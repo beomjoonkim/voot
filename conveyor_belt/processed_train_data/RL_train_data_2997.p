@@ -1,0 +1,9 @@
+(lp1
+(dp2
+S'a'
+(lp3
+sS's'
+(lp4
+sS'r'
+(lp5
+sa.

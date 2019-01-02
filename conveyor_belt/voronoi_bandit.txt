@@ -1,0 +1,99 @@
+N_evals 100
+Explr_p 0.0 Mean regret 0.01 Std 0.02 
+Explr_p 0.2 Mean regret 0.00 Std 0.01 
+Explr_p 0.4 Mean regret 0.00 Std 0.01 
+Explr_p 0.6 Mean regret 0.01 Std 0.03 
+Explr_p 0.8 Mean regret 0.03 Std 0.06 
+Explr_p 1.0 Mean regret 0.06 Std 0.11 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.00 Std 0.01 
+================== 
+N_evals 100
+N_evals 100
+N_evals 100
+N_evals 100
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.45 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.52 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.54 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.55 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.45 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.52 Std 0.45 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.54 Std 0.47 
+================== 
+N_evals 100
+Explr_p 0.5 Mean regret 0.42 Std 0.45 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.45 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.54 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.46 
+================== 
+N_evals 100
+Explr_p 0.3 Mean regret 0.53 Std 0.45 
+================== 
+N_evals 100
+Explr_p 0.9 Mean regret 0.29 Std 0.36 
+================== 
+N_evals 100
+Explr_p 0.8 Mean regret 0.31 Std 0.39 
+================== 
+N_evals 100
+Explr_p 0.8 Mean regret 0.31 Std 0.39 
+================== 
+N_evals 100
+N_evals 100
+Explr_p 0.8 Mean regret 0.29 Std 0.36 
+================== 
+N_evals 100
+Explr_p 0.7 Mean regret 0.32 Std 0.40 
+================== 
+N_evals 100
+Explr_p 0.7 Mean regret 0.33 Std 0.41 
+================== 
+N_evals 100
+Explr_p 0.7 Mean regret 0.35 Std 0.41 
+================== 
+N_evals 100
+Explr_p 0.7 Mean regret 0.34 Std 0.42 
+================== 
+N_evals 100
+Explr_p 0.7 Mean regret 0.34 Std 0.40 
+================== 
+N_evals 100
+N_evals 100
+N_evals 100
+Explr_p 0.7 Mean regret 0.33 Std 0.41 
+================== 
+N_evals 100
+Explr_p 0.9 Mean regret 0.29 Std 0.36 
+================== 
+N_evals 100
+Explr_p 1.0 Mean regret 0.36 Std 0.38 
+================== 

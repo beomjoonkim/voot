@@ -1,0 +1,6739 @@
+#VRML V2.0 utf8
+Transform {
+translation 2002.909 -1767.403 1366.573
+rotation -0 -0 1 1.570796
+scale 9.329 9.329 9.329
+children [DEF GRP_Group1 Group {
+children [
+Shape {
+appearance DEF COL__Seashell_ Appearance {
+material Material { diffuseColor 1 0.961 0.933 }
+}
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+413.765 39.199 412.493,
+418.746 38.658 400.54,
+403 384.56 400.54,
+398.119 382.913 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.119 382.913 412.493,
+403 384.56 400.54,
+418.746 38.658 400.54,
+413.765 39.199 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.119 382.913 412.493,
+403 384.56 400.54,
+392.482 399.769 400.54,
+388.96 396.156 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+388.96 396.156 412.493,
+392.482 399.769 400.54,
+403 384.56 400.54,
+398.119 382.913 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+388.96 396.156 412.493,
+392.482 399.769 400.54,
+377.008 409.894 400.54,
+375.107 405.221 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+375.107 405.221 412.493,
+377.008 409.894 400.54,
+392.482 399.769 400.54,
+388.96 396.156 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+375.107 405.221 412.493,
+377.008 409.894 400.54,
+358.86 413.444 400.54,
+358.38 408.493 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+358.38 408.493 412.493,
+358.86 413.444 400.54,
+377.008 409.894 400.54,
+375.107 405.221 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+358.38 408.493 412.493,
+358.86 413.444 400.54,
+212.024 413.444 400.54,
+212.024 408.493 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 408.493 412.493,
+212.024 413.444 400.54,
+358.86 413.444 400.54,
+358.38 408.493 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.187 413.444 400.54,
+65.667 408.493 412.493,
+212.024 408.493 412.493,
+212.024 413.444 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.039 409.894 400.54,
+48.94 405.221 412.493,
+65.667 408.493 412.493,
+65.187 413.444 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.566 399.769 400.54,
+35.087 396.156 412.493,
+48.94 405.221 412.493,
+47.039 409.894 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+21.047 384.56 400.54,
+25.928 382.913 412.493,
+35.087 396.156 412.493,
+31.566 399.769 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.566 399.769 400.54,
+35.087 396.156 412.493,
+25.928 382.913 412.493,
+21.047 384.56 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.039 409.894 400.54,
+48.94 405.221 412.493,
+35.087 396.156 412.493,
+31.566 399.769 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.187 413.444 400.54,
+65.667 408.493 412.493,
+48.94 405.221 412.493,
+47.039 409.894 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 413.444 400.54,
+212.024 408.493 412.493,
+65.667 408.493 412.493,
+65.187 413.444 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.667 408.493 412.493,
+66.825 396.539 417.444,
+212.024 396.539 417.444,
+212.024 408.493 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+48.94 405.221 412.493,
+53.529 393.939 417.444,
+66.825 396.539 417.444,
+65.667 408.493 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.667 408.493 412.493,
+66.825 396.539 417.444,
+53.529 393.939 417.444,
+48.94 405.221 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 408.493 412.493,
+212.024 396.539 417.444,
+66.825 396.539 417.444,
+65.667 408.493 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+357.222 396.539 417.444,
+358.38 408.493 412.493,
+212.024 408.493 412.493,
+212.024 396.539 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 396.539 417.444,
+212.024 408.493 412.493,
+358.38 408.493 412.493,
+357.222 396.539 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+370.518 393.939 417.444,
+375.107 405.221 412.493,
+358.38 408.493 412.493,
+357.222 396.539 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+357.222 396.539 417.444,
+358.38 408.493 412.493,
+375.107 405.221 412.493,
+370.518 393.939 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.459 387.434 417.444,
+388.96 396.156 412.493,
+375.107 405.221 412.493,
+370.518 393.939 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+386.334 378.939 417.444,
+398.119 382.913 412.493,
+388.96 396.156 412.493,
+380.459 387.434 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.459 387.434 417.444,
+388.96 396.156 412.493,
+398.119 382.913 412.493,
+386.334 378.939 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+370.518 393.939 417.444,
+375.107 405.221 412.493,
+388.96 396.156 412.493,
+380.459 387.434 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 396.539 417.444,
+212.024 16.905 417.444,
+377.862 16.905 417.444,
+390.666 20.335 417.444,
+398.41 28.08 417.444,
+401.74 40.505 417.444,
+386.334 378.939 417.444,
+380.459 387.434 417.444,
+370.518 393.939 417.444,
+357.222 396.539 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 16.905 417.444,
+212.024 396.539 417.444,
+66.825 396.539 417.444,
+53.529 393.939 417.444,
+43.588 387.434 417.444,
+37.713 378.939 417.444,
+22.308 40.505 417.444,
+25.637 28.08 417.444,
+33.381 20.335 417.444,
+46.186 16.905 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+46.186 16.905 417.444,
+33.381 20.335 417.444,
+25.637 28.08 417.444,
+22.308 40.505 417.444,
+37.713 378.939 417.444,
+43.588 387.434 417.444,
+53.529 393.939 417.444,
+66.825 396.539 417.444,
+212.024 396.539 417.444,
+212.024 16.905 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+44.612 4.951 412.493,
+46.186 16.905 417.444,
+33.381 20.335 417.444,
+27.194 9.618 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 4.951 412.493,
+212.024 16.905 417.444,
+46.186 16.905 417.444,
+44.612 4.951 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 16.905 417.444,
+212.024 4.951 412.493,
+379.435 4.951 412.493,
+377.862 16.905 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+377.862 16.905 417.444,
+379.435 4.951 412.493,
+212.024 4.951 412.493,
+212.024 16.905 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+377.862 16.905 417.444,
+379.435 4.951 412.493,
+396.853 9.618 412.493,
+390.666 20.335 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+390.666 20.335 417.444,
+396.853 9.618 412.493,
+379.435 4.951 412.493,
+377.862 16.905 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+390.666 20.335 417.444,
+396.853 9.618 412.493,
+409.127 21.892 412.493,
+398.41 28.08 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.41 28.08 417.444,
+409.127 21.892 412.493,
+396.853 9.618 412.493,
+390.666 20.335 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.41 28.08 417.444,
+409.127 21.892 412.493,
+413.765 39.199 412.493,
+401.74 40.505 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+401.74 40.505 417.444,
+413.765 39.199 412.493,
+409.127 21.892 412.493,
+398.41 28.08 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+401.74 40.505 417.444,
+413.765 39.199 412.493,
+398.119 382.913 412.493,
+386.334 378.939 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+386.334 378.939 417.444,
+398.119 382.913 412.493,
+413.765 39.199 412.493,
+401.74 40.505 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+357.222 396.539 417.444,
+370.518 393.939 417.444,
+380.459 387.434 417.444,
+386.334 378.939 417.444,
+401.74 40.505 417.444,
+398.41 28.08 417.444,
+390.666 20.335 417.444,
+377.862 16.905 417.444,
+212.024 16.905 417.444,
+212.024 396.539 417.444,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+409.127 21.892 412.493,
+413.566 19.329 400.54,
+418.746 38.658 400.54,
+413.765 39.199 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+413.765 39.199 412.493,
+418.746 38.658 400.54,
+413.566 19.329 400.54,
+409.127 21.892 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+413.566 19.329 400.54,
+413.566 19.329 293.411,
+418.746 38.658 293.411,
+418.746 38.658 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+399.416 5.179 400.54,
+399.416 5.179 293.411,
+413.566 19.329 293.411,
+413.566 19.329 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.087 0 400.54,
+380.087 0 293.411,
+399.416 5.179 293.411,
+399.416 5.179 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+399.416 5.179 400.54,
+399.416 5.179 293.411,
+380.087 0 293.411,
+380.087 0 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+413.566 19.329 400.54,
+413.566 19.329 293.411,
+399.416 5.179 293.411,
+399.416 5.179 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+418.746 38.658 400.54,
+418.746 38.658 293.411,
+413.566 19.329 293.411,
+413.566 19.329 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+418.746 38.658 400.54,
+418.746 38.658 293.411,
+403 384.56 293.411,
+403 384.56 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+403 384.56 400.54,
+403 384.56 293.411,
+418.746 38.658 293.411,
+418.746 38.658 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+403 384.56 400.54,
+403 384.56 293.411,
+392.482 399.769 293.411,
+392.482 399.769 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+392.482 399.769 400.54,
+392.482 399.769 293.411,
+403 384.56 293.411,
+403 384.56 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+392.482 399.769 400.54,
+392.482 399.769 293.411,
+377.008 409.894 293.411,
+377.008 409.894 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+377.008 409.894 400.54,
+377.008 409.894 293.411,
+392.482 399.769 293.411,
+392.482 399.769 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+377.008 409.894 400.54,
+377.008 409.894 293.411,
+358.86 413.444 293.411,
+358.86 413.444 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+358.86 413.444 400.54,
+358.86 413.444 293.411,
+377.008 409.894 293.411,
+377.008 409.894 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+358.86 413.444 400.54,
+358.86 413.444 293.411,
+212.024 413.444 293.411,
+212.024 413.444 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 413.444 400.54,
+212.024 413.444 293.411,
+358.86 413.444 293.411,
+358.86 413.444 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.187 413.444 293.411,
+65.187 413.444 400.54,
+212.024 413.444 400.54,
+212.024 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.039 409.894 293.411,
+47.039 409.894 400.54,
+65.187 413.444 400.54,
+65.187 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.187 413.444 293.411,
+65.187 413.444 400.54,
+47.039 409.894 400.54,
+47.039 409.894 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 413.444 293.411,
+212.024 413.444 400.54,
+65.187 413.444 400.54,
+65.187 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 293.411,
+65.187 413.444 293.411,
+212.024 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 293.411,
+51.654 25.52 293.411,
+65.187 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 293.411,
+51.654 25.52 293.411,
+212.024 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 293.411,
+27.589 25.52 293.411,
+51.654 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 293.411,
+27.589 25.52 293.411,
+43.96 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 25.52 293.411,
+24.631 5.179 293.411,
+27.589 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 293.411,
+27.589 25.52 293.411,
+24.631 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 25.52 293.411,
+27.589 25.52 293.411,
+43.96 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance DEF TEX_Wood_Floor_Parquet Appearance {
+material Material {}
+texture ImageTexture {
+url ["Wood_Floor_Parquet.jpg"]
+}
+}
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 42.607 2.488,
+51.654 42.607 2.488,
+51.654 25.52 293.411,
+27.589 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.276 -0,
+0.517 -0,
+0.517 2.914,
+0.276 2.914,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 25.52 293.411,
+51.654 25.52 293.411,
+51.654 42.607 2.488,
+27.589 42.607 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 25.52 293.411,
+51.654 42.607 2.488,
+51.654 59.693 2.488,
+51.654 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.255 2.934,
+0.426 0.025,
+0.597 0.025,
+0.496 2.934,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 49.586 293.411,
+51.654 59.693 2.488,
+51.654 42.607 2.488,
+51.654 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 49.586 293.411,
+51.654 49.586 293.411,
+51.654 59.693 2.488,
+27.589 59.693 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.276 2.915,
+-0.517 2.915,
+-0.517 0.004,
+-0.276 0.004,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 49.586 293.411,
+31.566 399.769 293.411,
+51.654 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 293.411,
+31.566 399.769 293.411,
+27.589 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 293.411,
+21.047 384.56 293.411,
+31.566 399.769 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+10.481 19.329 293.411,
+21.047 384.56 293.411,
+24.631 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+21.047 384.56 293.411,
+10.481 19.329 293.411,
+5.302 38.658 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+5.302 38.658 293.411,
+10.481 19.329 293.411,
+21.047 384.56 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+10.481 19.329 293.411,
+10.481 19.329 400.54,
+5.302 38.658 400.54,
+5.302 38.658 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 293.411,
+24.631 5.179 400.54,
+10.481 19.329 400.54,
+10.481 19.329 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 293.411,
+43.96 0 400.54,
+24.631 5.179 400.54,
+24.631 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 293.411,
+24.631 5.179 400.54,
+43.96 0 400.54,
+43.96 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+10.481 19.329 293.411,
+10.481 19.329 400.54,
+24.631 5.179 400.54,
+24.631 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+5.302 38.658 293.411,
+5.302 38.658 400.54,
+10.481 19.329 400.54,
+10.481 19.329 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+5.302 38.658 293.411,
+5.302 38.658 400.54,
+21.047 384.56 400.54,
+21.047 384.56 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+21.047 384.56 293.411,
+21.047 384.56 400.54,
+5.302 38.658 400.54,
+5.302 38.658 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+21.047 384.56 293.411,
+21.047 384.56 400.54,
+31.566 399.769 400.54,
+31.566 399.769 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.566 399.769 293.411,
+31.566 399.769 400.54,
+21.047 384.56 400.54,
+21.047 384.56 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.566 399.769 293.411,
+31.566 399.769 400.54,
+47.039 409.894 400.54,
+47.039 409.894 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.039 409.894 293.411,
+47.039 409.894 400.54,
+31.566 399.769 400.54,
+31.566 399.769 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 49.586 293.411,
+31.566 399.769 293.411,
+47.039 409.894 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 49.586 293.411,
+31.566 399.769 293.411,
+27.589 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.039 409.894 293.411,
+31.566 399.769 293.411,
+51.654 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 49.586 293.411,
+47.039 409.894 293.411,
+65.187 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.187 413.444 293.411,
+47.039 409.894 293.411,
+51.654 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 49.586 293.411,
+65.187 413.444 293.411,
+51.654 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 25.52 293.411,
+65.187 413.444 293.411,
+51.654 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.187 413.444 293.411,
+51.654 25.52 293.411,
+212.024 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 293.411,
+51.654 25.52 293.411,
+43.96 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 293.411,
+212.024 0 293.411,
+212.024 0 400.54,
+43.96 0 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 400.54,
+212.024 0 400.54,
+212.024 0 293.411,
+43.96 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 400.54,
+212.024 4.951 412.493,
+44.612 4.951 412.493,
+43.96 0 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 4.951 412.493,
+212.024 0 400.54,
+380.087 0 400.54,
+379.435 4.951 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+379.435 4.951 412.493,
+380.087 0 400.54,
+212.024 0 400.54,
+212.024 4.951 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+379.435 4.951 412.493,
+380.087 0 400.54,
+399.416 5.179 400.54,
+396.853 9.618 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.853 9.618 412.493,
+399.416 5.179 400.54,
+380.087 0 400.54,
+379.435 4.951 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.853 9.618 412.493,
+399.416 5.179 400.54,
+413.566 19.329 400.54,
+409.127 21.892 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+409.127 21.892 412.493,
+413.566 19.329 400.54,
+399.416 5.179 400.54,
+396.853 9.618 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 293.411,
+380.087 0 293.411,
+380.087 0 400.54,
+212.024 0 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 400.54,
+380.087 0 400.54,
+380.087 0 293.411,
+212.024 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 293.411,
+372.393 25.52 293.411,
+380.087 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 0 293.411,
+358.86 413.444 293.411,
+372.393 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+358.86 413.444 293.411,
+212.024 0 293.411,
+212.024 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 413.444 293.411,
+212.024 0 293.411,
+358.86 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 413.444 293.411,
+65.187 413.444 293.411,
+212.024 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 25.52 293.411,
+358.86 413.444 293.411,
+212.024 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+358.86 413.444 293.411,
+372.393 49.586 293.411,
+372.393 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 49.586 293.411,
+358.86 413.444 293.411,
+377.008 409.894 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 25.52 293.411,
+372.393 49.586 293.411,
+358.86 413.444 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 42.607 2.488,
+372.393 25.52 293.411,
+372.393 49.586 293.411,
+372.393 59.693 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.426 0.025,
+-0.255 2.934,
+-0.496 2.934,
+-0.597 0.025,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 42.607 2.488,
+396.459 42.607 2.488,
+396.459 25.52 293.411,
+372.393 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+3.724 -0,
+3.965 -0,
+3.965 2.914,
+3.724 2.914,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 59.693 2.488,
+396.459 42.607 2.488,
+372.393 42.607 2.488,
+372.393 59.693 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 59.693 2.488,
+372.393 42.607 2.488,
+396.459 42.607 2.488,
+396.459 59.693 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 59.693 2.488,
+372.393 49.586 293.411,
+372.393 25.52 293.411,
+372.393 42.607 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 49.586 293.411,
+396.459 49.586 293.411,
+396.459 59.693 2.488,
+372.393 59.693 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-3.724 2.915,
+-3.965 2.915,
+-3.965 0.004,
+-3.724 0.004,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 59.693 2.488,
+396.459 59.693 2.488,
+396.459 49.586 293.411,
+372.393 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 59.693 2.488,
+396.459 49.586 293.411,
+396.459 25.52 293.411,
+396.459 42.607 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.597 0.025,
+0.496 2.934,
+0.255 2.934,
+0.426 0.025,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 42.607 2.488,
+396.459 25.52 293.411,
+396.459 49.586 293.411,
+396.459 59.693 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 25.52 293.411,
+396.459 25.52 293.411,
+396.459 42.607 2.488,
+372.393 42.607 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.087 0 293.411,
+372.393 25.52 293.411,
+396.459 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.087 0 293.411,
+372.393 25.52 293.411,
+212.024 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 25.52 293.411,
+372.393 25.52 293.411,
+380.087 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.087 0 293.411,
+396.459 25.52 293.411,
+399.416 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+399.416 5.179 293.411,
+396.459 25.52 293.411,
+380.087 0 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 25.52 293.411,
+403 384.56 293.411,
+399.416 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 49.586 293.411,
+403 384.56 293.411,
+396.459 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 49.586 293.411,
+392.482 399.769 293.411,
+403 384.56 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 49.586 293.411,
+377.008 409.894 293.411,
+392.482 399.769 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+372.393 49.586 293.411,
+377.008 409.894 293.411,
+396.459 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+377.008 409.894 293.411,
+358.86 413.444 293.411,
+372.393 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 49.586 293.411,
+377.008 409.894 293.411,
+372.393 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+392.482 399.769 293.411,
+377.008 409.894 293.411,
+396.459 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+403 384.56 293.411,
+392.482 399.769 293.411,
+396.459 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+396.459 25.52 293.411,
+403 384.56 293.411,
+396.459 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+399.416 5.179 293.411,
+403 384.56 293.411,
+396.459 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+399.416 5.179 293.411,
+403 384.56 293.411,
+413.566 19.329 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+413.566 19.329 293.411,
+403 384.56 293.411,
+399.416 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+413.566 19.329 293.411,
+403 384.56 293.411,
+418.746 38.658 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+418.746 38.658 293.411,
+403 384.56 293.411,
+413.566 19.329 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 400.54,
+44.612 4.951 412.493,
+212.024 4.951 412.493,
+212.024 0 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.96 0 400.54,
+44.612 4.951 412.493,
+27.194 9.618 412.493,
+24.631 5.179 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 400.54,
+27.194 9.618 412.493,
+44.612 4.951 412.493,
+43.96 0 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 400.54,
+27.194 9.618 412.493,
+14.92 21.892 412.493,
+10.481 19.329 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+10.481 19.329 400.54,
+14.92 21.892 412.493,
+27.194 9.618 412.493,
+24.631 5.179 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+10.481 19.329 400.54,
+14.92 21.892 412.493,
+10.283 39.199 412.493,
+5.302 38.658 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+5.302 38.658 400.54,
+10.283 39.199 412.493,
+14.92 21.892 412.493,
+10.481 19.329 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+5.302 38.658 400.54,
+10.283 39.199 412.493,
+25.928 382.913 412.493,
+21.047 384.56 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+21.047 384.56 400.54,
+25.928 382.913 412.493,
+10.283 39.199 412.493,
+5.302 38.658 400.54,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+10.283 39.199 412.493,
+22.308 40.505 417.444,
+37.713 378.939 417.444,
+25.928 382.913 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+14.92 21.892 412.493,
+25.637 28.08 417.444,
+22.308 40.505 417.444,
+10.283 39.199 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+10.283 39.199 412.493,
+22.308 40.505 417.444,
+25.637 28.08 417.444,
+14.92 21.892 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+25.928 382.913 412.493,
+37.713 378.939 417.444,
+22.308 40.505 417.444,
+10.283 39.199 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+25.928 382.913 412.493,
+37.713 378.939 417.444,
+43.588 387.434 417.444,
+35.087 396.156 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+35.087 396.156 412.493,
+43.588 387.434 417.444,
+37.713 378.939 417.444,
+25.928 382.913 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+35.087 396.156 412.493,
+43.588 387.434 417.444,
+53.529 393.939 417.444,
+48.94 405.221 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+48.94 405.221 412.493,
+53.529 393.939 417.444,
+43.588 387.434 417.444,
+35.087 396.156 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.194 9.618 412.493,
+33.381 20.335 417.444,
+25.637 28.08 417.444,
+14.92 21.892 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+14.92 21.892 412.493,
+25.637 28.08 417.444,
+33.381 20.335 417.444,
+27.194 9.618 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.194 9.618 412.493,
+33.381 20.335 417.444,
+46.186 16.905 417.444,
+44.612 4.951 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+44.612 4.951 412.493,
+46.186 16.905 417.444,
+212.024 16.905 417.444,
+212.024 4.951 412.493,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 49.586 293.411,
+31.566 399.769 293.411,
+24.631 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.566 399.769 293.411,
+21.047 384.56 293.411,
+24.631 5.179 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+24.631 5.179 293.411,
+21.047 384.56 293.411,
+10.481 19.329 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 49.586 293.411,
+24.631 5.179 293.411,
+27.589 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 49.586 293.411,
+27.589 59.693 2.488,
+27.589 42.607 2.488,
+27.589 25.52 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.496 2.934,
+-0.597 0.025,
+-0.426 0.025,
+-0.255 2.934,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 25.52 293.411,
+27.589 42.607 2.488,
+27.589 59.693 2.488,
+27.589 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 42.607 2.488,
+27.589 59.693 2.488,
+51.654 59.693 2.488,
+51.654 42.607 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+51.654 42.607 2.488,
+51.654 59.693 2.488,
+27.589 59.693 2.488,
+27.589 42.607 2.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+27.589 59.693 2.488,
+51.654 59.693 2.488,
+51.654 49.586 293.411,
+27.589 49.586 293.411,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+38.744 475.78 2.919,
+14.796 475.545 4.378,
+34.884 435.368 254.656,
+58.867 435.534 253.619,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.387 -0.725,
+-0.148 -0.711,
+-0.349 1.824,
+-0.589 1.814,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+58.867 435.534 253.619,
+34.884 435.368 254.656,
+14.796 475.545 4.378,
+38.744 475.78 2.919,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+58.867 435.534 253.619,
+34.884 435.368 254.656,
+43.269 418.599 506.856,
+67.279 418.709 506.672,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.606 2.241,
+-0.367 2.252,
+-0.45 4.779,
+-0.69 4.777,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.279 418.709 506.672,
+43.269 418.599 506.856,
+34.884 435.368 254.656,
+58.867 435.534 253.619,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.223 440.022 760.374,
+67.279 418.709 506.672,
+43.269 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.495 7.947,
+-0.695 5.401,
+-0.455 5.403,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.279 418.709 506.672,
+47.223 440.022 760.374,
+47.112 418.16 760.821,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+4.189 4.999,
+4.402 7.544,
+4.183 7.548,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.112 418.16 760.821,
+47.223 440.022 760.374,
+67.279 418.709 506.672,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.223 440.022 760.374,
+25.194 439.911 760.151,
+25.083 418.048 760.597,
+47.112 418.16 760.821,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.112 418.16 760.821,
+25.083 418.048 760.597,
+25.194 439.911 760.151,
+47.223 440.022 760.374,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.112 418.16 760.821,
+25.083 418.048 760.597,
+43.159 394.754 506.488,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.488 7.959,
+0.268 7.957,
+0.448 5.405,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.159 394.754 506.488,
+25.083 418.048 760.597,
+47.112 418.16 760.821,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.269 418.599 506.856,
+43.159 394.754 506.488,
+25.083 418.048 760.597,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.188 5.026,
+-3.95 5.023,
+-4.182 7.57,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+34.884 435.368 254.656,
+34.718 411.635 252.582,
+43.159 394.754 506.488,
+43.269 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.355 2.556,
+-4.118 2.535,
+-3.949 5.076,
+-4.188 5.08,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.269 418.599 506.856,
+43.159 394.754 506.488,
+34.718 411.635 252.582,
+34.884 435.368 254.656,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+25.083 418.048 760.597,
+43.159 394.754 506.488,
+43.269 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+25.083 418.048 760.597,
+25.194 439.911 760.151,
+43.269 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.181 7.57,
+-4.4 7.565,
+-4.188 5.026,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.269 418.599 506.856,
+25.194 439.911 760.151,
+25.083 418.048 760.597,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.269 418.599 506.856,
+25.194 439.911 760.151,
+47.223 440.022 760.374,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.45 5.403,
+-0.27 7.945,
+-0.491 7.947,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.223 440.022 760.374,
+25.194 439.911 760.151,
+43.269 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.269 418.599 506.856,
+67.279 418.709 506.672,
+47.223 440.022 760.374,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+34.718 411.635 252.582,
+58.7 411.802 251.545,
+67.169 394.863 506.304,
+43.159 394.754 506.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.364 2.247,
+0.604 2.236,
+0.688 4.79,
+0.448 4.791,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.159 394.754 506.488,
+67.169 394.863 506.304,
+58.7 411.802 251.545,
+34.718 411.635 252.582,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+43.159 394.754 506.488,
+67.169 394.863 506.304,
+47.112 418.16 760.821,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.452 5.405,
+0.693 5.403,
+0.493 7.959,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.112 418.16 760.821,
+67.169 394.863 506.304,
+43.159 394.754 506.488,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+47.112 418.16 760.821,
+67.169 394.863 506.304,
+67.279 418.709 506.672,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+4.184 7.549,
+3.952 4.996,
+4.191 5,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.279 418.709 506.672,
+67.169 394.863 506.304,
+47.112 418.16 760.821,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+58.7 411.802 251.545,
+58.867 435.534 253.619,
+67.279 418.709 506.672,
+67.169 394.863 506.304,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+4.12 2.533,
+4.358 2.554,
+4.19 5.086,
+3.951 5.082,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.169 394.863 506.304,
+67.279 418.709 506.672,
+58.867 435.534 253.619,
+58.7 411.802 251.545,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+38.51 452.183 0,
+38.744 475.78 2.919,
+58.867 435.534 253.619,
+58.7 411.802 251.545,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+4.522 0.031,
+4.758 0.06,
+4.355 2.575,
+4.118 2.554,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+14.796 475.545 4.378,
+38.744 475.78 2.919,
+38.51 452.183 0,
+14.561 451.948 1.459,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+14.561 451.948 1.459,
+38.51 452.183 0,
+38.744 475.78 2.919,
+14.796 475.545 4.378,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+14.561 451.948 1.459,
+38.51 452.183 0,
+58.7 411.802 251.545,
+34.718 411.635 252.582,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.146 -0.702,
+0.385 -0.717,
+0.587 1.831,
+0.347 1.841,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+34.718 411.635 252.582,
+58.7 411.802 251.545,
+38.51 452.183 0,
+14.561 451.948 1.459,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+58.7 411.802 251.545,
+58.867 435.534 253.619,
+38.744 475.78 2.919,
+38.51 452.183 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+14.796 475.545 4.378,
+14.561 451.948 1.459,
+34.718 411.635 252.582,
+34.884 435.368 254.656,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.755 0.055,
+-4.519 0.026,
+-4.116 2.545,
+-4.354 2.566,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+34.884 435.368 254.656,
+34.718 411.635 252.582,
+14.561 451.948 1.459,
+14.796 475.545 4.378,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+409.486 451.948 1.459,
+409.251 475.545 4.378,
+389.163 435.368 254.656,
+389.329 411.635 252.582,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+4.519 -0.313,
+4.755 -0.284,
+4.354 2.227,
+4.116 2.206,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+389.329 411.635 252.582,
+389.163 435.368 254.656,
+409.251 475.545 4.378,
+409.486 451.948 1.459,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+389.329 411.635 252.582,
+389.163 435.368 254.656,
+380.779 418.599 506.856,
+380.888 394.754 506.488,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+4.1 2.393,
+4.338 2.414,
+4.17 4.938,
+3.932 4.934,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.888 394.754 506.488,
+380.779 418.599 506.856,
+389.163 435.368 254.656,
+389.329 411.635 252.582,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.888 394.754 506.488,
+380.779 418.599 506.856,
+398.964 418.048 760.597,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+3.926 5.326,
+4.164 5.329,
+4.158 7.873,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.964 418.048 760.597,
+380.779 418.599 506.856,
+380.888 394.754 506.488,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.853 439.911 760.151,
+398.964 418.048 760.597,
+380.779 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+4.385 7.868,
+4.166 7.873,
+4.172 5.329,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.853 439.911 760.151,
+376.824 440.022 760.374,
+376.935 418.16 760.821,
+398.964 418.048 760.597,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.964 418.048 760.597,
+376.935 418.16 760.821,
+376.824 440.022 760.374,
+398.853 439.911 760.151,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.964 418.048 760.597,
+376.935 418.16 760.821,
+380.888 394.754 506.488,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+3.972 7.958,
+3.752 7.961,
+3.793 5.407,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.888 394.754 506.488,
+376.935 418.16 760.821,
+398.964 418.048 760.597,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+356.878 394.863 506.304,
+380.888 394.754 506.488,
+376.935 418.16 760.821,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+3.548 5.405,
+3.788 5.407,
+3.747 7.961,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+376.935 418.16 760.821,
+380.888 394.754 506.488,
+356.878 394.863 506.304,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+365.347 411.802 251.545,
+389.329 411.635 252.582,
+380.888 394.754 506.488,
+356.878 394.863 506.304,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+3.637 2.235,
+3.877 2.246,
+3.793 4.79,
+3.553 4.788,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+385.538 452.183 0,
+409.486 451.948 1.459,
+389.329 411.635 252.582,
+365.347 411.802 251.545,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+3.855 -0.717,
+4.095 -0.702,
+3.893 1.841,
+3.653 1.831,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+385.303 475.78 2.919,
+409.251 475.545 4.378,
+409.486 451.948 1.459,
+385.538 452.183 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+409.251 475.545 4.378,
+385.303 475.78 2.919,
+365.181 435.534 253.619,
+389.163 435.368 254.656,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.093 -0.711,
+-3.853 -0.725,
+-3.652 1.814,
+-3.892 1.824,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+389.163 435.368 254.656,
+365.181 435.534 253.619,
+385.303 475.78 2.919,
+409.251 475.545 4.378,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+389.163 435.368 254.656,
+365.181 435.534 253.619,
+356.768 418.709 506.672,
+380.779 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-3.874 2.25,
+-3.634 2.24,
+-3.551 4.776,
+-3.791 4.778,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.779 418.599 506.856,
+356.768 418.709 506.672,
+365.181 435.534 253.619,
+389.163 435.368 254.656,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+356.768 418.709 506.672,
+376.824 440.022 760.374,
+380.779 418.599 506.856,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-3.546 5.403,
+-3.745 7.949,
+-3.786 5.404,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+376.824 440.022 760.374,
+356.768 418.709 506.672,
+376.935 418.16 760.821,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.387 7.879,
+-4.175 5.334,
+-4.169 7.884,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+376.935 418.16 760.821,
+356.768 418.709 506.672,
+376.824 440.022 760.374,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+356.878 394.863 506.304,
+376.935 418.16 760.821,
+356.768 418.709 506.672,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-3.928 5.331,
+-4.16 7.884,
+-4.166 5.335,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+356.768 418.709 506.672,
+376.935 418.16 760.821,
+356.878 394.863 506.304,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+365.181 435.534 253.619,
+365.347 411.802 251.545,
+356.878 394.863 506.304,
+356.768 418.709 506.672,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.34 2.412,
+-4.103 2.391,
+-3.934 4.94,
+-4.172 4.944,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+385.303 475.78 2.919,
+385.538 452.183 0,
+365.347 411.802 251.545,
+365.181 435.534 253.619,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-4.758 -0.279,
+-4.522 -0.308,
+-4.118 2.215,
+-4.355 2.236,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+365.181 435.534 253.619,
+365.347 411.802 251.545,
+385.538 452.183 0,
+385.303 475.78 2.919,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+356.768 418.709 506.672,
+356.878 394.863 506.304,
+365.347 411.802 251.545,
+365.181 435.534 253.619,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+356.878 394.863 506.304,
+380.888 394.754 506.488,
+389.329 411.635 252.582,
+365.347 411.802 251.545,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+365.347 411.802 251.545,
+389.329 411.635 252.582,
+409.486 451.948 1.459,
+385.538 452.183 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+385.538 452.183 0,
+409.486 451.948 1.459,
+409.251 475.545 4.378,
+385.303 475.78 2.919,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.779 418.599 506.856,
+376.824 440.022 760.374,
+356.768 418.709 506.672,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+398.853 439.911 760.151,
+380.779 418.599 506.856,
+376.824 440.022 760.374,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+-3.97 7.946,
+-3.79 5.404,
+-3.75 7.948,
+]
+}
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+380.779 418.599 506.856,
+398.964 418.048 760.597,
+398.853 439.911 760.151,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+376.824 440.022 760.374,
+380.779 418.599 506.856,
+398.853 439.911 760.151,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 400.821 493.622,
+212.024 447.918 782.383,
+212.024 499.844 782.383,
+212.024 452.747 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 452.747 493.622,
+212.024 499.844 782.383,
+212.024 447.918 782.383,
+212.024 400.821 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 452.747 493.622,
+146.019 452.747 493.622,
+138.221 499.844 782.383,
+212.024 499.844 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 499.844 782.383,
+138.221 499.844 782.383,
+146.019 452.747 493.622,
+212.024 452.747 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+15.424 395.339 782.383,
+138.221 447.918 782.383,
+212.024 447.918 782.383,
+212.024 499.844 782.383,
+138.221 499.844 782.383,
+0 440.661 782.383,
+0 406.941 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.965 370.98 525.845,
+138.221 447.918 782.383,
+15.424 395.339 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+40.061 367.965 493.622,
+146.019 400.821 493.622,
+138.221 447.918 782.383,
+31.965 370.98 525.845,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.965 370.98 525.845,
+138.221 447.918 782.383,
+146.019 400.821 493.622,
+40.061 367.965 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+15.424 395.339 782.383,
+138.221 447.918 782.383,
+31.965 370.98 525.845,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+0 406.941 782.383,
+0 440.661 782.383,
+138.221 499.844 782.383,
+212.024 499.844 782.383,
+212.024 447.918 782.383,
+138.221 447.918 782.383,
+15.424 395.339 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 406.941 782.383,
+0 440.661 782.383,
+18.618 413.243 493.622,
+18.618 379.523 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+18.618 379.523 493.622,
+18.618 413.243 493.622,
+0 440.661 782.383,
+0 406.941 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+212.024 452.747 493.622,
+212.024 400.821 493.622,
+146.019 400.821 493.622,
+40.061 367.965 493.622,
+18.618 379.523 493.622,
+18.618 413.243 493.622,
+146.019 452.747 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+146.019 452.747 493.622,
+18.618 413.243 493.622,
+18.618 379.523 493.622,
+40.061 367.965 493.622,
+146.019 400.821 493.622,
+212.024 400.821 493.622,
+212.024 452.747 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+18.618 413.243 493.622,
+138.221 499.844 782.383,
+146.019 452.747 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+138.221 499.844 782.383,
+18.618 413.243 493.622,
+0 440.661 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 440.661 782.383,
+18.618 413.243 493.622,
+138.221 499.844 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+146.019 452.747 493.622,
+138.221 499.844 782.383,
+18.618 413.243 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+18.618 379.523 493.622,
+40.061 367.965 493.622,
+34.012 367.965 494.093,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+34.012 367.965 494.093,
+40.061 367.965 493.622,
+18.618 379.523 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+34.012 367.965 494.093,
+40.061 367.965 493.622,
+31.965 370.98 525.845,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+31.965 370.98 525.845,
+40.061 367.965 493.622,
+34.012 367.965 494.093,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+34.012 367.965 494.093,
+31.965 370.98 525.845,
+15.424 395.339 782.383,
+0 406.941 782.383,
+18.618 379.523 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+18.618 379.523 493.622,
+0 406.941 782.383,
+15.424 395.339 782.383,
+31.965 370.98 525.845,
+34.012 367.965 494.093,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+146.019 400.821 493.622,
+212.024 400.821 493.622,
+212.024 447.918 782.383,
+138.221 447.918 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+138.221 447.918 782.383,
+212.024 447.918 782.383,
+212.024 400.821 493.622,
+146.019 400.821 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 400.821 493.622,
+278.028 400.821 493.622,
+285.826 447.918 782.383,
+212.024 447.918 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+212.024 447.918 782.383,
+285.826 447.918 782.383,
+278.028 400.821 493.622,
+212.024 400.821 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+285.826 447.918 782.383,
+408.623 395.339 782.383,
+424.047 406.941 782.383,
+424.047 440.661 782.383,
+285.826 499.844 782.383,
+212.024 499.844 782.383,
+212.024 447.918 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+212.024 447.918 782.383,
+212.024 499.844 782.383,
+285.826 499.844 782.383,
+424.047 440.661 782.383,
+424.047 406.941 782.383,
+408.623 395.339 782.383,
+285.826 447.918 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+278.028 452.747 493.622,
+212.024 452.747 493.622,
+212.024 499.844 782.383,
+285.826 499.844 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+285.826 499.844 782.383,
+212.024 499.844 782.383,
+212.024 452.747 493.622,
+278.028 452.747 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+212.024 400.821 493.622,
+212.024 452.747 493.622,
+278.028 452.747 493.622,
+405.429 413.243 493.622,
+405.429 379.523 493.622,
+383.986 367.965 493.622,
+278.028 400.821 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+278.028 400.821 493.622,
+383.986 367.965 493.622,
+405.429 379.523 493.622,
+405.429 413.243 493.622,
+278.028 452.747 493.622,
+212.024 452.747 493.622,
+212.024 400.821 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+278.028 400.821 493.622,
+383.986 367.965 493.622,
+392.082 370.98 525.845,
+285.826 447.918 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+285.826 447.918 782.383,
+392.082 370.98 525.845,
+383.986 367.965 493.622,
+278.028 400.821 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+285.826 447.918 782.383,
+392.082 370.98 525.845,
+408.623 395.339 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+408.623 395.339 782.383,
+392.082 370.98 525.845,
+285.826 447.918 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+392.082 370.98 525.845,
+390.035 367.965 494.093,
+405.429 379.523 493.622,
+424.047 406.941 782.383,
+408.623 395.339 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+408.623 395.339 782.383,
+424.047 406.941 782.383,
+405.429 379.523 493.622,
+390.035 367.965 494.093,
+392.082 370.98 525.845,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+424.047 440.661 782.383,
+424.047 406.941 782.383,
+405.429 379.523 493.622,
+405.429 413.243 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+405.429 413.243 493.622,
+405.429 379.523 493.622,
+424.047 406.941 782.383,
+424.047 440.661 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+405.429 413.243 493.622,
+285.826 499.844 782.383,
+424.047 440.661 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+285.826 499.844 782.383,
+405.429 413.243 493.622,
+278.028 452.747 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+278.028 452.747 493.622,
+405.429 413.243 493.622,
+285.826 499.844 782.383,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+424.047 440.661 782.383,
+285.826 499.844 782.383,
+405.429 413.243 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+383.986 367.965 493.622,
+405.429 379.523 493.622,
+390.035 367.965 494.093,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+390.035 367.965 494.093,
+405.429 379.523 493.622,
+383.986 367.965 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+383.986 367.965 493.622,
+390.035 367.965 494.093,
+392.082 370.98 525.845,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL__Seashell_
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+392.082 370.98 525.845,
+390.035 367.965 494.093,
+383.986 367.965 493.622,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+]
+}
+]
+}
+Viewpoint {
+position 44629.481 -104111 96007.6
+orientation 0.926432 0.182164 0.329455 1.076177
+fieldOfView 0.61087
+description "Camera"
+jump FALSE
+}

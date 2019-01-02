@@ -1,0 +1,362 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{amsopn,amssymb,thmtools,thm-restate}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsopn,amssymb,thmtools,thm-restate}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\input{notations}
+
+\author{Beomjoon Kim}
+\title{Feedback-based Continuous planning for G-TAMP}
+\begin{document}
+\maketitle
+\section{Problem formulation}
+Given a computational budget B,
+a plan skeleton $\{\op_1(\disc_1,\cdot),\cdots,\op_T(\disc_t,\cdot)\}$, 
+and the set of goal states $S_G$, possibly described with a predicate,
+find the continuous parameters $\cont_1,\cdots,\cont_T$ such that it maximizes
+the sum of the discounted rewards,
+$$ \max_{\cont_1,\cdots,\cont_T}  \sum_{t=0}^{T
+}  \gamma^t r(s_t,\cont_t)  $$
+where $r(s_t,\cont_t) = r(s_t,\op_t(\disc_t,\cont_t) )$, $s_T \in S_G$ and
+the generative model of the environment $T$ such that $s_{t+1} = T(s_t,\op_t(\disc_t,\cont_T))$
+
+\section{Voronoi-based Optimistic Optimization for continuous space}
+Suppose for now that the planning horizon is 1. This reduces to the black-box
+function optimization problem. 
+
+We would like to find the optimal action $x^*$ under the assumption that 
+$$ f(x) - f(y) \leq \lambda \cdot d(x,y)$$
+So, we have
+$ f(x) \leq f(y) + \lambda \cdot d(x,y)$.
+
+At any time point $t$, we know that we would have evaluated $x_1,\cdots x_t$ number of points.
+We denote the Vornoi regions induced by these points as $V(x_i)$. By the definition of the 
+Voronoi region, we know that the lowest upper-bound of value of points in a region
+is provided by the furthest distance to the 
+generator $x_i$ of the region. Hence, we  propose the following:
+\begin{enumerate}
+\item Compute the convex hulls of the Voronoi regions $V(x_1),\cdots, V(x_t)$. Denote $CH(V_i)$ as the
+convex hull of the $i^{th}$ Voronoi region.
+\item Select the most optimistic region by  $$ i^* = \arg\max_{i \in {1,\cdots,t}} f(x_i) + \lambda \cdot \max_{x \in CH(V_i)} d(x,x_i)$$ 
+\item Randomly sample a point from $V(x_{i^*})$.
+\end{enumerate}
+
+\subsection{Planning with VOO}
+\subsubsection{Monte-Carlo planning with progressive widening}
+
+\begin{algorithm}[htb]
+\small
+   \caption{\sc{search}($s_0$)}
+   \label{alg:search}
+\begin{algorithmic}[1]
+\STATE $\tree(s_0) = \{ N(s_0)=1,A=\emptyset,Q(s_0,\cdot)=0,N(s_0,\cdot)=0 \}$
+\REPEAT
+\STATE {\sc simulate}($s_0,0$)
+\UNTIL{$timeout$}
+\STATE{\bf return} $\argmax_{a\in\tree(s_0).A} \tree(s_0).Q(s,a)$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htb]
+\small
+   \caption{\sc{simulate}($s, T, \delta, \alpha, \epsilon, S_G$)}
+   \label{alg:simulate}
+\begin{algorithmic}[1]
+\IF{$s == infeasible$}
+\STATE{\bf return} \text{infeasible-rwd}
+\ELSIF{$s \in S_G$}
+\STATE{\bf return} \text{success-rwd}
+\ENDIF
+\IF{$|\tree(s).A| \leq \delta \cdot \tree(s).N(s)$}
+\STATE //progressive widening step
+\STATE $a \sim ${\sc VOO}($\tree(s).A, \epsilon$)// \text{based on the algorithm above}
+\STATE $\tree(s).A = \tree(s).A \cup a$
+\ELSE
+\STATE $a = \argmax_{a \in tree(s).A} Q(s,a, \alpha)$
+\ENDIF
+\STATE $s',r ~ \sim f(s,a)$
+\STATE $R = r + \gamma \cdot $\sc{simulate}$(s',depth+1)$
+\STATE $\tree(s).N(s,a) += 1$
+\STATE $\tree(s).Q(s,a) = Q(s,a) + \frac{R-\tree(s).Q(s,a)}{\tree(s).N(s,a)}$
+\end{algorithmic}
+\end{algorithm}
+
+Here, $\tree$ refers to the Monte Carlo tree, $N(s)$
+is the number of times a state $s$ has been visited, $N(s,a)$ is
+the number of times $a$ has been simulated from $s$, and $Q(s,a)$ is
+the value of the action edge $a$ that goes out from $s$. $Q^+$ is the
+augmented Q function that encourages exploration. $\pi$ is the stochastic
+policy which we sample actions from, and $\delta$ is the progressive
+widening parameter.
+
+This Monte-Carlo planning approach is more advantageous
+than heuristic-based search in that it is anytime, and the value
+of the heuristic function improves overtime. It begins with a 
+rather wrong estimate of the value function, 0, and the value
+becomes more accurate as more simulations are performed.
+
+There are subtleties that need to be taken care of when applying
+this for TAMP problems. First, instead of depth, we should think
+about detecting the dead-ends. However, detecting this is non-trivial.
+Second, the function {\sc sampleaction} in line 10 of Algorithm 2 must take account
+of the fact that there are infeasible actions. Unlike the 
+game of Go where the infeasible moves are cheap and trivial to
+detect, in TAMP, we need to call a motion planner to
+find if the action is actually achievable. This is an expensive
+step.
+
+\subsubsection{A variant of A*}
+The above approach is troublesome in that the function $Q$ is being
+constantly updated, and that at a particular node, even if you choose
+the same action you end up with different $Q$-value. Also, it has too
+many parameters
+
+We might naively try to optimize the entire sequence $\cont_1,\cdots,\cont_T$
+directly, but doing so discards the important advantage of the search-based
+method, which is that it has the ability to back-track, if deemed necessary.
+We take the idea from A* to optimize $K^T = \cont_1,\cdots\cont_T$.
+
+We will denote the $i^{th}$ sequence of actions whose length is $d \in [1,T]$ as
+$K^{d}_i = \cont_1^{(i)} \cdots \cont_d^{(i)}$. Further, we assume that
+the reward function is Lipschitz.
+
+\begin{enumerate}
+\item Inputs: {\sc VOO} parameter $\epsilon$, heuristic function $\hat{h}(K^*)$
+\item Initialize the sequence set $S$ with an empty set.
+\item for i=1 to timeout, 
+\item Choose a sequence $K^{d} \in S$ according to
+$$B(K^{d}) = \sum_{t=1}^{d-1} \gamma^t r(s_t,\cont_t) 
++ diameter(V(s_t.K))
+ + \gamma^{d} \hat{h}(K^{d}) $$ 
+\item Choose the dimension to cut, from $d+1$ choices, that
+would reduce the upper bound $B(K^{d})$ the most.
+\item Sample an action $a \sim ${\sc VOO}($\epsilon$), and divide the selected dimension
+\item Add the new sequence to the sequence set S
+\end{enumerate}
+
+Alternatively, what happens if we ignore the diameter information? It will not
+take account of how many actions we've s sampled at a particular dimension in
+$K^T$.
+
+The diameter information can also give insights into whether to switch
+the plan skeleton. For example, if our $B(K^d)$ is bad to the point that
+it does not contain the optimal value, then we should forgo it.
+
+
+\section{Monte-Carlo planning algorithm for continuous domains}
+
+\subsection{Dealing with infeasible actions}
+if the next state node's state is equivalent to the current 
+node's state, because the action failed,
+then if I simulate forward from this state, then I might get a different reward.
+If I get a high reward, then this might mean that current state is actually good, but
+it does not mean that that particular (s,a), which got you back to the same state s, was good.
+We would waste a lot of time updating the value of an edge that gets you back to the same state
+What if I make it so that it returns 0 if it the sampled action is infeasible? That is, treat
+(s,a) as a deadend-action. If I do this, then there is no recursion after this
+
+
+\subsection{An idea about the roll-out policy}
+It seems that the purpose of the roll-out policy is to supposed
+to give a rough first estimate of the untravelled edge $(s,a)$.
+We might do a (fast) roll-out by postponing the calls to the motion
+planner when using this policy.
+
+\section{Improving Monte-Carlo planning with learning}
+Instead of initializing Q-values of new nodes with 0, we will
+learn Q off-line and then soft-update it online. Also, instead
+of using a uniform policy to sample actions, we will use
+a learned policy. If our learned policy does not have a support
+for the entire action space, then this will not guarantee probabilistic
+completeness. So, our approach would be to use a uniform policy
+with some small probability.
+
+\section{Theoretical conjectures}
+Suppose that our reward function is 1 at the goal state(s), and 0 otherwise.
+In this case, finding a satisficing solution would be equivalent to finding an optimal solution.
+A probabilistic completeness in this case would give us the guarantee
+that we will find this optimal solution, if we use a uniform random
+policy for $\pi$ as the number of evaluations of edges reaches infinity. 
+This, however, does not give us the convergence rate, 
+which is much more desirable.
+
+Most of the papers in the Monte-carlo planning literature discusses about how to partition the
+action space using a bandit algorithm, whether continuous or discrete,
+ in order to show convergence rates. These algorithms, however, won't be able 
+to scale to large dimensions. Hence our
+hope is to use learning, and show the convergence rate as a function of
+estimation error.
+Here are specific questions :
+\begin{enumerate}
+\item Suppose when I sample an action (line 10 of Algorithm 2), I sample from a uniform
+policy with probability $p$, and from a learned policy $\pi_\theta$. If my
+learned policy has an error of $\delta$, $|\pi(s) - \pi^*(s)|\leq \delta\ \forall s \in S$,
+then what is my convergence rate?
+\item Suppose I have learned $Q_{\alpha}$ such that $|Q_{\alpha}(s,a)-Q^*(s,a)|\leq \delta\ \forall (s,a) \in S \times A$.
+If in the backup step in line 18 of Algorithm 2, I use
+$$ Q(s,a) \leftarrow (1-q)\cdot Q_{\alpha}(s,a) + q \cdot Q_{MC}(s,a)$$ 
+where $Q_{MC}(s,a)$ is the value that I obtained by solely using
+Monte-Carlo rollouts, and $q\in[0,1]$, then  what is my convergence rate?
+\end{enumerate}
+
+\section{Optimistic planning using the Voronoi region}
+We would like to find the optimal action $x^*$ under the assumption that 
+$$ f(x) - f(y) \leq \lambda \cdot d(x,y)$$
+So, we have
+$ f(x) \leq f(y) + \lambda \cdot d(x,y)$.
+
+At any time point $t$, we know that we would have evaluated $x_1,\cdots x_t$ number of points.
+We denote the Vornoi regions induced by these points as $V(x_i)$. By the definition of the 
+Voronoi region, we know that the lowest upper-bound of value of points in a region
+is provided by the furthest distance to the 
+generator $x_i$ of the region. Hence, we  propose the following:
+\begin{enumerate}
+\item Compute the convex hulls of the Voronoi regions $V(x_1),\cdots, V(x_t)$. Denote $CH(V_i)$ as the
+convex hull of the $i^{th}$ Voronoi region.
+\item Select the most optimistic region by  $$ i^* = \arg\max_{i \in {1,\cdots,t}} f(x_i) + \max_{x \in CH(V_i)} d(x,x_i)$$ 
+\item Randomly sample a point from $V(x_{i^*})$.
+\end{enumerate}
+
+
+\subsection{Computing the convex hull of the Voronoi region}
+Suppose we have points $p_1,\cdots,p_n$. 
+Denote the line segment from $p_i$ to $p_j$ as $\overline{p_ip_j}$. 
+Given two points  $p_i$ and $p_j$, by the definition of a Voronoi region, we know that
+the Voronoi regions whose sites are $p_i$ and $p_j$ are defined by 
+the perpendicular bisector of the line segment $\overline{p_ip_j}$.
+We can find this analytically. 
+
+
+In general, if we have $n$ points, then the Voronoi region of a point $p_i$ can be 
+determined by the intersection of the perpendicular bisectors of the line segment between 
+ $p_i$ and all the other points. Finding the intersection of hyperplanes 
+takes $O(n\log n)$ time, where $n$ is the number of hyperplanes. 
+If we repeat this for all the points, then it takes $O(n^2\log n)$ time. 
+
+Once we have the intersection, we can the set of points where the hyperplanes that define 
+the intersection meet. These give the convex hull.
+
+\subsection{Analysis}
+Denote $\delta(V_i) = \max_{x \in CH(V_i)} d(x,x_i)$.
+We know that if $i^{th}$ Voronoi region contains $\xopt$, then by our smoothness 
+assumption it is bounded above by $$f(\xopt) \leq f(x_i) + \delta(V_i)$$
+So, we will never evaluate a region whose upper bound is lower than $f(\xopt)$, because
+$$ f(x_j) + \delta(V_j) \leq f(\xopt) \leq f(x_i) + \delta(V_i) $$
+
+We can adopt the similar assumptions from DOO yet more precise. We know at at any point time
+$t$, the diameters of the Voronoi region is decreasing. So, we have decreasing sequence
+of diameters, with respect to the number of evaluations $t$, $B(t)$.
+
+
+\section{Sampling-based approach}
+This scales poorly with the number of dimensions. New algorithm:
+\begin{enumerate}
+\item With probability $\epsilon$, sample uniform randomly from $\mathcal{X}$
+\item With probability $1-\epsilon$, sample uniform randomly from the best Voronoi region $V(x_{i^*})$, $ i^* = \arg\max_{i \in {1,\cdots,t}} f(x_i) $
+\end{enumerate}
+
+
+\section{Geometric task-and-motion-planning problem}
+We denote the workspace of the robot as $\workspace$. A region $\region$ is
+defined as a subset of the workspace. We define \emph{task constraint} as a set of objects 
+ to be packed in the ordered sequence of regions,
+$$[\region_1:(\obj^{(1)}_1,\cdots,\obj^{(1)}_{m_1}), \cdots, 
+\region_T:(\obj^{(T)}_1,\cdots,\obj^{(T)}_{m_T})]$$ and the \emph{connecting region}
+$\region_{connect}$ between two regions $\region_i$ and $\region_j$ as
+$\region_{connect} \not\subset \region_i \cup \region_j$ such that,
+ from any robot configuration in $\region_{connect}$, any configuration
+in  $\region_i$ and $\region_j$ can be reached, 
+without considering the movable obstacles. We will call the regions
+specified in the task constraint as \emph{key regions}.
+
+
+The problem statement is as follows. \emph{Given a task constraint, regions, and connecting 
+regions between all pairs of regions, find the optimal motion plan to 
+pack each object into its corresponding
+key region in the given order, where the quality of a plan is measured by the number of
+robot operations in it.}  We have following variability in our problem:
+\begin{itemize}
+\item The objects specified within a key region may or may not be ordered.
+\item There may be other movable obstacles that are not specified in the task constraint.
+\end{itemize}
+We have following assumptions:
+\begin{itemize}
+\item We cannot find a feasible solution of the packing problem for $\region_{t}$ without
+finding one for $\region_{t-1}$.
+\item How we pack objects in $\region_{t-1}$ does not affect the
+feasibility of the packing problem for $\region_{t}$, but affects the optimality.
+\end{itemize}
+
+Given this setup, G-TAMP problem is a sequence of interrelated packing problems. 
+A packing problem
+$$\mathcal{R}: (\obj_1,\cdots,\obj_{m})$$
+consists of two parts: fetching objects from their initial regions, and
+then placing them in $\region$. We assume that we cannot move a target
+object once we pack it in $\region$, in order to remove redundant actions.
+
+In fetching-and-placing a target object, we need to determine
+objects that are in the way and clear them out. 
+Therefore, we can see that a packing problem has
+four unknowns, for each object:
+\begin{enumerate}
+\item Finding a robot reaching motion to the current target object
+from the robot's current configuration. 
+\item Finding a robot constraint-removal motion for clearing movable obstacles
+from this reaching-motion
+\item Finding a robot placing motion that places the current target
+object in $\region$ such that all of target objects $\obj_1,\cdots,\obj_m$ can
+be packed in $\region$.
+\item Finding a robot constraint-removal motion for clearing movable obstacles
+from this placing-motion
+\end{enumerate}
+
+These problems are related in that we cannot solve for 2 without solving for
+1, 3 without solving for 2, and so on. However, if we tackle this naively in this 
+order, we may waste our effort finding solutions 
+for 1, 2, and 3 for many early objects, only to find 
+that these early placements prevents a solution for latter objects. 
+
+
+How should we define the sub-problem for which MCTS will be used for?
+We should define it such that a solution to the earlier sub-problem
+cannot have feasibility-level influence on the solution of the
+next sub-problem, and we need the solution to the sub-problem
+for the subsequent sub-problem. For example, we can separate object
+fetching problem and NAMO problem, because how I fetch objects
+cannot influence the feasibility of the NAMO problem, and
+I cannot solve (or even define) the NAMO problem without knowing the fetching path.
+But I cannot separate clearing each object within a NAMO problem
+because if I clear an earlier obstacle such that it makes the
+next obstacle unreachable, then the problem is infeasible.
+
+
+I cannot define the reaching-problem for object $B_2$ if I have not
+solved the reaching-and-constraint-removal motion for object $B_1$,
+because I do not know how objects will be arranged. Also, I am assuming (?)
+that no matter how I clear obstacles and reach-and-pack object $B_1$,
+it cannot influence the feasiblity of reach-and-place of object $B_2$,
+because at the end of clearing-reaching-and-packing, I will be at the
+connecting region to $B_2$, because I ensure an existence of path
+to a point in connecting region of $B_2$.
+
+What's the connecting region between the box region and the home region?
+What if I have to get stuff from the kitchen and shelf to box 1?
+
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

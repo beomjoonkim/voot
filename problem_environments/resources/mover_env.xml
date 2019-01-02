@@ -1,0 +1,694 @@
+<Environment>
+  <camtrans>0 -4 6</camtrans>
+  <camrotationaxis>-1 0 0 150</camrotationaxis>
+  <camfocal>0</camfocal>
+
+  <Robot file="robots/pr2-beta-static.zae">
+    <translation>-1 1 0.075</translation>
+  </Robot>
+
+
+	<Robot name="fridge">
+		<translation>-.87 -2.0 1.55</translation>
+		<KinBody>
+			<Body type="dynamic" name="cam">
+				<Geom type="sphere">
+					<radius>0.005</radius>
+					<diffuseColor>0.2 .2 .2</diffuseColor>
+				</Geom>
+    		</Body>
+		</KinBody>
+
+		<AttachedSensor name="webcam">
+			<link>cam</link>
+			<translation>0 0 -0.051</translation>
+	    	<rotationaxis>0 1 0 90</rotationaxis>
+	    	<sensor type="BaseFlashLidar3D">
+				<maxrange>2.2</maxrange>
+				<scantime>0.2</scantime>
+        		<KK>32 14 32 14</KK>
+        		<width>64</width>
+        		<height>48</height>
+        		<color>0 0 0.5</color>
+			</sensor>
+		</AttachedSensor>
+	</Robot>
+
+	<Robot name="cooker">
+		<translation>1.98 1.72 .75</translation>
+
+		<KinBody>
+			<Body type="dynamic" name="cooker">
+				<Geom type="sphere">
+					<radius>0.005</radius>
+					<diffuseColor>0.2 .2 .2</diffuseColor>
+				</Geom>
+    		</Body>
+		</KinBody>
+
+		<AttachedSensor name="motion_detector">
+			<link>cooker</link>
+			<translation>0 0 -0.051</translation>
+	    	<rotationaxis>0 1 0 90</rotationaxis>
+	    	<rotationaxis>0 0 1 -90</rotationaxis>
+	    	<rotationaxis>1 0 0 -45</rotationaxis>
+			<sensor type="BaseLaser2D">
+				<minangle>-45</minangle>
+				<maxangle>25</maxangle>
+				<resolution>1</resolution>
+				<maxrange>1</maxrange>
+				<scantime>0.2</scantime>
+				<color>0 1 0</color>
+			</sensor>
+		</AttachedSensor>
+	</Robot>
+
+	<!--Robot name="care-o-bot_4918" file="care-o-bot3.zae">
+		<Translation>.29 1.18 .15</Translation>
+		<quat>.369 0 0 .92943</quat>
+		<jointvalues> -1.7 -.5  3
+					   1.5   0  1
+					     0   0  0
+					     0   0  0
+					     0   0  0
+					     0   0  0
+					     0   0  0
+					     0   0  0
+					     0   0  0 0 </jointvalues>
+
+	</Robot-->
+
+
+
+	<KinBody name="kitchen">
+    	<Body type="static">
+            <!--translation>0 0.5 0</translation-->
+      		<Geom type="trimesh">
+				<render>kitchen.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="chair_2e39">
+    	<Body type="static">
+    		<translation>0.95 -1.15 0</translation>
+    		<quat>.82402 0 0 .56657</quat>
+      		<Geom type="trimesh">
+				<render>chair.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="chair_12d0">
+    	<Body type="static">
+    		<translation>.43229 .17536 0</translation>
+    		<quat>.98286 0 0 -.18433</quat>
+      		<Geom type="trimesh">
+				<render>chair.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="chair_6b56">
+    	<Body type="static">
+    		<translation>1.34 .27 0</translation>
+    		<quat>-.08079 0 0 .99673</quat>
+      		<Geom type="trimesh">
+				<render>chair.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="chair_083c">
+    	<Body type="static">
+    		<translation>.52 -0.60 0</translation>
+      		<Geom type="trimesh">
+				<render>chair.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="table">
+    	<Body type="static">
+    		<translation>.91704 -.12644 0</translation>
+      		<Geom type="trimesh">
+				<render>table.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="plate_835a">
+    	<Body type="static">
+    		<translation>1.06 -.73 .922</translation>
+      		<Geom type="trimesh">
+				<render>plate.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="plate_496f">
+    	<Body type="static">
+    		<translation>0.67 -.45556 .922</translation>
+      		<Geom type="trimesh">
+				<render>plate.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="plate_fa76">
+    	<Body type="static">
+    		<translation>1.14 0 .922</translation>
+      		<Geom type="trimesh">
+				<render>plate.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="plate_b4e7">
+    	<Body type="static">
+    		<translation>-1.13 2.01 1.14</translation>
+      		<Geom type="trimesh">
+				<render>plate.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="cup_905a">
+    	<Body type="static">
+    		<translation>1.00 .433 .922</translation>
+      		<Geom type="trimesh">
+				<render>cup.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<!--KinBody name="cup_1ff6">
+    	<Body type="static">
+    		<translation>.81 .35 .922</translation>
+      		<Geom type="trimesh">
+				<render>cup.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody-->
+
+	<KinBody name="cup_58a2">
+    	<Body type="static">
+    		<translation>.61 .45 .922</translation>
+      		<Geom type="trimesh">
+				<render>cup.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="cup_b6af">
+    	<Body type="static">
+    		<translation>.76 .55 .922</translation>
+      		<Geom type="trimesh">
+				<render>cup.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="cup_d441">
+    	<Body type="static">
+    		<translation>.97 .58 .922</translation>
+      		<Geom type="trimesh">
+				<render>cup.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="sink">
+    	<Body type="static">
+      		<Translation>.35 2.15 -.1</Translation>
+      		<Geom type="box">
+        		<extents>.2 .2 0.0005</extents>
+        		<translation>0 0 .9</translation>
+      		</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="can">
+    	<Body type="static">
+    		<translation>-1.25 -.54 .97</translation>
+      		<Geom type="trimesh">
+				<render>can.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="coffe_machine">
+    	<Body type="static">
+    		<translation>-1.335 .96 .97</translation>
+      		<Geom type="trimesh">
+				<render>coffe_machine.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="mixer">
+    	<Body type="static">
+    		<translation>1.69 2.3 .956</translation>
+      		<Geom type="trimesh">
+				<render>mixer.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="toaster">
+    	<Body type="static">
+    		<translation>-1.26 -1.18 .96</translation>
+    		<quat>.94893 0 0 .3155</quat>
+      		<Geom type="trimesh">
+				<render>toaster.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="microwave">
+    	<Body type="static">
+    		<translation>-1.1 2.0 .963</translation>
+      		<Geom type="trimesh">
+				<render>microwave.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="pin_371e">
+    	<Body type="static">
+    		<translation>-1.2 1.4 .96</translation>
+      		<Geom type="trimesh">
+				<render>pin.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="pin_a091">
+    	<Body type="static">
+    		<translation>-1.466 2.27 1.67</translation>
+      		<Geom type="trimesh">
+				<render>pin.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="pin_c671">
+    	<Body type="static">
+    		<translation>-1.11 2.286 1.67</translation>
+      		<Geom type="trimesh">
+				<render>pin.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="knife_block">
+    	<Body type="static">
+    		<translation>-0.51 2.3 .968</translation>
+      		<Geom type="trimesh">
+				<render>knife_block.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+	<KinBody name="shaker">
+    	<Body type="static">
+    		<translation>2.13 2.26 .98</translation>
+      		<Geom type="trimesh">
+				<render>shaker.wrl 0.000115</render>
+			</Geom>
+		</Body>
+	</KinBody>
+
+
+  <KinBody name="computer_table" file="data/table.kinbody.xml">
+    <Translation>+4.75 -1.5 0.7495</Translation>
+    <rotationaxis>0 0 1 270</rotationaxis>
+    <KinBody name="computer">
+      <modelsdir>..</modelsdir>
+      <translation>0 0. 0</translation>
+      <rotationmat>1 0 0 0 0 -1 0 1 0</rotationmat>
+      <Body type="dynamic">
+        <Geom type="trimesh">
+          <render>models/furniture/computer.iv</render>
+          <data>models/furniture/computer.iv</data>
+        </Geom>
+      </Body>
+    </KinBody>
+
+    <KinBody name = "lowerbox">
+    <Translation >0  0 -0.75285</Translation>
+      <RotationAxis>0 0 1 90</RotationAxis>
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 0 0.3775</Translation>
+        <extents>.26 0.63 0.3775</extents>
+        <diffuseColor>0.7 0.7 0.2</diffuseColor>
+      </Geom>
+    </Body>
+    </KinBody>
+  </KinBody>
+
+  <KinBody name="table2" file="data/table.kinbody.xml">
+    <Translation>-1.3 2 .7495</Translation>
+    <rotationaxis>0 0 1 90</rotationaxis>
+
+    <KinBody name = "lowerbox">
+    <Translation >0  0 -0.75285</Translation>
+      <RotationAxis>0 0 1 90</RotationAxis>
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 0 0.3775</Translation>
+        <extents>.26 0.63 0.3775</extents>
+        <diffuseColor>0.7 0.7 0.2</diffuseColor>
+      </Geom>
+    </Body>
+    </KinBody>
+  </KinBody>
+
+  <KinBody name="shelf1" file="data/ikeashelf.kinbody.xml">
+    <Translation>1.58315845, -2.33205483,  0.010004 </Translation>
+    <rotationaxis>0 0 1 270</rotationaxis>
+  </KinBody>
+
+ <KinBody name="shelf2" file="data/ikeashelf.kinbody.xml">
+    <Translation>2.58315845, 2.33205483,  0.010004 </Translation>
+    <rotationaxis>0 0 1 270</rotationaxis>
+  </KinBody>
+
+    <KinBody name="computer_chair">
+    <Body type="static">
+        <translation>0.95 -1.15 0</translation>
+        <quat>.82402 0 0 .56657</quat>
+        <Geom type="trimesh">
+            <render>chair.wrl 0.000115</render>
+        </Geom>
+    </Body>
+    </KinBody>
+
+   <KinBody name="floorwalls">
+    <Body type="static">
+      <Translation>1.8 -6 0.135</Translation>
+      <RotationAxis>0 0 1 90</RotationAxis>
+      <!--> floor </!-->
+      <Geom type="box">
+        <extents>1.75 2.5 0.005</extents>
+        <translation>-0.8 0 -0.005</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+      <!--side walls-->
+      <Geom type="box">
+        <extents>1.75 0.01 0.2</extents>
+        <translation>-0.78 -2.5 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+      <Geom type="box">
+        <extents>1.75 0.01 0.2</extents>
+        <translation>-0.78 2.5 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--back wall-->
+      <Geom type="box">
+        <extents>0.01 2.5 0.2</extents>
+        <translation>-2.5 0 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--conveyor belt-->
+      <Geom type="box">
+        <extents>5 0.5 0.005</extents>
+        <translation>3 1.05 -0.005</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--walls near conveyor belt-->
+      <Geom type="box">
+        <extents>0.01 0.5 0.2</extents>
+        <translation>0.95 2 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+      <Geom type="box">
+        <extents>0.01 1.5 0.2</extents>
+        <translation>0.95 -1 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+    </Body>
+  </KinBody>
+
+	<KinBody name="square_packing_box1">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+				<Geom type="box">
+					<extents>0.2 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+      			</Geom>
+                <Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+    <KinBody name="rectangular_packing_box1">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+				<Geom type="box">
+					<extents>0.3 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+      			</Geom>
+                <Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+
+	<KinBody name="square_packing_box2">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+				<Geom type="box">
+					<extents>0.2 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+      			</Geom>
+                <Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+    <KinBody name="rectangular_packing_box2">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+				<Geom type="box">
+					<extents>0.3 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+      			</Geom>
+                <Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+
+	<KinBody name="square_packing_box3">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+				<Geom type="box">
+					<extents>0.2 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+      			</Geom>
+                <Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+    <KinBody name="rectangular_packing_box3">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+				<Geom type="box">
+					<extents>0.3 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+      			</Geom>
+                <Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+
+	<KinBody name="square_packing_box4">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+                <!--> floor </!-->
+				<Geom type="box">
+                    <!--extents>1.75 2.5 0.005</extents-->
+					<extents>0.2 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                    <!--translation>-0.8 0 -0.005</translation-->
+      			</Geom>
+               <!--side walls-->
+                <Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.2 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.2 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+    <KinBody name="rectangular_packing_box4">
+		<Body type="static">
+			<Color>1 0 0</Color>
+      		<Translation>0 1 1</Translation>
+      		<RotationAxis>0 0 1 90</RotationAxis>
+				<Geom type="box">
+					<extents>0.3 0.2 0.01</extents>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+      			</Geom>
+                <Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.3 0.001 0.5</extents>
+                    <translation>0 -0.2 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+			 	<Geom type="box">
+                    <extents>0.001 0.2 0.5</extents>
+                    <translation>-0.3 0 0.25</translation>
+					<DiffuseColor>0 0.3 0 </DiffuseColor>
+                </Geom>
+        </Body>
+	</KinBody>
+
+</Environment>

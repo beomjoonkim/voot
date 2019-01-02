@@ -1,0 +1,347 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{amsopn,amssymb,thmtools,thm-restate}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsopn,amssymb,thmtools,thm-restate}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\input{notations}
+
+\author{Beomjoon Kim}
+\title{A planning algorithm for G-TAMP}
+\begin{document}
+\maketitle
+\section{Introduction}
+\emph{Motivation:}
+\begin{itemize}
+\item TAMP planners integrate discrete symbolic reasoning with continuous
+geometric reasoning to plan robot motions to achieve a high-level objective.
+\item While TAMP planners need make decisions at different levels of abstractions,
+for a large class of TAMP problems, we need to
+eventually solve a sequence of reaching-and-packing problems. For instance, consider
+the task of cooking a meal. We may, at
+a purely symbolic level, make a plan that says the target raw food
+should be washed first, and then placed on a stove on top of a frying pan, without
+performing any geometric reasoning. At a more concrete level, however,
+the problem eventually comes down to finding the motions for reaching and
+placing it in the region determined
+in the task plan. All the while, if there are any obstacles that are
+blocking the path of the reaching-and-packing motion, the planner also need
+to identify these objects and find motions to clear them. 
+\item What makes such geometric reasoning challenging is the intricate
+relationship among individual reaching-and-packing problems: how we clear
+obstacles for reaching-and-placing the raw food can influence how we
+reach-and-place the frying pan.
+\item We define such problems as geometric TAMP problems. Our goal is to
+first formally formulate this problem, and identify the structures of these problems
+to propose a planning algorithm that exploits such structures to solve them
+efficiently and optimally. Our algorithm can be used as an interface layer  used
+to check the feasibility of the task-plan, much like how existing
+TAMP planners use motion planners such as RRT to check the 
+feasibility of individual pick and place operator
+instances.
+\item We focus on mobile-manipulation problems where, feasibility check
+might come down to calling a path planner with an infeasible problem instance,
+rather than simply checking existence of an inverse kinematics solution
+and a collision at the end-configuration which in general takes
+faster than reporting failure with a sampling-based path planner.
+\end{itemize}
+Informal problem formulation:
+\begin{itemize}
+\item Specifically, given a task-plan that consists of 
+the sequence of abstract and discrete operators which
+satisfies the task-level goal, our objective is to find the continuous 
+decision variables such as grasps, base poses, placements, 
+and collision-free paths that correspond to the given
+abstract operator sequence, as well as any obstacles that are in the way, and
+the associated continuous variables to clear them, such that the solution
+optimizes the objective function.
+\item This is a long-horizon problem with an infinite branching factor and a set
+of hybrid decision variables. We
+could, in principle, use uniform-random sampling to sample operator instances
+and heuristic-forward search that reconsiders past nodes, 
+to find a solution. However,
+this algorithm is inefficient in that it cannot determine which branch to re-explore,
+or which node to back-track to. Moreover, as we will show,
+uniform sampling cannot find an optimal solution.
+\end{itemize}
+Algorithmic contribution:
+\begin{itemize}
+\item We offer an anytime planning algorithm, which, in similar spirit to
+Monte-Carlo Tree Search, uses the online estimate of the heuristic
+to decide which branch to re-explore in a principled manner. Our algorithm
+operates on different levels of hierarchy which effectively 
+shortens the planning horizon, and allows efficient back-tracking. To determine
+the obstacles to clear, we use the swept-volume of reaching and packing motions
+for the key objects, rather than random sampling.
+To optimize the heuristic function, we propose a novel sampling strategy that
+not only finds a feasible solution but also an optimal solution under
+mild assumptions.
+\item Specifically, our algorithm operates at three different levels of hierarchy.
+In the highest level, we have the task-planner that outputs the abstract
+task plan. This task plan is then passed on to the next layer.
+In the second layer, we need solve the \emph{reaching} and \emph{packing}
+problems in which we decide how we will fetch the given object, by finding grasps
+and pick base pose, as well as how to pack the object into a region,
+by finding object placement, placement base pose,
+and motions from the pick configuration to the place configuration,
+ignoring any obstacles in the way. The swept-volume of the fetching and packing
+motion is then passed into the layer below, which then solves an instance
+of the \emph{navigation-among-movable-obstacles (NAMO)} problem. At
+this stage, the abstract plan becomes completely concrete, and the
+planner outputs the sequence of configurations that clears obstacles
+and fetches and packs the target object. We then move onto the next abstract 
+operator in the task plan.
+
+\iffalse
+\item To gain planning efficiency to find the first feasible solution
+yet optimize the plan, we take the finding-and-committing 
+approach: we first find a feasible solution for each step in the task-plan
+ and each level of hierarchy and commit to it without back-tracking across 
+them, and move onto the next. This will not affect correctness of our
+algorithm, because while how we fetch, pack, and clear obstacles
+for the first object in the task-plan may influence the
+optimality for the next plan, but it will not affect feasibility.
+
+At each level of hierarchy and each step in the task plan, the latter
+part of the planning problem cannot be defined until we solve the
+earlier part. For instance, we cannot solve the NAMO problem associated
+with fetching and packing an object, because we do not have a swept-volume
+yet. We also cannot move onto the 
+\item What do I want to say next? Introduce MCTS. Introduce the idea
+of committing and then optimizing. We have reward functions.
+We have 
+\item  
+\fi
+\end{itemize}
+
+\iffalse
+Some benefits in terms of algorithm usage:
+\begin{itemize}
+\item Unlike previous TAMP planners that use symbolic planners, such as 
+FastDownward, to perform geometric reasoning using predicates such as
+Reachable, we assume that the symbolic planner only has access to abstract
+reaching motion, such as pick, or placing motion, such as place or push,
+whose preconditions and effects only consists of discrete symbolic 
+predicates. This allows us to write a simpler task-plan domain description.
+\end{itemize}
+
+\section{Problem formulation}
+We assume that the task-planner is given abstract reaching and placing
+operators. They are abstract in the sense that their inputs are only discrete 
+elements in the world, such as objects and regions. While in general
+there are other useful non-geometric operators, such as wiping a dish,
+we will focus our attention to geometric operators that require 
+feasibility checks using a call to a motion planner.
+
+The task-plan would then consists of a sequence of abstract pick-and-places.
+We assume that the task-planner is cost-efficient in the sense that it will
+not touch objects that are not relevant in solving the problem. 
+
+More formally, we assume that we have a set of regions, $\{\region_1,\cdots,\region_m\}$,
+a set of objects, $\{\obj_1,\cdots,\obj_n\}$, and a set of concrete pick and place
+operators and their samplers. 
+The task-plan is given in the following form, as a sequence
+of abstract pick-and-places.
+$$[PaP(\obj_1, \region_1), \cdots PaP(\obj_T, \region_T))]$$
+Our goal is to find a sequence of configurations
+that achieve these picks and places.
+
+\section{Our approach}
+Hierarchical planning and limited horizon planning for NAMO problems, with Monte-Carlo
+planning.
+
+\subsection{Receding-horizon NAMO planning}
+Based on the description of our problem, we can formulate the NAMO problem
+as follows. Given $\initconf, \pickconf, \placeconf$ and $\motion_{place}$, 
+where $\pickconf$ and 
+$\placeconf$  are beginning and end of $\motion_{place}$ find a sequence of 
+robot motions from $\initconf$ to clear obstacles present in $\motion_{place}$. 
+We have the following algorithm, that generalizes Stillman's algorithm to continuous
+search space.
+\begin{enumerate}
+\item Plan a path from current configuration to $\pickconf$, ignoring obstacles.
+Define this as $\motion_{pick}$
+\item If any, plan a pick-and-place motion to clear the first obstacle in 
+$\motion_{pick}$. Make sure to not to place it in $\motion_{place}$. 
+\item Repeat 1 and 2 until there are no obstacles in $\motion_{pick}$.
+\item If any, plan a pick-and-place motion to clear the first obstacle in 
+$\motion$. Make sure to not to place it in $\motion_{pick}$. Repeat until
+no obstacles are in the way.
+\end{enumerate}
+Now, even for getting a single object, this may be a long-horizon planning problem,
+and it is non-trivial to which stage we should back-track to, if the current pick or
+placement turns out to be infeasible. So, we propose to use a
+ receding-horizon approach, by limiting
+the NAMO problem into different regions, when available,
+ and limit the clearance of obstacles within
+that region.  The underlying assumption is that the NAMO problem within a region
+can be solved by rearranging obstacles within that region. Sometimes this is
+true by the description of the problem - two regions are defined as separate
+regions because they are used to store obstacles that are different sizes,
+or because these regions are too far (ex. loading truck and packing area).
+Sometimes, it is not necessarily true at all (ex. my kitchen).
+
+\subsection{Monte Carlo Planning}
+Monte-Carlo tree search with progressive widening.
+\begin{algorithm}[htb]
+\small
+   \caption{\sc{search}($s_0$)}
+   \label{alg:search}
+\begin{algorithmic}[1]
+\STATE $\tree(s_0) = \{ N(s_0)=1,A=\emptyset,Q(s_0,\cdot)=0,N(s_0,\cdot)=0 \}$
+\REPEAT
+\STATE {\sc simulate}($s_0,0$)
+\UNTIL{$timeout$}
+\STATE{\bf return} $\argmax_{a\in\tree(s_0).A} \tree(s_0).Q(s,a)$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htb]
+\small
+   \caption{\sc{simulate}($s, T, \delta, \alpha, \epsilon, S_G$)}
+   \label{alg:simulate}
+\begin{algorithmic}[1]
+\IF{$s \in S_G$}
+\STATE{\bf return} \text{success-rwd}
+\ENDIF
+\IF{$|\tree(s).A| \leq \delta \cdot \tree(s).N(s)$}
+\STATE //progressive widening step
+\STATE $a \sim ${\sc SAMPLE}($\tree(s).A, \epsilon$)// \text{based on a sampling algorithm}
+\STATE $\tree(s).A = \tree(s).A \cup a$
+\ELSE
+\STATE $a = \argmax_{a \in tree(s).A} Q(s,a, \alpha)$
+\ENDIF
+\IF{$a\ is\ infeasible$}
+\STATE{\bf return} \text{infeasible-rwd}
+\ENDIF
+\STATE $s',r ~ \sim f(s,a)$
+\STATE $R = r + \gamma \cdot $\sc{simulate}$(s',depth+1)$
+\STATE $\tree(s).N(s,a) += 1$
+\STATE $\tree(s).Q(s,a) = Q(s,a) + \frac{R-\tree(s).Q(s,a)}{\tree(s).N(s,a)}$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Limitations}
+\subsection{Limitation of using abstract operators during task-planning stage}
+The problem with this is that, we cannot know, during the 
+task-planning stage, that a NAMO plan might move an 
+essential object out of its goal pose for NAMO purpose. 
+For example, in trying to pick the target object located 
+in the sink, we might have moved the detergent out of its 
+"detergent pose", to which it must be placed back to. However, 
+if the detergent was at the detergent pose in the initial state, 
+the task planner would not recognize that it can go out of its this pose.
+
+One possible way to resolve this might be to add a side-effect to the 
+abstract pick and place operators, that says, the poses of objects 
+that are in the same region as the object being picked might change. 
+In HPN, what was the purpose of side effects, and how did you end 
+up using them? Was it for making the search complete or making the planner sound?
+
+\subsection{Limitation of using swept volume}
+Even in LP1, we cannot move obstacles out of the way that are not detected in
+the swept volume.
+
+\iffalse
+\section{Geometric task-and-motion-planning problem}
+We denote the workspace of the robot as $\workspace$. A region $\region$ is
+defined as a subset of the workspace. We define \emph{task constraint} as a set of objects 
+ to be packed in the ordered sequence of regions,
+$$[\region_1:(\obj^{(1)}_1,\cdots,\obj^{(1)}_{m_1}), \cdots, 
+\region_T:(\obj^{(T)}_1,\cdots,\obj^{(T)}_{m_T})]$$ and the \emph{connecting region}
+$\region_{connect}$ between two regions $\region_i$ and $\region_j$ as
+$\region_{connect} \not\subset \region_i \cup \region_j$ such that,
+ from any robot configuration in $\region_{connect}$, any configuration
+in  $\region_i$ and $\region_j$ can be reached, 
+without considering the movable obstacles. We will call the regions
+specified in the task constraint as \emph{key regions}.
+
+
+The problem statement is as follows. \emph{Given a task constraint, regions, and connecting 
+regions between all pairs of regions, find the optimal motion plan to 
+pack each object into its corresponding
+key region in the given order, where the quality of a plan is measured by the number of
+robot operations in it.}  We have following variability in our problem:
+\begin{itemize}
+\item The objects specified within a key region may or may not be ordered.
+\item There may be other movable obstacles that are not specified in the task constraint.
+\end{itemize}
+We have following assumptions:
+\begin{itemize}
+\item We cannot find a feasible solution of the packing problem for $\region_{t}$ without
+finding one for $\region_{t-1}$.
+\item How we pack objects in $\region_{t-1}$ does not affect the
+feasibility of the packing problem for $\region_{t}$, but affects the optimality.
+\end{itemize}
+
+Given this setup, G-TAMP problem is a sequence of interrelated packing problems. 
+A packing problem
+$$\mathcal{R}: (\obj_1,\cdots,\obj_{m})$$
+consists of two parts: fetching objects from their initial regions, and
+then placing them in $\region$. We assume that we cannot move a target
+object once we pack it in $\region$, in order to remove redundant actions.
+
+In fetching-and-placing a target object, we need to determine
+objects that are in the way and clear them out. 
+Therefore, we can see that a packing problem has
+four unknowns, for each object:
+\begin{enumerate}
+\item Finding a robot reaching motion to the current target object
+from the robot's current configuration. 
+\item Finding a robot constraint-removal motion for clearing movable obstacles
+from this reaching-motion
+\item Finding a robot placing motion that places the current target
+object in $\region$ such that all of target objects $\obj_1,\cdots,\obj_m$ can
+be packed in $\region$.
+\item Finding a robot constraint-removal motion for clearing movable obstacles
+from this placing-motion
+\end{enumerate}
+
+These problems are related in that we cannot solve for 2 without solving for
+1, 3 without solving for 2, and so on. However, if we tackle this naively in this 
+order, we may waste our effort finding solutions 
+for 1, 2, and 3 for many early objects, only to find 
+that these early placements prevents a solution for latter objects. 
+
+
+How should we define the sub-problem for which MCTS will be used for?
+We should define it such that a solution to the earlier sub-problem
+cannot have feasibility-level influence on the solution of the
+next sub-problem, and we need the solution to the sub-problem
+for the subsequent sub-problem. For example, we can separate object
+fetching problem and NAMO problem, because how I fetch objects
+cannot influence the feasibility of the NAMO problem, and
+I cannot solve (or even define) the NAMO problem without knowing the fetching path.
+But I cannot separate clearing each object within a NAMO problem
+because if I clear an earlier obstacle such that it makes the
+next obstacle unreachable, then the problem is infeasible.
+
+
+I cannot define the reaching-problem for object $B_2$ if I have not
+solved the reaching-and-constraint-removal motion for object $B_1$,
+because I do not know how objects will be arranged. Also, I am assuming (?)
+that no matter how I clear obstacles and reach-and-pack object $B_1$,
+it cannot influence the feasiblity of reach-and-place of object $B_2$,
+because at the end of clearing-reaching-and-packing, I will be at the
+connecting region to $B_2$, because I ensure an existence of path
+to a point in connecting region of $B_2$.
+
+What's the connecting region between the box region and the home region?
+What if I have to get stuff from the kitchen and shelf to box 1?
+\fi
+\fi
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

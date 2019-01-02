@@ -1,0 +1,31 @@
+Metadata-Version: 1.1
+Name: SelectScript_OpenRAVE
+Version: 1
+Summary: Implementation of the query-language SelectScript for OpenRAVE.
+Home-page: https://pypi.python.org/pypi/SelectScript_OpenRAVE/1
+Author: André Dietrich
+Author-email: dietrich@ivs.cs.uni-magdeburg.de
+License: BSD
+Description: SelectScript_OpenRAVE: SelectScript implementation for OpenRAVE.
+        
+        
+        Contact: 
+        ===========
+        
+        If you change the code, improve this project, fix bugs, or just have comments, 
+        feel free to contact me...
+        
+        André Dietrich: dietrich@ivs.cs.uni-magdeburg.de
+        
+        Website: http://eos.cs.ovgu.de/dietrich
+        
+        
+        Information: 
+        ============
+        
+        Please visit the package information site http://pythonhosted.org//SelectScript_OpenRAVE
+Keywords: openrave,query,language,SelectScript
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Topic :: Utilities
+Classifier: License :: OSI Approved :: BSD License

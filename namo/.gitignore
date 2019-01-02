@@ -1,0 +1,8 @@
+processed_train_data/place_aggregated_data.p
+processed_train_data/pick_aggregated_data.p
+processed_train_data/old/place_aggregated_data.p
+processed_train_data/old/pick_aggregated_data.p
+*core*
+*.swo
+*.sw*
+*.h5

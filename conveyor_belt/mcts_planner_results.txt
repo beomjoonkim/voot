@@ -1,0 +1,45 @@
+Widening parameter 0.07, UCT parameter 1.00
+0 search_time, 178.28130
+Widening parameter 0.00, UCT parameter 0.00
+Widening parameter 0.00, UCT parameter 0.00
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.10, UCT parameter 1.00
+<<<<<<< HEAD
+0 search_time, 1965.86357
+1 search_time, 2106.89944
+2 search_time, 452.67794
+Widening parameter 0.10, UCT parameter 1.00
+0 search_time, 1604.41676
+1 search_time, 21152.54870
+2 search_time, 380.83457
+3 search_time, 6354.86409
+4 search_time, 2177.97619
+5 search_time, 18548.05860
+6 search_time, 960.53531
+7 search_time, 7191.00856
+8 search_time, 1588.81730
+9 search_time, 2349.68129
+10 search_time, 4284.20442
+11 search_time, 5131.23189
+=======
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.10, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+Widening parameter 0.30, UCT parameter 1.00
+>>>>>>> 83b6a633a32b052bb646b43beff17a8f8b84187a

@@ -1,0 +1,39 @@
+N_evals 100
+Mean regret 0.10 Std 0.14 
+N_evals 100
+Mean regret -0.25 Std 0.15 
+N_evals 100
+Mean regret 0.10 Std 0.19 
+N_evals 100
+Mean regret 0.15 Std 0.21 
+N_evals 100
+Mean regret 0.19 Std 0.26 
+N_evals 100
+Mean regret 0.14 Std 0.22 
+N_evals 100
+Mean regret 0.18 Std 0.23 
+N_evals 100
+N_evals 100
+Mean regret 0.17 Std 0.23 
+N_evals 100
+Mean regret 0.13 Std 0.21 
+N_evals 100
+Mean regret 0.17 Std 0.24 
+N_evals 100
+Mean regret 0.16 Std 0.21 
+N_evals 100
+Mean regret 0.15 Std 0.21 
+N_evals 100
+Mean regret 0.20 Std 0.23 
+N_evals 100
+Mean regret 0.14 Std 0.22 
+N_evals 100
+Mean regret 0.18 Std 0.25 
+N_evals 100
+Mean regret 0.19 Std 0.23 
+N_evals 100
+Mean regret 0.20 Std 0.25 
+N_evals 100
+Mean regret 0.16 Std 0.23 
+N_evals 100
+Mean regret 0.19 Std 0.25 

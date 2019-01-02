@@ -1,0 +1,2090 @@
+#VRML V2.0 utf8
+Transform {
+translation -3968.668 -7918.769 1367.71
+scale 11.517 11.517 11.517
+children [DEF GRP_Group1 Group {
+children [
+Shape {
+appearance DEF TEX_Wood_Floor_Parquet Appearance {
+material Material {}
+texture ImageTexture {
+url ["Wood_Floor_Parquet.jpg"]
+}
+}
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 1317.5 0,
+67.549 1253.994 0,
+0 1253.994 0,
+0 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.675 13.175,
+-0.675 12.54,
+0 12.54,
+0 13.175,
+]
+}
+}
+}
+Shape {
+appearance DEF COL_BackColor Appearance {
+material Material { diffuseColor 0.671 0.69 0.8 }
+}
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 0,
+0 1253.994 0,
+67.549 1253.994 0,
+67.549 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1253.994 0,
+0 1253.994 496.081,
+0 1317.5 496.081,
+0 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-12.54 0,
+-12.54 4.961,
+-13.175 4.961,
+-13.175 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1253.994 496.081,
+0 1253.994 0,
+67.549 1253.994 0,
+67.549 1253.994 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 4.961,
+0 0,
+0.675 0,
+0.675 4.961,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 1253.994 496.081,
+67.549 1253.994 0,
+0 1253.994 0,
+0 1253.994 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 1253.994 496.081,
+67.549 1253.994 0,
+67.549 1317.5 0,
+67.549 1317.5 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+12.54 4.961,
+12.54 0,
+13.175 0,
+13.175 4.961,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 1317.5 496.081,
+67.549 1317.5 0,
+67.549 1253.994 0,
+67.549 1253.994 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 0,
+0 1317.5 496.081,
+67.549 1317.5 496.081,
+67.549 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 0,
+0 4.961,
+-0.675 4.961,
+-0.675 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 0,
+0 1317.5 496.081,
+0 1253.994 496.081,
+0 1253.994 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-13.175 0,
+-13.175 4.961,
+-12.54 4.961,
+-12.54 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 1317.5 0,
+67.549 1317.5 496.081,
+0 1317.5 496.081,
+0 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.675 0,
+-0.675 4.961,
+0 4.961,
+0 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 575.5,
+740.75 1317.5 496.081,
+672.447 1317.5 496.081,
+67.549 1317.5 496.081,
+0 1317.5 496.081,
+0 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+-7.407 5.755,
+-7.407 4.961,
+-6.724 4.961,
+-0.675 4.961,
+0 4.961,
+0 5.755,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 575.5,
+0 1317.5 496.081,
+67.549 1317.5 496.081,
+672.447 1317.5 496.081,
+740.75 1317.5 496.081,
+740.75 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 5.755,
+0 4.961,
+-0.675 4.961,
+-6.724 4.961,
+-7.407 4.961,
+-7.407 5.755,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 575.5,
+0 1317.5 496.081,
+0 1253.994 496.081,
+0 66.269 496.081,
+0 0 496.081,
+0 0 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+-13.175 5.755,
+-13.175 4.961,
+-12.54 4.961,
+-0.663 4.961,
+0 4.961,
+-0 5.755,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+0 0 575.5,
+0 0 496.081,
+0 66.269 496.081,
+0 1253.994 496.081,
+0 1317.5 496.081,
+0 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0 5.755,
+0 4.961,
+-0.663 4.961,
+-12.54 4.961,
+-13.175 4.961,
+-13.175 5.755,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+0 0 575.5,
+0 0 496.081,
+67.549 0 496.081,
+672.447 0 496.081,
+740.75 0 496.081,
+740.75 0 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 5.755,
+0 4.961,
+0.675 4.961,
+6.724 4.961,
+7.407 4.961,
+7.407 5.755,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+740.75 0 575.5,
+740.75 0 496.081,
+672.447 0 496.081,
+67.549 0 496.081,
+0 0 496.081,
+0 0 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+7.407 5.755,
+7.407 4.961,
+6.724 4.961,
+0.675 4.961,
+0 4.961,
+0 5.755,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+740.75 76.43 496.081,
+740.75 1244.527 496.081,
+740.75 1317.5 496.081,
+740.75 1317.5 575.5,
+740.75 0 575.5,
+740.75 0 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.764 4.961,
+12.445 4.961,
+13.175 4.961,
+13.175 5.755,
+0 5.755,
+0 4.961,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+672.447 1317.5 496.081,
+672.447 1244.527 496.081,
+740.75 1244.527 496.081,
+740.75 76.43 496.081,
+672.447 76.43 496.081,
+672.447 0 496.081,
+67.549 0 496.081,
+67.549 66.269 496.081,
+0 66.269 496.081,
+0 1253.994 496.081,
+67.549 1253.994 496.081,
+67.549 1317.5 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+-1
+]
+texCoord TextureCoordinate {
+point [
+-6.724 13.175,
+-6.724 12.445,
+-7.407 12.445,
+-7.407 0.764,
+-6.724 0.764,
+-6.724 0,
+-0.675 0,
+-0.675 0.663,
+0 0.663,
+0 12.54,
+-0.675 12.54,
+-0.675 13.175,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+67.549 1317.5 496.081,
+67.549 1253.994 496.081,
+0 1253.994 496.081,
+0 66.269 496.081,
+67.549 66.269 496.081,
+67.549 0 496.081,
+672.447 0 496.081,
+672.447 76.43 496.081,
+740.75 76.43 496.081,
+740.75 1244.527 496.081,
+672.447 1244.527 496.081,
+672.447 1317.5 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.675 13.175,
+-0.675 12.54,
+0 12.54,
+0 0.663,
+-0.675 0.663,
+-0.675 0,
+-6.724 0,
+-6.724 0.764,
+-7.407 0.764,
+-7.407 12.445,
+-6.724 12.445,
+-6.724 13.175,
+]
+}
+}
+}
+Shape {
+appearance DEF COL_FrontColor Appearance {
+material Material { diffuseColor 1 1 1 }
+}
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 1317.5 496.081,
+67.549 1253.994 496.081,
+0 1253.994 496.081,
+0 1317.5 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 496.081,
+0 1253.994 496.081,
+67.549 1253.994 496.081,
+67.549 1317.5 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 13.175,
+0 12.54,
+-0.675 12.54,
+-0.675 13.175,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 66.269 0,
+0 66.269 496.081,
+67.549 66.269 496.081,
+67.549 66.269 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 0,
+0 4.961,
+-0.675 4.961,
+-0.675 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 0 0,
+0 0 496.081,
+0 66.269 496.081,
+0 66.269 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0 0,
+0 4.961,
+-0.663 4.961,
+-0.663 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 66.269 0,
+0 66.269 496.081,
+0 0 496.081,
+0 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0.663 0,
+-0.663 4.961,
+0 4.961,
+-0 0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 66.269 0,
+67.549 66.269 496.081,
+0 66.269 496.081,
+0 66.269 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 66.269 496.081,
+67.549 0 496.081,
+67.549 0 0,
+67.549 66.269 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.663 4.961,
+0 4.961,
+0 0,
+0.663 0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 66.269 0,
+67.549 0 0,
+67.549 0 496.081,
+67.549 66.269 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 66.269 0,
+67.549 66.269 0,
+67.549 0 0,
+0 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 0.663,
+-0.675 0.663,
+-0.675 0,
+0 0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 0 0,
+67.549 0 0,
+67.549 66.269 0,
+0 66.269 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+67.549 0 0,
+67.549 0 496.081,
+0 0 496.081,
+0 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.675 -0,
+0.675 4.961,
+0 4.961,
+-0 -0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 0 0,
+0 0 496.081,
+67.549 0 496.081,
+67.549 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0 -0,
+0 4.961,
+0.675 4.961,
+0.675 -0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_FrontColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 66.269 496.081,
+67.549 66.269 496.081,
+67.549 0 496.081,
+0 0 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 0 496.081,
+67.549 0 496.081,
+67.549 66.269 496.081,
+0 66.269 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 0,
+-0.675 0,
+-0.675 0.663,
+0 0.663,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 0 496.081,
+672.447 76.43 496.081,
+672.447 76.43 0,
+672.447 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-0 4.961,
+-0.764 4.961,
+-0.764 0,
+-0 0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 0 0,
+672.447 76.43 0,
+672.447 76.43 496.081,
+672.447 0 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 0 0,
+672.447 76.43 0,
+740.75 76.43 0,
+740.75 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-6.724 0,
+-6.724 0.764,
+-7.407 0.764,
+-7.407 0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 0 0,
+740.75 76.43 0,
+672.447 76.43 0,
+672.447 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 76.43 0,
+740.75 76.43 496.081,
+740.75 0 496.081,
+740.75 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.764 0,
+0.764 4.961,
+0 4.961,
+0 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 0 0,
+740.75 0 496.081,
+740.75 76.43 496.081,
+740.75 76.43 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 0,
+0 4.961,
+0.764 4.961,
+0.764 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 0 0,
+740.75 0 496.081,
+672.447 0 496.081,
+672.447 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+7.407 -0,
+7.407 4.961,
+6.724 4.961,
+6.724 -0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 0 0,
+672.447 0 496.081,
+740.75 0 496.081,
+740.75 0 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+6.724 -0,
+6.724 4.961,
+7.407 4.961,
+7.407 -0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_FrontColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 76.43 496.081,
+740.75 76.43 496.081,
+740.75 0 496.081,
+672.447 0 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 76.43 496.081,
+740.75 76.43 0,
+672.447 76.43 0,
+672.447 76.43 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-7.407 4.961,
+-7.407 0,
+-6.724 0,
+-6.724 4.961,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 76.43 496.081,
+672.447 76.43 0,
+740.75 76.43 0,
+740.75 76.43 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 0 496.081,
+740.75 0 496.081,
+740.75 76.43 496.081,
+672.447 76.43 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-6.724 -0,
+-7.407 -0,
+-7.407 0.764,
+-6.724 0.764,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+convex FALSE
+solid TRUE
+coord Coordinate {
+point [
+740.75 0 496.081,
+740.75 0 575.5,
+740.75 1317.5 575.5,
+740.75 1317.5 496.081,
+740.75 1244.527 496.081,
+740.75 76.43 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+4
+5
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 4.961,
+0 5.755,
+13.175 5.755,
+13.175 4.961,
+12.445 4.961,
+0.764 4.961,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 575.5,
+675.526 1252.276 575.5,
+740.75 0 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+7.407 13.175,
+6.755 12.523,
+7.407 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 575.5,
+65.224 1252.276 575.5,
+675.526 1252.276 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+7.407 13.175,
+0.652 12.523,
+6.755 12.523,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 575.5,
+65.224 1252.276 575.5,
+740.75 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 13.175,
+0.652 12.523,
+7.407 13.175,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.224 1252.276 575.5,
+0 1317.5 575.5,
+65.224 65.224 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.652 12.523,
+0 13.175,
+0.652 0.652,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 575.5,
+65.224 1252.276 575.5,
+0 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+675.526 1252.276 575.5,
+65.224 1252.276 575.5,
+740.75 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance DEF COL_Translucent_Glass_Gray Appearance {
+material Material { diffuseColor 0.698 0.698 0.698 }
+}
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.224 65.224 575.5,
+675.526 65.224 575.5,
+675.526 1252.276 575.5,
+65.224 1252.276 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.224 65.224 575.5,
+740.75 0 575.5,
+675.526 65.224 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.652 0.652,
+7.407 0,
+6.755 0.652,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.224 65.224 575.5,
+0 0 575.5,
+740.75 0 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+0.652 0.652,
+0 0,
+7.407 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 0 575.5,
+65.224 65.224 575.5,
+0 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+0 0,
+0.652 0.652,
+0 13.175,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+0 1317.5 575.5,
+65.224 65.224 575.5,
+0 0 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.224 65.224 575.5,
+0 1317.5 575.5,
+65.224 1252.276 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL_Translucent_Glass_Gray
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+65.224 1252.276 575.5,
+675.526 1252.276 575.5,
+675.526 65.224 575.5,
+65.224 65.224 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+675.526 65.224 575.5,
+740.75 0 575.5,
+675.526 1252.276 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+texCoord TextureCoordinate {
+point [
+6.755 0.652,
+7.407 0,
+6.755 12.523,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+675.526 65.224 575.5,
+740.75 0 575.5,
+65.224 65.224 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+675.526 1252.276 575.5,
+740.75 0 575.5,
+675.526 65.224 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 0 575.5,
+675.526 1252.276 575.5,
+740.75 1317.5 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 0 575.5,
+0 0 575.5,
+65.224 65.224 575.5,
+]
+}
+coordIndex [
+0
+1
+2
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 0,
+740.75 1317.5 496.081,
+740.75 1244.527 496.081,
+740.75 1244.527 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+13.175 0,
+13.175 4.961,
+12.445 4.961,
+12.445 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 1317.5 0,
+672.447 1317.5 496.081,
+740.75 1317.5 496.081,
+740.75 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-6.724 0,
+-6.724 4.961,
+-7.407 4.961,
+-7.407 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 1244.527 496.081,
+672.447 1317.5 496.081,
+672.447 1317.5 0,
+672.447 1244.527 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-12.445 4.961,
+-13.175 4.961,
+-13.175 0,
+-12.445 0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 1244.527 0,
+672.447 1317.5 0,
+672.447 1317.5 496.081,
+672.447 1244.527 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1244.527 0,
+672.447 1244.527 0,
+672.447 1317.5 0,
+740.75 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-7.407 12.445,
+-6.724 12.445,
+-6.724 13.175,
+-7.407 13.175,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 0,
+672.447 1317.5 0,
+672.447 1244.527 0,
+740.75 1244.527 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 0,
+740.75 1317.5 496.081,
+672.447 1317.5 496.081,
+672.447 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-7.407 0,
+-7.407 4.961,
+-6.724 4.961,
+-6.724 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1244.527 0,
+740.75 1244.527 496.081,
+740.75 1317.5 496.081,
+740.75 1317.5 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+12.445 0,
+12.445 4.961,
+13.175 4.961,
+13.175 0,
+]
+}
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1244.527 0,
+740.75 1244.527 496.081,
+672.447 1244.527 496.081,
+672.447 1244.527 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+7.407 0,
+7.407 4.961,
+6.724 4.961,
+6.724 0,
+]
+}
+}
+}
+Shape {
+appearance USE COL_BackColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+672.447 1244.527 0,
+672.447 1244.527 496.081,
+740.75 1244.527 496.081,
+740.75 1244.527 0,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE COL_FrontColor
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1244.527 496.081,
+672.447 1244.527 496.081,
+672.447 1317.5 496.081,
+740.75 1317.5 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+}
+}
+Shape {
+appearance USE TEX_Wood_Floor_Parquet
+geometry IndexedFaceSet {
+solid TRUE
+coord Coordinate {
+point [
+740.75 1317.5 496.081,
+672.447 1317.5 496.081,
+672.447 1244.527 496.081,
+740.75 1244.527 496.081,
+]
+}
+coordIndex [
+0
+1
+2
+3
+-1
+]
+texCoord TextureCoordinate {
+point [
+-7.407 13.175,
+-6.724 13.175,
+-6.724 12.445,
+-7.407 12.445,
+]
+}
+}
+}
+]
+}
+]
+}
+Viewpoint {
+position 44629.481 -104111 96007.6
+orientation 0.926432 0.182164 0.329455 1.076177
+fieldOfView 0.61087
+description "Camera"
+jump FALSE
+}
