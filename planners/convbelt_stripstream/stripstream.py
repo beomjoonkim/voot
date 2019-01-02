@@ -92,10 +92,10 @@ def gen_placement(problem, place_unif):
                 problem.reset_to_init_state_stripstream()
                 print "Input", obj_name, grasp, pick_base_pose
                 # ('obj0', array([2.6868955, 0.64292839, 0.22429731]), array([4.41584923, 1.52569695, -2.24756557]))
-                return (place_base_pose, object_pose, path)
+                yield (place_base_pose, object_pose, path)
             else:
                 problem.reset_to_init_state_stripstream()
-                return None
+                yield None
 
     return fcn
 
@@ -116,7 +116,7 @@ def get_problem():
     place_sampler = PlaceUnif(convbelt)
     constant_map = {}
     stream_map = {'gen-grasp': from_gen_fn(gen_grasp(pick_sampler)),
-                  'gen-placement': from_fn(gen_placement(convbelt, place_sampler)),
+                  'gen-placement': from_gen_fn(gen_placement(convbelt, place_sampler)),
                   #'TrajPoseCollision': fn_from_constant(False)
                   'TrajPoseCollision': check_traj_collision(convbelt),
                   }

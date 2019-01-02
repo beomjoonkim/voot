@@ -48,8 +48,9 @@ def gen_grasp(pick_unif):
             pick_unif.problem_env.reset_to_init_state_stripstream()
             if g_config is None:
                 yield None
-            print grasp, pick_base_pose, g_config
-            yield [grasp, pick_base_pose, g_config]
+            else:
+                print grasp, pick_base_pose, g_config
+                yield [grasp, pick_base_pose, g_config]
     return fcn
 
 
@@ -80,35 +81,31 @@ def gen_placement(problem, place_unif):
             problem.apply_two_arm_pick_action_stripstream((pick_base_pose, grasp, g_config), obj) # how do I ensure that we are in the same state in both openrave and stripstream?
             print region_name
 
-            assert obj.IsEnabled()
-            assert problem.env.GetKinBody('floorwalls').IsEnabled()
-            assert len(problem.robot.GetGrabbed()) != 0
-            assert problem.robot.IsEnabled()
-
             problem.disable_objects_in_region('entire_region')
             obj.Enable(True)
             place_action = place_unif.predict(obj, problem.regions[region_name])
-            problem.enable_objects_in_region('entire_region')
-
             place_base_pose = place_action['base_pose']
             object_pose = place_action['object_pose'].squeeze()
-            action = {'base_pose': place_base_pose}
-            two_arm_place_object(obj, problem.robot, action)
+            path, status = problem.get_base_motion_plan(place_base_pose.squeeze())
+            problem.enable_objects_in_region('entire_region')
+            print "Input", obj_name, grasp, pick_base_pose
 
             problem.reset_to_init_state_stripstream()
-            print "Input", obj_name, grasp, pick_base_pose
-            return (place_base_pose, object_pose)
-
+            if status == 'HasSolution':
+                yield (place_base_pose, object_pose, path)
+            else:
+                yield None
     return fcn
 
 
 def check_traj_collision_with_object(problem):
-    def fcn(holding_obj_name, grasp, pick_base_conf, g_config, placed_obj_name, placed_obj_pose, q_init, q_goal, hodlinig_obj_path):
+    def fcn(holding_obj_name, grasp, pick_base_conf, g_config, placed_obj_name, placed_obj_pose, q_goal, hodlinig_obj_path):
         holding_obj = problem.env.GetKinBody(holding_obj_name)
         placed_obj = problem.env.GetKinBody(placed_obj_name)
         problem.apply_two_arm_pick_action_stripstream((pick_base_conf, grasp, g_config), holding_obj)  # how do I ensure that we are in the same state in both openrave and stripstream?
 
-        if np.all(q_init) == np.all(q_goal):
+        import pdb;pdb.set_trace()
+        if np.all(pick_base_conf == q_goal):
             return False
 
         if holding_obj_name != placed_obj_name:
@@ -133,6 +130,7 @@ def gen_base_traj_with_object(problem):
     # note generate object placement, relative base conf, absolute base conf, and the path from q1 to abs base conf
     def fcn(obj_name, grasp, pick_base_pose, g_config, q_init, q_goal):
         # simulate pick
+        import pdb;pdb.set_trace()
         while True:
             obj = problem.env.GetKinBody(obj_name)
             problem.disable_objects_in_region('entire_region')
@@ -160,7 +158,7 @@ def gen_base_traj(namo):
     def fcn(q_init, q_goal):
         while True:
             if np.all(q_init == q_goal):
-                return ([q_init],)
+                yield ([q_init],)
             curr_robot_config = get_body_xytheta(namo.robot)
             set_robot_config(q_init, namo.robot)
             namo.disable_objects_in_region('entire_region')
@@ -168,9 +166,9 @@ def gen_base_traj(namo):
             namo.enable_objects_in_region('entire_region')
             set_robot_config(curr_robot_config, namo.robot)
             if status == 'HasSolution':
-                return (plan,)
+                yield (plan,)
             else:
-                return None
+                yield None
     return fcn
 
 def read_pddl(filename):
@@ -191,9 +189,9 @@ def get_problem():
     stream_map = {'gen-grasp': from_gen_fn(gen_grasp(pick_sampler)),
                   'TrajPoseCollision': check_traj_collision(namo),
                   'TrajPoseCollisionWithObject': check_traj_collision_with_object(namo),
-                  'gen-base-traj': from_fn(gen_base_traj(namo)),
-                  'gen-placement': from_fn(gen_placement(namo, place_sampler)),
-                  'gen-base-traj-with-obj': from_fn(gen_base_traj_with_object(namo)),
+                  'gen-base-traj': from_gen_fn(gen_base_traj(namo)),
+                  'gen-placement': from_gen_fn(gen_placement(namo, place_sampler)),
+                  #'gen-base-traj-with-obj': from_fn(gen_base_traj_with_object(namo)),
                   }
     obj_names = problem_config['obj_poses'].keys()
     obj_poses = problem_config['obj_poses'].values()
@@ -208,12 +206,10 @@ def get_problem():
     init += [('Pose', obj_name, obj_pose) for obj_name, obj_pose in zip(obj_names, obj_poses)]
 
     init_config = np.array([-1, 1, 0])
-    goal_config = np.array([-2, 1, 0])
     init += [('BaseConf', init_config)]
     init += [('AtConf', init_config)]
-    init += [('BaseConf', goal_config)]
 
-    goal = ['and', ('InRegion', 'obj0')]
+    goal = ['and', ('InRegion', 'obj0', 'loading_region')]
     #goal = ['and', ('AtConf', goal_config), ('not', ('EmptyArm', ))]
     return (domain_pddl, constant_map, stream_pddl, stream_map, init, goal), namo
 
@@ -224,6 +220,7 @@ def process_plan(plan, namo):
     namo.reset_to_init_state_stripstream()
     for step_idx, step in enumerate(plan):
         # todo finish this visualization script
+        import pdb;pdb.set_trace()
         if step[0] == 'pickup':
             obj_name = step[1][0]
             grasp = step[1][1]
@@ -246,12 +243,11 @@ def process_plan(plan, namo):
         else:
             place_obj_name = step[1][0]
             place_base_pose = step[1][4]
-            path = step[1][5]
+            path = step[1][-1]
             visualize_path(namo.robot, path)
             action = {'base_pose': place_base_pose}
             obj = namo.env.GetKinBody(place_obj_name)
             two_arm_place_object(obj, namo.robot, action)
-        import pdb;pdb.set_trace()
 
 
 def solve_pddlstream():

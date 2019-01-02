@@ -18,11 +18,12 @@
                  (GraspTransform ?o ?g ?pick_q ?g_config)
                  (Region ?region)
                  )
-    :outputs (?place_q ?obj_pose)
+    :outputs (?place_q ?obj_pose ?traj)
     :certified (and (BaseConf ?place_q)
                     (Pose ?o ?obj_pose)
                     (PlaceConf ?o ?obj_pose ?place_q)
                     (ObjPoseInRegion ?o ?obj_pose ?place_q ?region)
+                    (BTrajWithObject ?o ?g ?pick_q ?place_q ?traj)
                     )
   )
 
@@ -34,19 +35,6 @@
     :outputs (?traj)
     :certified (and (BTraj ?q_init ?q_goal ?traj)))
 
-  (:stream gen-base-traj-with-obj
-    :inputs (?o ?g ?pick_q ?g_config ?q_init ?q_goal)
-    :domain (and (Pickable ?o)
-                 (Grasp ?g)
-                 (BaseConf ?q_init)
-                 (BaseConf ?q_goal)
-                 (GraspTransform ?o ?g ?pick_q ?g_config)
-                 )
-    :outputs (?traj)
-    :certified (and
-                (BTrajWithObject ?o ?g ?pick_q ?q_init ?q_goal ?traj)
-               )
-  )
 
   (:predicate (TrajPoseCollision ?obstacle ?obstacle_pose ?q_init ?q_goal ?traj)
    (and (BTraj ?q_init ?q_goal ?traj)
@@ -54,9 +42,9 @@
         )
   )
 
-  (:predicate (TrajPoseCollisionWithObject ?holding_o ?grasp ?pick_q ?g_config ?placed_obj ?placed_o_pose ?q_init ?q_goal ?traj)
+  (:predicate (TrajPoseCollisionWithObject ?holding_o ?grasp ?pick_q ?g_config ?placed_obj ?placed_o_pose ?place_q ?traj)
    (and
-         (BTrajWithObject ?holding_o ?grasp ?pick_q ?q_init ?q_goal ?traj)
+         (BTrajWithObject ?holding_o ?grasp ?pick_q ?place_q ?traj)
          (GraspTransform ?holding_o ?grasp ?pick_q ?g_config)
          (Pose ?placed_obj ?placed_o_pose)
          )
