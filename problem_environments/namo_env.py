@@ -19,6 +19,7 @@ from manipulation.bodies.bodies import set_color
 sys.path.append('../mover_library/')
 from utils import set_robot_config, get_body_xytheta, check_collision_except,  grab_obj, \
     simulate_path, two_arm_pick_object, two_arm_place_object
+from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 
 OBJECT_ORIGINAL_COLOR = (0, 0, 0)
 COLLIDING_OBJ_COLOR = (0, 1, 1)
@@ -184,6 +185,33 @@ class NAMO(ProblemEnvironment):
         else:
             return 'two_arm_place'
 
+    def apply_two_arm_pick_action_stripstream(self, action, obj=None, do_check_reachability=False):
+        if obj is None:
+            obj_to_pick = self.curr_obj
+        else:
+            obj_to_pick = obj
+
+        pick_base_pose, grasp_params, g_config = action
+        set_robot_config(pick_base_pose, self.robot)
+        """
+        grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
+                                       height_portion=grasp_params[1],
+                                       theta=grasp_params[0],
+                                       obj=obj_to_pick,
+                                       robot=self.robot)
+        g_config = solveTwoArmIKs(self.env, self.robot, obj_to_pick, grasps)
+        try:
+            assert g_config is not None
+        except:
+            import pdb;pdb.set_trace()
+        """
+
+        action = {'base_pose': pick_base_pose, 'g_config': g_config}
+        two_arm_pick_object(obj_to_pick, self.robot, action)
+        curr_state = self.get_state()
+        reward = 0
+        pick_path = None
+        return curr_state, reward, g_config, pick_path
 
 
 

@@ -36,8 +36,8 @@ def gen_grasp(pick_unif):
             pick_unif.problem_env.reset_to_init_state_stripstream()
             if g_config is None:
                 yield None
-            print grasp, pick_base_pose
-            yield [grasp, pick_base_pose]
+            print grasp, pick_base_pose, g_config
+            yield [grasp, pick_base_pose, g_config]
     return fcn
 
 
@@ -61,20 +61,23 @@ def check_traj_collision(problem):
 
 def gen_placement(problem, place_unif):
     # note generate object placement, relative base conf, absolute base conf, and the path from q1 to abs base conf
-    def fcn(obj_name, grasp, pick_base_pose, region_name):
+    def fcn(obj_name, grasp, pick_base_pose, g_config, region_name):
         # simulate pick
-        import pdb;pdb.set_trace()
         while True:
             obj = problem.env.GetKinBody(obj_name)
-            problem.apply_two_arm_pick_action_stripstream((pick_base_pose, grasp), obj) # how do I ensure that we are in the same state in both openrave and stripstream?
-            place_action = place_unif.predict(obj, problem.regions['object_region'])
-            place_base_pose = place_action['base_pose']
-            object_pose = place_action['object_pose'].squeeze()
+            problem.apply_two_arm_pick_action_stripstream((pick_base_pose, grasp, g_config), obj) # how do I ensure that we are in the same state in both openrave and stripstream?
+            print region_name
 
             assert obj.IsEnabled()
             assert problem.env.GetKinBody('floorwalls').IsEnabled()
             assert len(problem.robot.GetGrabbed()) != 0
             assert problem.robot.IsEnabled()
+
+            place_action = place_unif.predict(obj, problem.regions[region_name])
+            place_base_pose = place_action['base_pose']
+            object_pose = place_action['object_pose'].squeeze()
+            action = {'base_pose': place_base_pose}
+            two_arm_place_object(obj, problem.robot, action)
 
             problem.reset_to_init_state_stripstream()
             print "Input", obj_name, grasp, pick_base_pose
@@ -167,6 +170,7 @@ def process_plan(plan, namo):
 
 def solve_pddlstream():
     pddlstream_problem, namo = get_problem()
+    namo.env.SetViewer('qtcoin')
     stime = time.time()
     solution = solve_incremental(pddlstream_problem, unit_costs=True, max_time=500)
     #solution = solve_focused(pddlstream_problem, unit_costs=True, max_time=500)
