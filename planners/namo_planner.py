@@ -72,7 +72,8 @@ class NAMOPlanner:
         motion_planning_region = self.problem_env.get_region_containing(obj)
         goal_robot_xytheta = action['base_pose']
 
-        if self.problem_env.check_base_pose_feasible(goal_robot_xytheta, obj, motion_planning_region):
+        if action['g_config'] is not None and self.problem_env.check_base_pose_feasible(goal_robot_xytheta, obj,
+                                                                                        motion_planning_region):
             motion, status = self.problem_env.get_base_motion_plan(goal_robot_xytheta, motion_planning_region.name)
         else:
             motion = None

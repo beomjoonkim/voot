@@ -74,6 +74,24 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         status = "HasSolution"
         return motion, status
 
+    def check_two_arm_pick_feasibility(self, obj, action):
+        motion_planning_region = self.problem_env.get_region_containing(obj)
+        goal_robot_xytheta = action['base_pose']
+
+        motion = None
+        status = "NoPath"
+        if action['g_config'] is not None and self.problem_env.check_base_pose_feasible(goal_robot_xytheta, obj,
+                                                                                        motion_planning_region):
+            motion, status = self.problem_env.get_base_motion_plan(goal_robot_xytheta, motion_planning_region.name)
+
+        if action['g_config'] is None or status == 'NoPath':
+            motion = None
+            status = 'NoPath'
+            #self.get_new_fetching_pick_path(obj, motion_planning_region.name)
+
+        return motion, status
+
+
     def check_two_arm_place_feasibility(self, namo_obj, action, obj_placement_region):
         motion_planning_region_name = 'entire_region'
 
@@ -81,8 +99,6 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         pick_base_pose = get_body_xytheta(self.problem_env.robot)
         pick_conf = self.problem_env.robot.GetDOFValues()
 
-        current_collisions = self.curr_namo_object_names
-        self.prev_namo_object_names = current_collisions
 
         namo_status = 'NoPath'
         namo_place_motion = None
@@ -92,14 +108,10 @@ class NamoDomainNamoPlanner(NAMOPlanner):
                                                                                    motion_planning_region_name)
         if namo_status == 'NoPath':
             return namo_place_motion, namo_status, self.curr_namo_object_names
-
         two_arm_place_object(namo_obj, self.problem_env.robot, action)
-        fetch_pick_path, fetching_pick_status = self.get_new_fetching_pick_path(namo_obj,
-                                                                                motion_planning_region_name)
-        if fetching_pick_status == "NoPath":
-            return None, 'NoPath', self.curr_namo_object_names
 
-        fetch_place_path = self.fetch_place_path # this remains unchanged
+        fetch_pick_path = self.fetch_pick_path
+        fetch_place_path = self.fetch_place_path
         new_collisions = self.get_obstacles_in_collision_from_fetching_path(fetch_pick_path, fetch_place_path)
 
         # go back to pre-place
@@ -113,12 +125,12 @@ class NamoDomainNamoPlanner(NAMOPlanner):
             return None, "NoPath", self.curr_namo_object_names
 
         # if new collisions is more than or equal to the current collisions, don't bother executing it
-        if len(current_collisions) <= len(new_collisions):
-        #    import pdb;pdb.set_trace()
+        if len(self.curr_namo_object_names) <= len(new_collisions):
             print "There are more or equal number of collisions on the new path"
-        #    return None, "NoPath", self.curr_namo_object_names
+            return None, "NoPath", self.curr_namo_object_names
 
         # otherwise, update the new namo objects
+        self.prev_namo_object_names = self.curr_namo_object_names
         self.curr_namo_object_names = [obj.GetName() for obj in new_collisions]
 
         # pick motion is the path to the fetching object, place motion is the path to place the namo object
@@ -132,7 +144,6 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         # update the high level controller task plan
         namo_region = self.problem_env.get_region_containing(self.fetching_obj)
         self.high_level_controller.set_task_plan([{'region': namo_region, 'objects': new_collisions}])
-
         return motion, "HasSolution", self.curr_namo_object_names
 
     def namo_domain_solve_single_object(self, initial_collision_names, mcts):

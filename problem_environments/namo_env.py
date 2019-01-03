@@ -109,30 +109,28 @@ class NAMO(ProblemEnvironment):
                 return True
         return False
 
-    def apply_two_arm_pick_action(self, action, obj, region, check_feasibility, parent_motion):
+    def apply_two_arm_pick_action(self, action, node, check_feasibility, parent_motion):
+        obj = node.obj
+        region = node.region
+
         motion_plan = None
         status = "NoSolution"
-        if action['g_config'] is None:
-            curr_state = self.get_state()
-            namo_objects = [self.env.GetKinBody(namo_obj_name) for namo_obj_name in self.namo_planner.curr_namo_object_names]
-            return curr_state, self.infeasible_reward, None, namo_objects
 
         if check_feasibility:
             if self.is_solving_fetching:
                 motion_plan, status = self.fetch_planner.check_two_arm_pick_feasibility(obj, action, region)
             elif self.is_solving_namo:
                 motion_plan, status = self.namo_planner.check_two_arm_pick_feasibility(obj, action)
+            reward, objs_in_collision = self.determine_reward('two_arm_pick', obj, motion_plan, status)
         else:
             motion_plan = parent_motion
             status = 'HasSolution'
+            reward = node.parent_action_reward
+            objs_in_collision = node.objs_in_collision
 
-        reward, objs_in_collision = self.determine_reward('two_arm_pick', obj, motion_plan, status)
         if status == 'HasSolution':
             two_arm_pick_object(obj, self.robot, action)
             curr_state = self.get_state()
-            if self.is_solving_namo:
-                # update the current pick configuration
-                self.namo_planner.current_pick_conf = action['base_pose']
         else:
             curr_state = self.get_state()
 
@@ -169,8 +167,8 @@ class NAMO(ProblemEnvironment):
         if status == 'HasSolution':
             two_arm_place_object(target_obj, self.robot, action)
             curr_state = self.get_state()
-            if self.is_solving_namo:
-                set_robot_config(self.namo_planner.current_pick_conf, self.robot)
+            #if self.is_solving_namo:
+            #    set_robot_config(self.namo_planner.current_pick_conf, self.robot)
         else:
             curr_state = self.get_state()
 

@@ -3,6 +3,7 @@ import argparse
 import os
 import numpy as np
 
+
 def get_stripstream_results(domain_name):
     if domain_name == 'convbelt':
         result_dir = './test_results/convbelt_results/stripstream/'
@@ -24,6 +25,7 @@ def get_stripstream_results(domain_name):
     print np.array(success).mean()
     print len(search_times)
 
+
 def get_mcts_results(domain_name):
     if domain_name == 'convbelt':
         result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_unif/'
@@ -38,9 +40,14 @@ def get_mcts_results(domain_name):
           result = pickle.load(open(result_dir+fin,'r'))
         except:
           print fin
-        success.append(result['plan'] is not None)
-        search_times.append(result['search_time'][-1][0])
-        import pdb;pdb.set_trace()
+        if domain_name=='convbelt':
+            success.append(result['plan'] is not None)
+            search_times.append(result['search_time'][-1][0])
+        else:
+            is_success = result['search_time']['namo'][-1][-1]
+            success.append(is_success)
+            if is_success:
+                search_times.append(result['search_time']['namo'][-1][0])
 
     print "mcts time and success rate:"
     print np.array(search_times).mean()
