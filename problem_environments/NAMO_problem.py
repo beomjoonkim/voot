@@ -34,8 +34,8 @@ SLEEPTIME = 0.05
 
 
 def create_objects(env, obj_region, table_region):
-    #NUM_OBJECTS = 8
-    NUM_OBJECTS = 2
+    NUM_OBJECTS = 8
+    #NUM_OBJECTS = 2
     OBJECTS = []
     obj_shapes = {}
     obj_poses = {}

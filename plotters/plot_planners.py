@@ -6,6 +6,8 @@ import numpy as np
 def get_stripstream_results(domain_name):
     if domain_name == 'convbelt':
         result_dir = './test_results/convbelt_results/stripstream/'
+    else:
+        result_dir = './test_results/convbelt_results/stripstream/'
     search_times = []
     success = []
     for fin in os.listdir(result_dir):
@@ -25,6 +27,8 @@ def get_stripstream_results(domain_name):
 def get_mcts_results(domain_name):
     if domain_name == 'convbelt':
         result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_unif/'
+    elif domain_name == 'namo':
+        result_dir = './test_results/namo_results/uct_0.0_widening_0.5_unif/'
     search_times = []
     success = []
     for fin in os.listdir(result_dir):
@@ -36,13 +40,13 @@ def get_mcts_results(domain_name):
           print fin
         success.append(result['plan'] is not None)
         search_times.append(result['search_time'][-1][0])
-        #if result['plan'] is None:
-        #    import pdb;pdb.set_trace()
+        import pdb;pdb.set_trace()
 
     print "mcts time and success rate:"
     print np.array(search_times).mean()
     print np.array(success).mean()
     print len(search_times)
+    import pdb;pdb.set_trace()
     
 
 def main():
