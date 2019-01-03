@@ -26,39 +26,27 @@
                  (GraspConfig ?g_config)
                  (BTrajWithObject ?o ?g ?pick_q ?q_goal ?traj)
                  (Placed ?obj)
-
     )
 
     (:action pickup
-    :parameters (?o ?g ?pick_q ?g_config ?obj_pose)
+    :parameters (?o ?g ?pick_q ?g_config ?init_q ?obj_pose ?traj)
     :precondition (and (EmptyArm)
                        (Pickable ?o)
-                       (AtConf ?pick_q)
+                       (AtConf ?init_q)
                        (Pose ?o ?obj_pose)
                        (AtPose ?o ?obj_pose)
                        (GraspTransform ?o ?g ?pick_q ?g_config)
+                       (BTraj ?init_q ?pick_q ?traj)
+                       (not (UnsafeBTraj ?init_q ?pick_q ?traj))
                        )
     :effect (and
                (Picked ?o ?g ?pick_q ?g_config)
+               (AtConf ?pick_q)
+               (not (AtConf ?q_init))
                (not (AtPose ?o ?obj_pose))
                (not (EmptyArm))
                (Holding ?o)
                )
-    )
-
-    (:action movebase
-    :parameters (?q_init ?q_goal ?traj)
-    :precondition (and (AtConf ?q_init)
-                       (BaseConf ?q_init)
-                       (BaseConf ?q_goal)
-                       (BTraj ?q_init ?q_goal ?traj)
-                       (not (UnsafeBTraj ?q_init ?q_goal ?traj))
-                       (EmptyArm)
-                       )
-    :effect (and
-            (AtConf ?q_goal)
-            (not (AtConf ?q_init))
-            )
     )
 
     (:action place

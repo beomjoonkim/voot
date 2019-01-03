@@ -1,13 +1,14 @@
 (define (stream namo)
 
   (:stream gen-grasp
-    :inputs (?o)
-    :domain (and (Pickable ?o))
-    :outputs (?grasp ?q_pick ?gconfig)
+    :inputs (?o ?q_init)
+    :domain (and (Pickable ?o) (BaseConf ?q_init))
+    :outputs (?grasp ?q_pick ?gconfig ?pick_traj)
     :certified (and (Grasp ?grasp)
                     (BaseConf ?q_pick)
                     (GraspConfig ?gconfig)
                     (GraspTransform ?o ?grasp ?q_pick ?gconfig)
+                    (BTraj ?q_init ?q_pick ?pick_traj)
                     ))
 
   (:stream gen-placement
@@ -26,15 +27,6 @@
                     (BTrajWithObject ?o ?g ?pick_q ?place_q ?traj)
                     )
   )
-
-  (:stream gen-base-traj
-    :inputs (?q_init ?q_goal)
-    :domain (and
-                 (BaseConf ?q_init)
-                 (BaseConf ?q_goal))
-    :outputs (?traj)
-    :certified (and (BTraj ?q_init ?q_goal ?traj)))
-
 
   (:predicate (TrajPoseCollision ?obstacle ?obstacle_pose ?q_init ?q_goal ?traj)
    (and (BTraj ?q_init ?q_goal ?traj)

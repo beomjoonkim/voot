@@ -32,26 +32,36 @@ def pklload(name=''):
 
 def gen_grasp(pick_unif):
     # note generate grasp, ik solution gc, relative base conf, and absolute base transform for grasping
-    def fcn(obj_name):
-        pick_unif.problem_env.reset_to_init_state_stripstream()
-        obj = pick_unif.problem_env.env.GetKinBody(obj_name)
+    def fcn(obj_name, q_init):
 
         while True:
             # todo: disable all of objects
             print "Calling gengrasp"
+            obj = pick_unif.problem_env.env.GetKinBody(obj_name)
+            pick_unif.problem_env.reset_to_init_state_stripstream()
+
             pick_unif.problem_env.disable_objects_in_region('entire_region')
             obj.Enable(True)
+
             action = pick_unif.predict(obj, pick_unif.problem_env.regions['entire_region'])
-            pick_unif.problem_env.enable_objects_in_region('entire_region')
             pick_base_pose = action['base_pose']
             grasp = action['grasp_params']
             g_config = action['g_config']
-            pick_unif.problem_env.reset_to_init_state_stripstream()
+
             if g_config is None:
+                pick_unif.problem_env.enable_objects_in_region('entire_region')
                 yield None
             else:
-                print grasp, pick_base_pose, g_config
-                yield [grasp, pick_base_pose, g_config]
+                set_robot_config(q_init, pick_unif.problem_env.robot)
+                plan, status = pick_unif.problem_env.get_base_motion_plan(pick_base_pose)
+                pick_unif.problem_env.enable_objects_in_region('entire_region')
+
+                pick_unif.problem_env.reset_to_init_state_stripstream()
+                if status == 'NoPath':
+                    yield None
+                else:
+                    print grasp, pick_base_pose, g_config
+                    yield [grasp, pick_base_pose, g_config, plan]
     return fcn
 
 
@@ -60,7 +70,6 @@ def check_traj_collision(problem):
         problem.reset_to_init_state_stripstream()
         obstacle = problem.env.GetKinBody(obstacle_name)
         set_obj_xytheta(obstacle_pose, obstacle)
-        import pdb;pdb.set_trace()
 
         # check collision
         for p in traj:
@@ -80,6 +89,7 @@ def gen_placement(problem, place_unif):
     def fcn(obj_name, grasp, pick_base_pose, g_config, region_name):
         # simulate pick
         while True:
+            problem.reset_to_init_state_stripstream()
             obj = problem.env.GetKinBody(obj_name)
             problem.apply_two_arm_pick_action_stripstream((pick_base_pose, grasp, g_config), obj) # how do I ensure that we are in the same state in both openrave and stripstream?
             print region_name
@@ -191,7 +201,7 @@ def get_problem():
 
     #goal = ['and', ('InRegion', 'obj0', 'loading_region')]
     #goal = ['and', ('InRegion', 'obj0', 'loading_region')]
-    goal = ['and', ('Holding', 'obj0')]
+    goal = ['and', ('Holding', 'obj1')]
     #goal = ['and', ('AtConf', goal_config), ('Placed', 'obj0')]
     #goal = ['and', ('not', ('EmptyArm',))]
     return (domain_pddl, constant_map, stream_pddl, stream_map, init, goal), namo
@@ -238,8 +248,8 @@ def solve_pddlstream():
     pddlstream_problem, namo = get_problem()
     namo.env.SetViewer('qtcoin')
     stime = time.time()
-    solution = solve_incremental(pddlstream_problem, unit_costs=True, max_time=500)
-    #solution = solve_focused(pddlstream_problem, unit_costs=True, max_time=500)
+    #solution = solve_incremental(pddlstream_problem, unit_costs=True, max_time=500)
+    solution = solve_focused(pddlstream_problem, unit_costs=True, max_time=500)
     search_time = time.time()-stime
     plan, cost, evaluations = solution
     print "Search time", search_time
