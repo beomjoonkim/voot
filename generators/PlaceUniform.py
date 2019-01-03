@@ -54,7 +54,7 @@ class PlaceUnif:
                         and (target_robot_region.contains(self.robot.ComputeAABB())):
                     self.robot.SetTransform(original_trans)
                     self.robot.SetDOFValues(original_config)
-                    return {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose':obj_pose}
+                    return {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
 
         #import pdb;pdb.set_trace()
         return None

@@ -70,8 +70,11 @@ def get_node_info_in_string(node):
             parent_action = 'None'
         elif operator_name.find('pick') != -1:
             params = np.hstack([pact['base_pose'],pact['grasp_params']])
-            parent_action += ' (%.2f,%.2f,%.2f,%.2f,%.2f,%.2f) '%( params[3], params[4], params[5],
+            try:
+                parent_action += ' (%.2f,%.2f,%.2f,%.2f,%.2f,%.2f) '%( params[3], params[4], params[5],
                                                                    params[0], params[1], params[2])
+            except:
+                import pdb;pdb.set_trace()
         else:
             parent_action += ' (%.2f,%.2f,%.2f)' % \
                              (pact['base_pose'][0], pact['base_pose'][1], pact['base_pose'][2])

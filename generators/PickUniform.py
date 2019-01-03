@@ -93,6 +93,7 @@ class PickWithBaseUnif(PickUnif):
             if self.problem_env.name == 'convbelt':
                 pick_params = self.compute_grasp_action(obj, region, n_iter=1000)
             else:
+                #pick_params = self.compute_grasp_action(obj, region, n_iter=10)
                 pick_params = self.compute_grasp_action(obj, region, n_iter=10)
 
         if self.problem_env.is_solving_fetching and pick_params['g_config'] is None:

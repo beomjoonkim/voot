@@ -42,7 +42,7 @@ class HighLevelPlanner:
         self.is_debugging = is_debugging
 
         if self.problem_env.name == 'namo':
-            self.namo_planner = NamoDomainNamoPlanner(problem_env, self, n_iter=100, n_optimal_iter=0)
+            self.namo_planner = NamoDomainNamoPlanner(problem_env, self, n_iter=10000, n_optimal_iter=0, max_time=500)
         else:
             self.namo_planner = NAMOPlanner(problem_env, self, n_iter=30, n_optimal_iter=0)
 
@@ -202,7 +202,7 @@ class HighLevelPlanner:
 
     def solve_namo(self, object, target_packing_region):
         next_init_node = None
-        search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_fetching_single_object(object,
+        fetch_search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_fetching_single_object(object,
                                                                                                       target_packing_region,
                                                                                                       self.mcts,
                                                                                                       next_init_node)
@@ -210,8 +210,9 @@ class HighLevelPlanner:
         initial_collision_names = self.fetch_planner.get_initial_collisions(fetch_plan)
         print "Solved fetching"
         self.namo_planner.namo_domain_initialize_namo_problem(fetch_plan, goal_node)
-        namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(initial_collision_names,
+        namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(initial_collision_names,
                                                                                  self.mcts)
+        search_time_to_reward = {'fetch':fetch_search_time_to_reward, 'namo':namo_search_time_to_reward}
         return search_time_to_reward, fetch_plan, goal_node
 
     def search(self):

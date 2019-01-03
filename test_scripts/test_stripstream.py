@@ -5,6 +5,8 @@ import os
 import pickle
 import argparse
 
+import numpy as np
+import random
 
 def make_save_dir(domain):
     save_dir = './test_results/' + domain + '_results/stripstream/'
@@ -21,6 +23,9 @@ def main():
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-v', action='store_true', default=False)
     args = parser.parse_args()
+    sd = 0
+    np.random.seed(sd)
+    random.seed(sd)
 
     save_dir = make_save_dir(args.domain)
     if args.domain == 'convbelt':
