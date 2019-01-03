@@ -29,6 +29,7 @@ def pklsave(obj, name=''):
 def pklload(name=''):
     return pickle.load(open('ss_tmp'+str(name)+'.pkl', 'r'))
 
+
 def gen_grasp(pick_unif):
     # note generate grasp, ik solution gc, relative base conf, and absolute base transform for grasping
     def fcn(obj_name):
@@ -56,8 +57,10 @@ def gen_grasp(pick_unif):
 
 def check_traj_collision(problem):
     def fcn(obstacle_name, obstacle_pose, q_init, q_goal, traj):
+        problem.reset_to_init_state_stripstream()
         obstacle = problem.env.GetKinBody(obstacle_name)
         set_obj_xytheta(obstacle_pose, obstacle)
+        import pdb;pdb.set_trace()
 
         # check collision
         for p in traj:
@@ -90,6 +93,8 @@ def gen_placement(problem, place_unif):
             problem.enable_objects_in_region('entire_region')
             print "Input", obj_name, grasp, pick_base_pose
 
+            set_robot_config(place_base_pose, problem.robot)
+
             problem.reset_to_init_state_stripstream()
             if status == 'HasSolution':
                 yield (place_base_pose, object_pose, path)
@@ -99,12 +104,11 @@ def gen_placement(problem, place_unif):
 
 
 def check_traj_collision_with_object(problem):
-    def fcn(holding_obj_name, grasp, pick_base_conf, g_config, placed_obj_name, placed_obj_pose, q_goal, hodlinig_obj_path):
+    def fcn(holding_obj_name, grasp, pick_base_conf, g_config, placed_obj_name, placed_obj_pose, q_goal, holding_obj_path):
         holding_obj = problem.env.GetKinBody(holding_obj_name)
         placed_obj = problem.env.GetKinBody(placed_obj_name)
         problem.apply_two_arm_pick_action_stripstream((pick_base_conf, grasp, g_config), holding_obj)  # how do I ensure that we are in the same state in both openrave and stripstream?
 
-        import pdb;pdb.set_trace()
         if np.all(pick_base_conf == q_goal):
             return False
 
@@ -114,43 +118,15 @@ def check_traj_collision_with_object(problem):
         else:
             return False  # this is already checked
 
+        return False
         # check collision
-        for p in hodlinig_obj_path:
+        for p in holding_obj_path:
             set_robot_config(p, problem.robot)
             if problem.env.CheckCollision(problem.robot):
                 problem.reset_to_init_state_stripstream()
                 return True
-
         problem.reset_to_init_state_stripstream()
         return False
-    return fcn
-
-
-def gen_base_traj_with_object(problem):
-    # note generate object placement, relative base conf, absolute base conf, and the path from q1 to abs base conf
-    def fcn(obj_name, grasp, pick_base_pose, g_config, q_init, q_goal):
-        # simulate pick
-        import pdb;pdb.set_trace()
-        while True:
-            obj = problem.env.GetKinBody(obj_name)
-            problem.disable_objects_in_region('entire_region')
-            obj.Enable(True)
-            problem.apply_two_arm_pick_action_stripstream((pick_base_pose, grasp, g_config), obj) # how do I ensure that we are in the same state in both openrave and stripstream?
-            set_robot_config(q_init, problem.robot)
-            path, status = problem.get_base_motion_plan(q_goal.squeeze())
-            problem.enable_objects_in_region('entire_region')
-
-            if np.all(q_init == q_goal):
-                return ([q_init],)
-
-            if status == "HasSolution":
-                problem.reset_to_init_state_stripstream()
-                print "Input", obj_name, grasp, pick_base_pose
-                # ('obj0', array([2.6868955, 0.64292839, 0.22429731]), array([4.41584923, 1.52569695, -2.24756557]))
-                return (path,)
-            else:
-                problem.reset_to_init_state_stripstream()
-                return None
     return fcn
 
 
@@ -168,8 +144,10 @@ def gen_base_traj(namo):
             if status == 'HasSolution':
                 yield (plan,)
             else:
+                import pdb;pdb.set_trace()
                 yield None
     return fcn
+
 
 def read_pddl(filename):
     directory = os.path.dirname(os.path.abspath(__file__))
@@ -206,11 +184,16 @@ def get_problem():
     init += [('Pose', obj_name, obj_pose) for obj_name, obj_pose in zip(obj_names, obj_poses)]
 
     init_config = np.array([-1, 1, 0])
+    goal_config = np.array([-2, 1, 0])
     init += [('BaseConf', init_config)]
+    init += [('BaseConf', goal_config)]
     init += [('AtConf', init_config)]
 
-    goal = ['and', ('InRegion', 'obj0', 'loading_region')]
-    #goal = ['and', ('AtConf', goal_config), ('not', ('EmptyArm', ))]
+    #goal = ['and', ('InRegion', 'obj0', 'loading_region')]
+    #goal = ['and', ('InRegion', 'obj0', 'loading_region')]
+    goal = ['and', ('Holding', 'obj0')]
+    #goal = ['and', ('AtConf', goal_config), ('Placed', 'obj0')]
+    #goal = ['and', ('not', ('EmptyArm',))]
     return (domain_pddl, constant_map, stream_pddl, stream_map, init, goal), namo
 
 ##################################################
@@ -221,6 +204,7 @@ def process_plan(plan, namo):
     for step_idx, step in enumerate(plan):
         # todo finish this visualization script
         import pdb;pdb.set_trace()
+        print "Executing operator ", step[0]
         if step[0] == 'pickup':
             obj_name = step[1][0]
             grasp = step[1][1]
@@ -254,12 +238,11 @@ def solve_pddlstream():
     pddlstream_problem, namo = get_problem()
     namo.env.SetViewer('qtcoin')
     stime = time.time()
-    #solution = solve_incremental(pddlstream_problem, unit_costs=True, max_time=500)
-    solution = solve_focused(pddlstream_problem, unit_costs=True, max_time=500)
+    solution = solve_incremental(pddlstream_problem, unit_costs=True, max_time=500)
+    #solution = solve_focused(pddlstream_problem, unit_costs=True, max_time=500)
     search_time = time.time()-stime
     plan, cost, evaluations = solution
     print "Search time", search_time
-    import pdb;pdb.set_trace()
     if solution[0] is None:
         print "No Solution"
         sys.exit(-1)

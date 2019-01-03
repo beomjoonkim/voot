@@ -5,7 +5,7 @@
                  (GraspConf ?gc)
                  (GraspTransform ?o ?g ?q ?g_config)
                  (EmptyArm)
-                 (Holding ?o ?g ?gc)
+                 (Holding ?o)
                  (BaseConf ?q)
                  (PlaceConf ?o ?p ?q)
                  (AtPose ?o ?p)
@@ -25,6 +25,8 @@
                  (TrajPoseCollision ?obstacle ?obstacle_pose ?q_init ?q_goal ?traj)
                  (GraspConfig ?g_config)
                  (BTrajWithObject ?o ?g ?pick_q ?q_goal ?traj)
+                 (Placed ?obj)
+
     )
 
     (:action pickup
@@ -32,6 +34,7 @@
     :precondition (and (EmptyArm)
                        (Pickable ?o)
                        (AtConf ?pick_q)
+                       (Pose ?o ?obj_pose)
                        (AtPose ?o ?obj_pose)
                        (GraspTransform ?o ?g ?pick_q ?g_config)
                        )
@@ -39,8 +42,9 @@
                (Picked ?o ?g ?pick_q ?g_config)
                (not (AtPose ?o ?obj_pose))
                (not (EmptyArm))
+               (Holding ?o)
                )
-   )
+    )
 
     (:action movebase
     :parameters (?q_init ?q_goal ?traj)
@@ -51,23 +55,29 @@
                        (not (UnsafeBTraj ?q_init ?q_goal ?traj))
                        (EmptyArm)
                        )
-    :effect (and (AtConf ?q_goal) (not (AtConf ?q_init))))
-
+    :effect (and
+            (AtConf ?q_goal)
+            (not (AtConf ?q_init))
+            )
+    )
 
     (:action place
     :parameters(?obj ?grasp ?pick_q ?g_config ?place_q ?place_obj_pose ?region ?traj )
     :precondition (and
                        (Picked ?obj ?grasp ?pick_q ?g_config)
-                       ;(AtConf ?pick_q)
-                       ;(PlaceConf ?obj ?place_obj_pose ?place_q)
-                       ;(ObjPoseInRegion ?obj ?place_obj_pose ?place_q ?region)
+                       (AtConf ?pick_q)
+                       (PlaceConf ?obj ?place_obj_pose ?place_q)
+                       (ObjPoseInRegion ?obj ?place_obj_pose ?place_q ?region)
                        (BTrajWithObject ?obj ?grasp ?pick_q ?place_q ?traj)
-                       (not (UnsafeBTrajWithObject ?obj ?grasp ?pick_q ?g_config ?place_q ?traj) )
+                       ;(not (UnsafeBTrajWithObject ?obj ?grasp ?pick_q ?g_config ?place_q ?traj) )
                        )
     :effect (and (EmptyArm)
                  (not (Picked ?obj ?grasp ?pick_q ?g_config))
                  (InRegion ?obj ?region)
+                 (Placed ?obj)
                  (AtPose ?obj ?place_obj_pose)
+                 (not (AtConf ?pick_q))
+                 (AtConf ?place_q)
                  )
     )
 
@@ -78,11 +88,11 @@
                     (TrajPoseCollision ?obstacle ?obstacle_pose ?q_init ?q_goal ?traj))
     ))
 
-    (:derived (UnsafeBTrajWithObject ?holding_o ?grasp ?pick_q ?g_config ?q_goal ?traj)(
+    (:derived (UnsafeBTrajWithObject ?holding_o ?grasp ?pick_q ?g_config ?place_q ?traj)(
         exists (?placed_o ?placed_p)
                  (and
                     (AtPose ?placed_o ?placed_p)
-                    (TrajPoseCollisionWithObject ?holding_o ?grasp ?pick_q ?g_config ?placed_o ?placed_p ?q_goal ?traj)
+                    (TrajPoseCollisionWithObject ?holding_o ?grasp ?pick_q ?g_config ?placed_o ?placed_p ?place_q ?traj)
                  )
     ))
 )
