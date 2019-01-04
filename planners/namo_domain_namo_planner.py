@@ -25,17 +25,17 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         assert len(self.robot.GetGrabbed()) == 0, 'this function assumes the robot starts with object in hand'
 
         ### fetch place path collisions
-        # this really stays the same if we do not move the packing region
-        #place_collisions = self.init_namo_object_names_on_place_path
-        # no, we may have moved obstacle that is in both pick and place paths
-        place_collisions = self.problem_env.get_objs_in_collision(place_path, curr_region.name)
+        if self.fetch_place_op_instance is not None:
+            two_arm_pick_object(self.fetching_obj, self.robot, self.fetch_pick_op_instance['action'])
+            place_collisions = self.problem_env.get_objs_in_collision(place_path, curr_region.name)
 
         ### fetch pick path collisions
         two_arm_place_object(self.fetching_obj, self.robot, self.fetch_pick_op_instance['action'])
         pick_collisions = self.problem_env.get_objs_in_collision(pick_path, curr_region.name)
 
         collisions = pick_collisions
-        collisions += [p for p in place_collisions if p not in collisions]
+        if self.fetch_place_op_instance is not None:
+            collisions += [p for p in place_collisions if p not in collisions]
 
         # go back to the original robot state
         two_arm_place_object(self.fetching_obj, self.problem_env.robot, self.fetch_pick_op_instance['action'])
@@ -120,18 +120,23 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         grab_obj(self.problem_env.robot, namo_obj)
         set_robot_config(pick_base_pose, self.robot)
 
+        """
         if namo_obj in new_collisions:
             print "Object moved still in collision"
             return None, "NoPath", self.curr_namo_object_names
+        """
 
         # if new collisions is more than or equal to the current collisions, don't bother executing it
         if len(self.curr_namo_object_names) <= len(new_collisions):
             print "There are more or equal number of collisions on the new path"
+            print len(self.curr_namo_object_names), len(new_collisions)
+            print namo_obj, new_collisions
             return None, "NoPath", self.curr_namo_object_names
 
         # otherwise, update the new namo objects
         self.prev_namo_object_names = self.curr_namo_object_names
         self.curr_namo_object_names = [obj.GetName() for obj in new_collisions]
+
 
         # pick motion is the path to the fetching object, place motion is the path to place the namo object
         motion = {'fetch_pick_path': fetch_pick_path, 'fetch_place_path': fetch_place_path,
@@ -184,12 +189,12 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         self.fetching_obj = self.env.GetKinBody(fetch_plan[0]['obj_name'])
 
         self.fetch_pick_op_instance = fetch_plan[0]
-        self.fetch_place_op_instance = fetch_plan[1]
+        #self.fetch_place_op_instance = fetch_plan[1]
         self.fetch_pick_path = fetch_plan[0]['path']
-        self.fetch_place_path = fetch_plan[1]['path']
+        #self.fetch_place_path = fetch_plan[1]['path']
 
         self.fetch_pick_conf = self.problem_env.make_config_from_op_instance(self.fetch_pick_op_instance)
-        self.fetch_place_conf = self.problem_env.make_config_from_op_instance(self.fetch_place_op_instance)
+        #self.fetch_place_conf = self.problem_env.make_config_from_op_instance(self.fetch_place_op_instance)
         self.problem_env.high_level_planner = self.high_level_controller
         self.fetch_goal_node = fetch_goal_node
         self.fetch_goal_node.state_saver = DynamicEnvironmentStateSaver(self.env) # this assumes that we're in prefetch state

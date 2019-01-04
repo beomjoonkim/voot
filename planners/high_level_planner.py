@@ -77,6 +77,11 @@ class HighLevelPlanner:
         self.task_plan_idx = 0
 
     def is_goal_reached(self):
+        if self.problem_env.name == 'namo' and self.problem_env.is_solving_fetching:
+            if len(self.problem_env.robot.GetGrabbed())  > 0:
+                return self.problem_env.robot.GetGrabbed()[0] ==self.fetch_planner.fetching_object
+            else:
+                return False
         if self.problem_env.is_solving_namo:
             return len(self.task_plan[0]['objects']) == 0 # done if all obstacles are cleared
         else:
@@ -208,12 +213,14 @@ class HighLevelPlanner:
                                                                                                       next_init_node)
 
         initial_collision_names = self.fetch_planner.get_initial_collisions(fetch_plan)
+
         print "Solved fetching"
         self.namo_planner.namo_domain_initialize_namo_problem(fetch_plan, goal_node)
         namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(initial_collision_names,
                                                                                  self.mcts)
-        search_time_to_reward = {'fetch':fetch_search_time_to_reward, 'namo':namo_search_time_to_reward}
-        return search_time_to_reward, fetch_plan, goal_node
+        search_time_to_reward = {'fetch': fetch_search_time_to_reward, 'namo': namo_search_time_to_reward}
+        plan = fetch_plan+namo_plan
+        return search_time_to_reward, plan, goal_node
 
     def search(self):
         for plan_step in self.abstract_task_plan:

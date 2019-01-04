@@ -164,6 +164,8 @@ class NAMO(ProblemEnvironment):
                 self.high_level_planner.set_task_plan([{'region': self.regions['entire_region'], 'objects': new_namo_objs}])
 
         reward, objs_in_collision = self.determine_reward('two_arm_place', target_obj, plan, status, new_namo_obj_names)
+        if reward > 1:
+            import pdb;pdb.set_trace()
         if status == 'HasSolution':
             two_arm_place_object(target_obj, self.robot, action)
             curr_state = self.get_state()

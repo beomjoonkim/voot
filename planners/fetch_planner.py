@@ -168,7 +168,10 @@ class FetchPlanner:
     @staticmethod
     def get_initial_collisions(fetch_plan):
         pick_collisions = fetch_plan[0]['obj_names_in_collision']
-        place_collisions = fetch_plan[1]['obj_names_in_collision']
+        if len(fetch_plan) > 1:
+            place_collisions = fetch_plan[1]['obj_names_in_collision']
+        else:
+            place_collisions = []
         collisions = {'pick_collisions': pick_collisions, 'place_collisions': place_collisions}
         return collisions
 
