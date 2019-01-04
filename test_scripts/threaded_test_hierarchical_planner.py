@@ -23,7 +23,7 @@ def main():
     configs = []
     for t in trials:
         configs.append([t])
-    n_workers = int(1)
+    n_workers = int(5)
 
     print configs
     pool = ThreadPool(n_workers)

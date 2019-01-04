@@ -10,3 +10,4 @@ mover_library/*.pyc
 *temp/
 ./temp/*
 *pyc
+*core
