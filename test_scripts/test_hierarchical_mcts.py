@@ -45,11 +45,7 @@ def make_sampling_strategy(sampling_strategy, domain_name, problem_env):
         place_sampler = PlaceUnif(problem_env)
 
         if sampling_strategy == 'voo':
-<<<<<<< HEAD
-            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=0)
-=======
             sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=0.3)
->>>>>>> 9d0b7f058a2bf6a8d03f629c00b1f30c06114e04
         else:
             sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
 
