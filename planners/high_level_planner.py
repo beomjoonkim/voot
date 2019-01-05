@@ -219,7 +219,10 @@ class HighLevelPlanner:
         namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(initial_collision_names,
                                                                                  self.mcts)
         search_time_to_reward = {'fetch': fetch_search_time_to_reward, 'namo': namo_search_time_to_reward}
-        plan = fetch_plan+namo_plan
+        if namo_plan is None:
+            plan = None
+        else:
+            plan = fetch_plan+namo_plan
         return search_time_to_reward, plan, goal_node
 
     def search(self):

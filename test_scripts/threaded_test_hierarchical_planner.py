@@ -1,7 +1,7 @@
 import os
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
 
-DOMAIN = 'convbelt'
+DOMAIN = 'namo'
 
 
 def worker_p(config):
@@ -23,7 +23,7 @@ def main():
     configs = []
     for t in trials:
         configs.append([t])
-    n_workers = int(1)
+    n_workers = int(5)
 
     print configs
     pool = ThreadPool(n_workers)
