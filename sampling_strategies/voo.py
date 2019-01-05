@@ -4,6 +4,7 @@ import sys
 sys.path.append('./mover_library/')
 from sampling_strategy import SamplingStrategy
 from utils import get_body_xytheta
+from planners.mcts_utils import make_action_executable
 
 
 class VOO(SamplingStrategy):
@@ -13,12 +14,12 @@ class VOO(SamplingStrategy):
 
     def grasp_distance(self, a1, a2, curr_obj):
         obj_xyth = get_body_xytheta(curr_obj)
-        grasp_a1 = np.array(a1[0])
-        base_a1 = np.array(a1[1])
+        grasp_a1 = np.array(a1['grasp_params'])
+        base_a1 = np.array(a1['base_pose'])
         relative_config_a1 = base_a1 - obj_xyth
 
-        grasp_a2 = np.array(a2[0])
-        base_a2 = np.array(a2[1])
+        grasp_a2 = np.array(a2['grasp_params'])
+        base_a2 = np.array(a2['base_pose'])
         relative_config_a2 = base_a2 - obj_xyth
         return np.sum(abs(grasp_a1-grasp_a2)) + np.sum(self.base_conf_distance(relative_config_a1, relative_config_a2))
 
@@ -40,25 +41,28 @@ class VOO(SamplingStrategy):
             return action
 
         if which_operator == 'two_arm_pick':
-            action = self.pick_pi.predict(curr_obj)
-            dists_to_non_best_actions = np.array([self.grasp_distance(action, y, curr_obj)
+            action = self.pick_pi.predict(curr_obj, region)
+            dists_to_non_best_actions = np.array([self.grasp_distance(action, make_action_executable(y), curr_obj)
                                                   for y in evaled_actions if y != best_action])
-            dist_to_curr_best_action = np.array(self.grasp_distance(action, best_action, curr_obj))
+            dist_to_curr_best_action = np.array(self.grasp_distance(action, make_action_executable(best_action), curr_obj))
         else:
-            action = self.place_pi.predict(curr_obj)
-            dists_to_non_best_actions = np.array([self.base_conf_distance(action, y)
+            action = self.place_pi.predict(curr_obj, region)
+            dists_to_non_best_actions = np.array([self.base_conf_distance(action['base_pose'],
+                                                                          make_action_executable(y)['base_pose'])
                                                   for y in evaled_actions if y != best_action])
-            dist_to_curr_best_action = np.array(self.base_conf_distance(action, best_action))
+            dist_to_curr_best_action = np.array(self.base_conf_distance(action,
+                                                                        make_action_executable(best_action)['base_pose']))
 
         n_trials = 0
         while len(dists_to_non_best_actions) != 0 and np.any(dist_to_curr_best_action > dists_to_non_best_actions) \
                 and n_trials < 30:
             if which_operator == 'two_arm_pick':
-                action = self.pick_pi.predict(curr_obj)
-                dist_to_curr_best_action = np.array(self.grasp_distance(action, best_action, curr_obj))
+                action = self.pick_pi.predict(curr_obj, region)
+                dist_to_curr_best_action = np.array(self.grasp_distance(action, make_action_executable(best_action), curr_obj))
             else:
-                action = self.place_pi.predict(curr_obj)
-                dist_to_curr_best_action = np.array(self.base_conf_distance(action, best_action))
+                action = self.place_pi.predict(curr_obj, region)
+                dist_to_curr_best_action = np.array(self.base_conf_distance(action['base_conf'],
+                                                                            make_action_executable(best_action['base_conf'])))
             n_trials += 1
 
             print "Is pick?", which_operator == 'two_arm_pick'

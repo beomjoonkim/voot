@@ -77,6 +77,10 @@ class ConveyorBelt(ProblemEnvironment):
             self.curr_obj = self.objs_to_move[len(self.placements)]  # update the next object to be picked
 
     def apply_two_arm_pick_action(self, action, node, check_feasibility, parent_motion):
+        if action['g_config'] is None:
+            curr_state = self.get_state()
+            return curr_state, self.infeasible_reward, None, []
+
         object_to_pick = node.obj
         if check_feasibility:
             pick_base_pose = action['base_pose']
