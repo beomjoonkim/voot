@@ -16,7 +16,6 @@ from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 
 
-
 class ConveyorBelt(ProblemEnvironment):
     def __init__(self):
         ProblemEnvironment.__init__(self)
@@ -77,7 +76,8 @@ class ConveyorBelt(ProblemEnvironment):
         if len(self.placements) < len(self.objects):
             self.curr_obj = self.objs_to_move[len(self.placements)]  # update the next object to be picked
 
-    def apply_two_arm_pick_action(self, action, object, region, check_feasibility, parent_motion):
+    def apply_two_arm_pick_action(self, action, node, check_feasibility, parent_motion):
+        object_to_pick = node.obj
         if check_feasibility:
             pick_base_pose = action['base_pose']
             grasp_params = action['grasp_params']
@@ -85,17 +85,16 @@ class ConveyorBelt(ProblemEnvironment):
             grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
                                            height_portion=grasp_params[1],
                                            theta=grasp_params[0],
-                                           obj=object,
+                                           obj=object_to_pick,
                                            robot=self.robot)
-            g_config = solveTwoArmIKs(self.env, self.robot, object, grasps)
+            g_config = solveTwoArmIKs(self.env, self.robot, object_to_pick, grasps)
             try:
                 assert g_config is not None
             except:
                 import pdb;pdb.set_trace()
         else:
             g_config = parent_motion
-
-        two_arm_pick_object(object, self.robot, action)
+        two_arm_pick_object(object_to_pick, self.robot, action)
         set_robot_config(self.init_base_conf, self.robot)
         curr_state = self.get_state()
         reward = 0

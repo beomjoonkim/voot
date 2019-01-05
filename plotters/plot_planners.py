@@ -18,8 +18,10 @@ def get_stripstream_results(domain_name):
           result = pickle.load(open(result_dir+fin,'r'))
         except:
           print fin
-        success.append(result['plan'] is not None)
-        search_times.append(result['search_time'])
+        is_success = result['plan'] is not None
+        success.append(is_success)
+        if is_success:
+          search_times.append(result['search_time'])
     print "stripstream time and success rate:"
     print np.array(search_times).mean()
     print np.array(success).mean()
@@ -47,7 +49,7 @@ def get_mcts_results(domain_name):
             is_success = result['search_time']['namo'][-1][-1]
             success.append(is_success)
             if is_success:
-                search_times.append(result['search_time']['namo'][-1][0])
+              search_times.append(result['search_time']['namo'][-1][0])
 
     print "mcts time and success rate:"
     print np.array(search_times).mean()
