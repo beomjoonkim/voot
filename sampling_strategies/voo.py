@@ -55,7 +55,6 @@ class VOO(SamplingStrategy):
             else:
                 action = self.place_pi.predict(curr_obj, region)
             return action
-        import pdb;pdb.set_trace()
         if which_operator == 'two_arm_pick':
             action = self.pick_pi.predict(curr_obj, region)
             dists_to_non_best_actions = np.array([self.pick_distance(action, y, curr_obj)
