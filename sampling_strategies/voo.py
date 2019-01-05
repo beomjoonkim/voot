@@ -15,6 +15,7 @@ class VOO(SamplingStrategy):
     def pick_distance(self, a1, a2, curr_obj):
         a2_executable = make_action_executable(a2)
         obj_xyth = get_body_xytheta(curr_obj)
+
         grasp_a1 = np.array(a1['grasp_params'])
         base_a1 = np.array(a1['base_pose'])
         relative_config_a1 = (base_a1 - obj_xyth).squeeze()
