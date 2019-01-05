@@ -23,13 +23,12 @@ class VOO(SamplingStrategy):
         base_a2 = np.array(a2_executable['base_pose']).squeeze()
         relative_config_a2 = (base_a2 - obj_xyth).squeeze()
 
-        grasp_distance = np.sum(abs(grasp_a1[1:] - grasp_a2[1:]))
-        base_distance = np.sum(self.base_conf_distance(relative_config_a1[0:2], relative_config_a2[0:2]))
+        grasp_distance = np.sum(abs(grasp_a1 - grasp_a2))
+        base_distance = np.sum(self.base_conf_distance(relative_config_a1, relative_config_a2))
         return grasp_distance + base_distance
 
     @staticmethod
     def base_conf_distance(x, y):
-        x[-1]
         return np.sum(abs(x - y))
 
     def place_distance(self, a1, a2, curr_obj):
@@ -66,6 +65,7 @@ class VOO(SamplingStrategy):
                                                   for y in evaled_actions if y != best_action])
             dist_to_curr_best_action = self.place_distance(action, best_action, curr_obj)
 
+        print dist_to_curr_best_action, dists_to_non_best_actions
         n_trials = 0
         while len(dists_to_non_best_actions) != 0 and np.any(dist_to_curr_best_action > dists_to_non_best_actions) \
                 and n_trials < 30:
@@ -81,6 +81,8 @@ class VOO(SamplingStrategy):
 
             print "Sampling from best voronoi region. Best and other action distances, and n_trial ", \
                 dist_to_curr_best_action, dists_to_non_best_actions, n_trials
+        #if len(dists_to_non_best_actions) > 1:
+        #    import pdb;pdb.set_trace()
 
         return action
 
