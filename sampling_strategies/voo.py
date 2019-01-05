@@ -12,20 +12,32 @@ class VOO(SamplingStrategy):
         SamplingStrategy.__init__(self, environment, pick_pi, place_pi)
         self.explr_p = explr_p
 
-    def grasp_distance(self, a1, a2, curr_obj):
+    def pick_distance(self, a1, a2, curr_obj):
+        a2_executable = make_action_executable(a2)
         obj_xyth = get_body_xytheta(curr_obj)
         grasp_a1 = np.array(a1['grasp_params'])
         base_a1 = np.array(a1['base_pose'])
         relative_config_a1 = base_a1 - obj_xyth
 
-        grasp_a2 = np.array(a2['grasp_params'])
-        base_a2 = np.array(a2['base_pose'])
+        grasp_a2 = np.array(a2_executable['grasp_params'])
+        base_a2 = np.array(a2_executable['base_pose'])
         relative_config_a2 = base_a2 - obj_xyth
         return np.sum(abs(grasp_a1-grasp_a2)) + np.sum(self.base_conf_distance(relative_config_a1, relative_config_a2))
 
     @staticmethod
     def base_conf_distance(x, y):
         return np.sum(abs(x - y))
+
+    def place_distance(self, a1, a2, curr_obj):
+        obj_xyth = get_body_xytheta(curr_obj)
+        base_a1 = np.array(a1['base_pose'])
+        relative_config_a1 = base_a1 - obj_xyth
+
+        a2_executable = make_action_executable(a2)
+        base_a2 = np.array(a2_executable['base_pose'])
+        relative_config_a2 = base_a2 - obj_xyth
+
+        return np.sum(self.base_conf_distance(relative_config_a1, relative_config_a2))
 
     def sample_from_best_voroi_region(self, evaled_actions, evaled_scores, node):
         best_action = evaled_actions[np.argmax(evaled_scores)]
@@ -42,27 +54,24 @@ class VOO(SamplingStrategy):
 
         if which_operator == 'two_arm_pick':
             action = self.pick_pi.predict(curr_obj, region)
-            dists_to_non_best_actions = np.array([self.grasp_distance(action, make_action_executable(y), curr_obj)
+            dists_to_non_best_actions = np.array([self.pick_distance(action, y, curr_obj)
                                                   for y in evaled_actions if y != best_action])
-            dist_to_curr_best_action = np.array(self.grasp_distance(action, make_action_executable(best_action), curr_obj))
+            dist_to_curr_best_action = self.pick_distance(action, best_action, curr_obj)
         else:
             action = self.place_pi.predict(curr_obj, region)
-            dists_to_non_best_actions = np.array([self.base_conf_distance(action['base_pose'],
-                                                                          make_action_executable(y)['base_pose'])
+            dists_to_non_best_actions = np.array([self.place_distance(action, y, curr_obj)
                                                   for y in evaled_actions if y != best_action])
-            dist_to_curr_best_action = np.array(self.base_conf_distance(action,
-                                                                        make_action_executable(best_action)['base_pose']))
+            dist_to_curr_best_action = self.place_distance(action, best_action, curr_obj)
 
         n_trials = 0
         while len(dists_to_non_best_actions) != 0 and np.any(dist_to_curr_best_action > dists_to_non_best_actions) \
                 and n_trials < 30:
             if which_operator == 'two_arm_pick':
                 action = self.pick_pi.predict(curr_obj, region)
-                dist_to_curr_best_action = np.array(self.grasp_distance(action, make_action_executable(best_action), curr_obj))
+                dist_to_curr_best_action = np.array([self.pick_distance(action, best_action, curr_obj)])
             else:
                 action = self.place_pi.predict(curr_obj, region)
-                dist_to_curr_best_action = np.array(self.base_conf_distance(action['base_conf'],
-                                                                            make_action_executable(best_action['base_conf'])))
+                dist_to_curr_best_action = self.place_distance(action, best_action, curr_obj)
             n_trials += 1
 
             print "Is pick?", which_operator == 'two_arm_pick'
