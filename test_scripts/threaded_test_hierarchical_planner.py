@@ -1,13 +1,13 @@
 import os
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
 
-DOMAIN = 'namo'
+DOMAIN = 'convbelt'
 
 
 def worker_p(config):
     pidx = config[0]
 
-    command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy unif -problem_idx ' + str(pidx) + ' -domain ' + DOMAIN
+    command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy voo -problem_idx ' + str(pidx) + ' -domain ' + DOMAIN
 
     print command
     os.system(command)
@@ -23,7 +23,7 @@ def main():
     configs = []
     for t in trials:
         configs.append([t])
-    n_workers = int(5)
+    n_workers = int(1)
 
     print configs
     pool = ThreadPool(n_workers)
