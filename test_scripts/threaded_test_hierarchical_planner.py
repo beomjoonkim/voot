@@ -1,13 +1,14 @@
 import os
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
 
+DOMAIN = 'convbelt'
 DOMAIN = 'namo'
-
+sample = 'voo'
 
 def worker_p(config):
     pidx = config[0]
 
-    command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy voo -problem_idx ' + str(pidx) + ' -domain ' + DOMAIN
+    command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy '+ sample+ ' -problem_idx ' + str(pidx) + ' -domain ' + DOMAIN
 
     print command
     os.system(command)

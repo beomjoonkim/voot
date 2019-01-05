@@ -17,15 +17,19 @@ class VOO(SamplingStrategy):
         obj_xyth = get_body_xytheta(curr_obj)
         grasp_a1 = np.array(a1['grasp_params'])
         base_a1 = np.array(a1['base_pose'])
-        relative_config_a1 = base_a1 - obj_xyth
+        relative_config_a1 = (base_a1 - obj_xyth).squeeze()
 
-        grasp_a2 = np.array(a2_executable['grasp_params'])
-        base_a2 = np.array(a2_executable['base_pose'])
-        relative_config_a2 = base_a2 - obj_xyth
-        return np.sum(abs(grasp_a1-grasp_a2)) + np.sum(self.base_conf_distance(relative_config_a1, relative_config_a2))
+        grasp_a2 = np.array(a2_executable['grasp_params']).squeeze()
+        base_a2 = np.array(a2_executable['base_pose']).squeeze()
+        relative_config_a2 = (base_a2 - obj_xyth).squeeze()
+
+        grasp_distance = np.sum(abs(grasp_a1[1:] - grasp_a2[1:]))
+        base_distance = np.sum(self.base_conf_distance(relative_config_a1[0:2], relative_config_a2[0:2]))
+        return grasp_distance + base_distance
 
     @staticmethod
     def base_conf_distance(x, y):
+        x[-1]
         return np.sum(abs(x - y))
 
     def place_distance(self, a1, a2, curr_obj):
@@ -51,7 +55,7 @@ class VOO(SamplingStrategy):
             else:
                 action = self.place_pi.predict(curr_obj, region)
             return action
-
+        import pdb;pdb.set_trace()
         if which_operator == 'two_arm_pick':
             action = self.pick_pi.predict(curr_obj, region)
             dists_to_non_best_actions = np.array([self.pick_distance(action, y, curr_obj)
