@@ -1,0 +1,41 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{amsopn,amssymb,thmtools,thm-restate}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsopn,amssymb,thmtools,thm-restate}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\input{notations}
+
+\author{Beomjoon Kim}
+\title{Continuous search algorithm}
+\begin{document}
+\maketitle
+\section{Problem formulation}
+Given a computational budget B,
+a plan skeleton $\{\op_1(\disc_1,\cdot),\cdots,\op_T(\disc_t,\cdot)\}$, 
+and the set of goal states $S_G$, possibly described with a predicate,
+find the continuous parameters $\cont_1,\cdots,\cont_T$ such that it maximizes
+the sum of the discounted rewards,
+$$ \max_{\cont_1,\cdots,\cont_T}  \sum_{t=0}^{T
+}  \gamma^t r(s_t,\cont_t)  $$
+where $r(s_t,\cont_t) = r(s_t,\op_t(\disc_t,\cont_t) )$, $s_T \in S_G$ and
+the generative model of the environment $T$ such that $s_{t+1} = T(s_t,\op_t(\disc_t,\cont_T))$
+
+
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}
