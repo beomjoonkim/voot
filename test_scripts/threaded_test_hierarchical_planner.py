@@ -4,6 +4,7 @@ from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocess
 DOMAIN = 'convbelt'
 DOMAIN = 'namo'
 sample = 'voo'
+sample = 'unif'
 
 def worker_p(config):
     pidx = config[0]

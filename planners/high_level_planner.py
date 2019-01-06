@@ -199,10 +199,16 @@ class HighLevelPlanner:
     def solve_convbelt(self, objects, target_packing_region):
         plan = []
         next_init_node = None
+        rwd = self.problem_env.infeasible_reward
+        while self.problem_env.infeasible_reward == rwd:
+            pick_action = self.mcts.sampling_strategy.pick_pi.predict(objects[0], self.problem_env.regions['entire_region'])
+            _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node,True,None)
+        self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
+        self.mcts.tree.root = self.mcts.s0_node
         search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_packing(objects,
-                                                                                              target_packing_region,
-                                                                                              self.mcts,
-                                                                                              next_init_node)
+                                                                                        target_packing_region,
+                                                                                        self.mcts,
+                                                                                        next_init_node)
         return search_time_to_reward, fetch_plan, goal_node
 
     def solve_namo(self, object, target_packing_region):

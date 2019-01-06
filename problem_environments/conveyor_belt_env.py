@@ -34,11 +34,14 @@ class ConveyorBelt(ProblemEnvironment):
         self.optimal_score = 5
 
         self.curr_obj = self.objects[0]
+
         self.curr_state = self.get_state()
         self.objs_to_move = self.objects
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.is_init_pick_node = True
+        self.init_operator = 'two_arm_place'
+        self.init_obj = self.objects[0]
         self.name = 'convbelt'
 
     def apply_two_arm_pick_action_stripstream(self, action, obj=None, do_check_reachability=False):
@@ -96,6 +99,13 @@ class ConveyorBelt(ProblemEnvironment):
                 assert g_config is not None
             except:
                 import pdb;pdb.set_trace()
+            two_arm_pick_object(object_to_pick, self.robot, action)
+            set_robot_config(self.init_base_conf, self.robot)
+            if self.env.CheckCollision(self.robot):
+                two_arm_place_object(object_to_pick, self.robot, action)
+                set_robot_config(self.init_base_conf, self.robot)
+                curr_state = self.get_state()
+                return curr_state, self.infeasible_reward, None, []
         else:
             g_config = parent_motion
         two_arm_pick_object(object_to_pick, self.robot, action)
@@ -136,7 +146,7 @@ class ConveyorBelt(ProblemEnvironment):
         self.placements = copy.deepcopy(self.initial_placements)
 
         self.curr_obj = self.objs_to_move[len(self.placements)] # todo change it for NAMO domain
-        if not self.init_which_opreator != 'two_arm_pick':
+        if self.init_operator != 'two_arm_pick':
             grab_obj(self.robot, self.curr_obj)
         self.high_level_planner.reset_task_plan_indices()
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
