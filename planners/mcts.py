@@ -274,13 +274,13 @@ class MCTS:
             print 'Is pick time? ', self.environment.is_pick_time()
             print "Executing action ", action
 
-        #if self.high_level_planner.is_debugging:
-        #    import pdb;pdb.set_trace()
+        if self.high_level_planner.is_debugging:
+            import pdb;pdb.set_trace()
         next_state, reward, parent_motion, objs_in_collision = self.apply_action(curr_node, action, check_feasibility, parent_motion)
         print 'Reward ', reward
         self.high_level_planner.update_task_plan_indices(reward, action['operator_name']) # create the next node based on the updated task plan progress
-        #if self.high_level_planner.is_debugging:
-        #    import pdb;pdb.set_trace()
+        if self.high_level_planner.is_debugging:
+            import pdb;pdb.set_trace()
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, objs_in_collision, is_init_node=False)

@@ -75,7 +75,7 @@ class NAMO(ProblemEnvironment):
                     objs_in_collision = [self.env.GetKinBody(name) for name in new_namo_obj_names]
                 else:
                     objs_in_collision = [self.env.GetKinBody(name) for name in self.namo_planner.curr_namo_object_names]
-                    reward = 0.5
+                    reward = 1
         else:
             reward = self.infeasible_reward
 
@@ -121,13 +121,13 @@ class NAMO(ProblemEnvironment):
                 motion_plan, status = self.fetch_planner.check_two_arm_pick_feasibility(obj, action, region)
             elif self.is_solving_namo:
                 motion_plan, status = self.namo_planner.check_two_arm_pick_feasibility(obj, action)
-            reward, objs_in_collision = self.determine_reward('two_arm_pick', obj, motion_plan, status)
         else:
             motion_plan = parent_motion
             status = 'HasSolution'
-            reward = node.parent_action_reward
-            objs_in_collision = node.objs_in_collision
+            #reward = node.parent_action_reward
+            #objs_in_collision = node.objs_in_collision
 
+        reward, objs_in_collision = self.determine_reward('two_arm_pick', obj, motion_plan, status)
         if status == 'HasSolution':
             two_arm_pick_object(obj, self.robot, action)
             curr_state = self.get_state()

@@ -68,9 +68,21 @@ class PlaceUnif:
             grab_obj(self.robot, obj)
         return obj_pose, robot_xytheta
 
+    def sample_closest_to_best_action(self, obj, target_obj_region, best_action, other_actions, T_r_wrt_o):
+        best_dist = np.inf
+        other_dists = np.array([-1])
+        while np.any(best_dist > other_dists):
+            obj_pose, robot_xytheta = self.get_placement(obj, target_obj_region, T_r_wrt_o)
+            action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
+            best_dist = place_distance(action, best_action, obj)
+            other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
+
+        return obj_pose, robot_xytheta
+
     def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions):
         best_action = make_action_executable(best_action)
         other_actions = [make_action_executable(a) for a in other_actions]
+
         original_trans = self.robot.GetTransform()
         original_config = self.robot.GetDOFValues()
         T_r_wrt_o = np.dot(np.linalg.inv(obj.GetTransform()), self.robot.GetTransform())
@@ -83,21 +95,17 @@ class PlaceUnif:
             target_robot_region = self.robot_region
             target_obj_region = obj_region  # for fetching, you want to move it around
 
-        best_dist = np.inf
-        other_dists = np.array([-1])
-        for iter in range(30):
+        for iter in range(1000):
             print "Sampling place iter: ", iter
-            while np.any(best_dist > other_dists):
-                obj_pose, robot_xytheta = self.get_placement(obj,target_obj_region, T_r_wrt_o)
-                action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
-                best_dist = place_distance(action, best_action, obj)
-                other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
+            obj_pose, robot_xytheta = self.sample_closest_to_best_action(obj, obj_region, best_action, other_actions, T_r_wrt_o)
+            print "Done sampling closest"
 
             set_robot_config(robot_xytheta, self.robot)
             if not (self.env.CheckCollision(obj) or self.env.CheckCollision(self.robot)) \
                     and (target_robot_region.contains(self.robot.ComputeAABB())):
                 self.robot.SetTransform(original_trans)
                 self.robot.SetDOFValues(original_config)
+                action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
                 print "Found best placement"
                 return action
 
