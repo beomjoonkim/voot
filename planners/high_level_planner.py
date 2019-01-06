@@ -205,7 +205,6 @@ class HighLevelPlanner:
             _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node,True,None)
         self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.mcts.tree.root = self.mcts.s0_node
-        import pdb;pdb.set_trace()
         search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_packing(objects,
                                                                                         target_packing_region,
                                                                                         self.mcts,
