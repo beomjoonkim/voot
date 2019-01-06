@@ -1,31 +1,21 @@
-from manipulation.problems.fixed import ENVIRONMENTS_DIR
-from manipulation.bodies.bodies import box_body, randomly_place_body, place_xyz_body
 from manipulation.problems.problem import *
 from manipulation.bodies.bodies import get_name
-from misc.functions import randomize
-from misc.generators import take
-from misc.numerical import INF
-from manipulation.bodies.robot import set_default_robot_config
+
 from manipulation.primitives.transforms import get_point, set_point, pose_from_quat_point, unit_quat
-from misc.colors import get_color
 from manipulation.constants import BODY_PLACEMENT_Z_OFFSET
 from manipulation.constants import *
-from manipulation.primitives.utils import Pose
 
 ##TODO: Clean this
 from manipulation.constants import PARALLEL_LEFT_ARM, REST_LEFT_ARM, HOLDING_LEFT_ARM, FOLDED_LEFT_ARM, \
     FAR_HOLDING_LEFT_ARM, LOWER_TOP_HOLDING_LEFT_ARM, REGION_Z_OFFSET
 from manipulation.regions import create_region, AARegion
-from manipulation.bodies.bodies import randomly_place_region, place_body, place_body_on_floor
-from manipulation.inverse_reachability.inverse_reachability import ir_base_trans
-from manipulation.primitives.utils import mirror_arm_config
+
 from manipulation.primitives.transforms import trans_from_base_values, set_pose, set_quat, \
     point_from_pose, axis_angle_from_rot, rot_from_quat, quat_from_pose, quat_from_z_rot, \
     get_pose, base_values_from_pose, pose_from_base_values, set_xy, quat_from_angle_vector, \
     quat_from_trans
 
-from manipulation.primitives.savers import DynamicEnvironmentStateSaver
-
+from utils import *
 from itertools import product
 import numpy as np
 
@@ -134,6 +124,30 @@ def randomly_place_in_region(env, body, region):
         if not body_collision(env, body):
             return get_body_xytheta(body)
     return None
+
+
+def gaussian_randomly_place_in_region(env, body, region, center, var):
+    if env.GetKinBody(get_name(body)) is None:
+        env.Add(body)
+
+    for i in range(1000):
+        xytheta = np.random.normal(center, var)
+        set_obj_xytheta(xytheta, body)
+        if not body_collision(env, body):
+            return xytheta
+
+    import pdb;pdb.set_trace()
+    for i in range(1000):
+        set_quat(body, quat_from_z_rot(uniform(0, 2 * PI)))
+        aabb = aabb_from_body(body)
+        cspace = region.cspace(aabb)
+        if cspace is None: continue
+        set_point(body, np.array([uniform(*cspace_range) for cspace_range in cspace] + [
+            region.z + aabb.extents()[2] + BODY_PLACEMENT_Z_OFFSET]) - aabb.pos() + get_point(body))
+        if not body_collision(env, body):
+            return get_body_xytheta(body)
+    return None
+
 
 def randomly_place_in_region_need_to_be_fixed(env, obj, region, th=None):
     # todo fix this function

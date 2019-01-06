@@ -15,6 +15,7 @@ def make_action_hashable(action):
 
     elif operator_name == 'two_arm_place':
         hashable_action += action['base_pose'].tolist()
+        hashable_action += action['object_pose'].tolist()
 
     elif operator_name == 'one_arm_pick':
         #raise NotImplementedError
@@ -43,6 +44,7 @@ def make_action_executable(action):
 
     elif operator_name == 'two_arm_place':
         executable_action['base_pose'] = np.array(action[1:4])
+        executable_action['object_pose'] = np.array(action[4:])
 
     elif operator_name == 'one_arm_pick':
         executable_action['grasp_params'] = np.array(action[1:4])
