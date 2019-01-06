@@ -38,6 +38,7 @@ class VOO(SamplingStrategy):
         return np.sum(abs(x - y))
 
     def place_distance(self, a1, a2, curr_obj):
+        import pdb;pdb.set_trace()
         obj_xyth = get_body_xytheta(curr_obj)
         base_a1 = np.array(a1['base_pose'])
         relative_config_a1 = base_a1 - obj_xyth

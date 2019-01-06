@@ -1,5 +1,5 @@
 from problem_environments.conveyor_belt_env import ConveyorBelt
-# from problem_environments.namo_env import NAMO
+from problem_environments.namo_env import NAMO
 from problem_environments.mover_env import Mover
 
 from planners.high_level_planner import HighLevelPlanner
@@ -45,7 +45,7 @@ def make_sampling_strategy(sampling_strategy, domain_name, problem_env):
         place_sampler = PlaceUnif(problem_env)
 
         if sampling_strategy == 'voo':
-            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=0)
+            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=0.3)
         else:
             sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
 
@@ -100,8 +100,8 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        print "RANDOM SEED SET", np.random.seed(10)
-        print "RANDOM SEED SET", random.seed(10)
+        print "RANDOM SEED SET", np.random.seed(3)
+        print "RANDOM SEED SET", random.seed(3)
 
     uct_parameter = args.uct
     widening_parameter = args.widening_parameter
