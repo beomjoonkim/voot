@@ -97,8 +97,9 @@ class PlaceUnif:
         other_dists = np.array([-1])
         counter = 1
         while np.any(best_dist > other_dists):
-            if obj.GetName() != 'obj0' or counter > 30:
-                import pdb;pdb.set_trace()
+            #if obj.GetName() != 'obj0' or counter > 30:
+            #    import pdb;pdb.set_trace()
+
             if len(other_dists) > 0:
                 variance = np.array([0.3, 0.3, 0.5]) / counter
                 print 'Gaussian sampling', best_dist, other_dists, variance
@@ -108,7 +109,6 @@ class PlaceUnif:
                                                                                                T_r_wrt_o,
                                                                                                variance)
             else:
-
                 print 'Regular sampling', best_dist, other_dists
                 obj_pose, robot_xytheta = self.get_placement(obj, target_obj_region, T_r_wrt_o)
 

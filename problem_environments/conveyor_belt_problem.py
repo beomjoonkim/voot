@@ -79,7 +79,7 @@ def create_obstacles(env, loading_regions):
 
 
 def create_objects(env, conveyor_belt):
-    NUM_OBJECTS = 5
+    NUM_OBJECTS = 8
     OBJECTS = []
     obj_shapes = {}
     obj_poses = {}
