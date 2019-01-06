@@ -154,7 +154,6 @@ class MCTS:
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
-            import pdb;pdb.set_trace()
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
