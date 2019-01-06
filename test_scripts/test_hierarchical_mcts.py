@@ -109,14 +109,14 @@ def main():
     problem_index = args.problem_idx
 
     save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter, sampling_strategy)
-    problem_env = make_problem_env(args.domain)
-    sampling_strategy = make_sampling_strategy(args.sampling_strategy, args.domain, problem_env)
-    task_plan = get_task_plan(args.domain, problem_env)
     stat_file_name = save_dir + str(problem_index)+'.pkl'
-
     if os.path.isfile(stat_file_name):
         print "already done"
         return -1
+
+    problem_env = make_problem_env(args.domain)
+    sampling_strategy = make_sampling_strategy(args.sampling_strategy, args.domain, problem_env)
+    task_plan = get_task_plan(args.domain, problem_env)
 
     if args.v:
         problem_env.env.SetViewer('qtcoin')
