@@ -74,7 +74,7 @@ class VOO(SamplingStrategy):
         print dist_to_curr_best_action, dists_to_non_best_actions
         n_trials = 0
         while len(dists_to_non_best_actions) != 0 and np.any(dist_to_curr_best_action > dists_to_non_best_actions) \
-                and n_trials < 30:
+                and n_trials < 10:
             if which_operator == 'two_arm_pick':
                 action = self.pick_pi.predict(curr_obj, region)
                 dist_to_curr_best_action = np.array([self.pick_distance(action, best_action, curr_obj)])
