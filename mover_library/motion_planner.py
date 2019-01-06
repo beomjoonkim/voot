@@ -172,6 +172,7 @@ def base_linear_interpolation(body, q1, q2):
 def rrt_connect(q1, q2, distance, sample, extend, collision, iterations):
     # check if q1 or q2 is in collision
     if collision(q1) or collision(q2):
+        import pdb;pdb.set_trace()
         print 'collision in either initial or goal'
         return None
 

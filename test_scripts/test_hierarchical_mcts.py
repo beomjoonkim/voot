@@ -100,8 +100,9 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        print "RANDOM SEED SET", np.random.seed(3)
-        print "RANDOM SEED SET", random.seed(3)
+        sd = 2
+        print "RANDOM SEED SET", np.random.seed(sd)
+        print "RANDOM SEED SET", random.seed(sd)
 
     uct_parameter = args.uct
     widening_parameter = args.widening_parameter

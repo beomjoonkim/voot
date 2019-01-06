@@ -56,56 +56,52 @@ class PickWithBaseUnif(PickUnif):
 
         print 'Sampling pick'
         for iter in range(n_iter):
+
+            # sample pick parameters
             with self.robot:
                 pick_base_pose = sample_ir(obj, self.robot, self.env, region)
             if pick_base_pose is None:
                 return {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None}
             theta, height_portion, depth_portion = sample_grasp_parameters()
             grasp_params = np.array([theta[0], height_portion[0], depth_portion[0]])
-            with self.robot:
-                g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
-                if g_config is not None:
-                    pick_action = {'g_config': g_config, 'base_pose': pick_base_pose}
-                    place_action = {'base_pose': pick_base_pose}
-                    pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params, 'g_config': g_config}
-                    if self.problem_env.name != 'convbelt':
-                        two_arm_pick_object(obj, self.robot, pick_action)
-                        if not check_collision_except(obj, self.env):
-                            two_arm_place_object(obj, self.robot, place_action)
-                            pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params, 'g_config': g_config}
-                            set_robot_config(pick_base_pose, self.robot)
-                            two_arm_place_object(obj, self.robot, place_action)
-                            print "Sampling pick succeeded"
-                            return pick_params
-                        set_robot_config(pick_base_pose, self.robot)
-                        two_arm_place_object(obj, self.robot, place_action)
-                    else:
-                        return pick_params
+
+            # compute if parameters are feasible
+            g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)
+            if g_config is not None:
+                pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
+                               'grasp_params': grasp_params, 'g_config': g_config}
+                return pick_action
         print "Sampling pick failed"
-        pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params, 'g_config': g_config}
-        return pick_params
+        pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params, 'g_config': g_config}
+        return pick_action
 
     def compute_g_config(self, obj, pick_base_pose, grasp_params):
-        #todo finish refactor this
         with self.robot:
             g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
             if g_config is not None:
-                pick_action = {'g_config': g_config, 'base_pose': pick_base_pose}
-                place_action = {'base_pose': pick_base_pose}
-                if self.problem_env.name != 'convbelt':
+                pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
+                               'grasp_params': grasp_params, 'g_config': g_config}
+                if self.problem_env.name == 'convbelt':
+                    two_arm_pick_object(obj, self.robot, pick_action)
+                    set_robot_config(self.problem_env.init_base_conf, self.robot)
+                    if not check_collision_except(obj, self.env):
+                        two_arm_place_object(obj, self.robot, pick_action)
+                        set_robot_config(self.problem_env.init_base_conf, self.robot)
+                        print "Sampling pick succeeded"
+                        return g_config
+                    else:
+                        two_arm_place_object(obj, self.robot, pick_action)
+                        set_robot_config(self.problem_env.init_base_conf, self.robot)
+                else:
                     two_arm_pick_object(obj, self.robot, pick_action)
                     if not check_collision_except(obj, self.env):
-                        two_arm_place_object(obj, self.robot, place_action)
-                        pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
-                                       'grasp_params': grasp_params, 'g_config': g_config}
-                        set_robot_config(pick_base_pose, self.robot)
-                        two_arm_place_object(obj, self.robot, place_action)
+                        two_arm_place_object(obj, self.robot, pick_action)
                         print "Sampling pick succeeded"
-                        return pick_params
-                    set_robot_config(pick_base_pose, self.robot)
-                    two_arm_place_object(obj, self.robot, place_action)
-                else:
-                    return pick_params
+                        return g_config
+                    else:
+                        two_arm_place_object(obj, self.robot, pick_action)
+            else:
+                return None
 
     def predict_closest_to_best_action(self, obj, region, best_action, other_actions):
         #pick_params = self.compute_grasp_action_closest_to_best_action(obj, region, n_iter=1000)
@@ -125,30 +121,16 @@ class PickWithBaseUnif(PickUnif):
                 pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params}
                 best_dist = pick_distance(pick_params, best_action, obj)
                 other_dists = np.array([pick_distance(other, pick_params, obj) for other in other_actions])
-            with self.robot:
-                g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
-                if g_config is not None:
-                    pick_action = {'g_config': g_config, 'base_pose': pick_base_pose}
-                    place_action = {'base_pose': pick_base_pose}
-                    pick_params = {'operator_name': 'two_arm_pick',
-                                   'base_pose': pick_base_pose,
-                                   'grasp_params': grasp_params,
-                                   'g_config':g_config}
 
-                    if self.problem_env.name != 'convbelt':
-                        two_arm_pick_object(obj, self.robot, pick_action)
-                        if not check_collision_except(obj, self.env):
-                            two_arm_place_object(obj, self.robot, place_action) # put it back
-                            print "Sampling pick succeeded"
-                            return pick_params
-                        two_arm_place_object(obj, self.robot, place_action) # put it back
-                    else:
-                        return pick_params
+            g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)
+            if g_config is not None:
+                pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
+                               'grasp_params': grasp_params, 'g_config': g_config}
+                return pick_action
 
         print "Sampling pick failed"
-        pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params,
-                       'g_config': g_config}
-        return pick_params
+        pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params, 'g_config': g_config}
+        return pick_action
 
     def predict(self, obj, region):
         if self.problem_env.is_solving_namo:

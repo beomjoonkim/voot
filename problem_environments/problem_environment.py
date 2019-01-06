@@ -42,6 +42,7 @@ class ProblemEnvironment:
         self.high_level_planner = None
         self.namo_planner = None
         self.fetch_planner = None
+        self.env.StopSimulation()
 
     def make_config_from_op_instance(self, op_instance):
         if op_instance['operator'].find('one_arm')!=-1:

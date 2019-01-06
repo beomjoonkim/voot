@@ -345,15 +345,11 @@ GRAB_SLEEP_TIME = 0.05
 
 
 def grab_obj(robot, obj):
-    robot.GetEnv().StopSimulation()
     robot.Grab(obj)
-    robot.GetEnv().StartSimulation(0.01)
 
 
 def release_obj(robot, obj):
-    robot.GetEnv().StopSimulation()
     robot.Release(obj)
-    robot.GetEnv().StartSimulation(0.01)
 
 
 def one_arm_pick_object(obj, robot, pick_action):
@@ -423,38 +419,43 @@ def simulate_path(robot, path, timestep=0.001):
         set_robot_config(p, robot)
         time.sleep(timestep)
 
+
 def pick_distance(a1, a2, curr_obj):
     obj_xyth = get_body_xytheta(curr_obj)
 
     grasp_a1 = np.array(a1['grasp_params']).squeeze()
     base_a1 = clean_pose_data(np.array(a1['base_pose'])).squeeze()
-    relative_config_a1 = (base_a1 - obj_xyth).squeeze()
 
     grasp_a2 = np.array(a2['grasp_params']).squeeze()
     base_a2 = clean_pose_data(np.array(a2['base_pose'])).squeeze()
-    relative_config_a2 = (base_a2 - obj_xyth).squeeze()
 
     # normalize grasp distance
     grasp_max_diff = [1/2.356, 1., 1.]
     grasp_distance = np.sum( np.dot(abs(grasp_a1 - grasp_a2), grasp_max_diff))
 
-    bas_distance_max_diff = np.array([1./(2*2.51), 1./(2*2.51), 1/2*np.pi])
-    base_distance = np.sum(np.dot(base_conf_distance(relative_config_a1, relative_config_a2),
-                                  bas_distance_max_diff))
-    return grasp_distance + base_distance
+    bas_distance_max_diff = np.array([1./(2*2.51), 1./(2*2.51), 1/np.pi])
+    base_distance = np.sum(np.dot(base_conf_diff(base_a1, base_a2), bas_distance_max_diff))
 
-def base_conf_distance(x, y):
-    return np.sum(abs(x - y))
+    # base distance more important the grasp
+    return grasp_distance + 2*base_distance
+
+
+def base_conf_diff(x, y):
+    base_diff = abs(x-y)
+    base_diff[-1] = base_diff[-1] if base_diff[-1] <= np.pi else 2*np.pi-base_diff[-1]
+    return base_diff
+
 
 def place_distance(a1, a2, curr_obj):
     obj_xyth = get_body_xytheta(curr_obj)
     base_a1 = np.array(a1['base_pose'])
-    relative_config_a1 = base_a1 - obj_xyth
+    base_a1 = clean_pose_data(base_a1).squeeze()
 
     base_a2 = np.array(a2['base_pose'])
-    relative_config_a2 = base_a2 - obj_xyth
-    bas_distance_max_diff = np.array([1. / (0.98), 1. / (0.98), 1 / 2 * np.pi])
-    base_distance = np.sum(np.dot(base_conf_distance(relative_config_a1, relative_config_a2),
-                                  bas_distance_max_diff))
+    base_a2 = clean_pose_data(np.array(base_a2)).squeeze()
+
+    base_distance_max_diff = np.array([1. / (2*2.51), 1. / (2*2.51), 1 / np.pi])
+    base_distance = np.sum(np.dot(base_conf_diff(base_a1, base_a2),
+                                  base_distance_max_diff))
 
     return base_distance

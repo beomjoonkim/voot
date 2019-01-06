@@ -24,7 +24,6 @@ class VOO(SamplingStrategy):
         else:
             action = self.place_pi.predict_closest_to_best_action(curr_obj, region, best_action, evaled_actions)
 
-
         """
         if which_operator == 'two_arm_pick':
             action = self.pick_pi.predict(curr_obj, region)
