@@ -2,8 +2,9 @@ import os
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
 
 DOMAIN = 'convbelt'
+DOMAIN = 'namo'
+sample = 'voo'
 sample = 'unif'
-#sample = 'voo'
 
 def worker_p(config):
     pidx = config[0]
