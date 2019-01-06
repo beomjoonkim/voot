@@ -78,7 +78,7 @@ class PlaceUnif:
             other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
 
         return obj_pose, robot_xytheta
-    """
+
     def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions):
         best_action = make_action_executable(best_action)
         other_actions = [make_action_executable(a) for a in other_actions]
@@ -113,8 +113,8 @@ class PlaceUnif:
         self.robot.SetDOFValues(original_config)
         action = self.predict(obj, obj_region)
         return action
-    """
 
+    """
     def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions):
         best_action = make_action_executable(best_action)
         other_actions = [make_action_executable(a) for a in other_actions]
@@ -127,3 +127,4 @@ class PlaceUnif:
             other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
 
         return action
+    """

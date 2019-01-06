@@ -439,7 +439,6 @@ def pick_distance(a1, a2, curr_obj):
     # base distance more important the grasp
     return grasp_distance + 2*base_distance
 
-"""
 
 def base_conf_diff(x, y):
     base_diff = abs(x-y)
@@ -496,3 +495,4 @@ def place_distance(a1, a2, curr_obj):
                                   bas_distance_max_diff))
 
     return base_distance
+"""
