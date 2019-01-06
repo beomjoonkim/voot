@@ -3,8 +3,8 @@ from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocess
 
 #DOMAIN = 'namo'
 DOMAIN = 'convbelt'
-#sample = 'voo'
 sample = 'voo'
+sample = 'unif'
 
 def worker_p(config):
     pidx = config[0]
@@ -20,12 +20,12 @@ def worker_wrapper_multi_input(multi_args):
 
 
 def main():
-    trials = range(300)
+    trials = range(100)
 
     configs = []
     for t in trials:
         configs.append([t])
-    n_workers = int(1)
+    n_workers = int(5)
 
     print configs
     pool = ThreadPool(n_workers)
