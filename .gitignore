@@ -4,6 +4,7 @@
 *DS_Store
 .idea
 mcts_evolutions/*
+test_scripts/threaded_test_hierarchical_planner.py
 mcts_evolutions
 conveyor_belt/mcts_evolutions
 mover_library/*.pyc
