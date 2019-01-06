@@ -6,10 +6,12 @@ from samplers import sample_pick, sample_grasp_parameters, sample_ir, sample_ir_
 
 from utils import compute_occ_vec, set_robot_config, remove_drawn_configs, \
     draw_configs, clean_pose_data, draw_robot_at_conf, \
-    check_collision_except, two_arm_pick_object, two_arm_place_object
+    check_collision_except, two_arm_pick_object, two_arm_place_object, pick_distance, place_distance
 
 sys.path.append('../mover_library/')
 from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
+from planners.mcts_utils import make_action_executable
+
 
 
 #def check_collision_except_obj(obj, robot, env):
@@ -63,7 +65,7 @@ class PickWithBaseUnif(PickUnif):
             with self.robot:
                 g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
                 if g_config is not None:
-                    pick_action = {'g_config':g_config, 'base_pose': pick_base_pose}
+                    pick_action = {'g_config': g_config, 'base_pose': pick_base_pose}
                     place_action = {'base_pose': pick_base_pose}
                     pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params, 'g_config': g_config}
                     if self.problem_env.name != 'convbelt':
@@ -82,6 +84,74 @@ class PickWithBaseUnif(PickUnif):
         print "Sampling pick failed"
         pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params, 'g_config': g_config}
         return pick_params
+
+    def compute_g_config(self, obj, pick_base_pose, grasp_params):
+        #todo finish refactor this
+        with self.robot:
+            g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
+            if g_config is not None:
+                pick_action = {'g_config': g_config, 'base_pose': pick_base_pose}
+                place_action = {'base_pose': pick_base_pose}
+                if self.problem_env.name != 'convbelt':
+                    two_arm_pick_object(obj, self.robot, pick_action)
+                    if not check_collision_except(obj, self.env):
+                        two_arm_place_object(obj, self.robot, place_action)
+                        pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
+                                       'grasp_params': grasp_params, 'g_config': g_config}
+                        set_robot_config(pick_base_pose, self.robot)
+                        two_arm_place_object(obj, self.robot, place_action)
+                        print "Sampling pick succeeded"
+                        return pick_params
+                    set_robot_config(pick_base_pose, self.robot)
+                    two_arm_place_object(obj, self.robot, place_action)
+                else:
+                    return pick_params
+
+    def predict_closest_to_best_action(self, obj, region, best_action, other_actions):
+        #pick_params = self.compute_grasp_action_closest_to_best_action(obj, region, n_iter=1000)
+        best_action = make_action_executable(best_action)
+        other_actions = [make_action_executable(a) for a in other_actions]
+
+        for iter in range(1000):
+            best_dist = np.inf
+            other_dists = np.array([-1])
+            while np.any(best_dist > other_dists):
+                with self.robot:
+                    pick_base_pose = sample_ir(obj, self.robot, self.env, region)
+                if pick_base_pose is None:
+                    return {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None}
+                theta, height_portion, depth_portion = sample_grasp_parameters()
+                grasp_params = np.array([theta[0], height_portion[0], depth_portion[0]])
+                pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params}
+                best_dist = pick_distance(pick_params, best_action, obj)
+                other_dists = np.array([pick_distance(other, pick_params, obj) for other in other_actions])
+            with self.robot:
+                g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
+                if g_config is not None:
+                    pick_action = {'g_config': g_config, 'base_pose': pick_base_pose}
+                    place_action = {'base_pose': pick_base_pose}
+                    if self.problem_env.name != 'convbelt':
+                        two_arm_pick_object(obj, self.robot, pick_action)
+                        if not check_collision_except(obj, self.env):
+                            two_arm_place_object(obj, self.robot, place_action)
+                            pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
+                                           'grasp_params': grasp_params, 'g_config': g_config}
+                            set_robot_config(pick_base_pose, self.robot)
+                            two_arm_place_object(obj, self.robot, place_action)
+                            print "Sampling pick succeeded"
+                            return pick_params
+                        set_robot_config(pick_base_pose, self.robot)
+                        two_arm_place_object(obj, self.robot, place_action)
+                    else:
+                        return pick_params
+
+        print "Sampling pick failed"
+        pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params,
+                       'g_config': g_config}
+        return pick_params
+
+
+
 
     def predict(self, obj, region):
         if self.problem_env.is_solving_namo:

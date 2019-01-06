@@ -5,6 +5,8 @@ import pickle
 sys.path.append('../mover_library/')
 from samplers import *
 from utils import *
+from utils import place_distance
+from planners.mcts_utils import make_action_executable
 
 
 def generate_rand(min, max):
@@ -59,4 +61,15 @@ class PlaceUnif:
         #import pdb;pdb.set_trace()
         return None
 
+    def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions):
+        best_action = make_action_executable(best_action)
+        other_actions = [make_action_executable(a) for a in other_actions]
 
+        best_dist = np.inf
+        other_dists = np.array([-1])
+        while np.any(best_dist > other_dists):
+            action = self.predict(obj, obj_region)
+            best_dist = place_distance(action, best_action, obj)
+            other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
+
+        return action

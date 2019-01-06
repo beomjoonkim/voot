@@ -5,6 +5,7 @@ from manipulation.constants import PARALLEL_LEFT_ARM, REST_LEFT_ARM, HOLDING_LEF
 
 from manipulation.regions import create_region, AARegion
 from manipulation.primitives.utils import mirror_arm_config
+from planners.mcts_utils import make_action_executable
 from openravepy import *
 import numpy as np
 import math
@@ -421,3 +422,39 @@ def simulate_path(robot, path, timestep=0.001):
     for p in path:
         set_robot_config(p, robot)
         time.sleep(timestep)
+
+def pick_distance(a1, a2, curr_obj):
+    obj_xyth = get_body_xytheta(curr_obj)
+
+    grasp_a1 = np.array(a1['grasp_params']).squeeze()
+    base_a1 = clean_pose_data(np.array(a1['base_pose'])).squeeze()
+    relative_config_a1 = (base_a1 - obj_xyth).squeeze()
+
+    grasp_a2 = np.array(a2['grasp_params']).squeeze()
+    base_a2 = clean_pose_data(np.array(a2['base_pose'])).squeeze()
+    relative_config_a2 = (base_a2 - obj_xyth).squeeze()
+
+    # normalize grasp distance
+    grasp_max_diff = [1/2.356, 1., 1.]
+    grasp_distance = np.sum( np.dot(abs(grasp_a1 - grasp_a2), grasp_max_diff))
+
+    bas_distance_max_diff = np.array([1./(2*2.51), 1./(2*2.51), 1/2*np.pi])
+    base_distance = np.sum(np.dot(base_conf_distance(relative_config_a1, relative_config_a2),
+                                  bas_distance_max_diff))
+    return grasp_distance + base_distance
+
+def base_conf_distance(x, y):
+    return np.sum(abs(x - y))
+
+def place_distance(a1, a2, curr_obj):
+    obj_xyth = get_body_xytheta(curr_obj)
+    base_a1 = np.array(a1['base_pose'])
+    relative_config_a1 = base_a1 - obj_xyth
+
+    base_a2 = np.array(a2['base_pose'])
+    relative_config_a2 = base_a2 - obj_xyth
+    bas_distance_max_diff = np.array([1. / (0.98), 1. / (0.98), 1 / 2 * np.pi])
+    base_distance = np.sum(np.dot(base_conf_distance(relative_config_a1, relative_config_a2),
+                                  bas_distance_max_diff))
+
+    return base_distance
