@@ -30,8 +30,8 @@ def get_stripstream_results(domain_name):
 
 def get_mcts_results(domain_name):
     if domain_name == 'convbelt':
-        result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_unif/'
-        #result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_voo/'
+        #result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_unif/'
+        result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_voo/'
     elif domain_name == 'namo':
         result_dir = './test_results/namo_results/uct_0.0_widening_0.5_unif/'
         result_dir = './test_results/namo_results/uct_0.0_widening_0.5_voo/'
@@ -45,8 +45,10 @@ def get_mcts_results(domain_name):
         except:
           print fin
         if domain_name=='convbelt':
-            success.append(result['plan'] is not None)
-            search_times.append(result['search_time'][-1][0])
+            is_success = result['plan'] is not None
+            success.append(is_success)
+            if is_success:
+                search_times.append(result['search_time'][-1][0])
         else:
             is_success = result['search_time']['namo'][-1][-1]
             success.append(is_success)
