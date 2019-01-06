@@ -37,6 +37,8 @@ class PickWithBaseUnif(PickUnif):
 
     def compute_grasp_config(self, obj, pick_base_pose, grasp_params):
         set_robot_config(pick_base_pose, self.robot)
+        if self.env.CheckCollision(self.robot):
+            return None
         grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
                                        height_portion=grasp_params[1],
                                        theta=grasp_params[0],
@@ -84,7 +86,7 @@ class PickWithBaseUnif(PickUnif):
                 if self.problem_env.name == 'convbelt':
                     two_arm_pick_object(obj, self.robot, pick_action)
                     set_robot_config(self.problem_env.init_base_conf, self.robot)
-                    if not check_collision_except(obj, self.env):
+                    if not self.env.CheckCollision(self.robot):
                         two_arm_place_object(obj, self.robot, pick_action)
                         set_robot_config(self.problem_env.init_base_conf, self.robot)
                         print "Sampling pick succeeded"
@@ -94,7 +96,7 @@ class PickWithBaseUnif(PickUnif):
                         set_robot_config(self.problem_env.init_base_conf, self.robot)
                 else:
                     two_arm_pick_object(obj, self.robot, pick_action)
-                    if not check_collision_except(obj, self.env):
+                    if not self.env.CheckCollision(self.robot):
                         two_arm_place_object(obj, self.robot, pick_action)
                         print "Sampling pick succeeded"
                         return g_config
@@ -106,18 +108,46 @@ class PickWithBaseUnif(PickUnif):
     def sample_closest_to_best_action(self, obj, region, best_action, other_actions):
         best_dist = np.inf
         other_dists = np.array([-1])
+        counter = 1
         while np.any(best_dist > other_dists):
-            with self.robot:
-                pick_base_pose = sample_ir(obj, self.robot, self.env, region)
-            if pick_base_pose is None:
-                return None, None
-            theta, height_portion, depth_portion = sample_grasp_parameters()
-            grasp_params = np.array([theta[0], height_portion[0], depth_portion[0]])
+
+            if len(other_dists) > 0:
+                print "Gaussian pick sampling, counter", counter
+                best_action_base_pose = best_action['base_pose']
+                var_base_pose = np.array([0.3, 0.3, 0.5]) / float(counter)
+                pick_base_pose = np.random.normal(best_action_base_pose, var_base_pose)
+
+                best_action_grasp_params = best_action['grasp_params']
+                var_grasp = np.array([0.5, 0.2, 0.2]) / float(counter)
+                grasp_params = np.random.normal(best_action_grasp_params, var_grasp)
+
+                if grasp_params[0] > np.pi:
+                    grasp_params[0] = np.pi
+                elif grasp_params[0] < np.pi/4.0:
+                    grasp_params[0] = np.pi/4.0
+
+                if grasp_params[1] > 1:
+                    grasp_params[1] = 1
+                elif grasp_params[1] < 0:
+                    grasp_params[1] = 0
+
+                if grasp_params[2] > 1:
+                    grasp_params[2] = 1
+                elif grasp_params[2] < 0:
+                    grasp_params[2] = 0
+            else:
+                with self.robot:
+                    pick_base_pose = sample_ir(obj, self.robot, self.env, region)
+                if pick_base_pose is None:
+                    return None, None
+                theta, height_portion, depth_portion = sample_grasp_parameters()
+                grasp_params = np.array([theta[0], height_portion[0], depth_portion[0]])
+            counter += 1
+
             pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose, 'grasp_params': grasp_params}
             best_dist = pick_distance(pick_params, best_action, obj)
             other_dists = np.array([pick_distance(other, pick_params, obj) for other in other_actions])
         return pick_base_pose, grasp_params
-
 
     def predict_closest_to_best_action(self, obj, region, best_action, other_actions):
         #pick_params = self.compute_grasp_action_closest_to_best_action(obj, region, n_iter=1000)
@@ -125,11 +155,15 @@ class PickWithBaseUnif(PickUnif):
         other_actions = [make_action_executable(a) for a in other_actions]
 
         for iter in range(1000):
+            print "Sampling closest"
             pick_base_pose, grasp_params = self.sample_closest_to_best_action(obj, region, best_action, other_actions)
+
             if pick_base_pose is None:
                 continue
+
             if self.problem_env.name == 'convbelt':
                 self.problem_env.disable_objects()
+                obj.Enable(True)
             g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)
             if self.problem_env.name == 'convbelt':
                 self.problem_env.enable_objects()
@@ -152,6 +186,7 @@ class PickWithBaseUnif(PickUnif):
         else:
             if self.problem_env.name == 'convbelt':
                 self.problem_env.disable_objects()
+                obj.Enable(True)
                 pick_params = self.compute_grasp_action(obj, region, n_iter=1000)
                 self.problem_env.enable_objects()
             else:

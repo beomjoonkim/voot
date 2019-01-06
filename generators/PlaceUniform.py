@@ -71,7 +71,7 @@ class PlaceUnif:
             grab_obj(self.robot, obj)
         return obj_pose, robot_xytheta
 
-    def get_gaussian_placement_wrt_target_obj_placement(self, obj, target_obj_placement, target_obj_region, T_r_wrt_o):
+    def get_gaussian_placement_wrt_target_obj_placement(self, obj, target_obj_placement, target_obj_region, T_r_wrt_o, variance):
         original_trans = self.robot.GetTransform()
         original_config = self.robot.GetDOFValues()
         self.robot.SetTransform(original_trans)
@@ -80,7 +80,7 @@ class PlaceUnif:
         release_obj(self.robot, obj)
         with self.robot:
             # print target_obj_region
-            obj_pose = gaussian_randomly_place_in_region(self.env, obj, target_obj_region, center=target_obj_placement, var=[0.3, 0.3, 0.5])  # randomly place obj
+            obj_pose = gaussian_randomly_place_in_region(self.env, obj, target_obj_region, center=target_obj_placement, var=variance)  # randomly place obj
             obj_pose = obj_pose.squeeze()
 
             # compute the resulting robot transform
@@ -95,18 +95,27 @@ class PlaceUnif:
     def sample_closest_to_best_action(self, obj, target_obj_region, best_action, other_actions, T_r_wrt_o):
         best_dist = np.inf
         other_dists = np.array([-1])
+        counter = 1
         while np.any(best_dist > other_dists):
-            if len(other_dists) > 5:
+            #if obj.GetName() != 'obj0' or counter > 30:
+            #    import pdb;pdb.set_trace()
+
+            if len(other_dists) > 0:
+                variance = np.array([0.3, 0.3, 0.5]) / counter
+                print 'Gaussian sampling', best_dist, other_dists, variance
                 obj_pose, robot_xytheta = self.get_gaussian_placement_wrt_target_obj_placement(obj,
                                                                                                best_action['object_pose'],
                                                                                                target_obj_region,
-                                                                                               T_r_wrt_o)
+                                                                                               T_r_wrt_o,
+                                                                                               variance)
             else:
+                print 'Regular sampling', best_dist, other_dists
                 obj_pose, robot_xytheta = self.get_placement(obj, target_obj_region, T_r_wrt_o)
 
             action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
             best_dist = place_distance(action, best_action, obj)
             other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
+            counter += 1
 
         return obj_pose, robot_xytheta
 

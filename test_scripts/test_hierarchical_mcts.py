@@ -100,7 +100,7 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        sd = 2
+        sd = 39
         print "RANDOM SEED SET", np.random.seed(sd)
         print "RANDOM SEED SET", random.seed(sd)
 
