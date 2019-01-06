@@ -37,6 +37,7 @@ def get_mcts_results(domain_name):
         #result_dir = './test_results/namo_results/uct_0.0_widening_0.5_unif/'
     search_times = []
     success = []
+    search_rwd_times = []
     for fin in os.listdir(result_dir):
         if fin.find('.pkl') == -1: 
             continue
@@ -44,9 +45,13 @@ def get_mcts_results(domain_name):
           result = pickle.load(open(result_dir+fin,'r'))
         except:
           print fin
+
+        search_rwd_times.append(result['search_time'])
         if domain_name=='convbelt':
-            success.append(result['plan'] is not None)
-            search_times.append(result['search_time'][-1][0])
+            is_success = result['plan'] is not None
+            success.append(is_success)
+            if is_success:
+                search_times.append(result['search_time'][-1][0])
         else:
             is_success = result['search_time']['namo'][-1][-1]
             success.append(is_success)
@@ -56,7 +61,7 @@ def get_mcts_results(domain_name):
     print "mcts time and success rate:"
     print np.array(search_times).mean()
     print np.array(success).mean()
-    print len(search_times)
+    print len(success)
     import pdb;pdb.set_trace()
     
 
@@ -65,7 +70,7 @@ def main():
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-planner', type=str, default='stripstream')
     args = parser.parse_args()
-    get_stripstream_results(args.domain)
+    #get_stripstream_results(args.domain)
     get_mcts_results(args.domain)
 
 
