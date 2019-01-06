@@ -3,7 +3,7 @@ import sys
 
 sys.path.append('./mover_library/')
 from sampling_strategy import SamplingStrategy
-from utils import get_body_xytheta
+from utils import get_body_xytheta, clean_pose_data
 from planners.mcts_utils import make_action_executable
 
 
@@ -16,16 +16,21 @@ class VOO(SamplingStrategy):
         a2_executable = make_action_executable(a2)
         obj_xyth = get_body_xytheta(curr_obj)
 
-        grasp_a1 = np.array(a1['grasp_params'])
-        base_a1 = np.array(a1['base_pose'])
+        grasp_a1 = np.array(a1['grasp_params']).squeeze()
+        base_a1 = clean_pose_data(np.array(a1['base_pose'])).squeeze()
         relative_config_a1 = (base_a1 - obj_xyth).squeeze()
 
         grasp_a2 = np.array(a2_executable['grasp_params']).squeeze()
-        base_a2 = np.array(a2_executable['base_pose']).squeeze()
+        base_a2 = clean_pose_data(np.array(a2_executable['base_pose'])).squeeze()
         relative_config_a2 = (base_a2 - obj_xyth).squeeze()
 
-        grasp_distance = np.sum(abs(grasp_a1 - grasp_a2))
-        base_distance = np.sum(self.base_conf_distance(relative_config_a1, relative_config_a2))
+        # normalize grasp distance
+        grasp_max_diff = [1/2.356, 1., 1.]
+        grasp_distance = np.sum( np.dot(abs(grasp_a1 - grasp_a2), grasp_max_diff))
+
+        bas_distance_max_diff = np.array([1./(2*2.51), 1./(2*2.51), 1/2*np.pi])
+        base_distance = np.sum(np.dot(self.base_conf_distance(relative_config_a1, relative_config_a2),
+                                      bas_distance_max_diff))
         return grasp_distance + base_distance
 
     @staticmethod
