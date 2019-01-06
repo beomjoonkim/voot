@@ -86,19 +86,6 @@ class ConveyorBelt(ProblemEnvironment):
 
         object_to_pick = node.obj
         if check_feasibility:
-            pick_base_pose = action['base_pose']
-            grasp_params = action['grasp_params']
-            set_robot_config(pick_base_pose, self.robot)
-            grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
-                                           height_portion=grasp_params[1],
-                                           theta=grasp_params[0],
-                                           obj=object_to_pick,
-                                           robot=self.robot)
-            g_config = solveTwoArmIKs(self.env, self.robot, object_to_pick, grasps)
-            try:
-                assert g_config is not None
-            except:
-                import pdb;pdb.set_trace()
             two_arm_pick_object(object_to_pick, self.robot, action)
             set_robot_config(self.init_base_conf, self.robot)
             if self.env.CheckCollision(self.robot):
@@ -112,10 +99,13 @@ class ConveyorBelt(ProblemEnvironment):
         set_robot_config(self.init_base_conf, self.robot)
         curr_state = self.get_state()
         reward = 0
-        return curr_state, reward, g_config, []
+        return curr_state, reward, action['g_config'], []
 
     def apply_two_arm_place_action(self, action, node, check_feasibility, parent_motion):
-        # todo should this function tell you that it is a terminal state?
+        if action['base_pose'] is None:
+            curr_state = self.get_state()
+            return curr_state, self.infeasible_reward, None, []
+
         target_obj = node.obj
         target_region = node.region
         place_base_pose = action['base_pose']
@@ -161,11 +151,13 @@ class ConveyorBelt(ProblemEnvironment):
         self.init_which_opreator = saver.which_operator
         self.objs_to_move = self.objects[len(saver.placements):]
 
-    def disable_objects_in_region(self, region_name):
-        return
+    def disable_objects(self):
+        for o in self.objects:
+            o.Enable(False)
 
-    def enable_objects_in_region(self, region_name):
-        return
+    def enable_objects(self):
+        for o in self.objects:
+            o.Enable(True)
 
     def which_operator(self, obj=None):
         if self.is_pick_time():

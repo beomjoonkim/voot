@@ -42,10 +42,13 @@ class PlaceUnif:
                 self.robot.SetTransform(original_trans)
                 self.robot.SetDOFValues(original_config)
                 return {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
+            else:
+                self.robot.SetTransform(original_trans)
+                self.robot.SetDOFValues(original_config)
 
         self.robot.SetTransform(original_trans)
         self.robot.SetDOFValues(original_config)
-        return None
+        return {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}
 
     def get_placement(self, obj, target_obj_region, T_r_wrt_o):
         original_trans = self.robot.GetTransform()
@@ -77,8 +80,7 @@ class PlaceUnif:
         release_obj(self.robot, obj)
         with self.robot:
             # print target_obj_region
-            obj_pose = gaussian_randomly_place_in_region(self.env, obj, target_obj_region, center=target_obj_placement,
-                                                         var=[0.3, 0.3, 0.5])  # randomly place obj
+            obj_pose = gaussian_randomly_place_in_region(self.env, obj, target_obj_region, center=target_obj_placement, var=[0.3, 0.3, 0.5])  # randomly place obj
             obj_pose = obj_pose.squeeze()
 
             # compute the resulting robot transform
@@ -143,8 +145,7 @@ class PlaceUnif:
 
         self.robot.SetTransform(original_trans)
         self.robot.SetDOFValues(original_config)
-        action = self.predict(obj, obj_region)
-        return action
+        return {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}
 
     """
     def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions):

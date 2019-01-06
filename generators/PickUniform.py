@@ -128,7 +128,12 @@ class PickWithBaseUnif(PickUnif):
             pick_base_pose, grasp_params = self.sample_closest_to_best_action(obj, region, best_action, other_actions)
             if pick_base_pose is None:
                 continue
+            if self.problem_env.name == 'convbelt':
+                self.problem_env.disable_objects()
             g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)
+            if self.problem_env.name == 'convbelt':
+                self.problem_env.enable_objects()
+
             if g_config is not None:
                 pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
                                'grasp_params': grasp_params, 'g_config': g_config}
@@ -146,7 +151,9 @@ class PickWithBaseUnif(PickUnif):
                 pick_params = self.compute_grasp_action(obj, region, n_iter=100)
         else:
             if self.problem_env.name == 'convbelt':
+                self.problem_env.disable_objects()
                 pick_params = self.compute_grasp_action(obj, region, n_iter=1000)
+                self.problem_env.enable_objects()
             else:
                 #pick_params = self.compute_grasp_action(obj, region, n_iter=10)
                 pick_params = self.compute_grasp_action(obj, region, n_iter=10)
@@ -156,8 +163,8 @@ class PickWithBaseUnif(PickUnif):
             obj.Enable(True)
             pick_params = self.compute_grasp_action(obj, region, n_iter=100)
             self.problem_env.enable_objects_in_region(region.name)
-        #if pick_params['g_config'] is None:
-        #    import pdb;pdb.set_trace()
+
+
         return pick_params
 
 

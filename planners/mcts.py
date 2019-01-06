@@ -154,6 +154,7 @@ class MCTS:
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
+            import pdb;pdb.set_trace()
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
@@ -224,7 +225,6 @@ class MCTS:
     @staticmethod
     def update_node_statistics(curr_node, action, sum_rewards, reward):
         curr_node.Nvisited += 1
-        print action
         if is_action_hashable(action):
             hashable_action = action
         else:
@@ -253,10 +253,7 @@ class MCTS:
         if DEBUG:
             print "At depth ", depth
             print "Is it time to pick?", self.environment.is_pick_time()
-        print self.environment.robot.GetGrabbed()
         action = self.choose_action(curr_node)
-        print action, curr_node.operator
-        print self.environment.robot.GetGrabbed()
         parent_motion = None
         if curr_node.is_action_tried(action):
             if DEBUG:
@@ -269,7 +266,6 @@ class MCTS:
                 check_feasibility = False
         else:
             check_feasibility = True  # todo: store path?
-        print self.environment.robot.GetGrabbed()
         if DEBUG:
             print 'Is pick time? ', self.environment.is_pick_time()
             print "Executing action ", action
