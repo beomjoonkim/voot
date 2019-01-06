@@ -130,18 +130,18 @@ class PickWithBaseUnif(PickUnif):
                 if g_config is not None:
                     pick_action = {'g_config': g_config, 'base_pose': pick_base_pose}
                     place_action = {'base_pose': pick_base_pose}
+                    pick_params = {'operator_name': 'two_arm_pick',
+                                   'base_pose': pick_base_pose,
+                                   'grasp_params': grasp_params,
+                                   'g_config':g_config}
+
                     if self.problem_env.name != 'convbelt':
                         two_arm_pick_object(obj, self.robot, pick_action)
                         if not check_collision_except(obj, self.env):
-                            two_arm_place_object(obj, self.robot, place_action)
-                            pick_params = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
-                                           'grasp_params': grasp_params, 'g_config': g_config}
-                            set_robot_config(pick_base_pose, self.robot)
-                            two_arm_place_object(obj, self.robot, place_action)
+                            two_arm_place_object(obj, self.robot, place_action) # put it back
                             print "Sampling pick succeeded"
                             return pick_params
-                        set_robot_config(pick_base_pose, self.robot)
-                        two_arm_place_object(obj, self.robot, place_action)
+                        two_arm_place_object(obj, self.robot, place_action) # put it back
                     else:
                         return pick_params
 
@@ -150,12 +150,9 @@ class PickWithBaseUnif(PickUnif):
                        'g_config': g_config}
         return pick_params
 
-
-
-
     def predict(self, obj, region):
         if self.problem_env.is_solving_namo:
-            if self.problem_env.name == 'convbelt' or self.problem_env.name == 'namo':
+            if self.problem_env.name == 'namo':
                 pick_params = self.compute_grasp_action(obj, region, n_iter=100)
             else:
                 pick_params = self.compute_grasp_action(obj, region, n_iter=100)

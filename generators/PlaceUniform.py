@@ -67,9 +67,12 @@ class PlaceUnif:
 
         best_dist = np.inf
         other_dists = np.array([-1])
-        while np.any(best_dist > other_dists):
+        for iter in range(30):
+            print "Sampling place iter: ",iter
             action = self.predict(obj, obj_region)
             best_dist = place_distance(action, best_action, obj)
             other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
-
+            if not np.any(best_dist > other_dists):
+                print 'Best v-region place found'
+                break
         return action
