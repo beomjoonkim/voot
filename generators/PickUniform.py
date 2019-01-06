@@ -112,17 +112,15 @@ class PickWithBaseUnif(PickUnif):
         while np.any(best_dist > other_dists):
 
             if len(other_dists) > 0:
-                if counter >= 2:
-                    import pdb;pdb.set_trace()
                 print "Gaussian pick sampling, counter", counter
                 best_action_base_pose = best_action['base_pose']
-                best_action_grasp_params = best_action['grasp_params']
-
                 var_base_pose = np.array([0.3, 0.3, 0.5]) / float(counter)
                 pick_base_pose = np.random.normal(best_action_base_pose, var_base_pose)
 
+                best_action_grasp_params = best_action['grasp_params']
                 var_grasp = np.array([0.5, 0.2, 0.2]) / float(counter)
                 grasp_params = np.random.normal(best_action_grasp_params, var_grasp)
+
                 if grasp_params[0] > np.pi:
                     grasp_params[0] = np.pi
                 elif grasp_params[0] < np.pi/4.0:
