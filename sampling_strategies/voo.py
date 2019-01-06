@@ -45,8 +45,11 @@ class VOO(SamplingStrategy):
         a2_executable = make_action_executable(a2)
         base_a2 = np.array(a2_executable['base_pose'])
         relative_config_a2 = base_a2 - obj_xyth
+        bas_distance_max_diff = np.array([1. / (0.98), 1. / (0.98), 1 / 2 * np.pi])
+        base_distance = np.sum(np.dot(self.base_conf_distance(relative_config_a1, relative_config_a2),
+                                      bas_distance_max_diff))
 
-        return np.sum(self.base_conf_distance(relative_config_a1, relative_config_a2))
+        return base_distance
 
     def sample_from_best_voroi_region(self, evaled_actions, evaled_scores, node):
         best_action = evaled_actions[np.argmax(evaled_scores)]
@@ -54,12 +57,6 @@ class VOO(SamplingStrategy):
         curr_obj = node.obj
         region = node.region
 
-        if len(np.unique(evaled_scores)) == 1:
-            if which_operator == 'two_arm_pick':
-                action = self.pick_pi.predict(curr_obj, region)
-            else:
-                action = self.place_pi.predict(curr_obj, region)
-            return action
         if which_operator == 'two_arm_pick':
             action = self.pick_pi.predict(curr_obj, region)
             dists_to_non_best_actions = np.array([self.pick_distance(action, y, curr_obj)
@@ -74,7 +71,7 @@ class VOO(SamplingStrategy):
         print dist_to_curr_best_action, dists_to_non_best_actions
         n_trials = 0
         while len(dists_to_non_best_actions) != 0 and np.any(dist_to_curr_best_action > dists_to_non_best_actions) \
-                and n_trials < 10:
+                and n_trials < 30:
             if which_operator == 'two_arm_pick':
                 action = self.pick_pi.predict(curr_obj, region)
                 dist_to_curr_best_action = np.array([self.pick_distance(action, best_action, curr_obj)])
@@ -108,7 +105,7 @@ class VOO(SamplingStrategy):
         evaled_actions = node.Q.keys()
 
         rnd = np.random.random()
-        if rnd < 1-self.explr_p and len(evaled_actions) > 0 \
+        if rnd < 1-self.explr_p and len(evaled_actions) > 1 \
                 and np.max(evaled_scores) > self.environment.infeasible_reward:
             print "VOO sampling from best voronoi region"
             action = self.sample_from_best_voroi_region(evaled_actions, evaled_scores, node)
