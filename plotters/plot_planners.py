@@ -31,10 +31,10 @@ def get_stripstream_results(domain_name):
 def get_mcts_results(domain_name):
     if domain_name == 'convbelt':
         result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_unif/'
-        #result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_voo/'
+        result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_voo/'
     elif domain_name == 'namo':
-        result_dir = './test_results/namo_results/uct_0.0_widening_0.5_unif/'
         result_dir = './test_results/namo_results/uct_0.0_widening_0.5_voo/'
+        #result_dir = './test_results/namo_results/uct_0.0_widening_0.5_unif/'
     search_times = []
     success = []
     for fin in os.listdir(result_dir):

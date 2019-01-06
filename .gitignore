@@ -1,4 +1,5 @@
 *.pyc
+test_scripts/threaded_test_hierarchical_planner.py
 *.swp
 *.swo
 *DS_Store
