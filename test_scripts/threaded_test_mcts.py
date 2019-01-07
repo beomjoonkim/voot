@@ -1,16 +1,21 @@
 import os
+import sys
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
-
-DOMAIN = 'namo'
 
 
 def worker_p(config):
-    pidx = config[0]
-
-    command = 'python ./test_scripts/test_mcts.py -sampling_strategy uniform -problem_idx ' + str(pidx) + ' -domain ' + DOMAIN
-
+    sampling_strategy = config[-1]
+    domain = config[-2]
+    pidx = config[-3]
+    if sampling_strategy == 'voo':
+        epsilon = config[0]
+        command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + sampling_strategy + \
+              ' -problem_idx ' + str(pidx) + ' -domain ' + domain + ' -epsilon ' + str(epsilon)
+    else:
+        command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + sampling_strategy + \
+                  ' -problem_idx ' + str(pidx) + ' -domain ' + domain
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -18,12 +23,22 @@ def worker_wrapper_multi_input(multi_args):
 
 
 def main():
-    trials = range(190)
+    domain = sys.argv[1]
+    sampling_strategy = sys.argv[2]
+    if sampling_strategy == 'voo':
+        epsilons = [0.01, 0.05, 0.1, 0.15, 0.2, 0.25]
+        trials = range(100)
+        configs = []
+        for e in epsilons:
+            for t in trials:
+                configs.append([e, t, domain, sampling_strategy])
+    else:
+        trials = range(100)
+        configs = []
+        for t in trials:
+            configs.append([t, domain, sampling_strategy])
 
-    configs = []
-    for t in trials:
-        configs.append([t])
-    n_workers = int(1)
+    n_workers = int(5)
 
     print configs
     pool = ThreadPool(n_workers)

@@ -13,4 +13,3 @@ mover_library/*.pyc
 *pyc
 *core
 *core*
-/test_scripts/threaded_test_hierarchical_planner.py

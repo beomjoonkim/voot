@@ -19,11 +19,22 @@ import os
 import openravepy
 import numpy as np
 import random
+import socket
+
+hostname = socket.gethostname()
+if hostname == 'dell-XPS-15-9560' or hostname=='phaedra':
+    ROOTDIR = './'
+else:
+    ROOTDIR = '/data/public/rw/pass.port/gtamp_results/'
 
 
-def make_save_dir(domain, uct_parameter, widening_parameter, sampling_strategy):
-    save_dir = './test_results/' + domain + '_results/uct_' + str(uct_parameter) + '_widening_' \
-               + str(widening_parameter) + '_'+sampling_strategy+'/'
+def make_save_dir(domain, uct_parameter, widening_parameter, voo_exploration_parameter, sampling_strategy):
+    if sampling_strategy == 'voo':
+        save_dir = ROOTDIR+'/test_results/' + domain + '_results/uct_' + str(uct_parameter) + '_widening_' \
+                   + str(widening_parameter) + '_'+sampling_strategy+'/eps_'+ str(voo_exploration_parameter) +'/'
+    else:
+        save_dir = ROOTDIR+'./test_results/' + domain + '_results/uct_' + str(uct_parameter) + '_widening_' \
+                   + str(widening_parameter) + '_'+sampling_strategy+'/'
 
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
@@ -31,12 +42,12 @@ def make_save_dir(domain, uct_parameter, widening_parameter, sampling_strategy):
     return save_dir
 
 
-def make_sampling_strategy(sampling_strategy, domain_name, problem_env):
+def make_sampling_strategy(sampling_strategy, domain_name, problem_env, voo_exploration_parameter):
     if domain_name == 'namo':
         pick_sampler = PickWithBaseUnif(problem_env)
         place_sampler = PlaceUnif(problem_env)
         if sampling_strategy == 'voo':
-            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=0.3)
+            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=voo_exploration_parameter)
         else:
             sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
 
@@ -45,7 +56,7 @@ def make_sampling_strategy(sampling_strategy, domain_name, problem_env):
         place_sampler = PlaceUnif(problem_env)
 
         if sampling_strategy == 'voo':
-            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=0.3)
+            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=voo_exploration_parameter)
         else:
             sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
 
@@ -58,7 +69,7 @@ def make_sampling_strategy(sampling_strategy, domain_name, problem_env):
 
         # todo make MoverVOO
         if sampling_strategy == 'voo':
-            sampling_strategy = MoverVOO(problem_env, two_arm_pick_pi, two_arm_place_pi, explr_p=0.3)
+            sampling_strategy = MoverVOO(problem_env, two_arm_pick_pi, two_arm_place_pi, explr_p=voo_exploration_parameter)
         else:
             sampling_strategy = Uniform(problem_env, two_arm_pick_pi, two_arm_place_pi, one_arm_pick_pi,
                                         one_arm_place_pi)
@@ -91,6 +102,7 @@ def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-uct', type=float, default=0.0)
     parser.add_argument('-widening_parameter', type=float, default=0.5)
+    parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)
     parser.add_argument('-domain', type=str, default='namo')
@@ -107,16 +119,18 @@ def main():
     uct_parameter = args.uct
     widening_parameter = args.widening_parameter
     sampling_strategy = args.sampling_strategy
+    voo_exploration_parameter = args.epsilon
     problem_index = args.problem_idx
 
-    save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter, sampling_strategy)
+    save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter, voo_exploration_parameter, sampling_strategy)
+
     stat_file_name = save_dir + str(problem_index)+'.pkl'
     if os.path.isfile(stat_file_name):
         print "already done"
         return -1
 
     problem_env = make_problem_env(args.domain)
-    sampling_strategy = make_sampling_strategy(args.sampling_strategy, args.domain, problem_env)
+    sampling_strategy = make_sampling_strategy(args.sampling_strategy, args.domain, problem_env, voo_exploration_parameter)
     task_plan = get_task_plan(args.domain, problem_env)
 
     if args.v:
