@@ -1,11 +1,9 @@
 *.pyc
-test_scripts/threaded_test_hierarchical_planner.py
 *.swp
 *.swo
 *DS_Store
 .idea
 mcts_evolutions/*
-test_scripts/threaded_test_hierarchical_planner.py
 mcts_evolutions
 conveyor_belt/mcts_evolutions
 mover_library/*.pyc
@@ -14,5 +12,5 @@ mover_library/*.pyc
 ./temp/*
 *pyc
 *core
-test_scripts/threaded_test_hierarchical_planner.py
 *core*
+/test_scripts/threaded_test_hierarchical_planner.py
