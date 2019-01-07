@@ -168,7 +168,7 @@ class MCTS:
 
             # log the reward vs. time
             best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node()
-            search_time_to_reward.append([time_to_search, best_traj_rwd, self.found_solution])
+            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, self.found_solution])
 
             if self.found_solution:
                 # todo next:

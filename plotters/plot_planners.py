@@ -10,6 +10,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import socket
 
+
+def savefig(xlabel,ylabel,fname=''):
+  plt.legend(loc='best',prop={'size': 13})
+  plt.xlabel(xlabel,fontsize=14,fontweight='bold')
+  plt.ylabel(ylabel,fontsize=14,fontweight='bold')
+  plt.xticks(fontsize=14)
+  plt.yticks(fontsize=14)
+  print 'Saving figure ',fname+'.png'
+  plt.savefig(fname+'.png',dpi=100,format='png')
+
 def get_stripstream_results(domain_name):
     if domain_name == 'convbelt':
         result_dir = './test_results/convbelt_results/stripstream/'
@@ -35,19 +45,27 @@ def get_stripstream_results(domain_name):
 
 
 def get_result_dir(domain_name, algo_name):
+    if algo_name.find('voo') != -1:
+        epsilon = algo_name.split('_')[1]
+        algo_name = algo_name.split('_')[0]
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+    else:
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+
     if domain_name == 'convbelt':
-        result_dir = './test_results/convbelt_results/uct_0.0_widening_0.5_'
+        result_dir = rootdir+'/convbelt_results/uct_0.0_widening_0.5_'
     elif domain_name == 'namo':
-        result_dir = './test_results/namo_results/uct_0.0_widening_0.5_'
+        result_dir = rootdir+'/namo_results/uct_0.0_widening_0.5_'
     else:
         return -1
 
     result_dir += algo_name +'/'
+    if algo_name.find('voo')!=-1:
+        result_dir += 'eps_'+ str(epsilon)+'/'
     return result_dir
 
 
 def get_mcts_results(domain_name, algo_name):
-
     result_dir = get_result_dir(domain_name, algo_name)
     search_times = []
     success = []
@@ -55,7 +73,10 @@ def get_mcts_results(domain_name, algo_name):
     for fin in os.listdir(result_dir):
         if fin.find('.pkl') == -1: 
             continue
-        result = pickle.load(open(result_dir+fin,'r'))
+        if algo_name == 'voo':
+            result = pickle.load(open(result_dir+fin,'r'))
+        else:
+            result = pickle.load(open(result_dir+fin,'r'))
         search_rwd_times.append(result['search_time'])
 
         if domain_name=='convbelt':
@@ -74,6 +95,7 @@ def get_mcts_results(domain_name, algo_name):
     print np.array(success).mean()
     print len(success)
     return search_rwd_times
+
 
 def get_max_rwds_wrt_time(search_rwd_times):
     max_time = 310
@@ -122,10 +144,20 @@ def main():
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-planner', type=str, default='stripstream')
     args = parser.parse_args()
-    algo_names = ['unif', 'voo']
+    algo_names = ['voo_0.001', 'voo_0.01', 'voo_0.05', 'voo_0.08', 'voo_0.1', 'voo_0.3', 'voo_0.5', 'voo_0.7' ]
+    #algo_names = ['voo_0.01', 'voo_0.3', 'voo_0.9','voo_0.001']
+    #algo_names = ['voo_0.3', 'unif']
+
+    if args.domain == 'namo':
+        algo_names = ['unif', 'voo_0.001', 'voo_0.05', 'voo_0.7', 'voo_0.3']
+    else:
+        algo_names = ['unif', 'voo_0.001', 'voo_0.05', 'voo_0.7', 'voo_0.3']
+        #algo_names = ['unif', 'voo_0.3']
+
+
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_names = color_dict.keys()
+    color_names = color_dict.keys()[1:]
 
     for algo_idx, algo in enumerate(algo_names):
         search_rwd_times = get_mcts_results(args.domain, algo)
@@ -134,8 +166,7 @@ def main():
         else:
             search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
-    plt.show()
-    import pdb;pdb.set_trace()
+    savefig('Time (s)', 'Average rewards', fname='./plotters/'+args.domain)
 
 
 

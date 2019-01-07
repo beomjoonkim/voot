@@ -21,6 +21,23 @@
 \title{Continuous search algorithm}
 \begin{document}
 \maketitle
+\section{Introduction}
+Motivation
+\begin{itemize}
+\item Planning in a continuous state-action space is important in robotics
+\item Extending heuristic search algorithms, such as A*, with sampling
+to deal with continuous search space is viable but requires
+a good method to sample from the action space, and a good heuristic
+function. Also, in the discrete case such class of algorithms may
+be able to find a shortest-path, assuming the heuristic function
+is admissible, but it is not true true in the continuous case.
+\item Monte Carlo planning approaches offer a way to estimate the
+heuristic function
+\item We use a variant 
+\item 
+\end{itemize}
+
+
 \section{Problem formulation}
 Given a computational budget B,
 a plan skeleton $\{\op_1(\disc_1,\cdot),\cdots,\op_T(\disc_t,\cdot)\}$, 
