@@ -152,8 +152,6 @@ def main():
         algo_names = ['unif', 'voo_0.001', 'voo_0.05', 'voo_0.7', 'voo_0.3']
     else:
         algo_names = ['unif', 'voo_0.001', 'voo_0.05', 'voo_0.7', 'voo_0.3']
-        #algo_names = ['unif', 'voo_0.3']
-
 
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
