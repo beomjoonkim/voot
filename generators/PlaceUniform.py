@@ -48,6 +48,7 @@ class PlaceUnif:
 
         self.robot.SetTransform(original_trans)
         self.robot.SetDOFValues(original_config)
+        print "Sampling failed"
         return {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}
 
     def get_placement(self, obj, target_obj_region, T_r_wrt_o):
@@ -154,6 +155,7 @@ class PlaceUnif:
 
         self.robot.SetTransform(original_trans)
         self.robot.SetDOFValues(original_config)
+        print "Sampling failed"
         return {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}
 
     """

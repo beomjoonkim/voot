@@ -14,8 +14,11 @@ def make_action_hashable(action):
             hashable_action += action['g_config'][1].tolist()
 
     elif operator_name == 'two_arm_place':
-        hashable_action += action['base_pose'].tolist()
-        hashable_action += action['object_pose'].tolist()
+        if action['base_pose'] is None:
+            hashable_action += 'None'
+        else:
+            hashable_action += action['base_pose'].tolist()
+            hashable_action += action['object_pose'].tolist()
 
     elif operator_name == 'one_arm_pick':
         #raise NotImplementedError
