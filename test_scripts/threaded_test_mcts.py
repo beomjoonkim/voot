@@ -15,7 +15,7 @@ def worker_p(config):
         command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + sampling_strategy + \
                   ' -problem_idx ' + str(pidx) + ' -domain ' + domain
     print command
-    #os.system(command)
+    os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
