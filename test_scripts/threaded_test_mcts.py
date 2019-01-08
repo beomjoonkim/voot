@@ -33,7 +33,7 @@ def main():
             for t in trials:
                 configs.append([e, t, domain, sampling_strategy])
     else:
-        trials = range(100)
+        trials = range(60,120)
         configs = []
         for t in trials:
             configs.append([t, domain, sampling_strategy])
