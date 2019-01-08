@@ -106,7 +106,7 @@ class PlaceUnif:
             if len(other_dists) > 0:
                 variance = np.array([0.3, 0.3, 0.5]) / counter
                 variance = 2*(np.array([0.3, 0.3, 0.5]) / counter)
-                print 'Gaussian sampling', best_dist, other_dists, variance
+                #print 'Gaussian sampling', best_dist, other_dists, variance
                 obj_pose, robot_xytheta = self.get_gaussian_placement_wrt_target_obj_placement(obj,
                                                                                                best_action['object_pose'],
                                                                                                target_obj_region,
