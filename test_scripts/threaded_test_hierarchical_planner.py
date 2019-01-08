@@ -19,7 +19,7 @@ def worker_wrapper_multi_input(multi_args):
 
 
 def main():
-    trials = range(30)
+    trials = range(30,60)
 
     configs = []
     for t in trials:
