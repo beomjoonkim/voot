@@ -15,7 +15,7 @@ def worker_p(config):
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w)
 
     print command
-    #os.system(command)
+    os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
