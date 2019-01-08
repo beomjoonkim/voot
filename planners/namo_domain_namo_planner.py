@@ -136,8 +136,8 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         # otherwise, update the new namo objects
         self.prev_namo_object_names = self.curr_namo_object_names
         self.curr_namo_object_names = [obj.GetName() for obj in new_collisions]
-        if len(self.prev_namo_object_names) - len(self.curr_namo_object_names ) > 1:
-            import pdb;pdb.set_trace()
+        #if len(self.prev_namo_object_names) - len(self.curr_namo_object_names ) > 1:
+        #    import pdb;pdb.set_trace()
 
 
         # pick motion is the path to the fetching object, place motion is the path to place the namo object
