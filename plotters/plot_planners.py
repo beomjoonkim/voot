@@ -45,7 +45,7 @@ def get_stripstream_results(domain_name):
     print len(search_times)
 
 
-def get_result_dir(domain_name, algo_name):
+def get_result_dir(domain_name, algo_name, widening_parameter):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
@@ -66,9 +66,9 @@ def get_result_dir(domain_name, algo_name):
     """
 
     if domain_name == 'convbelt':
-        result_dir = rootdir+'/convbelt_results/uct_0.0_widening_0.8_'
+        result_dir = rootdir+'/convbelt_results/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
-        result_dir = rootdir+'/namo_results/uct_0.0_widening_0.8_'
+        result_dir = rootdir+'/namo_results/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
 
@@ -79,8 +79,8 @@ def get_result_dir(domain_name, algo_name):
     return result_dir
 
 
-def get_mcts_results(domain_name, algo_name):
-    result_dir = get_result_dir(domain_name, algo_name)
+def get_mcts_results(domain_name, algo_name, widening_parameter):
+    result_dir = get_result_dir(domain_name, algo_name, widening_parameter)
     search_times = []
     success = []
     search_rwd_times = []
@@ -182,11 +182,13 @@ def get_max_rwds_wrt_time_namo(search_rwd_times):
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='convbelt')
-    parser.add_argument('-planner', type=str, default='stripstream')
+    parser.add_argument('-w', type=str, default='stripstream')
     args = parser.parse_args()
     algo_names = ['voo_0.001', 'voo_0.01', 'voo_0.05', 'voo_0.08', 'voo_0.1', 'voo_0.3', 'voo_0.5', 'voo_0.7' ]
     #algo_names = ['voo_0.01', 'voo_0.3', 'voo_0.9','voo_0.001']
     #algo_names = ['voo_0.3', 'unif']
+
+    widening_parameter = args.w
 
     if args.domain == 'namo':
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3']
@@ -195,7 +197,7 @@ def main():
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.5']
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3']
         algo_names = ['unif', 'voo_0.3']
-        algo_names = ['unif', 'voo_0.3']
+        algo_names = ['unif', 'voo_0.3',  'voo_0.2',  'voo_0.1']
 
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -203,7 +205,10 @@ def main():
 
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        search_rwd_times = get_mcts_results(args.domain, algo)
+        try:
+            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter)
+        except:
+            continue
         if args.domain == 'namo':
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         else:

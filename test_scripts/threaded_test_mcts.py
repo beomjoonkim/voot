@@ -5,16 +5,15 @@ import argparse
 
 
 def worker_p(config):
-    sampling_strategy = config[-1]
-    domain = config[-2]
-    pidx = config[-3]
-    if sampling_strategy == 'voo':
-        epsilon = config[0]
-        command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + sampling_strategy + \
-            ' -problem_idx ' + str(pidx) + ' -domain ' + domain + ' -epsilon ' + str(epsilon)
-    else:
-        command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + sampling_strategy + \
-                  ' -problem_idx ' + str(pidx) + ' -domain ' + domain
+    s = config['sampling_strategy']
+    d = config['domain']
+    pidx = config['trial']
+    w = config['widening_parameter']
+    e = config['epsilon']
+
+    command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + s + \
+        ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w)
+
     print command
     os.system(command)
 
@@ -26,28 +25,27 @@ def worker_wrapper_multi_input(multi_args):
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-sampling', type=str, default='unif')
-    parser.add_argument('-domain', type=str, default='namo')
-    parser.add_argument('-widening_parameter', nargs='+')
-    parser.add_argument('-epsilon', nargs='+')
-
+    parser.add_argument('-domain', type=str, default='convbelt')
+    parser.add_argument('-w', nargs='+', type=float)
+    parser.add_argument('-epsilon', nargs='+', type=float)
 
     args = parser.parse_args()
 
-    sampling_strategy = args.sampling_strategy
-    epsilon = args.epsilon
+    sampling_strategy = args.sampling
+    epsilons = args.epsilon
     domain = args.domain
-    widening_parameters = args.widening_parameter
-    import pdb;pdb.set_trace()
+    widening_parameters = args.w
 
-    if sampling_strategy == 'voo':
-        epsilons = [0.3]
-        trials = range(120)
-        configs = []
-        for e in epsilons:
-            for t in trials:
+    trials = range(120)
+    configs = []
+    for e in epsilons:
+        for t in trials:
+            for widening_parameter in widening_parameters:
                 config = {"widening_parameter": widening_parameter,
-                          "epsilon": e, 'trial':t, 'domain':domain, 'sampling':sampling_strategy}
-                configs.append([e, t, domain, sampling_strategy])
+                          "epsilon": e, 'trial':t, 'domain':domain, 'sampling_strategy':sampling_strategy}
+                configs.append(config)
+
+    """
     else:
         trials = range(120)
         configs = []
@@ -55,6 +53,7 @@ def main():
             config = {"widening_parameter": widening_parameter,
                       "epsilon": None, 'trial':t, 'domain':domain, 'sampling':sampling_strategy}
             configs.append([t, domain, sampling_strategy])
+    """
 
     n_workers = int(30)
 

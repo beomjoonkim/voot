@@ -97,7 +97,6 @@ class PlaceUnif:
         best_dist = np.inf
         other_dists = np.array([-1])
         counter = 1
-        stime = time.time()
         while np.any(best_dist > other_dists):
             #if obj.GetName() != 'obj0' or counter > 10:
             #    print time.time()-stime
@@ -105,15 +104,12 @@ class PlaceUnif:
 
             if len(other_dists) > 0:
                 variance = np.array([0.3, 0.3, 0.5]) / counter
-                variance = 2*(np.array([0.3, 0.3, 0.5]) / counter)
-                #print 'Gaussian sampling', best_dist, other_dists, variance
                 obj_pose, robot_xytheta = self.get_gaussian_placement_wrt_target_obj_placement(obj,
                                                                                                best_action['object_pose'],
                                                                                                target_obj_region,
                                                                                                T_r_wrt_o,
                                                                                                variance)
             else:
-                print 'Regular sampling', best_dist, other_dists
                 obj_pose, robot_xytheta = self.get_placement(obj, target_obj_region, T_r_wrt_o)
 
             action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
