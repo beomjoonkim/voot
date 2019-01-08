@@ -157,7 +157,7 @@ class MCTS:
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
-
+            """
             if socket.gethostname() == 'dell-XPS-15-9560':
                 if self.environment.is_solving_namo:
                     write_dot_file(self.tree, iteration, 'solving_namo')
@@ -165,6 +165,7 @@ class MCTS:
                     write_dot_file(self.tree, iteration, 'solving_packing')
                 elif self.environment.is_solving_fetching:
                     write_dot_file(self.tree, iteration, 'solving_fetching')
+            """
 
             # log the reward vs. time
             best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node()

@@ -50,6 +50,7 @@ class ConveyorBelt:
         self.init_saver = DynamicEnvironmentStateSaverWithCurrObj(self.env, self.get_placements(), self.curr_obj, False)
         self.is_init_pick_node = True
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
+        import pdb;pdb.set.trace()
 
     def restore(self, state_saver):
         curr_obj = state_saver.curr_obj

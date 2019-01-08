@@ -35,7 +35,7 @@ class HighLevelPlanner:
         self.obj_plan_idx = 0
         self.task_plan = task_plan
         if self.problem_env.name == 'convbelt':
-            self.fetch_planner = FetchPlanner(problem_env, self, n_iter=10000, n_optimal_iter=0, max_time=300)
+            self.fetch_planner = FetchPlanner(problem_env, self, n_iter=50, n_optimal_iter=0, max_time=np.inf)
         else:
             self.fetch_planner = FetchPlanner(problem_env, self, n_iter=10, n_optimal_iter=0)
 
