@@ -49,6 +49,12 @@ def get_result_dir(domain_name, algo_name):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
+
+    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+
+    """
+        epsilon = algo_name.split('_')[1]
+        algo_name = algo_name.split('_')[0]
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
         if domain_name == 'namo':
             rootdir = './test_results/'
@@ -57,17 +63,16 @@ def get_result_dir(domain_name, algo_name):
             rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
         else:
             rootdir = './test_results/'
+    """
 
     if domain_name == 'convbelt':
-        result_dir = rootdir+'/convbelt_results/uct_0.0_widening_0.5_'
+        result_dir = rootdir+'/convbelt_results/uct_0.0_widening_0.8_'
     elif domain_name == 'namo':
-        result_dir = rootdir+'/namo_results/uct_0.0_widening_0.5_'
+        result_dir = rootdir+'/namo_results/uct_0.0_widening_0.8_'
     else:
         return -1
 
     result_dir += algo_name +'/'
-    if domain_name == 'convbelt' and algo_name.find('voo') !=-1:
-        result_dir += 'old_distance/'
 
     if algo_name.find('voo')!=-1:
         result_dir += 'eps_'+ str(epsilon)+'/'
@@ -130,7 +135,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
     return np.array(all_episode_data),organized_times
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(50)
+    organized_times = range(150)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -142,7 +147,7 @@ def get_max_rwds_wrt_samples(search_rwd_times):
                 episode_rwds = np.array(rwd_time_temp)[:, -1]
             else:
                 episode_times = np.array(rwd_time)[:, 1]
-                episode_rwds = np.array(rwd_time)[:, 2] > 4
+                episode_rwds = np.array(rwd_time)[:, 2]
             idxs = episode_times <= organized_time
             if np.any(idxs):
                 max_rwd = np.max(episode_rwds[idxs])
@@ -189,6 +194,7 @@ def main():
     else:
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.5']
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3']
+        algo_names = ['unif', 'voo_0.3']
         algo_names = ['unif', 'voo_0.3']
 
 

@@ -10,7 +10,7 @@ def worker_p(config):
     if sampling_strategy == 'voo':
         epsilon = config[0]
         command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + sampling_strategy + \
-              ' -problem_idx ' + str(pidx) + ' -domain ' + domain + ' -epsilon ' + str(epsilon)
+            ' -problem_idx ' + str(pidx) + ' -domain ' + domain + ' -epsilon ' + str(epsilon)
     else:
         command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + sampling_strategy + \
                   ' -problem_idx ' + str(pidx) + ' -domain ' + domain
