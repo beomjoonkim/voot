@@ -15,7 +15,7 @@ def worker_p(config):
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w)
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -32,10 +32,9 @@ def main():
     args = parser.parse_args()
 
     sampling_strategy = args.sampling
-    epsilons = args.epsilon
+    epsilons = args.epsilon if args.epsilon is not None else [-1]
     domain = args.domain
     widening_parameters = args.w
-
     trials = range(120)
     configs = []
     for e in epsilons:
