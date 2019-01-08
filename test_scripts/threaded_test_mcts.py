@@ -26,14 +26,14 @@ def main():
     domain = sys.argv[1]
     sampling_strategy = sys.argv[2]
     if sampling_strategy == 'voo':
-        epsilons = [1.0]
-        trials = range(30)
+        epsilons = [0.1]
+        trials = range(120)
         configs = []
         for e in epsilons:
             for t in trials:
                 configs.append([e, t, domain, sampling_strategy])
     else:
-        trials = range(100)
+        trials = range(120)
         configs = []
         for t in trials:
             configs.append([t, domain, sampling_strategy])
