@@ -17,7 +17,7 @@ def worker_p(config):
         ' -mcts_iter ' + str(mcts_iter)
 
     print command
-    #os.system(command)
+    os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -50,18 +50,7 @@ def main():
                           'mcts_iter': mcts_iter}
                 configs.append(config)
 
-    """
-    else:
-        trials = range(120)
-        configs = []
-        for t in trials:
-            config = {"widening_parameter": widening_parameter,
-                      "epsilon": None, 'trial':t, 'domain':domain, 'sampling':sampling_strategy}
-            configs.append([t, domain, sampling_strategy])
-    """
-
     n_workers = int(30)
-
     print configs
     pool = ThreadPool(n_workers)
     results = pool.map(worker_wrapper_multi_input, configs)
