@@ -49,8 +49,9 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
-
-    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+        rootdir = './test_results/'
+    else:
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
     """
         epsilon = algo_name.split('_')[1]
@@ -197,7 +198,7 @@ def main():
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.5']
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3']
         algo_names = ['unif', 'voo_0.3']
-        algo_names = ['unif', 'voo_0.3',  'voo_0.2',  'voo_0.1']
+        algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'voo_0.5', 'voo_0.6', 'voo_0.7']  #'voo_0.01',  'voo_0.1']
 
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))

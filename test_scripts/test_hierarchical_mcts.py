@@ -28,12 +28,14 @@ else:
     ROOTDIR = '/data/public/rw/pass.port/gtamp_results/'
 
 
-def make_save_dir(domain, uct_parameter, widening_parameter, voo_exploration_parameter, sampling_strategy):
+def make_save_dir(domain, uct_parameter, widening_parameter, voo_exploration_parameter, sampling_strategy,mcts_iter):
     if sampling_strategy == 'voo':
-        save_dir = ROOTDIR+'/test_results/' + domain + '_results/uct_' + str(uct_parameter) + '_widening_' \
-                   + str(widening_parameter) + '_'+sampling_strategy+'/eps_'+ str(voo_exploration_parameter) +'/'
+        save_dir = ROOTDIR+'/test_results/' + domain + '_results/'+'mcts_iter_'+str(mcts_iter)+'/uct_' \
+                   + str(uct_parameter) + '_widening_' \
+                   + str(widening_parameter) + '_'+sampling_strategy+'/eps_'+ str(voo_exploration_parameter) + '/'
     else:
-        save_dir = ROOTDIR+'./test_results/' + domain + '_results/uct_' + str(uct_parameter) + '_widening_' \
+        save_dir = ROOTDIR+'./test_results/' + domain + '_results/'+'mcts_iter_'+str(mcts_iter)+'/uct_' \
+                   + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_'+sampling_strategy+'/'
 
     if not os.path.isdir(save_dir):
@@ -109,6 +111,7 @@ def main():
     parser.add_argument('-planner', type=str, default='mcts')
     parser.add_argument('-v', action='store_true', default=False)
     parser.add_argument('-debug', action='store_true', default=False)
+    parser.add_argument('-mcts_iter', type=int, default=50)
     args = parser.parse_args()
 
     if args.debug:
@@ -121,8 +124,9 @@ def main():
     sampling_strategy = args.sampling_strategy
     voo_exploration_parameter = args.epsilon
     problem_index = args.problem_idx
+    mcts_iter = args.mcts_iter
 
-    save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter, voo_exploration_parameter, sampling_strategy)
+    save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter, voo_exploration_parameter, sampling_strategy, mcts_iter)
 
     stat_file_name = save_dir + str(problem_index)+'.pkl'
     if os.path.isfile(stat_file_name):
@@ -137,7 +141,7 @@ def main():
         problem_env.env.SetViewer('qtcoin')
 
     hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
-    hierarchical_planner.set_mcts_parameters(widening_parameter, uct_parameter, sampling_strategy)
+    hierarchical_planner.set_mcts_parameters(widening_parameter, uct_parameter, sampling_strategy, n_iter=mcts_iter)
     search_time_to_reward, plan, optimal_score_achieved = hierarchical_planner.search()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': problem_index,

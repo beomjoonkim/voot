@@ -6,13 +6,10 @@ from utils import visualize_path, two_arm_pick_object, one_arm_pick_object
 
 
 class FetchPlanner:
-    def __init__(self, problem_env, high_level_controller, n_iter, n_optimal_iter, max_time=np.inf):
+    def __init__(self, problem_env, high_level_controller):
         self.problem_env = problem_env
         self.high_level_controller = high_level_controller
-        self.n_iter = n_iter
-        self.n_optimal_iter = n_optimal_iter
         self.fetching_object = None
-        self.max_time = max_time
 
         self.env = self.problem_env.env
         self.robot = self.problem_env.robot
@@ -52,7 +49,9 @@ class FetchPlanner:
         self.high_level_controller.task_plan = [{'region': connecting_region, 'objects': target_object}]
         if init_node is not None:
             mcts.switch_init_node(init_node)
-        search_time_to_reward, fetch_plan, goal_node = mcts.search(self.n_iter, self.n_optimal_iter, self.max_time)
+        search_time_to_reward, fetch_plan, goal_node = mcts.search(self.high_level_controller.n_iter,
+                                                                   self.high_level_controller.n_optimal_iter,
+                                                                   self.high_level_controller.max_time)
         self.problem_env.is_solving_fetching = False
         self.high_level_controller.reset_task_plan_indices()
         return search_time_to_reward, fetch_plan, goal_node
@@ -66,7 +65,9 @@ class FetchPlanner:
         self.high_level_controller.task_plan = [{'region': connecting_region, 'objects': target_objects}]
         if init_node is not None:
             mcts.switch_init_node(init_node)
-        search_time_to_reward, fetch_plan, goal_node = mcts.search(self.n_iter, self.n_optimal_iter,  self.max_time)
+        search_time_to_reward, fetch_plan, goal_node = mcts.search(self.high_level_controller.n_iter,
+                                                                   self.high_level_controller.n_optimal_iter,
+                                                                   self.high_level_controller.max_time)
         self.problem_env.is_solving_fetching = False
         self.high_level_controller.reset_task_plan_indices()
         return search_time_to_reward, fetch_plan, goal_node

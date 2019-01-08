@@ -35,25 +35,29 @@ class HighLevelPlanner:
         self.obj_plan_idx = 0
         self.task_plan = task_plan
         if self.problem_env.name == 'convbelt':
-            self.fetch_planner = FetchPlanner(problem_env, self, n_iter=50, n_optimal_iter=0, max_time=np.inf)
+            self.fetch_planner = FetchPlanner(problem_env, self)
         else:
-            self.fetch_planner = FetchPlanner(problem_env, self, n_iter=10, n_optimal_iter=0)
+            self.fetch_planner = FetchPlanner(problem_env, self)
 
         self.is_debugging = is_debugging
 
         if self.problem_env.name == 'namo':
-            self.namo_planner = NamoDomainNamoPlanner(problem_env, self, n_iter=50, n_optimal_iter=0, max_time=np.inf)
+            self.namo_planner = NamoDomainNamoPlanner(problem_env, self)
         else:
-            self.namo_planner = NAMOPlanner(problem_env, self, n_iter=30, n_optimal_iter=0)
+            self.namo_planner = NAMOPlanner(problem_env, self)
 
         ## for debugging purpose, remove later
         self.env = self.problem_env.env
         self.robot = self.problem_env.robot
 
-    def set_mcts_parameters(self, widening_parameter, uct_parameter, sampling_stategy):
+    def set_mcts_parameters(self, widening_parameter, uct_parameter, sampling_stategy,
+                            n_iter=50, n_optimal_iter=0, max_time=np.inf):
         self.widening_parameter = widening_parameter
         self.uct_parameter = uct_parameter
         self.sampling_stategy = sampling_stategy
+        self.n_iter = n_iter
+        self.n_optimal_iter = n_optimal_iter
+        self.max_time = max_time
         self.mcts = MCTS(self.widening_parameter, self.uct_parameter, self.sampling_stategy,
                          self.problem_env, self.domain_name, self)
 

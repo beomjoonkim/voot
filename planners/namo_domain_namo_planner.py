@@ -14,11 +14,10 @@ import numpy as np
 
 
 class NamoDomainNamoPlanner(NAMOPlanner):
-    def __init__(self, problem_env, high_level_controller, n_iter, n_optimal_iter, max_time):
-        NAMOPlanner.__init__(self, problem_env, high_level_controller, n_iter, n_optimal_iter)
+    def __init__(self, problem_env, high_level_controller):
+        NAMOPlanner.__init__(self, problem_env, high_level_controller)
         self.init_namo_object_names_on_place_path = []
         self.current_pick_conf = None
-        self.max_time = max_time
 
     def get_obstacles_in_collision_from_fetching_path(self, pick_path, place_path):
         curr_region = self.problem_env.get_region_containing(self.problem_env.robot)
@@ -180,9 +179,9 @@ class NamoDomainNamoPlanner(NAMOPlanner):
 
         mcts.switch_init_node(prenamo_initial_node)
         self.problem_env.is_solving_namo = True
-        search_time_to_reward, namo_plan, goal_node = mcts.search(n_iter=self.n_iter,
-                                                                  n_optimal_iter=self.n_optimal_iter,
-                                                                  max_time=self.max_time)
+        search_time_to_reward, namo_plan, goal_node = mcts.search(n_iter=self.high_level_controller.n_iter,
+                                                                  n_optimal_iter=self.high_level_controller.n_optimal_iter,
+                                                                  max_time=self.high_level_controller.max_time)
         self.problem_env.is_solving_namo = False
 
         return search_time_to_reward, namo_plan, goal_node

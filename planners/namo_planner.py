@@ -12,11 +12,9 @@ import numpy as np
 
 
 class NAMOPlanner:
-    def __init__(self, problem_env, high_level_controller, n_iter, n_optimal_iter):
+    def __init__(self, problem_env, high_level_controller):
         self.problem_env = problem_env
         self.high_level_controller = high_level_controller
-        self.n_iter = n_iter
-        self.n_optimal_iter = n_optimal_iter
 
         # related to solving the NAMO problem
         self.prefetching_robot_config = None
