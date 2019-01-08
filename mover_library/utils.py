@@ -431,8 +431,9 @@ def pick_distance(a1, a2, curr_obj):
     grasp_max_diff = [1/2.356, 1., 1.]
     grasp_distance = np.sum( np.dot(abs(grasp_a1 - grasp_a2), grasp_max_diff))
 
-    bas_distance_max_diff = np.array([1./(2*2.51), 1./(2*2.51), 1/np.pi])
-    base_distance = np.sum(np.dot(base_conf_diff(base_a1, base_a2), bas_distance_max_diff))
+    #bas_distance_max_diff = np.array([1./(2*2.51), 1./(2*2.51), 1/np.pi])
+    base_distance_max_diff = np.array([1, 1, 1/np.pi])
+    base_distance = np.sum(np.dot(base_conf_diff(base_a1, base_a2), base_distance_max_diff))
 
     # base distance more important the grasp
     return grasp_distance + 2*base_distance
@@ -452,7 +453,7 @@ def place_distance(a1, a2, curr_obj):
     base_a2 = clean_pose_data(np.array(base_a2)).squeeze()
 
     base_distance_max_diff = np.array([1. / (2*2.51), 1. / (2*2.51), 1 / np.pi])
-    base_distance_max_diff = np.array([1., 1., 1])
+    base_distance_max_diff = np.array([1., 1., 1/np.pi])
     base_distance = np.sum(np.dot(base_conf_diff(base_a1, base_a2), base_distance_max_diff))
 
     return base_distance

@@ -20,6 +20,7 @@ def savefig(xlabel,ylabel,fname=''):
   print 'Saving figure ', fname+'.png'
   plt.savefig(fname+'.png', dpi=100,format='png')
 
+
 def get_stripstream_results(domain_name):
     if domain_name == 'convbelt':
         result_dir = './test_results/convbelt_results/stripstream/'
@@ -49,6 +50,7 @@ def get_result_dir(domain_name, algo_name):
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+        #rootdir = './test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
         rootdir = './test_results/'
@@ -172,7 +174,7 @@ def main():
     if args.domain == 'namo':
         algo_names = ['unif', 'voo_0.001', 'voo_0.05', 'voo_0.7', 'voo_0.3']
     else:
-        algo_names = ['unif', 'voo_0.15']
+        algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.5']
 
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
