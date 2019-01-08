@@ -42,7 +42,7 @@ class HighLevelPlanner:
         self.is_debugging = is_debugging
 
         if self.problem_env.name == 'namo':
-            self.namo_planner = NamoDomainNamoPlanner(problem_env, self, n_iter=10000, n_optimal_iter=0, max_time=500)
+            self.namo_planner = NamoDomainNamoPlanner(problem_env, self, n_iter=50, n_optimal_iter=0, max_time=np.inf)
         else:
             self.namo_planner = NAMOPlanner(problem_env, self, n_iter=30, n_optimal_iter=0)
 
