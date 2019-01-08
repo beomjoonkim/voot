@@ -51,6 +51,7 @@ def get_result_dir(domain_name, algo_name):
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+        rootdir = './test_results/'
 
     if domain_name == 'convbelt':
         result_dir = rootdir+'/convbelt_results/uct_0.0_widening_0.5_'
@@ -81,7 +82,7 @@ def get_mcts_results(domain_name, algo_name):
 
         if domain_name=='convbelt':
             is_success = result['plan'] is not None
-            is_success = np.any(np.array(result['search_time'])[:,2] >= 4)
+            is_success = np.any(np.array(result['search_time'])[:,2] >= 5)
             #search_times.append( np.where(np.array(result['search_time'])[:,2]>=4)[0][0])
             search_times.append(np.array(result['search_time'])[:,0][-1])
             success.append(is_success)
@@ -125,7 +126,6 @@ def get_max_rwds_wrt_samples(search_rwd_times):
     all_episode_data = []
     for rwd_time in search_rwd_times:
         episode_max_rwds_wrt_organized_times = []
-        import  pdb;pdb.set_trace()
         for organized_time in organized_times:
             episode_times = np.array(rwd_time)[:, 1]
             episode_rwds = np.array(rwd_time)[:, 2]
@@ -172,7 +172,7 @@ def main():
     if args.domain == 'namo':
         algo_names = ['unif', 'voo_0.001', 'voo_0.05', 'voo_0.7', 'voo_0.3']
     else:
-        algo_names = ['unif', 'voo_0.1']
+        algo_names = ['unif', 'voo_0.15']
 
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))

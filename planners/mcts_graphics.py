@@ -44,7 +44,10 @@ def add_line(curr_line, key, value):
         except:
             curr_line += 'None'
     else:
-        curr_line += ' (%.2f,%.2f,%.2f):%.2f ' % (key[1], key[2], key[3], value)
+        try:
+            curr_line += ' (%.2f,%.2f,%.2f):%.2f ' % (key[1], key[2], key[3], value)
+        except:
+            curr_line += "None"
     return curr_line
 
 

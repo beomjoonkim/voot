@@ -31,7 +31,7 @@ class TreeNode:
         best_value = -np.inf
         for action, value in zip(self.Q.keys(), self.Q.values()):
             uct_value = value + self.exploration_parameter * UCT_upperbound(self.Nvisited, self.N[action])
-            print 'uct value:', value, self.exploration_parameter * UCT_upperbound(self.Nvisited, self.N[action])
+            #print 'uct value:', value, self.exploration_parameter * UCT_upperbound(self.Nvisited, self.N[action])
 
             if uct_value > best_value:
                 best_action = action

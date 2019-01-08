@@ -97,8 +97,10 @@ class PlaceUnif:
         best_dist = np.inf
         other_dists = np.array([-1])
         counter = 1
+        stime = time.time()
         while np.any(best_dist > other_dists):
-            #if obj.GetName() != 'obj0' or counter > 30:
+            #if obj.GetName() != 'obj0' or counter > 10:
+            #    print time.time()-stime
             #    import pdb;pdb.set_trace()
 
             if len(other_dists) > 0:
