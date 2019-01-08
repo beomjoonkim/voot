@@ -26,8 +26,8 @@ def main():
     domain = sys.argv[1]
     sampling_strategy = sys.argv[2]
     if sampling_strategy == 'voo':
-        epsilons = [0.9]
-        trials = range(100)
+        epsilons = [1.0]
+        trials = range(30)
         configs = []
         for e in epsilons:
             for t in trials:
@@ -38,7 +38,7 @@ def main():
         for t in trials:
             configs.append([t, domain, sampling_strategy])
 
-    n_workers = int(1)
+    n_workers = int(30)
 
     print configs
     pool = ThreadPool(n_workers)
