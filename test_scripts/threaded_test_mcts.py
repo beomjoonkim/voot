@@ -26,7 +26,7 @@ def main():
     domain = sys.argv[1]
     sampling_strategy = sys.argv[2]
     if sampling_strategy == 'voo':
-        epsilons = [0.001]
+        epsilons = [0.15,0.25,0.35,0.45]
         trials = range(120)
         configs = []
         for e in epsilons:
