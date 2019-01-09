@@ -15,8 +15,8 @@ class PlaceGPUCB:
         self.env = problem_env.env
         self.robot = self.env.GetRobots()[0]
         self.robot_region = self.problem_env.regions['entire_region']
-        self.place_acq_fcn = UCB(zeta=0.01, gp=self.place_gp)
         self.place_gp = StandardContinuousGP(3)
+        self.place_acq_fcn = UCB(zeta=0.01, gp=self.place_gp)
 
         if problem_env.name == 'convbelt':
             place_domain = self.get_place_domain(problem_env.regions['object_region'])
@@ -26,6 +26,9 @@ class PlaceGPUCB:
         self.place_optimizer = BO(self.place_gp, self.place_acq_fcn, place_domain)  # this depends on the problem
 
     def predict(self,  obj, obj_region, evaled_x, evaled_y, n_iter):
+        original_trans = self.robot.GetTransform()
+        original_obj_trans = obj.GetTransform()
+
         T_r_wrt_o = np.dot(np.linalg.inv(obj.GetTransform()), self.robot.GetTransform())
         if self.problem_env.is_solving_namo:
             target_obj_region = self.problem_env.get_region_containing(obj)
@@ -34,6 +37,7 @@ class PlaceGPUCB:
             target_robot_region = self.problem_env.regions['entire_region']
             target_obj_region = obj_region  # for fetching, you want to move it around
 
+        release_obj(self.robot, obj)
         for i in range(n_iter):
             obj_pose = self.place_optimizer.choose_next_point(evaled_x, evaled_y)
             robot_xytheta = self.compute_robot_base_pose_given_object_pose(obj, self.robot, obj_pose, T_r_wrt_o)
@@ -43,14 +47,20 @@ class PlaceGPUCB:
                             self.env.CheckCollision(obj) or self.env.CheckCollision(self.robot)) and \
                                         (target_robot_region.contains(self.robot.ComputeAABB())) and \
                                         (target_obj_region.contains(obj.ComputeAABB()))
-
             if is_base_pose_feasible:
+                self.robot.SetTransform(original_trans)
+                original_obj_trans.SetTransform(original_obj_trans)
+                grab_obj(self.robot, obj)
                 action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
                 return action
             else:
-                print evaled_x
-            print len(evaled_x), len(evaled_y)
-        return {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}, evaled_x, evaled_y
+                evaled_x.append(obj_pose)
+                evaled_y.append(self.problem_env.infeasible_reward)
+
+        self.robot.SetTransform(original_trans)
+        obj.SetTransform(original_obj_trans)
+        grab_obj(self.robot, obj)
+        return {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}
 
     @staticmethod
     def get_place_domain(region):

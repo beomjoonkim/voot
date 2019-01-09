@@ -50,14 +50,16 @@ class PickGPUCB(PickGenerator):
     def predict(self, obj, region, evaled_x, evaled_y, n_iter):
         for i in range(n_iter):
             pick_parameters = self.pick_optimizer.choose_next_point(evaled_x, evaled_y)
-
             grasp_params, pick_base_pose = self.get_grasp_and_base_pose_params(obj, pick_parameters)
             set_robot_config(pick_base_pose, self.robot)
-            g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)
+            g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)  # this checks collision
             if g_config is not None:
                 pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
-                               'grasp_params': grasp_params, 'g_config': g_config}
+                               'grasp_params': grasp_params, 'g_config': g_config, 'pick_parameters':pick_parameters}
                 return pick_action
+            else:
+                evaled_x.append(pick_parameters)
+                evaled_y.append(self.problem_env.infeasible_reward)
 
         pick_action = {'operator_name': 'two_arm_pick', 'base_pose': None,
                        'grasp_params': None, 'g_config': None}

@@ -6,7 +6,7 @@ def make_action_hashable(action):
     hashable_action = [operator_name]
     if operator_name == 'two_arm_pick':
         if action['g_config'] is None:
-            hashable_action += 'None'
+            hashable_action += [None]
         else:
             hashable_action += action['grasp_params'].tolist()
             hashable_action += action['base_pose'].tolist()
@@ -15,7 +15,7 @@ def make_action_hashable(action):
 
     elif operator_name == 'two_arm_place':
         if action['base_pose'] is None:
-            hashable_action += 'None'
+            hashable_action += [None]
         else:
             hashable_action += action['base_pose'].tolist()
             hashable_action += action['object_pose'].tolist()
@@ -23,7 +23,7 @@ def make_action_hashable(action):
     elif operator_name == 'one_arm_pick':
         #raise NotImplementedError
         if action['grasp_params'] is None:
-            hashable_action += 'None'
+            hashable_action += [None]
         else:
             hashable_action += action['grasp_params'].tolist()
             hashable_action += action['base_pose'].tolist()

@@ -5,7 +5,7 @@ import GPy
 class StandardContinuousGP():
     def __init__(self, xdim):
         self.model = None
-        self.kern = GPy.kern.RBF(xdim, variance=200) # 500 was too good
+        self.kern = GPy.kern.RBF(xdim, variance=500)
 
     def predict(self, x):
         if self.model is None:
@@ -21,6 +21,9 @@ class StandardContinuousGP():
             return
         evaled_x = np.array(evaled_x)
         evaled_y = np.array(evaled_y)[:, None]
-        self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern)
+        try:
+            self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern)
+        except:
+            import pdb;pdb.set_trace()
 
 

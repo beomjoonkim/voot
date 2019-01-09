@@ -3,6 +3,7 @@ from planners.constrained_mcts import ConstrainedMCTS
 from planners.fetch_planner import FetchPlanner
 from planners.namo_planner import NAMOPlanner
 from planners.namo_domain_namo_planner import NamoDomainNamoPlanner
+from generators.PickUniform import PickWithBaseUnif
 
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 
@@ -205,9 +206,8 @@ class HighLevelPlanner:
         next_init_node = None
         rwd = self.problem_env.infeasible_reward
         while self.problem_env.infeasible_reward == rwd:
-            pick_action = self.mcts.sampling_strategy.pick_pi.predict(objects[0],
-                                                                      self.problem_env.regions['entire_region'],
-                                                                      n_iter=10000)
+            pick_pi = PickWithBaseUnif(self.problem_env)
+            pick_action = pick_pi.predict(objects[0], self.problem_env.regions['entire_region'], n_iter=10000)
             _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node, True, None)
         self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.mcts.tree.root = self.mcts.s0_node

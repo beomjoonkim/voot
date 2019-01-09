@@ -92,14 +92,7 @@ class PickWithBaseUnif(PickGenerator):
         return pick_action
 
     def predict(self, obj, region, n_iter):
-        if self.problem_env.is_solving_namo:
-            pick_params = self.compute_grasp_action(obj, region, n_iter)
-        else:
-            self.problem_env.disable_objects()
-            obj.Enable(True)
-            pick_params = self.compute_grasp_action(obj, region, n_iter)
-            self.problem_env.enable_objects()
-
+        pick_params = self.compute_grasp_action(obj, region, n_iter)
         return pick_params
 
 

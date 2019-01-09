@@ -317,7 +317,13 @@ class MCTS:
             return None, self.environment.infeasible_reward, None
         which_operator = self.environment.which_operator(node.obj)
         if which_operator == 'two_arm_pick':
+            if self.environment.name == 'convbelt':
+                self.environment.disable_objects()
+                node.obj.Enable(True)
             next_state, reward, path, objs_in_collision = self.environment.apply_two_arm_pick_action(action, node, check_feasibility, parent_motion)
+            if self.environment.name == 'convbelt':
+                self.environment.enable_objects()
+                node.obj.Enable(True)
         elif which_operator == 'two_arm_place':
             next_state, reward, path, objs_in_collision = self.environment.apply_two_arm_place_action(action, node, check_feasibility, parent_motion)
         elif which_operator == 'one_arm_pick':
