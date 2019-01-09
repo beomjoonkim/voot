@@ -122,10 +122,11 @@ def main():
     parser.add_argument('-v', action='store_true', default=False)
     parser.add_argument('-debug', action='store_true', default=False)
     parser.add_argument('-mcts_iter', type=int, default=50)
+    parser.add_argument('-seed', type=int, default=50)
     args = parser.parse_args()
 
     if args.debug:
-        sd = 39
+        sd = args.seed
         print "RANDOM SEED SET", np.random.seed(sd)
         print "RANDOM SEED SET", random.seed(sd)
 

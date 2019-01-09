@@ -21,9 +21,6 @@ class StandardContinuousGP():
             return
         evaled_x = np.array(evaled_x)
         evaled_y = np.array(evaled_y)[:, None]
-        try:
-            self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern)
-        except:
-            import pdb;pdb.set_trace()
+        self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern)
 
 

@@ -26,11 +26,10 @@ class GPUCB(SamplingStrategy):
             else:
                 evaled_x.append(x['object_pose'])
             evaled_y.append(y)
+
         if operator == 'two_arm_pick':
-            evaled_x = [pick['pick_parameters'] for pick in node.all_evaled_q.keys()]
             action = self.pick_pi.predict(obj, region, evaled_x, evaled_y, 100)
         elif operator == 'two_arm_place':
-            evaled_x = [pick['obj_pose'] for pick in node.all_evaled_q.keys()]
             action = self.place_pi.predict(obj, region, evaled_x, evaled_y, 100)
         else:
             assert False, "Undefined operator name"
