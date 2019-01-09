@@ -49,7 +49,7 @@ class PlaceGPUCB:
                                         (target_obj_region.contains(obj.ComputeAABB()))
             if is_base_pose_feasible:
                 self.robot.SetTransform(original_trans)
-                original_obj_trans.SetTransform(original_obj_trans)
+                obj.SetTransform(original_obj_trans)
                 grab_obj(self.robot, obj)
                 action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
                 return action
