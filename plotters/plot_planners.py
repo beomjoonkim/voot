@@ -50,8 +50,12 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
         rootdir = './test_results/'
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+        rootdir = './test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+        if domain_name == 'namo':
+            rootdir = './test_results/'
 
     """
         epsilon = algo_name.split('_')[1]
@@ -69,7 +73,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
     if domain_name == 'convbelt':
         result_dir = rootdir+'/convbelt_results/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
-        result_dir = rootdir+'/namo_results/uct_0.0_widening_' + str(widening_parameter)+'_'
+        result_dir = rootdir+'/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
 
@@ -136,7 +140,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
     return np.array(all_episode_data),organized_times
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(150)
+    organized_times = range(55)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -145,7 +149,8 @@ def get_max_rwds_wrt_samples(search_rwd_times):
             if isinstance(rwd_time,dict):
                 rwd_time_temp = rwd_time['namo']
                 episode_times = np.array(rwd_time_temp)[:, 1]
-                episode_rwds = np.array(rwd_time_temp)[:, -1]
+                #episode_rwds = np.array(rwd_time_temp)[:, -1]
+                episode_rwds = np.array(rwd_time_temp)[:, 2]
             else:
                 episode_times = np.array(rwd_time)[:, 1]
                 episode_rwds = np.array(rwd_time)[:, 2]
@@ -194,11 +199,11 @@ def main():
     if args.domain == 'namo':
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3']
         algo_names = ['unif', 'voo_0.3']
+        algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3']
     else:
         algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.5']
-        algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3']
         algo_names = ['unif', 'voo_0.3']
-        algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'voo_0.5', 'voo_0.6', 'voo_0.7']  #'voo_0.01',  'voo_0.1']
+        algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3']  #'voo_0.01',  'voo_0.1']
 
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))

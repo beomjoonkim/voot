@@ -10,9 +10,9 @@ class Uniform(SamplingStrategy):
         region = node.region
         operator = node.operator
         if operator == 'two_arm_pick':
-            action = self.pick_pi.predict(obj, region)
+            action = self.pick_pi.predict(obj, region, 1000)
         elif operator == 'two_arm_place':
-            action = self.place_pi.predict(obj, region)
+            action = self.place_pi.predict(obj, region, 1000)
         elif operator == 'one_arm_pick':
             action = self.one_arm_pick_pi.predict(obj, region)
         elif operator == 'one_arm_place':
@@ -21,5 +21,4 @@ class Uniform(SamplingStrategy):
             action = self.one_arm_place_pi.predict(grasp_params, obj, region)
         else:
             assert False, "Undefined operator name"
-
         return action

@@ -26,6 +26,7 @@ class TreeNode:
         self.depth = depth
         self.sum_rewards = 0
         self.operator = None
+        self.all_evaled_q = {}  # for the black box function optimization algorithms
 
     def get_best_action(self):
         best_value = -np.inf

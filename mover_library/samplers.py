@@ -16,7 +16,6 @@ from manipulation.primitives.transforms import trans_from_base_values, set_pose,
     quat_from_trans
 
 from utils import *
-from itertools import product
 import numpy as np
 
 from manipulation.bodies.bounding_volumes import aabb_from_body
@@ -50,19 +49,25 @@ def sample_angle_facing_given_transform(target_xy, robot_xy):
     dangle_in_rad = 30 * np.pi / 180.0  # random offset from the angle facing the object
     return angle_to_be_set + np.random.uniform(-dangle_in_rad, dangle_in_rad)
 
-
-def sample_base_locations(radius, obj, env):
-    portion = np.random.uniform(0.4, 0.9)
-    length = radius * portion  # how close are you to obj?
-    angle = np.random.uniform(0, 2 * PI)  # which angle?
-    x = length * np.cos(angle)
-    y = length * np.sin(angle)
+PR2_ARM_LENGTH = 0.9844
+def compute_robot_xy_given_ir_parameters(portion, angle, obj, radius=PR2_ARM_LENGTH):
+    dist_to_obj = radius * portion  # how close are you to obj?
+    x = dist_to_obj * np.cos(angle)
+    y = dist_to_obj * np.sin(angle)
     robot_wrt_o = np.array([x, y, 0, 1])
-    return np.dot(obj.GetTransform(), robot_wrt_o)[:-1]  # turn it into world ref frame
+    return np.dot(obj.GetTransform(), robot_wrt_o)[:-1]
+
+
+def sample_xy_locations(obj, radius):
+    portion = np.random.uniform(0.4, 0.9)
+    angle = np.random.uniform(0, 2 * PI)  # which angle?
+
+    robot_base_pose = compute_robot_xy_given_ir_parameters(portion, angle, obj, radius)
+    return robot_base_pose  # turn it into world ref frame
 
 
 def sample_ir(obj, robot, env, region, n_iter=300):
-    arm_len = 0.9844  # determined by spreading out the arm and measuring the dist from shoulder to ee
+    arm_len = PR2_ARM_LENGTH  # determined by spreading out the arm and measuring the dist from shoulder to ee
     # grasp_pos = Tgrasp[0:-1,3]
     obj_xy = get_point(obj)[:-1]
     robot_xy = get_point(robot)[:-1]
@@ -70,12 +75,13 @@ def sample_ir(obj, robot, env, region, n_iter=300):
 
     n_samples = 1
     for _ in range(n_iter):
-        robot_xy = sample_base_locations(arm_len, obj, env)[:-1]
+        robot_xy = sample_xy_locations(obj, arm_len)[:-1]
         angle = sample_angle_facing_given_transform(obj_xy, robot_xy)  # angle around z
         set_robot_config(np.r_[robot_xy, angle], robot)
         if (not env.CheckCollision(robot)) and (region.contains(robot.ComputeAABB())):
             return np.array([robot_xy[0], robot_xy[1], angle])
     return None
+
 
 
 def sample_ir_multiple_regions(obj, robot, env, multiple_regions):

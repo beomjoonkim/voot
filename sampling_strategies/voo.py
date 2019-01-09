@@ -19,9 +19,9 @@ class VOO(SamplingStrategy):
         region = node.region
 
         if which_operator == 'two_arm_pick':
-            action = self.pick_pi.predict_closest_to_best_action(curr_obj, region, best_action, evaled_actions)
+            action = self.pick_pi.predict_closest_to_best_action(curr_obj, region, best_action, evaled_actions, 1000)
         else:
-            action = self.place_pi.predict_closest_to_best_action(curr_obj, region, best_action, evaled_actions)
+            action = self.place_pi.predict_closest_to_best_action(curr_obj, region, best_action, evaled_actions, 1000)
 
         return action
 
@@ -31,9 +31,9 @@ class VOO(SamplingStrategy):
         which_operator = node.operator
 
         if which_operator == 'two_arm_pick':
-            action = self.pick_pi.predict(obj, region)
+            action = self.pick_pi.predict(obj, region, 1000)
         else:
-            action = self.place_pi.predict(obj, region)
+            action = self.place_pi.predict(obj, region, 1000)
         return action
 
     def sample_next_point(self, node):

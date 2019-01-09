@@ -1,5 +1,6 @@
 import pygraphviz as pgv
 import numpy as np
+import time
 
 
 def get_most_concrete_root_node(ctree):
@@ -51,7 +52,7 @@ def add_line(curr_line, key, value):
     return curr_line
 
 
-def get_node_info_in_string(node):
+def get_node_info_in_string(node, child_idx):
     Q=''
     N = ''
     parent_action = ''
@@ -72,15 +73,19 @@ def get_node_info_in_string(node):
         if pact is None:
             parent_action = 'None'
         elif operator_name.find('pick') != -1:
-            params = np.hstack([pact['base_pose'],pact['grasp_params']])
-            try:
+            if pact['base_pose'] is not None:
+                params = np.hstack([pact['base_pose'], pact['grasp_params']])
                 parent_action += ' (%.2f,%.2f,%.2f,%.2f,%.2f,%.2f) '%( params[3], params[4], params[5],
                                                                    params[0], params[1], params[2])
-            except:
-                import pdb;pdb.set_trace()
+            else:
+                parent_action += ' infeasible child' + str(child_idx)
+
         else:
-            parent_action += ' (%.2f,%.2f,%.2f)' % \
-                             (pact['base_pose'][0], pact['base_pose'][1], pact['base_pose'][2])
+            if pact['base_pose'] is not None:
+                parent_action += ' (%.2f,%.2f,%.2f)' % \
+                                 (pact['base_pose'][0], pact['base_pose'][1], pact['base_pose'][2])
+            else:
+                parent_action += ' infeasible child' + str(child_idx)
     else:
         parent_action = 'None'
 
@@ -95,7 +100,7 @@ def get_node_info_in_string(node):
 def recursive_write_tree_on_graph(curr_node, graph):
     # todo:
     #   write the object name and whether the place required the CRP planning
-    string_form = get_node_info_in_string(curr_node)
+    string_form = get_node_info_in_string(curr_node, 0)
     graph.add_node(string_form)
     if curr_node.is_init_node:
         node = graph.get_node(string_form)
@@ -106,7 +111,7 @@ def recursive_write_tree_on_graph(curr_node, graph):
         node.attr['color'] = "blue"
 
     for child_idx, child in enumerate(curr_node.children.values()):
-        child_string_form = get_node_info_in_string(child)
+        child_string_form = get_node_info_in_string(child, child_idx)
         graph.add_edge(string_form, child_string_form)  # connect an edge from parent to child
         edge = graph.get_edge(string_form, child_string_form)
         edge.attr['label'] = child.parent_action['operator_name']

@@ -6,12 +6,15 @@ from planners.high_level_planner import HighLevelPlanner
 
 from generators.PlaceUniform import PlaceUnif
 from generators.PickUniform import PickWithBaseUnif
+from generators.PickGPUCB import PickGPUCB
+from generators.PlaceGPUCB import PlaceGPUCB
 
 from generators.OneArmPickUniform import OneArmPickUnif
 from generators.OneArmPlaceUniform import OneArmPlaceUnif
 
 from sampling_strategies.voo import VOO, MoverVOO
 from sampling_strategies.uniform import Uniform
+from sampling_strategies.gpucb import GPUCB
 
 import argparse
 import cPickle as pickle
@@ -45,22 +48,29 @@ def make_save_dir(domain, uct_parameter, widening_parameter, voo_exploration_par
 
 
 def make_sampling_strategy(sampling_strategy, domain_name, problem_env, voo_exploration_parameter):
-    if domain_name == 'namo':
+    if sampling_strategy == 'voo' or sampling_strategy=='unif':
         pick_sampler = PickWithBaseUnif(problem_env)
         place_sampler = PlaceUnif(problem_env)
+    elif sampling_strategy == 'gpucb':
+        pick_sampler = PickGPUCB(problem_env)
+        place_sampler = PlaceGPUCB(problem_env)
+    else:
+        return
+
+    if domain_name == 'namo':
         if sampling_strategy == 'voo':
             sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=voo_exploration_parameter)
         else:
             sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
 
     elif domain_name == 'convbelt':
-        pick_sampler = PickWithBaseUnif(problem_env)
-        place_sampler = PlaceUnif(problem_env)
-
+        # todo change the sampling strategy
         if sampling_strategy == 'voo':
             sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=voo_exploration_parameter)
-        else:
+        elif sampling_strategy == 'unif':
             sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
+        elif sampling_strategy == 'gpucb':
+            sampling_strategy = GPUCB(problem_env, pick_sampler, place_sampler)
 
     elif domain_name == 'mover':
         # define and test pick operator
@@ -126,7 +136,8 @@ def main():
     problem_index = args.problem_idx
     mcts_iter = args.mcts_iter
 
-    save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter, voo_exploration_parameter, sampling_strategy, mcts_iter)
+    save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter,
+                             voo_exploration_parameter, sampling_strategy, mcts_iter)
 
     stat_file_name = save_dir + str(problem_index)+'.pkl'
     if os.path.isfile(stat_file_name):

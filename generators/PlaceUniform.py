@@ -20,7 +20,7 @@ class PlaceUnif:
         self.robot = self.env.GetRobots()[0]
         self.robot_region = self.problem_env.regions['entire_region']
 
-    def predict(self, obj, obj_region):
+    def predict(self, obj, obj_region, n_iter):
         original_trans = self.robot.GetTransform()
         original_config = self.robot.GetDOFValues()
         T_r_wrt_o = np.dot(np.linalg.inv(obj.GetTransform()), self.robot.GetTransform())
@@ -34,7 +34,7 @@ class PlaceUnif:
             target_obj_region = obj_region # for fetching, you want to move it around
 
         print "Sampling place"
-        for _ in range(1000):
+        for _ in range(n_iter):
             obj_pose, robot_xytheta = self.get_placement(obj, target_obj_region, T_r_wrt_o)
             set_robot_config(robot_xytheta, self.robot)
             if not (self.env.CheckCollision(obj) or self.env.CheckCollision(self.robot)) \
@@ -81,7 +81,8 @@ class PlaceUnif:
         release_obj(self.robot, obj)
         with self.robot:
             # print target_obj_region
-            obj_pose = gaussian_randomly_place_in_region(self.env, obj, target_obj_region, center=target_obj_placement, var=variance)  # randomly place obj
+            obj_pose = gaussian_randomly_place_in_region(self.env, obj, target_obj_region,
+                                                         center=target_obj_placement, var=variance)  # randomly place obj
             obj_pose = obj_pose.squeeze()
 
             # compute the resulting robot transform
@@ -91,6 +92,7 @@ class PlaceUnif:
             robot_xytheta = self.robot.GetActiveDOFValues()
             set_robot_config(robot_xytheta, self.robot)
             grab_obj(self.robot, obj)
+
         return obj_pose, robot_xytheta
 
     def sample_closest_to_best_action(self, obj, target_obj_region, best_action, other_actions, T_r_wrt_o):
@@ -119,7 +121,7 @@ class PlaceUnif:
 
         return obj_pose, robot_xytheta
 
-    def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions):
+    def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions, n_iter):
         best_action = make_action_executable(best_action)
         other_actions = [make_action_executable(a) for a in other_actions]
 
@@ -135,7 +137,7 @@ class PlaceUnif:
             target_robot_region = self.robot_region
             target_obj_region = obj_region  # for fetching, you want to move it around
 
-        for iter in range(1000):
+        for iter in range(n_iter):
             print "Sampling place iter: ", iter
             obj_pose, robot_xytheta = self.sample_closest_to_best_action(obj, obj_region, best_action, other_actions, T_r_wrt_o)
             print "Done sampling closest"
@@ -157,17 +159,4 @@ class PlaceUnif:
         print "Sampling failed"
         return {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}
 
-    """
-    def predict_closest_to_best_action(self, obj, obj_region, best_action, other_actions):
-        best_action = make_action_executable(best_action)
-        other_actions = [make_action_executable(a) for a in other_actions]
 
-        best_dist = np.inf
-        other_dists = np.array([-1])
-        while np.any(best_dist > other_dists):
-            action = self.predict(obj, obj_region)
-            best_dist = place_distance(action, best_action, obj)
-            other_dists = np.array([place_distance(other, action, obj) for other in other_actions])
-
-        return action
-    """
