@@ -66,28 +66,29 @@ class PickFeasibilityChecker(object):
         return g_config
 
     def compute_g_config(self, obj, pick_base_pose, grasp_params):
-        g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
-        if g_config is not None:
-            pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
-                           'grasp_params': grasp_params, 'g_config': g_config}
-            if self.problem_env.name == 'convbelt':
-                two_arm_pick_object(obj, self.robot, pick_action)
-                set_robot_config(self.problem_env.init_base_conf, self.robot)
-                if not self.env.CheckCollision(self.robot):
-                    two_arm_place_object(obj, self.robot, pick_action)
+        with self.robot:
+            g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
+            if g_config is not None:
+                pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
+                               'grasp_params': grasp_params, 'g_config': g_config}
+                if self.problem_env.name == 'convbelt':
+                    two_arm_pick_object(obj, self.robot, pick_action)
                     set_robot_config(self.problem_env.init_base_conf, self.robot)
-                    print "Sampling pick succeeded"
-                    return g_config
+                    if not self.env.CheckCollision(self.robot):
+                        two_arm_place_object(obj, self.robot, pick_action)
+                        set_robot_config(self.problem_env.init_base_conf, self.robot)
+                        print "Sampling pick succeeded"
+                        return g_config
+                    else:
+                        two_arm_place_object(obj, self.robot, pick_action)
+                        set_robot_config(self.problem_env.init_base_conf, self.robot)
                 else:
-                    two_arm_place_object(obj, self.robot, pick_action)
-                    set_robot_config(self.problem_env.init_base_conf, self.robot)
+                    two_arm_pick_object(obj, self.robot, pick_action)
+                    if not self.env.CheckCollision(self.robot):
+                        two_arm_place_object(obj, self.robot, pick_action)
+                        print "Sampling pick succeeded"
+                        return g_config
+                    else:
+                        two_arm_place_object(obj, self.robot, pick_action)
             else:
-                two_arm_pick_object(obj, self.robot, pick_action)
-                if not self.env.CheckCollision(self.robot):
-                    two_arm_place_object(obj, self.robot, pick_action)
-                    print "Sampling pick succeeded"
-                    return g_config
-                else:
-                    two_arm_place_object(obj, self.robot, pick_action)
-        else:
-            return None
+                return None

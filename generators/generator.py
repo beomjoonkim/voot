@@ -23,6 +23,8 @@ class Generator:
 
             self.domain = place_domain
             self.feasibility_checker = PlaceFeasibilityChecker(problem_env)
+        else:
+            import pdb;pdb.set_trace()
 
     def sample_next_point(self, node, n_iter):
         raise NotImplementedError

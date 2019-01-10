@@ -228,6 +228,7 @@ class HighLevelPlanner:
 
         initial_collision_names = self.fetch_planner.get_initial_collisions(fetch_plan)
 
+
         print "Solved fetching"
         self.namo_planner.namo_domain_initialize_namo_problem(fetch_plan, goal_node)
         namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(initial_collision_names,

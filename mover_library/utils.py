@@ -459,9 +459,8 @@ def place_distance(a1, a2):
 
 
 def pick_parameter_distance(param1, param2, domain):
-    normalizing_factor = 1.0 / domain[1] - domain[0]
-    import pdb;pdb.set_trace()
-    return np.dot(param1-param2, normalizing_factor)
+    normalizing_factor = 1.0 / (domain[1] - domain[0])
+    return np.dot(abs(param1-param2), normalizing_factor)
 
 def place_parameter_distance(param1, param2):
     base_a1 = clean_pose_data(param1).squeeze()

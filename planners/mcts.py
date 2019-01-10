@@ -100,7 +100,8 @@ class MCTS:
                         self.exploration_parameters, depth, state_saver, self.sampling_strategy, is_init_node)
 
         # perhaps move to tree node constructor
-        node.sampling_agent = self.create_sampling_agent(operator)
+        if not self.high_level_planner.is_goal_reached():
+            node.sampling_agent = self.create_sampling_agent(operator)
         node.objs_in_collision = objs_in_collision
         node.parent_action_reward = reward
         node.parent_action = parent_action
@@ -157,6 +158,7 @@ class MCTS:
                     curr_region = curr_obj_region
             else:
                 curr_region = self.high_level_planner.get_next_region()
+            node.sampling_agent = self.create_sampling_agent(operator)
             node.region = curr_region
             node.obj = curr_obj
             node.operator = operator
@@ -301,7 +303,7 @@ class MCTS:
         print 'Reward ', reward
         self.high_level_planner.update_task_plan_indices(reward, action['operator_name']) # create the next node based on the updated task plan progress
         #if self.high_level_planner.is_debugging:
-        #    import pdb;pdb.set_trace()
+        #   import pdb;pdb.set_trace()
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, objs_in_collision, is_init_node=False)
