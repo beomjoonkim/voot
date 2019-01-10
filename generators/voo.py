@@ -118,7 +118,7 @@ class VOOGenerator(Generator):
             new_parameters = np.random.normal(best_evaled_action, variance)
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
 
-            best_dist = pick_parameter_distance(obj, new_parameters, best_evaled_action, self.domain)
+            best_dist = pick_parameter_distance(obj, new_parameters, best_evaled_action)
             other_dists = np.array([pick_parameter_distance(other, new_parameters, self.domain) for other in
                                     other_actions])
             counter += 1
