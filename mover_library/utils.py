@@ -460,13 +460,15 @@ def place_distance(a1, a2):
 
 def pick_parameter_distance(param1, param2, domain):
     normalizing_factor = 1.0 / (domain[1] - domain[0])
+    normalizing_factor = 1.0 / 1.0
     return np.dot(abs(param1-param2), normalizing_factor)
 
-def place_parameter_distance(param1, param2):
+
+def place_parameter_distance(param1, param2, domain):
     base_a1 = clean_pose_data(param1).squeeze()
     base_a2 = clean_pose_data(np.array(param2)).squeeze()
 
-    base_distance_max_diff = 1.0/np.array([1.7, 5.02, 6.28318531])
+    base_distance_max_diff = 1.0/np.array([1., 1., 1.])
     base_distance = np.dot(base_conf_diff(base_a1, base_a2), base_distance_max_diff)
     return base_distance
 

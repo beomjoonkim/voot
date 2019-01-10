@@ -76,11 +76,11 @@ class VOOGenerator(Generator):
 
         while np.any(best_dist > other_dists):
             #print "Gaussian place sampling, counter", counter
-            variance = (self.domain[1] - self.domain[0]) / counter
+            variance = 0.5*(self.domain[1] - self.domain[0]) / counter
             new_parameters = np.random.normal(best_evaled_action, variance)
 
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
-            best_dist = place_parameter_distance(new_parameters, best_evaled_action)
+            best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.domain)
             other_dists = np.array([place_parameter_distance(other, new_parameters) for other in other_actions])
             counter += 1
         return new_parameters
