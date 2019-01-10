@@ -68,7 +68,8 @@ class VOOGenerator(Generator):
         other_dists = np.array([-1])
         counter = 1
 
-        best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values)).squeeze()
+        best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values))
+        best_action_idxs = best_action_idxs.reshape((len(best_action_idxs,)))
         best_action_idx = np.random.choice(best_action_idxs)
         best_evaled_action = self.evaled_actions[best_action_idx]
         other_actions = self.evaled_actions
