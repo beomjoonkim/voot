@@ -113,7 +113,8 @@ class VOOGenerator(Generator):
             new_parameters = np.hstack([grasp_params, ir_parameters])
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
             best_dist = pick_parameter_distance(new_parameters, best_evaled_action, self.domain)
-            other_dists = np.array([pick_parameter_distance(other, new_parameters, self.domain) for other in other_actions])
+            other_dists = np.array([pick_parameter_distance(other, new_parameters, self.domain) for other in
+                                    other_actions])
             counter += 1
 
         return new_parameters
