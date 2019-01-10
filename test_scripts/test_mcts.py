@@ -50,53 +50,6 @@ def make_save_dir(domain, uct_parameter, widening_parameter, voo_exploration_par
     return save_dir
 
 
-def make_sampling_strategy(sampling_strategy, domain_name, problem_env, voo_exploration_parameter):
-    if sampling_strategy == 'voo' or sampling_strategy=='unif':
-        pick_sampler = PickWithBaseUnif(problem_env)
-        place_sampler = PlaceUnif(problem_env)
-    elif sampling_strategy == 'gpucb':
-        pick_sampler = PickGPUCB(problem_env)
-        place_sampler = PlaceGPUCB(problem_env)
-    elif sampling_strategy == 'doo':
-        pick_sampler = PickDOO(problem_env)
-        place_sampler = PlaceDOO(problem_env)
-    else:
-        return
-
-    if domain_name == 'namo':
-        if sampling_strategy == 'voo':
-            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=voo_exploration_parameter)
-        else:
-            sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
-
-    elif domain_name == 'convbelt':
-        # todo change the sampling strategy
-        if sampling_strategy == 'voo':
-            sampling_strategy = VOO(problem_env, pick_sampler, place_sampler, explr_p=voo_exploration_parameter)
-        elif sampling_strategy == 'unif':
-            sampling_strategy = Uniform(problem_env, pick_sampler, place_sampler, None, None)
-        elif sampling_strategy == 'gpucb':
-            sampling_strategy = GPUCB(problem_env, pick_sampler, place_sampler)
-        elif sampling_strategy == 'doo':
-            sampling_strategy = DOO(problem_env, pick_sampler, place_sampler)
-
-
-    elif domain_name == 'mover':
-        # define and test pick operator
-        two_arm_pick_pi = PickWithBaseUnif(problem_env)
-        two_arm_place_pi = PlaceUnif(problem_env)
-        one_arm_pick_pi = OneArmPickUnif(problem_env)
-        one_arm_place_pi = OneArmPlaceUnif(problem_env)
-
-        # todo make MoverVOO
-        if sampling_strategy == 'voo':
-            sampling_strategy = MoverVOO(problem_env, two_arm_pick_pi, two_arm_place_pi, explr_p=voo_exploration_parameter)
-        else:
-            sampling_strategy = Uniform(problem_env, two_arm_pick_pi, two_arm_place_pi, one_arm_pick_pi,
-                                        one_arm_place_pi)
-    return sampling_strategy
-
-
 def make_problem_env(domain_name):
     if domain_name == 'namo':
         problem_env = NAMO()
@@ -155,7 +108,6 @@ def main():
         return -1
 
     problem_env = make_problem_env(args.domain)
-    sampling_strategy = make_sampling_strategy(args.sampling_strategy, args.domain, problem_env, voo_exploration_parameter)
     task_plan = get_task_plan(args.domain, problem_env)
 
     if args.v:

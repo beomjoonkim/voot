@@ -456,6 +456,29 @@ def place_distance(a1, a2, curr_obj):
     base_distance = np.sum(np.dot(base_conf_diff(base_a1, base_a2), base_distance_max_diff))
 
     return base_distance
+
+
+
+
+def get_place_domain(region):
+    box = np.array(region.box)
+    x_range = np.array([[box[0, 0]], [box[0, 1]]])
+    y_range = np.array([[box[1, 0]], [box[1, 1]]])
+    th_range = np.array([[0], [2 * np.pi]])
+    domain = np.hstack([x_range, y_range, th_range])
+    return domain
+
+
+
+def get_pick_domain():
+    portion_domain = [[0.4], [0.9]]
+    base_angle_domain = [[0], [2 * np.pi]]
+    facing_angle_domain = [[-30 * np.pi / 180.0], [30 * np.pi / 180]]
+    base_pose_domain = np.hstack([portion_domain, base_angle_domain, facing_angle_domain])
+
+    grasp_param_domain = np.array([[45 * np.pi / 180, 0.5, 0.1], [180 * np.pi / 180, 1, 0.9]])
+    domain = np.hstack([grasp_param_domain, base_pose_domain])
+    return domain
 """
 def pick_distance(a1, a2, curr_obj):
     obj_xyth = get_body_xytheta(curr_obj)

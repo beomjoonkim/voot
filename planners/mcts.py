@@ -2,10 +2,11 @@ import sys
 import socket
 import numpy as np
 
-from mcts_tree_node import StateSaverTreeNode
+from mcts_tree_node import TreeNode
 from mcts_tree import MCTSTree
 from mcts_utils import make_action_hashable, is_action_hashable
 
+from generators.uniform import UniformGenerator
 
 ## openrave helper libraries
 sys.path.append('../mover_library/')
@@ -14,12 +15,23 @@ from samplers import *
 from utils import *
 
 import time
+from generators.doo_utils.doo import BinaryDOOTree, DOOTreeNode
+sys.path.append('../mover_library/')
+from utils import get_pick_domain, get_place_domain
 
 
 DEBUG = True
 
 if socket.gethostname() == 'dell-XPS-15-9560':
     from mcts_graphics import write_dot_file
+
+
+def create_doo_agent(operator):
+    if operator == 'two_arm_pick':
+        domain = get_pick_domain()
+    else:
+        domain = get_place_domain()
+    return BinaryDOOTree(domain)
 
 
 class MCTS:
@@ -32,20 +44,21 @@ class MCTS:
         self.discount_rate = 0.9
         self.environment = environment
         self.high_level_planner = high_level_planner
-        self.s0_node = self.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
+        self.sampling_strategy = sampling_strategy
 
+        self.s0_node = self.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
         self.goal_reward = 0
 
+        """
         if domain_name == 'convbelt':
             self.depth_limit = 10
             self.is_satisficing_problem = True
         elif domain_name == 'namo':
             self.depth_limit = np.inf
             self.is_satisficing_problem = False
-
-        self.sampling_strategy = sampling_strategy
+        """
 
     def update_init_node_obj(self):
         self.s0_node.obj = self.high_level_planner.get_next_obj()
@@ -71,13 +84,19 @@ class MCTS:
                 curr_region = self.high_level_planner.get_next_region()
 
         state_saver = DynamicEnvironmentStateSaver(self.environment.env)
-        node = StateSaverTreeNode(curr_obj, curr_region, operator,
-                                  self.exploration_parameters, depth, state_saver, is_init_node)
+        node = TreeNode(curr_obj, curr_region, operator,
+                        self.exploration_parameters, depth, state_saver, self.sampling_strategy, is_init_node)
 
+        node.sampling_agent = self.create_sampling_agent(operator)
         node.objs_in_collision = objs_in_collision
         node.parent_action_reward = reward
         node.parent_action = parent_action
         return node
+
+    def create_sampling_agent(self, operator_name):
+        if self.sampling_strategy == 'unif':
+            return UniformGenerator(operator_name, self.environment)
+
 
     @staticmethod
     def get_best_child_node(node):
@@ -333,7 +352,7 @@ class MCTS:
         return next_state, reward, path, objs_in_collision
 
     def sample_action(self, node):
-        action = self.sampling_strategy.sample_next_point(node)
+        action = node.sampling_agent.sample_next_point(node, 1000)
         return action
 
 

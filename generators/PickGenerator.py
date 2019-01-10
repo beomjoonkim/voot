@@ -44,6 +44,7 @@ class PickGenerator(object):
             if pick_base_pose is None:
                 return {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None}
             theta, height_portion, depth_portion = sample_grasp_parameters()
+
             grasp_params = np.array([theta[0], height_portion[0], depth_portion[0]])
 
             # compute if parameters are feasible

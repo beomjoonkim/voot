@@ -51,11 +51,11 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
         algo_name = algo_name.split('_')[0]
         rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        rootdir = './test_results/'
+        #rootdir = './test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        if domain_name == 'namo':
-            rootdir = './test_results/'
+        #if domain_name == 'namo':
+        #    rootdir = './test_results/'
 
     """
         epsilon = algo_name.split('_')[1]
@@ -185,29 +185,22 @@ def get_max_rwds_wrt_time_namo(search_rwd_times):
     return np.array(all_episode_data), organized_times
 
 
-def main():
+def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='convbelt')
-    parser.add_argument('-w', type=str, default='stripstream')
-    args = parser.parse_args()
-    algo_names = ['voo_0.001', 'voo_0.01', 'voo_0.05', 'voo_0.08', 'voo_0.1', 'voo_0.3', 'voo_0.5', 'voo_0.7' ]
-    #algo_names = ['voo_0.01', 'voo_0.3', 'voo_0.9','voo_0.001']
-    #algo_names = ['voo_0.3', 'unif']
+    parser.add_argument('-w', type=str, default='none')
 
+    args = parser.parse_args()
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3']
-        algo_names = ['unif', 'voo_0.3']
         algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3']
     else:
-        algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.5']
-        algo_names = ['unif', 'voo_0.3']
-        algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3']  #'voo_0.01',  'voo_0.1']
-
+        algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'voo_0.5']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
+
 
     for algo_idx, algo in enumerate(algo_names):
         print algo
@@ -222,9 +215,37 @@ def main():
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     #plt.show()
-    savefig('Number of simulations', 'Average rewards', fname='./plotters/'+args.domain)
+    savefig('Number of simulations', 'Average rewards', fname='./plotters/'+args.domain+'_w_'+args.w)
 
+def plot_across_widening_parameters():
+    parser = argparse.ArgumentParser(description='MCTS parameters')
+    parser.add_argument('-domain', type=str, default='convbelt')
+    parser.add_argument('-algo_name', type=str, default='unif')
+
+    args = parser.parse_args()
+    widening_parameters = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+    widening_parameters = [0.6,0.7,0.2,0.8]
+    algo = args.algo_name
+
+    color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
+    color_names = color_dict.keys()[2:]
+    for widening_idx, widening_parameter in enumerate(widening_parameters):
+        print algo + str(widening_parameter)
+        try:
+            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter)
+        except:
+            continue
+        if args.domain == 'namo':
+            search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        else:
+            search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo+'_'+str(widening_parameter),
+                          color=color_dict[color_names[widening_idx]])
+        print  "===================="
+    # plt.show()
+    savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.domain + '_algo_' + args.algo_name)
 
 
 if __name__ == '__main__':
-    main()
+    #plot_across_algorithms()
+    plot_across_widening_parameters()

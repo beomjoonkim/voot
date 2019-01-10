@@ -95,7 +95,7 @@ class PlaceUnif:
 
         return obj_pose, robot_xytheta
 
-    def sample_closest_to_best_action(self, obj, target_obj_region, best_action, other_actions, T_r_wrt_o):
+    def get_placement_closest_to_best_action(self, obj, target_obj_region, best_action, other_actions, T_r_wrt_o):
         best_dist = np.inf
         other_dists = np.array([-1])
         counter = 1
@@ -139,7 +139,7 @@ class PlaceUnif:
 
         for iter in range(n_iter):
             print "Sampling place iter: ", iter
-            obj_pose, robot_xytheta = self.sample_closest_to_best_action(obj, obj_region, best_action, other_actions, T_r_wrt_o)
+            obj_pose, robot_xytheta = self.get_placement_closest_to_best_action(obj, obj_region, best_action, other_actions, T_r_wrt_o)
             print "Done sampling closest"
 
             set_robot_config(robot_xytheta, self.robot)
