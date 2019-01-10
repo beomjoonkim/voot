@@ -7,7 +7,7 @@ from utils import pick_parameter_distance, place_parameter_distance
 from planners.mcts_utils import make_action_executable
 
 
-class VOOGenerator(Generator):
+class GPUCBGenerator(Generator):
     def __init__(self, operator_name, problem_env, explr_p):
         Generator.__init__(self, operator_name, problem_env)
         self.explr_p = explr_p
@@ -46,9 +46,9 @@ class VOOGenerator(Generator):
             if status == 'HasSolution':
                 print "Found feasible sample"
                 break
-            #else:
-            #    self.evaled_actions.append(action_parameters)
-            #    self.evaled_q_values.append(self.problem_env.infeasible_reward)
+            else:
+                self.evaled_actions.append(action_parameters)
+                self.evaled_q_values.append(self.problem_env.infeasible_reward)
 
         return action
 
@@ -74,7 +74,7 @@ class VOOGenerator(Generator):
         other_actions = self.evaled_actions
 
         while np.any(best_dist > other_dists):
-            #print "Gaussian place sampling, counter", counter
+            print "Gaussian place sampling, counter", counter
             variance = (self.domain[1] - self.domain[0]) / counter
             new_parameters = np.random.normal(best_evaled_action, variance)
 
@@ -100,7 +100,7 @@ class VOOGenerator(Generator):
         '''
 
         while np.any(best_dist > other_dists):
-            #print "Gaussian pick sampling, counter", counter
+            print "Gaussian pick sampling, counter", counter
             best_ir_parameters = best_evaled_action[3:]
 
             var_ir = np.array([0.3, 30*np.pi/180., 10*np.pi/180]) / float(counter)

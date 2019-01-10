@@ -197,7 +197,8 @@ def plot_across_algorithms():
     if args.domain == 'namo':
         algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3']
     else:
-        algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'voo_0.5']
+        #algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'voo_0.5']
+        algo_names = ['unif', 'voo_0.3']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
