@@ -11,6 +11,17 @@ import numpy as np
 import math
 import time
 
+PR2_ARM_LENGTH = 0.9844
+
+def compute_robot_xy_given_ir_parameters(portion, angle, obj, radius=PR2_ARM_LENGTH):
+    dist_to_obj = radius * portion  # how close are you to obj?
+    x = dist_to_obj * np.cos(angle)
+    y = dist_to_obj * np.sin(angle)
+    robot_wrt_o = np.array([x, y, 0, 1])
+    return np.dot(obj.GetTransform(), robot_wrt_o)[:-1]
+
+
+
 def convert_collision_vec_to_one_hot(c_data):
     n_konf = c_data.shape[1]
     onehot_cdata = []
@@ -457,19 +468,63 @@ def place_distance(a1, a2):
 
     return base_distance
 
+def get_pick_base_pose_and_grasp_from_pick_parameters(obj, pick_parameters):
+    grasp_params = pick_parameters[0:3]
+    portion = pick_parameters[3]
+    base_angle = pick_parameters[4]
+    facing_angle = pick_parameters[5]
 
-def pick_parameter_distance(param1, param2, domain):
-    normalizing_factor = 1.0 / (domain[1] - domain[0])
-    normalizing_factor = 1.0 / 1.0
-    return np.dot(abs(param1-param2), normalizing_factor)
+    pick_base_pose = compute_robot_xy_given_ir_parameters(portion, base_angle, obj)
+    obj_xy = get_body_xytheta(obj).squeeze()[:-1]
+    robot_xy = pick_base_pose[0:2]
+    angle_to_be_set = compute_angle_to_be_set(obj_xy, robot_xy)
+    pick_base_pose[-1] = angle_to_be_set + facing_angle
+    return grasp_params, pick_base_pose
+
+
+def pick_parameter_distance(obj, param1, param2):
+    grasp_params1, pick_base_pose1 = get_pick_base_pose_and_grasp_from_pick_parameters(obj, param1)
+    grasp_params2, pick_base_pose2 = get_pick_base_pose_and_grasp_from_pick_parameters(obj, param2)
+
+    base_pose_distance = se2_distance(pick_base_pose1, pick_base_pose2)
+    grasp_distance = np.linalg.norm(grasp_params2 - grasp_params1)
+
+    c1 = 2
+    c2 = 1
+    distance = c1*base_pose_distance + c2*grasp_distance
+    return distance
+
+
+def cart2pol(x, y):
+    rho = np.sqrt(x**2 + y**2)
+    phi = np.arctan2(y, x)
+    return (rho, phi)
+
+
+def pol2cart(rho, phi):
+    x = rho * np.cos(phi)
+    y = rho * np.sin(phi)
+    return (x, y)
+
+
+def se2_distance(base_a1, base_a2):
+    base_a1 = base_a1.squeeze()
+    base_a2 = base_a2.squeeze()
+
+    x1, y1 = pol2cart(1, base_a1[-1])
+    x2, y2 = pol2cart(1, base_a2[-1])
+
+    angle_distance = np.sqrt((y2-y1)**2 + (x2-x1)**2)
+    base_distance = np.linalg.norm(base_a1[0:2] - base_a2[0:2])
+
+    c1 = 1
+    c2 = 1
+    distance = c1*base_distance + c2*angle_distance
+    return distance
 
 
 def place_parameter_distance(param1, param2):
-    base_a1 = clean_pose_data(param1).squeeze()
-    base_a2 = clean_pose_data(np.array(param2)).squeeze()
-    base_distance_max_diff = 1.0/np.array([1., 1., 1.])
-    base_distance = np.dot(base_conf_diff(base_a1, base_a2), base_distance_max_diff)
-    return base_distance
+    return se2_distance(param1, param2)
 
 
 def get_place_domain(region):
@@ -481,7 +536,6 @@ def get_place_domain(region):
     return domain
 
 
-
 def get_pick_domain():
     portion_domain = [[0.4], [0.9]]
     base_angle_domain = [[0], [2 * np.pi]]
@@ -491,6 +545,7 @@ def get_pick_domain():
     grasp_param_domain = np.array([[45 * np.pi / 180, 0.5, 0.1], [180 * np.pi / 180, 1, 0.9]])
     domain = np.hstack([grasp_param_domain, base_pose_domain])
     return domain
+
 """
 def pick_distance(a1, a2, curr_obj):
     obj_xyth = get_body_xytheta(curr_obj)

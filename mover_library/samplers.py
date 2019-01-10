@@ -49,14 +49,6 @@ def sample_angle_facing_given_transform(target_xy, robot_xy):
     dangle_in_rad = 30 * np.pi / 180.0  # random offset from the angle facing the object
     return angle_to_be_set + np.random.uniform(-dangle_in_rad, dangle_in_rad)
 
-PR2_ARM_LENGTH = 0.9844
-def compute_robot_xy_given_ir_parameters(portion, angle, obj, radius=PR2_ARM_LENGTH):
-    dist_to_obj = radius * portion  # how close are you to obj?
-    x = dist_to_obj * np.cos(angle)
-    y = dist_to_obj * np.sin(angle)
-    robot_wrt_o = np.array([x, y, 0, 1])
-    return np.dot(obj.GetTransform(), robot_wrt_o)[:-1]
-
 
 def sample_xy_locations(obj, radius):
     portion = np.random.uniform(0.4, 0.9)
