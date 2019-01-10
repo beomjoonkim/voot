@@ -12,7 +12,7 @@ def worker_p(config):
     e = config['epsilon']
     mcts_iter = config['mcts_iter']
 
-    command = 'python ./test_scripts/test_hierarchical_mcts.py -sampling_strategy ' + s + \
+    command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter)
 
