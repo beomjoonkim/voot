@@ -24,6 +24,12 @@ class Generator:
             self.domain = place_domain
             self.feasibility_checker = PlaceFeasibilityChecker(problem_env)
 
-    def choose_next_point(self, node, n_iter):
+    def sample_next_point(self, node, n_iter):
         raise NotImplementedError
+
+    def sample_from_uniform(self):
+        dim_parameters = self.domain.shape[-1]
+        domain_min = self.domain[0]
+        domain_max = self.domain[1]
+        return np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
 

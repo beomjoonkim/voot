@@ -3,13 +3,15 @@ import sys
 from mcts_utils import is_action_hashable, make_action_hashable, make_action_executable
 
 
+
 def UCT_upperbound(n, n_sa):
     return 2 * np.log(n) / float(n_sa)
 
 
 
 class TreeNode:
-    def __init__(self, obj, region, operator, exploration_parameter, depth, state_saver, sampling_strategy, is_init_node):
+    def __init__(self, obj, region, operator, exploration_parameter, depth, state_saver, sampling_strategy,
+                 is_init_node):
         self.Nvisited = 0
         self.N = {}  # N(n,a)
         self.Q = {}  # Q(n,a)
@@ -35,6 +37,7 @@ class TreeNode:
         self.region = region
         self.is_init_node = is_init_node
         self.objs_in_collision = None
+
         self.sampling_strategy = sampling_strategy
 
     def get_best_action(self):

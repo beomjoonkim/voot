@@ -45,10 +45,11 @@ class PickFeasibilityChecker(object):
 
         if g_config is not None:
             pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
-                           'grasp_params': grasp_params, 'g_config': g_config, 'pick_parameters': pick_parameters}
+                           'grasp_params': grasp_params, 'g_config': g_config, 'action_parameters': pick_parameters}
             return pick_action, 'HasSolution'
         else:
-            pick_action = {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None}
+            pick_action = {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None,
+                           'action_parameters': pick_parameters}
             return pick_action, "NoSolution"
 
     def compute_grasp_config(self, obj, pick_base_pose, grasp_params):

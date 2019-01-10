@@ -445,7 +445,7 @@ def base_conf_diff(x, y):
     return base_diff
 
 
-def place_distance(a1, a2, curr_obj):
+def place_distance(a1, a2):
     base_a1 = np.array(a1['base_pose'])
     base_a1 = clean_pose_data(base_a1).squeeze()
 
@@ -458,6 +458,18 @@ def place_distance(a1, a2, curr_obj):
     return base_distance
 
 
+def pick_parameter_distance(param1, param2, domain):
+    normalizing_factor = 1.0 / domain[1] - domain[0]
+    import pdb;pdb.set_trace()
+    return np.dot(param1-param2, normalizing_factor)
+
+def place_parameter_distance(param1, param2):
+    base_a1 = clean_pose_data(param1).squeeze()
+    base_a2 = clean_pose_data(np.array(param2)).squeeze()
+
+    base_distance_max_diff = 1.0/np.array([1.7, 5.02, 6.28318531])
+    base_distance = np.dot(base_conf_diff(base_a1, base_a2), base_distance_max_diff)
+    return base_distance
 
 
 def get_place_domain(region):

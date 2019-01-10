@@ -7,6 +7,9 @@ from mcts_tree import MCTSTree
 from mcts_utils import make_action_hashable, is_action_hashable
 
 from generators.uniform import UniformGenerator
+from generators.voo import VOOGenerator
+
+
 
 ## openrave helper libraries
 sys.path.append('../mover_library/')
@@ -36,7 +39,8 @@ def create_doo_agent(operator):
 
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
-                 sampling_strategy, environment, domain_name, high_level_planner):
+                 sampling_strategy, sampling_strategy_exploration_parameter,
+                 environment, domain_name, high_level_planner):
 
         self.progressive_widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
@@ -45,6 +49,7 @@ class MCTS:
         self.environment = environment
         self.high_level_planner = high_level_planner
         self.sampling_strategy = sampling_strategy
+        self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
 
         self.s0_node = self.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
@@ -59,6 +64,13 @@ class MCTS:
             self.depth_limit = np.inf
             self.is_satisficing_problem = False
         """
+
+    def create_sampling_agent(self, operator_name):
+        if self.sampling_strategy == 'unif':
+            return UniformGenerator(operator_name, self.environment)
+        elif self.sampling_strategy == 'voo':
+            return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
+
 
     def update_init_node_obj(self):
         self.s0_node.obj = self.high_level_planner.get_next_obj()
@@ -87,16 +99,12 @@ class MCTS:
         node = TreeNode(curr_obj, curr_region, operator,
                         self.exploration_parameters, depth, state_saver, self.sampling_strategy, is_init_node)
 
+        # perhaps move to tree node constructor
         node.sampling_agent = self.create_sampling_agent(operator)
         node.objs_in_collision = objs_in_collision
         node.parent_action_reward = reward
         node.parent_action = parent_action
         return node
-
-    def create_sampling_agent(self, operator_name):
-        if self.sampling_strategy == 'unif':
-            return UniformGenerator(operator_name, self.environment)
-
 
     @staticmethod
     def get_best_child_node(node):

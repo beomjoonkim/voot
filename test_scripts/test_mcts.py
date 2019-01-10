@@ -95,12 +95,12 @@ def main():
     uct_parameter = args.uct
     widening_parameter = args.widening_parameter
     sampling_strategy = args.sampling_strategy
-    voo_exploration_parameter = args.epsilon
+    sampling_strategy_exploration_parameter = args.epsilon
     problem_index = args.problem_idx
     mcts_iter = args.mcts_iter
 
     save_dir = make_save_dir(args.domain, uct_parameter, widening_parameter,
-                             voo_exploration_parameter, sampling_strategy, mcts_iter)
+                             sampling_strategy_exploration_parameter, sampling_strategy, mcts_iter)
 
     stat_file_name = save_dir + str(problem_index)+'.pkl'
     if os.path.isfile(stat_file_name):
@@ -114,7 +114,9 @@ def main():
         problem_env.env.SetViewer('qtcoin')
 
     hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
-    hierarchical_planner.set_mcts_parameters(widening_parameter, uct_parameter, sampling_strategy, n_iter=mcts_iter)
+    hierarchical_planner.set_mcts_parameters(widening_parameter, uct_parameter, sampling_strategy,
+                                             sampling_strategy_exploration_parameter,
+                                             n_iter=mcts_iter)
     search_time_to_reward, plan, optimal_score_achieved = hierarchical_planner.search()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': problem_index,

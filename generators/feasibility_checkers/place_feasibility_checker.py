@@ -41,15 +41,16 @@ class PlaceFeasibilityChecker:
         obj.SetTransform(original_obj_trans)
 
         if is_base_pose_feasible:
-            action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose}
+            action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose,
+                      'action_parameters': place_parameters}
             return action, 'HasSolution'
         else:
-            action = {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None}
+            action = {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None,
+                      'action_parameters': place_parameters}
             return action, 'NoSolution'
 
     @staticmethod
     def compute_robot_base_pose_given_object_pose(obj, robot, obj_pose, T_r_wrt_o):
-        original_obj_T = obj.GetTransform()
         original_robot_T = robot.GetTransform()
 
         release_obj(robot, obj)

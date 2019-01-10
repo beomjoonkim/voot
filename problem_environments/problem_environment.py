@@ -190,7 +190,7 @@ class ProblemEnvironment:
 
         if n_iterations is None:
             if self.name == 'convbelt':
-                n_iterations = [20, 50, 100, 500]
+                n_iterations = [20, 50, 100, 500, 3000]
             else:
                 n_iterations = [20, 50, 100, 500, 1000]
 

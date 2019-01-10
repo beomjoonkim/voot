@@ -10,11 +10,8 @@ class UniformGenerator(Generator):
         Generator.__init__(self, operator_name, problem_env)
 
     def sample_next_point(self, node, n_iter):
-        dim_parameters = self.domain.shape[-1]
-        domain_min = self.domain[0]
-        domain_max = self.domain[1]
         for i in range(n_iter):
-            action_parameters = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
+            action_parameters = self.sample_from_uniform()
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
             if status == 'HasSolution':
                 print "Found feasible sample"

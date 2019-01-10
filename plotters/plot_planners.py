@@ -51,9 +51,10 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
         algo_name = algo_name.split('_')[0]
         rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        #rootdir = './test_results/'
+        rootdir = './test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+        rootdir = './test_results/'
         #if domain_name == 'namo':
         #    rootdir = './test_results/'
 
@@ -71,14 +72,14 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
     """
 
     if domain_name == 'convbelt':
-        result_dir = rootdir+'/convbelt_results/uct_0.0_widening_'+ str(widening_parameter)+'_'
+        result_dir = rootdir+'/convbelt_results/mcts_iter_50/uct_0.0_widening_'+ str(widening_parameter)+'_'
+        print result_dir
     elif domain_name == 'namo':
         result_dir = rootdir+'/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
 
     result_dir += algo_name +'/'
-
     if algo_name.find('voo')!=-1:
         result_dir += 'eps_'+ str(epsilon)+'/'
     return result_dir
@@ -201,7 +202,6 @@ def plot_across_algorithms():
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
 
-
     for algo_idx, algo in enumerate(algo_names):
         print algo
         try:
@@ -247,5 +247,5 @@ def plot_across_widening_parameters():
 
 
 if __name__ == '__main__':
-    #plot_across_algorithms()
-    plot_across_widening_parameters()
+    plot_across_algorithms()
+    #plot_across_widening_parameters()
