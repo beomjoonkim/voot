@@ -22,7 +22,7 @@ class StandardContinuousGP:
             return
         evaled_x = np.array(evaled_x)
         evaled_y = np.array(evaled_y)[:, None]
-        self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern)
+        self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern, normalizer=True)
         self.model.optimize(messages=False, max_f_eval=1000)
 
 
