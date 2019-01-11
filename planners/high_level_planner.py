@@ -58,6 +58,7 @@ class HighLevelPlanner:
         sampling_strategy = args.sampling_strategy
         sampling_strategy_exploration_parameter = args.epsilon
         mcts_iter = args.mcts_iter
+        n_feasibility_checks = args.n_feasibility_checks
         c1 = args.c1
 
         self.widening_parameter = widening_parameter
@@ -67,7 +68,7 @@ class HighLevelPlanner:
         self.n_optimal_iter = 0
         self.max_time = args.max_time
         self.mcts = MCTS(self.widening_parameter, self.uct_parameter, self.sampling_stategy,
-                         sampling_strategy_exploration_parameter, c1,
+                         sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
                          self.problem_env, self.domain_name, self)
 
     def update_task_plan_indices(self, reward, operator_used):

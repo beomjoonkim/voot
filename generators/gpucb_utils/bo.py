@@ -11,9 +11,9 @@ class BO(object):
         self.opt_n = opt_n
 
     def choose_next_point(self, evaled_x, evaled_y):
-        print 'GP updating the model, n_data is ', len(evaled_x)
+        #print 'GP updating the model, n_data is ', len(evaled_x)
         self.model.update(evaled_x, evaled_y)
-        print 'GP model updated!'
+        #print 'GP model updated!'
         if len(evaled_x) == 0 or np.all(evaled_y) == -2:
             print 'GP choosing to random sample'
             dim_x = self.domain.domain.shape[-1]

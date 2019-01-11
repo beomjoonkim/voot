@@ -8,7 +8,6 @@ from mcts_utils import make_action_hashable, is_action_hashable
 
 from generators.uniform import UniformGenerator
 from generators.voo import VOOGenerator
-from generators.gpucb import GPUCBGenerator
 
 ## openrave helper libraries
 sys.path.append('../mover_library/')
@@ -26,6 +25,7 @@ DEBUG = True
 
 if socket.gethostname() == 'dell-XPS-15-9560':
     from mcts_graphics import write_dot_file
+    from generators.gpucb import GPUCBGenerator
 
 
 def create_doo_agent(operator):
@@ -38,7 +38,7 @@ def create_doo_agent(operator):
 
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
-                 sampling_strategy, sampling_strategy_exploration_parameter, c1,
+                 sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
                  environment, domain_name, high_level_planner):
         self.c1 = c1
         self.progressive_widening_parameter = widening_parameter
@@ -54,6 +54,7 @@ class MCTS:
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
         self.goal_reward = 0
+        self.n_feasibility_checks = n_feasibility_checks
 
         """
         if domain_name == 'convbelt':
@@ -363,7 +364,7 @@ class MCTS:
         return next_state, reward, path, objs_in_collision
 
     def sample_action(self, node):
-        action = node.sampling_agent.sample_next_point(node, 100)
+        action = node.sampling_agent.sample_next_point(node, self.n_feasibility_checks)
         return action
 
 

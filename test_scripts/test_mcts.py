@@ -7,7 +7,6 @@ from planners.high_level_planner import HighLevelPlanner
 
 from sampling_strategies.voo import VOO, MoverVOO
 from sampling_strategies.uniform import Uniform
-#from sampling_strategies.gpucb import GPUCB
 from sampling_strategies.doo import DOO
 
 import argparse
@@ -32,13 +31,14 @@ def make_save_dir(args):
     sampling_strategy = args.sampling_strategy
     sampling_strategy_exploration_parameter = args.epsilon
     mcts_iter = args.mcts_iter
+    n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
 
     save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                + str(uct_parameter) + '_widening_' \
-               + str(widening_parameter) + '_' + sampling_strategy
+               + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
 
-    if sampling_strategy == 'voo':
+    if sampling_strategy != 'unif':
         save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
 
     if not os.path.isdir(save_dir):
@@ -84,6 +84,7 @@ def main():
     parser.add_argument('-seed', type=int, default=50)
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1)
+    parser.add_argument('-n_feasibility_checks', type=int, default=100)
     args = parser.parse_args()
 
     if args.debug:
@@ -91,10 +92,7 @@ def main():
         print "RANDOM SEED SET", np.random.seed(sd)
         print "RANDOM SEED SET", random.seed(sd)
 
-
     save_dir = make_save_dir(args)
-
-
     stat_file_name = save_dir + str(args.problem_idx)+'.pkl'
     if os.path.isfile(stat_file_name):
         print "already done"
