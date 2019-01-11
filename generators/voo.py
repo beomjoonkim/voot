@@ -49,9 +49,10 @@ class VOOGenerator(Generator):
             if status == 'HasSolution':
                 print "Found feasible sample"
                 break
-            #else:
-            #    self.evaled_actions.append(action_parameters)
-            #    self.evaled_q_values.append(self.problem_env.infeasible_reward)
+            else:
+                pass
+                #self.evaled_actions.append(action_parameters)
+                #self.evaled_q_values.append(self.problem_env.infeasible_reward)
 
         return action
 
@@ -78,7 +79,7 @@ class VOOGenerator(Generator):
         other_actions = self.evaled_actions
 
         while np.any(best_dist > other_dists):
-            #print "Gaussian place sampling, counter", counter
+            #print "Gaussian place sampling, counter", counter, len(other_dists)
             variance = 0.5*(self.domain[1] - self.domain[0]) / counter
             new_parameters = np.random.normal(best_evaled_action, variance)
 
@@ -104,7 +105,7 @@ class VOOGenerator(Generator):
         '''
 
         while np.any(best_dist > other_dists):
-            #print "Gaussian pick sampling, counter", counter
+            #print "Gaussian pick sampling, counter", counter, len(other_dists)
             """
             best_ir_parameters = best_evaled_action[3:]
 

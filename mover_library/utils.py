@@ -488,7 +488,7 @@ def pick_parameter_distance(obj, param1, param2):
     grasp_params1, pick_base_pose1 = get_pick_base_pose_and_grasp_from_pick_parameters(obj, param1)
     grasp_params2, pick_base_pose2 = get_pick_base_pose_and_grasp_from_pick_parameters(obj, param2)
 
-    base_pose_distance = se2_distance(pick_base_pose1, pick_base_pose2)
+    base_pose_distance = se2_distance(pick_base_pose1, pick_base_pose2, 1, 1)
     grasp_distance = np.linalg.norm(grasp_params2 - grasp_params1)
 
     c1 = 2
@@ -509,7 +509,7 @@ def pol2cart(rho, phi):
     return (x, y)
 
 
-def se2_distance(base_a1, base_a2):
+def se2_distance(base_a1, base_a2, c1, c2):
     base_a1 = base_a1.squeeze()
     base_a2 = base_a2.squeeze()
 
@@ -519,14 +519,12 @@ def se2_distance(base_a1, base_a2):
     angle_distance = np.sqrt((y2-y1)**2 + (x2-x1)**2)
     base_distance = np.linalg.norm(base_a1[0:2] - base_a2[0:2])
 
-    c1 = 1
-    c2 = 1
     distance = c1*base_distance + c2*angle_distance
     return distance
 
 
 def place_parameter_distance(param1, param2):
-    return se2_distance(param1, param2)
+    return se2_distance(param1, param2, 5, 1)
 
 
 def get_place_domain(region):
