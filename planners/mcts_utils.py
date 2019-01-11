@@ -7,6 +7,7 @@ def make_action_hashable(action):
     if operator_name == 'two_arm_pick':
         if action['g_config'] is None:
             hashable_action += [None]
+            hashable_action += action['action_parameters'].tolist()
         else:
             hashable_action += action['grasp_params'].tolist()
             hashable_action += action['base_pose'].tolist()
@@ -17,6 +18,7 @@ def make_action_hashable(action):
     elif operator_name == 'two_arm_place':
         if action['base_pose'] is None:
             hashable_action += [None]
+            hashable_action += action['action_parameters'].tolist()
         else:
             hashable_action += action['base_pose'].tolist()
             hashable_action += action['object_pose'].tolist()
@@ -45,6 +47,7 @@ def make_action_executable(action):
             executable_action['g_config'] = None
             executable_action['base_pose'] = None
             executable_action['g_config'] = None
+            executable_action['action_parameters'] = np.array(action[2:])
         else:
             assert len(action) == 28, 'Only handles rightarm torso and left hand pick'
             executable_action['grasp_params'] = np.array(action[1:4])
@@ -54,9 +57,14 @@ def make_action_executable(action):
             executable_action['action_parameters'] = np.array(action[22:])
 
     elif operator_name == 'two_arm_place':
-        executable_action['base_pose'] = np.array(action[1:4])
-        executable_action['object_pose'] = np.array(action[4:7])
-        executable_action['action_parameters'] = np.array(action[7:])
+        if action[1] is None:
+            executable_action['base_pose'] = None
+            executable_action['object_pose'] = None
+            executable_action['action_parameters'] = np.array(action[2:])
+        else:
+            executable_action['base_pose'] = np.array(action[1:4])
+            executable_action['object_pose'] = np.array(action[4:7])
+            executable_action['action_parameters'] = np.array(action[7:])
 
     elif operator_name == 'one_arm_pick':
         executable_action['grasp_params'] = np.array(action[1:4])

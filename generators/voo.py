@@ -26,7 +26,10 @@ class VOOGenerator(Generator):
             is_action_included = np.any(is_in_array)
 
             if not is_action_included:
-                self.evaled_actions.append(executable_action['action_parameters'])
+                try:
+                    self.evaled_actions.append(executable_action['action_parameters'])
+                except:
+                    import pdb;pdb.set_trace()
                 self.evaled_q_values.append(q_value)
             else:
                 # update the value if the action is included
