@@ -523,8 +523,8 @@ def se2_distance(base_a1, base_a2, c1, c2):
     return distance
 
 
-def place_parameter_distance(param1, param2):
-    return se2_distance(param1, param2, 1, 1)
+def place_parameter_distance(param1, param2, c1=1):
+    return se2_distance(param1, param2, c1, 1)
 
 
 def get_place_domain(region):

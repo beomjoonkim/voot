@@ -39,9 +39,9 @@ def create_doo_agent(operator):
 
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
-                 sampling_strategy, sampling_strategy_exploration_parameter,
+                 sampling_strategy, sampling_strategy_exploration_parameter, c1,
                  environment, domain_name, high_level_planner):
-
+        self.c1 = c1
         self.progressive_widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
         self.time_limit = np.inf
@@ -69,7 +69,7 @@ class MCTS:
         if self.sampling_strategy == 'unif':
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
-            return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
+            return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter, self.c1)
 
 
     def update_init_node_obj(self):

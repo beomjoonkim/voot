@@ -51,17 +51,23 @@ class HighLevelPlanner:
         self.env = self.problem_env.env
         self.robot = self.problem_env.robot
 
-    def set_mcts_parameters(self, widening_parameter, uct_parameter, sampling_stategy,
-                            sampling_strategy_exploration_parameter,
-                            n_iter=50, n_optimal_iter=0, max_time=np.inf):
+    def set_mcts_parameters(self, args):
+        domain = args.domain
+        uct_parameter = args.uct
+        widening_parameter = args.widening_parameter
+        sampling_strategy = args.sampling_strategy
+        sampling_strategy_exploration_parameter = args.epsilon
+        mcts_iter = args.mcts_iter
+        c1 = args.c1
+
         self.widening_parameter = widening_parameter
         self.uct_parameter = uct_parameter
-        self.sampling_stategy = sampling_stategy
-        self.n_iter = n_iter
-        self.n_optimal_iter = n_optimal_iter
-        self.max_time = max_time
+        self.sampling_stategy = sampling_strategy
+        self.n_iter = mcts_iter
+        self.n_optimal_iter = 0
+        self.max_time = args.max_time
         self.mcts = MCTS(self.widening_parameter, self.uct_parameter, self.sampling_stategy,
-                         sampling_strategy_exploration_parameter,
+                         sampling_strategy_exploration_parameter, c1,
                          self.problem_env, self.domain_name, self)
 
     def update_task_plan_indices(self, reward, operator_used):
