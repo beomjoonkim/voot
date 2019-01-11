@@ -26,10 +26,7 @@ class VOOGenerator(Generator):
             is_action_included = np.any(is_in_array)
 
             if not is_action_included:
-                try:
-                    self.evaled_actions.append(executable_action['action_parameters'])
-                except:
-                    import pdb;pdb.set_trace()
+                self.evaled_actions.append(executable_action['action_parameters'])
                 self.evaled_q_values.append(q_value)
             else:
                 # update the value if the action is included
@@ -86,8 +83,8 @@ class VOOGenerator(Generator):
             #print "Gaussian place sampling, counter", counter, len(other_dists)
             variance = 0.5*(self.domain[1] - self.domain[0]) / counter
             new_parameters = np.random.normal(best_evaled_action, variance)
-
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
+
             best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
             other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
             counter += 1

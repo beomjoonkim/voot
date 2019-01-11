@@ -2,7 +2,7 @@ import numpy as np
 import GPy
 
 
-class StandardContinuousGP():
+class StandardContinuousGP:
     def __init__(self, xdim):
         self.model = None
         self.kern = GPy.kern.RBF(xdim, variance=500)
@@ -15,6 +15,7 @@ class StandardContinuousGP():
         return mu, sig
 
     def update(self, evaled_x, evaled_y):
+        # todo make the same distance used in the voo
         self.evaled_x = np.array(evaled_x)
         self.evaled_y = np.array(evaled_y)
         if len(evaled_x) == 0:
@@ -22,5 +23,7 @@ class StandardContinuousGP():
         evaled_x = np.array(evaled_x)
         evaled_y = np.array(evaled_y)[:, None]
         self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern)
+        self.model.optimize(messages=False, max_f_eval=1000)
+
 
 

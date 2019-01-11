@@ -12,10 +12,11 @@ def worker_p(config):
     e = config['epsilon']
     mcts_iter = config['mcts_iter']
     c1 = config['c1']
+    n_feasibility_checks = config['n_feasibility_checks']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
-        ' -mcts_iter ' + str(mcts_iter) + ' -c1 '+str(c1)
+        ' -mcts_iter ' + str(mcts_iter) + ' -c1 '+str(c1) + ' -n_feasibility_checks ' + str(n_feasibility_checks)
 
     print command
     os.system(command)
@@ -32,6 +33,7 @@ def main():
     parser.add_argument('-mcts_iter', type=int, default=50)
     parser.add_argument('-w', nargs='+', type=float)
     parser.add_argument('-c1', nargs='+', type=float)
+    parser.add_argument('-n_feasibility_checks', nargs='+', type=int)
     parser.add_argument('-epsilon', nargs='+', type=float)
 
     args = parser.parse_args()
@@ -42,17 +44,23 @@ def main():
     widening_parameters = args.w if args.w is not None else [0.8]
     mcts_iter = args.mcts_iter
     c1s = args.c1 if args.c1 is not None else [1]
+    n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [100]
     trials = range(200)
     configs = []
-    for c1 in c1s:
-        for e in epsilons:
-            for t in trials:
-                for widening_parameter in widening_parameters:
-                    config = {"widening_parameter": widening_parameter,
-                              "epsilon": e, 'trial':t, 'domain':domain,
-                              'sampling_strategy':sampling_strategy,
-                              'mcts_iter': mcts_iter, 'c1':c1}
-                    configs.append(config)
+
+    for n_feasibility_check in n_feasibility_checks:
+        for c1 in c1s:
+            for e in epsilons:
+                for t in trials:
+                    for widening_parameter in widening_parameters:
+                        config = {"widening_parameter": widening_parameter,
+                                  "epsilon": e, 'trial': t,
+                                  'domain': domain,
+                                  'sampling_strategy': sampling_strategy,
+                                  'mcts_iter': mcts_iter,
+                                  'c1': c1,
+                                  'n_feasibility_checks': n_feasibility_check}
+                        configs.append(config)
 
     n_workers = int(30)
     print configs

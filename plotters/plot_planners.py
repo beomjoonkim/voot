@@ -58,14 +58,15 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1):
         #if domain_name == 'namo':
         #    rootdir = './test_results/'
 
-
     if domain_name == 'convbelt':
-        result_dir = rootdir+'/convbelt_results/mcts_iter_150/uct_0.0_widening_'+ str(widening_parameter)+'_'
+        if algo_name.find('voo')!=-1:
+            result_dir = rootdir+'/convbelt_results/mcts_iter_350/uct_0.0_widening_'+ str(widening_parameter)+'_'
+        else:
+            result_dir = rootdir+'/convbelt_results/mcts_iter_350/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
         result_dir = rootdir+'/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
-
 
     result_dir += algo_name +'/'
     if algo_name.find('voo')!=-1:
@@ -92,9 +93,10 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1):
 
         if domain_name=='convbelt':
             is_success = result['plan'] is not None
-            is_success = np.any(np.array(result['search_time'])[:,2] >= 4)
-            #search_times.append( np.where(np.array(result['search_time'])[:,2]>=4)[0][0])
-            search_times.append(np.array(result['search_time'])[:,0][-1])
+            is_success = np.any(np.array(result['search_time'])[:, 2] >= 4)
+            if is_success:
+                search_times.append( np.where(np.array(result['search_time'])[:, 2] >= 4)[0][0])
+           #search_times.append(np.array(result['search_time'])[:,0][-1])
             success.append(is_success)
         else:
             is_success = result['search_time']['namo'][-1][-1]
@@ -130,7 +132,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
     return np.array(all_episode_data),organized_times
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(155)
+    organized_times = range(350)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
