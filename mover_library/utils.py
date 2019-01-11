@@ -13,12 +13,6 @@ import time
 
 PR2_ARM_LENGTH = 0.9844
 
-def compute_robot_xy_given_ir_parameters(portion, angle, obj, radius=PR2_ARM_LENGTH):
-    dist_to_obj = radius * portion  # how close are you to obj?
-    x = dist_to_obj * np.cos(angle)
-    y = dist_to_obj * np.sin(angle)
-    robot_wrt_o = np.array([x, y, 0, 1])
-    return np.dot(obj.GetTransform(), robot_wrt_o)[:-1]
 
 
 
@@ -467,6 +461,14 @@ def place_distance(a1, a2):
     base_distance = np.sum(np.dot(base_conf_diff(base_a1, base_a2), base_distance_max_diff))
 
     return base_distance
+
+def compute_robot_xy_given_ir_parameters(portion, angle, obj, radius=PR2_ARM_LENGTH):
+    dist_to_obj = radius * portion  # how close are you to obj?
+    x = dist_to_obj * np.cos(angle)
+    y = dist_to_obj * np.sin(angle)
+    robot_wrt_o = np.array([x, y, 0, 1])
+    return np.dot(obj.GetTransform(), robot_wrt_o)[:-1]
+
 
 def get_pick_base_pose_and_grasp_from_pick_parameters(obj, pick_parameters):
     grasp_params = pick_parameters[0:3]

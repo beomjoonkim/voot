@@ -16,16 +16,15 @@ class PickFeasibilityChecker(object):
         self.env = problem_env.env
         self.robot = self.env.GetRobots()[0]
 
-
     def check_feasibility(self, node, pick_parameters):
         obj = node.obj
         grasp_params, pick_base_pose = get_pick_base_pose_and_grasp_from_pick_parameters(obj, pick_parameters)
-
-        if self.problem_env.name == 'convbelt':
+        # todo disable objects for fetch
+        if self.problem_env.name == 'convbelt' or self.problem_env.is_solving_fetching:
             self.problem_env.disable_objects()
             obj.Enable(True)
         g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)
-        if self.problem_env.name == 'convbelt':
+        if self.problem_env.name == 'convbelt' or self.problem_env.is_solving_fetching:
             self.problem_env.enable_objects()
 
         if g_config is not None:

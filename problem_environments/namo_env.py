@@ -102,6 +102,16 @@ class NAMO(ProblemEnvironment):
         for object in self.objects:
             object.Enable(True)
 
+
+    def disable_objects(self):
+        for object in self.objects:
+            object.Enable(False)
+
+    def enable_objects(self):
+        for object in self.objects:
+            object.Enable(True)
+
+
     def check_base_pose_feasible(self, base_pose, obj, region):
         if not self.is_collision_at_base_pose(base_pose, obj) \
                 and self.is_in_region_at_base_pose(base_pose, obj, robot_region=region,
