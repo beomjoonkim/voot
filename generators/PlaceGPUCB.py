@@ -16,9 +16,9 @@ class PlaceGPUCB:
         self.env = problem_env.env
         self.robot = self.env.GetRobots()[0]
         self.robot_region = self.problem_env.regions['entire_region']
+
         self.place_gp = StandardContinuousGP(3)
         self.place_acq_fcn = UCB(zeta=0.01, gp=self.place_gp)
-
         if problem_env.name == 'convbelt':
             place_domain = Domain(0, get_place_domain(problem_env.regions['object_region']))
         else:

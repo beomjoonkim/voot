@@ -51,6 +51,7 @@ class VOOGenerator(Generator):
                 print "Found feasible sample"
                 break
             else:
+                # this does not add any information
                 #self.evaled_actions.append(action_parameters)
                 #self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 pass
@@ -98,25 +99,9 @@ class VOOGenerator(Generator):
         best_evaled_action = self.evaled_actions[np.argmax(self.evaled_q_values)]
         other_actions = self.evaled_actions
 
-        '''
-        grasp_params = pick_parameters[0:3]
-        portion = pick_parameters[3]
-        base_angle = pick_parameters[4]
-        facing_angle = pick_parameters[5]
-        '''
-
         while np.any(best_dist > other_dists):
             #print "Gaussian pick sampling, counter", counter, len(other_dists)
-            """
-            best_ir_parameters = best_evaled_action[3:]
 
-            var_ir = np.array([0.3, 30*np.pi/180., 10*np.pi/180]) / float(counter)
-            ir_parameters = np.random.normal(best_ir_parameters, var_ir)
-
-            best_action_grasp_params = best_evaled_action[0:3]
-            var_grasp = np.array([0.5, 0.2, 0.2]) / float(counter)
-            grasp_params = np.random.normal(best_action_grasp_params, var_grasp)
-            """
             variance = 0.5*(self.domain[1] - self.domain[0]) / counter
             new_parameters = np.random.normal(best_evaled_action, variance)
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])

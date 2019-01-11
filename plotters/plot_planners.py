@@ -72,7 +72,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
     """
 
     if domain_name == 'convbelt':
-        result_dir = rootdir+'/convbelt_results/mcts_iter_50/uct_0.0_widening_'+ str(widening_parameter)+'_'
+        result_dir = rootdir+'/convbelt_results/mcts_iter_300/uct_0.0_widening_'+ str(widening_parameter)+'_'
         print result_dir
     elif domain_name == 'namo':
         result_dir = rootdir+'/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter)+'_'
@@ -81,7 +81,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
 
     result_dir += algo_name +'/'
     if algo_name.find('voo')!=-1:
-        result_dir += 'eps_'+ str(epsilon)+'/'
+        result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_1.0/'
     return result_dir
 
 
@@ -141,7 +141,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
     return np.array(all_episode_data),organized_times
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(55)
+    organized_times = range(305)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
