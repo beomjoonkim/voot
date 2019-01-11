@@ -8,8 +8,7 @@ from mcts_utils import make_action_hashable, is_action_hashable
 
 from generators.uniform import UniformGenerator
 from generators.voo import VOOGenerator
-
-
+from generators.gpucb import GPUCBGenerator
 
 ## openrave helper libraries
 sys.path.append('../mover_library/')
@@ -70,6 +69,8 @@ class MCTS:
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
             return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter, self.c1)
+        elif self.sampling_strategy == 'gpucb':
+            return GPUCBGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
 
 
     def update_init_node_obj(self):

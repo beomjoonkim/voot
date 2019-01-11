@@ -1,10 +1,13 @@
 import sys
 import numpy as np
 sys.path.append('../mover_library/')
-from samplers import gaussian_randomly_place_in_region
 from generator import Generator
 from utils import pick_parameter_distance, place_parameter_distance
 from planners.mcts_utils import make_action_executable
+
+from gpucb_utils.gp import StandardContinuousGP
+from gpucb_utils.functions import UCB, Domain
+from gpucb_utils.bo import BO
 
 
 class GPUCBGenerator(Generator):
@@ -14,13 +17,17 @@ class GPUCBGenerator(Generator):
         self.evaled_actions = []
         self.evaled_q_values = []
 
+        self.gp = StandardContinuousGP(3)
+        self.acq_fcn = UCB(zeta=explr_p, gp=self.gp)
+        self.domain = Domain(0, self.domain)
+        self.gp_optimizer = BO(self.gp, self.acq_fcn, self.domain)  # this depends on the problem
+
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()
         executed_action_values_in_node = node.Q.values()
 
         for action, q_value in zip(executed_actions_in_node, executed_action_values_in_node):
             executable_action = make_action_executable(action)
-
             is_in_array = [np.array_equal(executable_action['action_parameters'], a) for a in self.evaled_actions]
             is_action_included = np.any(is_in_array)
 
@@ -35,20 +42,17 @@ class GPUCBGenerator(Generator):
         self.update_evaled_values(node)
 
         for i in range(n_iter):
-            rnd = np.random.random()
-            if rnd < 1 - self.explr_p and len(self.evaled_actions) > 0 \
-                    and np.max(self.evaled_q_values) > self.problem_env.infeasible_reward:
-                action_parameters = self.sample_from_best_voronoi_region(node)
-            else:
-                action_parameters = self.sample_from_uniform()
+            action_parameters = self.gp_optimizer.choose_next_point(self.evaled_actions, self.evaled_q_values)
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
 
             if status == 'HasSolution':
                 print "Found feasible sample"
                 break
             else:
+                #takes too long
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
+                pass
 
         return action
 
