@@ -4,19 +4,10 @@ from problem_environments.mover_env import Mover
 
 from planners.high_level_planner import HighLevelPlanner
 
-from generators.PlaceUniform import PlaceUnif
-from generators.PickUniform import PickWithBaseUnif
-from generators.PickGPUCB import PickGPUCB
-from generators.PlaceGPUCB import PlaceGPUCB
-from generators.PickDOO import PickDOO
-from generators.PlaceDOO import PlaceDOO
-
-from generators.OneArmPickUniform import OneArmPickUnif
-from generators.OneArmPlaceUniform import OneArmPlaceUnif
 
 from sampling_strategies.voo import VOO, MoverVOO
 from sampling_strategies.uniform import Uniform
-from sampling_strategies.gpucb import GPUCB
+#from sampling_strategies.gpucb import GPUCB
 from sampling_strategies.doo import DOO
 
 import argparse
