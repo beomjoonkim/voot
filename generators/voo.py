@@ -50,9 +50,8 @@ class VOOGenerator(Generator):
                 print "Found feasible sample"
                 break
             else:
-                pass
-                #self.evaled_actions.append(action_parameters)
-                #self.evaled_q_values.append(self.problem_env.infeasible_reward)
+                self.evaled_actions.append(action_parameters)
+                self.evaled_q_values.append(self.problem_env.infeasible_reward)
 
         return action
 
