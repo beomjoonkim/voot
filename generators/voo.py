@@ -39,7 +39,7 @@ class VOOGenerator(Generator):
         self.update_evaled_values(node)
 
         rnd = np.random.random() # this should lie outside
-        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 0 and \
+        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
                                        np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
         for i in range(n_iter):
             if is_sample_from_best_v_region:

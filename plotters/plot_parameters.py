@@ -192,13 +192,13 @@ def plot_across_widening_parameters():
     args = parser.parse_args()
     widening_parameters = np.arange(0.1, 3, 0.1)
     widening_parameters = [np.round(w, 1) for w in widening_parameters]
-    widening_parameters = [1.9, 1.7, 2.4, 1.5, 0.1, 1.8, 1.4, 2.6, 1.2, 2]
+    widening_parameters = [1.9, 2.0, 2.4, 1.5, 0.1, 1.8, 1.4, 2.6, 1.2, 3.0]
 
     algo = args.algo_name
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_dict['more1'] = color_dict.values()[0] + np.array([0.1, 0, 0.001])
-    color_dict['more2'] = color_dict.values()[0] + np.array([0.1, 0.7, 0.001])
-    color_dict['more3'] = color_dict.values()[0] + np.array([0, 0.1, 0.411])
+    color_dict['more1'] = color_dict.values()[0] + np.array([0.4, 0, 0.001])
+    color_dict['more2'] = color_dict.values()[0] + np.array([0, 0.7, 0.001])
+    color_dict['more3'] = color_dict.values()[0] + np.array([0, 0., 0.711])
     color_names = color_dict.keys()
 
     rwds = []
