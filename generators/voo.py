@@ -8,11 +8,12 @@ from planners.mcts_utils import make_action_executable
 
 
 class VOOGenerator(Generator):
-    def __init__(self, operator_name, problem_env, explr_p):
+    def __init__(self, operator_name, problem_env, explr_p, c1):
         Generator.__init__(self, operator_name, problem_env)
         self.explr_p = explr_p
         self.evaled_actions = []
         self.evaled_q_values = []
+        self.c1 = c1
 
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()
@@ -50,8 +51,9 @@ class VOOGenerator(Generator):
                 print "Found feasible sample"
                 break
             else:
-                self.evaled_actions.append(action_parameters)
-                self.evaled_q_values.append(self.problem_env.infeasible_reward)
+                #self.evaled_actions.append(action_parameters)
+                #self.evaled_q_values.append(self.problem_env.infeasible_reward)
+                pass
 
         return action
 
@@ -83,8 +85,8 @@ class VOOGenerator(Generator):
             new_parameters = np.random.normal(best_evaled_action, variance)
 
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
-            best_dist = place_parameter_distance(new_parameters, best_evaled_action)
-            other_dists = np.array([place_parameter_distance(other, new_parameters) for other in other_actions])
+            best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
+            other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
             counter += 1
         return new_parameters
 
