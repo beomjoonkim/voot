@@ -111,7 +111,7 @@ def main():
     search_time_to_reward, plan, optimal_score_achieved = hierarchical_planner.search()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
-                 'is_optimal_score': optimal_score_achieved}, open(save_dir + str(args.problem_idx)+'.pkl', 'wb'))
+                 'is_optimal_score': optimal_score_achieved}, open(save_dir + '/' + str(args.problem_idx)+'.pkl', 'wb'))
 
     problem_env.problem_config['env'].Destroy()
     openravepy.RaveDestroy()
