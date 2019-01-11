@@ -213,7 +213,6 @@ def plot_across_algorithms():
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         else:
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
-        import pdb;pdb.set_trace()
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     #plt.show()

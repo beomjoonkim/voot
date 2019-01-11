@@ -41,16 +41,17 @@ def make_action_executable(action):
     operator_name = action[0]
     executable_action = {'operator_name': operator_name}
     if operator_name == 'two_arm_pick':
-        try:
+        if action[1] is None:
+            executable_action['g_config'] = None
+            executable_action['base_pose'] = None
+            executable_action['g_config'] = None
+        else:
             assert len(action) == 28, 'Only handles rightarm torso and left hand pick'
-        except:
-            import pdb;pdb.set_trace()
-
-        executable_action['grasp_params'] = np.array(action[1:4])
-        executable_action['base_pose'] = np.array(action[4:7])
-        executable_action['g_config'] = [np.array(action[7:14])]
-        executable_action['g_config'].append(np.array(action[14:22]))
-        executable_action['action_parameters'] = np.array(action[22:])
+            executable_action['grasp_params'] = np.array(action[1:4])
+            executable_action['base_pose'] = np.array(action[4:7])
+            executable_action['g_config'] = [np.array(action[7:14])]
+            executable_action['g_config'].append(np.array(action[14:22]))
+            executable_action['action_parameters'] = np.array(action[22:])
 
     elif operator_name == 'two_arm_place':
         executable_action['base_pose'] = np.array(action[1:4])
