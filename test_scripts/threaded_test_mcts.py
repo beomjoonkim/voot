@@ -42,7 +42,7 @@ def main():
     widening_parameters = args.w if args.w is not None else [0.8]
     mcts_iter = args.mcts_iter
     c1s = args.c1 if args.c1 is not None else [1]
-    trials = range(200)
+    trials = range(60)
     configs = []
     for c1 in c1s:
         for e in epsilons:
