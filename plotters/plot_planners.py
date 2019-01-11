@@ -51,7 +51,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1):
         algo_name = algo_name.split('_')[0]
         rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        #rootdir = './test_results/'
+        rootdir = './test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
         rootdir = './test_results/'
@@ -65,6 +65,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1):
         result_dir = rootdir+'/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
+
 
     result_dir += algo_name +'/'
     if algo_name.find('voo')!=-1:
@@ -192,6 +193,7 @@ def plot_across_algorithms():
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
 
+    averages = []
     for algo_idx, algo in enumerate(algo_names):
         print algo
         try:
@@ -202,6 +204,8 @@ def plot_across_algorithms():
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         else:
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        print search_rwd_times.mean(axis=0)[25], search_rwd_times.var(axis=0)[25]
+
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     #plt.show()
@@ -214,8 +218,12 @@ def plot_across_widening_parameters():
     parser.add_argument('-algo_name', type=str, default='unif')
 
     args = parser.parse_args()
-    widening_parameters = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
-    widening_parameters = np.array([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]) +3
+    widening_parameters = np.linspace(0.1,3,30)#[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+    widening_parameters =  np.arange(0.1,3,0.1)
+    widening_parameters = [np.round(w,1) for w in widening_parameters]
+
+    #widening_parameters = np.array([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]) +3
+
     #widening_parameters = np.array([0.1, 2.0])
 
     algo = args.algo_name
@@ -225,21 +233,28 @@ def plot_across_widening_parameters():
     color_dict['more2'] = color_dict.values()[0] + np.array([1.1,0.1,0.001])
     color_dict['more3'] = color_dict.values()[0] + np.array([2.1,0.1,0.011])
     color_names = color_dict.keys()
+
+    rwds = []
     for widening_idx, widening_parameter in enumerate(widening_parameters):
         print algo + '_' +str(widening_parameter)
         try:
             search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter=0.8, c1=widening_parameter)
         except:
             continue
+        search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        search_rwd_times = np.array(search_rwd_times)
+        rwds.append( [search_rwd_times.mean(axis=0)[25], search_rwd_times.var(axis=0)[25]] )
+        """
         if args.domain == 'namo':
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         else:
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
-        print search_rwd_times.mean(axis=0)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo+'_'+str(widening_parameter),
                           color=color_dict[color_names[widening_idx]])
+        """
         print  "===================="
     # plt.show()
+    import pdb;pdb.set_trace()
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.domain + '_algo_' + args.algo_name)
 
 

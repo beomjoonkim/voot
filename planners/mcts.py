@@ -363,7 +363,7 @@ class MCTS:
         return next_state, reward, path, objs_in_collision
 
     def sample_action(self, node):
-        action = node.sampling_agent.sample_next_point(node, 100)
+        action = node.sampling_agent.sample_next_point(node, 50)
         return action
 
 
