@@ -7,7 +7,6 @@ from planners.high_level_planner import HighLevelPlanner
 
 from sampling_strategies.voo import VOO, MoverVOO
 from sampling_strategies.uniform import Uniform
-#from sampling_strategies.gpucb import GPUCB
 from sampling_strategies.doo import DOO
 
 import argparse

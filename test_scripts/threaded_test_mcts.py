@@ -45,7 +45,7 @@ def main():
     mcts_iter = args.mcts_iter
     c1s = args.c1 if args.c1 is not None else [1]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [100]
-    trials = range(200)
+    trials = range(60)
     configs = []
 
     for n_feasibility_check in n_feasibility_checks:

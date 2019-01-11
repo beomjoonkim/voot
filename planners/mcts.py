@@ -8,7 +8,6 @@ from mcts_utils import make_action_hashable, is_action_hashable
 
 from generators.uniform import UniformGenerator
 from generators.voo import VOOGenerator
-from generators.gpucb import GPUCBGenerator
 
 ## openrave helper libraries
 sys.path.append('../mover_library/')
@@ -26,6 +25,7 @@ DEBUG = True
 
 if socket.gethostname() == 'dell-XPS-15-9560':
     from mcts_graphics import write_dot_file
+    from generators.gpucb import GPUCBGenerator
 
 
 def create_doo_agent(operator):
