@@ -39,7 +39,7 @@ def main():
     domain = args.domain
     widening_parameters = args.w
     mcts_iter = args.mcts_iter
-    trials = range(120)
+    trials = range(30)
     configs = []
     for e in epsilons:
         for t in trials:
