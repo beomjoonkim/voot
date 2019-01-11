@@ -43,6 +43,9 @@ class GPUCBGenerator(Generator):
 
         for i in range(n_iter):
             action_parameters = self.gp_optimizer.choose_next_point(self.evaled_actions, self.evaled_q_values)
+            if i > 300:
+                # make it escape the local optima
+                action_parameters = self.sample_from_uniform()
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
 
             if status == 'HasSolution':

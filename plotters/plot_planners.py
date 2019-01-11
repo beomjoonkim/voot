@@ -45,35 +45,22 @@ def get_stripstream_results(domain_name):
     print len(search_times)
 
 
-def get_result_dir(domain_name, algo_name, widening_parameter):
+def get_result_dir(domain_name, algo_name, widening_parameter, c1):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
         rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        rootdir = './test_results/'
+        #rootdir = './test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
         rootdir = './test_results/'
         #if domain_name == 'namo':
         #    rootdir = './test_results/'
 
-    """
-        epsilon = algo_name.split('_')[1]
-        algo_name = algo_name.split('_')[0]
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        if domain_name == 'namo':
-            rootdir = './test_results/'
-    else:
-        if domain_name == 'namo':
-            rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        else:
-            rootdir = './test_results/'
-    """
 
     if domain_name == 'convbelt':
-        result_dir = rootdir+'/convbelt_results/mcts_iter_300/uct_0.0_widening_'+ str(widening_parameter)+'_'
-        print result_dir
+        result_dir = rootdir+'/convbelt_results/mcts_iter_50/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
         result_dir = rootdir+'/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
@@ -81,12 +68,13 @@ def get_result_dir(domain_name, algo_name, widening_parameter):
 
     result_dir += algo_name +'/'
     if algo_name.find('voo')!=-1:
-        result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_1.0/'
+        result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_' + str(c1) + '/'
+    print result_dir
     return result_dir
 
 
-def get_mcts_results(domain_name, algo_name, widening_parameter):
-    result_dir = get_result_dir(domain_name, algo_name, widening_parameter)
+def get_mcts_results(domain_name, algo_name, widening_parameter, c1):
+    result_dir = get_result_dir(domain_name, algo_name, widening_parameter, c1)
     search_times = []
     success = []
     search_rwd_times = []
@@ -141,7 +129,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
     return np.array(all_episode_data),organized_times
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(305)
+    organized_times = range(50)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -190,6 +178,7 @@ def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-w', type=str, default='none')
+    parser.add_argument('-c1', type=float, default=1.0)
 
     args = parser.parse_args()
     widening_parameter = args.w
@@ -206,7 +195,7 @@ def plot_across_algorithms():
     for algo_idx, algo in enumerate(algo_names):
         print algo
         try:
-            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter)
+            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter,args.c1)
         except:
             continue
         if args.domain == 'namo':
@@ -218,28 +207,35 @@ def plot_across_algorithms():
     #plt.show()
     savefig('Number of simulations', 'Average rewards', fname='./plotters/'+args.domain+'_w_'+args.w)
 
+
 def plot_across_widening_parameters():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-algo_name', type=str, default='unif')
 
     args = parser.parse_args()
-    widening_parameters = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-    widening_parameters = [0.6,0.7,0.2,0.8]
+    widening_parameters = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+    widening_parameters = np.array([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]) +3
+    #widening_parameters = np.array([0.1, 2.0])
+
     algo = args.algo_name
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_names = color_dict.keys()[2:]
+    color_dict['more1'] = color_dict.values()[0] + np.array([0.1,0,0.001])
+    color_dict['more2'] = color_dict.values()[0] + np.array([1.1,0.1,0.001])
+    color_dict['more3'] = color_dict.values()[0] + np.array([2.1,0.1,0.011])
+    color_names = color_dict.keys()
     for widening_idx, widening_parameter in enumerate(widening_parameters):
-        print algo + str(widening_parameter)
+        print algo + '_' +str(widening_parameter)
         try:
-            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter)
+            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter=0.8, c1=widening_parameter)
         except:
             continue
         if args.domain == 'namo':
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         else:
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        print search_rwd_times.mean(axis=0)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo+'_'+str(widening_parameter),
                           color=color_dict[color_names[widening_idx]])
         print  "===================="
