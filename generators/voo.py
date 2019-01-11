@@ -34,10 +34,11 @@ class VOOGenerator(Generator):
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
 
+        rnd = np.random.random() # this should lie outside
+        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 0 and \
+                                       np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
         for i in range(n_iter):
-            rnd = np.random.random()
-            if rnd < 1 - self.explr_p and len(self.evaled_actions) > 0 \
-                    and np.max(self.evaled_q_values) > self.problem_env.infeasible_reward:
+            if is_sample_from_best_v_region:
                 #print 'Sampling from best V region'
                 action_parameters = self.sample_from_best_voronoi_region(node)
             else:
