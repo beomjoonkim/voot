@@ -1,11 +1,17 @@
 import numpy as np
 import GPy
-
+from se2_kernel import RBF_SE2
 
 class StandardContinuousGP:
     def __init__(self, xdim):
         self.model = None
-        self.kern = GPy.kern.RBF(xdim, variance=500)
+        self.xdim = xdim
+        #self.kern = GPy.kern.RBF(xdim, variance=500)
+        if self.xdim == 3:
+            self.kern = RBF_SE2(xdim, variance=500)
+        else:
+            self.kern = GPy.kern.RBF(xdim, variance=500)
+
 
     def predict(self, x):
         if self.model is None:

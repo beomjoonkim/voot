@@ -11,7 +11,7 @@ class DOOTreeNode:
         self.f_value = f_value
         self.l_children = []
         self.r_children = []
-        self.min_x = min_x  # cell size
+        self.min_x = min_x  # size of the cell
         self.max_x = max_x
         self.delta_h = distance(x_value, min_x)
         assert np.isclose(self.delta_h, distance(x_value, max_x))
@@ -55,10 +55,11 @@ class BinaryDOOTree:
 
         return x_value
 
-    def choose_leaf_node_to_expand(self):
+    def choose_next_point(self):
         is_first_evaluation = self.root == None
         if is_first_evaluation:
             # todo get the midpoint as a
+            self.domain[1] - self.domain[0]
             pass
 
         max_upper_bound = -np.inf

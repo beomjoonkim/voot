@@ -3,7 +3,8 @@ import numpy as np
 sys.path.append('../mover_library/')
 from generator import Generator
 from utils import pick_parameter_distance, place_parameter_distance
-from planners.mcts_utils import make_action_executable
+from doo_utils.doo import  BinaryDOOTree
+
 
 
 
@@ -11,44 +12,19 @@ class DOOGenerator(Generator):
     def __init__(self, operator_name, problem_env, explr_p):
         Generator.__init__(self, operator_name, problem_env)
         self.explr_p = explr_p
-        self.evaled_actions = []
-        self.evaled_q_values = []
-
-        # todo
-        self.doo_optimizer = DOO(self.domain)  # this depends on the problem
-
-    def update_evaled_values(self, node):
-        executed_actions_in_node = node.Q.keys()
-        executed_action_values_in_node = node.Q.values()
-
-        for action, q_value in zip(executed_actions_in_node, executed_action_values_in_node):
-            executable_action = make_action_executable(action)
-            is_in_array = [np.array_equal(executable_action['action_parameters'], a) for a in self.evaled_actions]
-            is_action_included = np.any(is_in_array)
-
-            if not is_action_included:
-                self.evaled_actions.append(executable_action['action_parameters'])
-                self.evaled_q_values.append(q_value)
-            else:
-                # update the value if the action is included
-                self.evaled_q_values[np.where(is_in_array)[0][0]] = q_value
+        self.doo_optimizer = BinaryDOOTree(self.domain)  # this depends on the problem
 
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
 
         for i in range(n_iter):
-            # todo
-            action_parameters = self.gp_optimizer.choose_next_point(self.evaled_actions, self.evaled_q_values)
-            if i > 300:
-                # make it escape the local optima
-                action_parameters = self.sample_from_uniform()
+            action_parameters = self.doo_optimizer.choose_next_point(self.evaled_actions, self.evaled_q_values)
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
 
             if status == 'HasSolution':
                 print "Found feasible sample"
                 break
             else:
-                #takes too long
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 pass

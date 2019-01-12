@@ -45,7 +45,7 @@ def get_stripstream_results(domain_name):
     print len(search_times)
 
 
-def get_result_dir(domain_name, algo_name, widening_parameter, c1):
+def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
@@ -64,19 +64,20 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1):
         else:
             result_dir = rootdir+'/convbelt_results/mcts_iter_350/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
-        result_dir = rootdir+'/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter)+'_'
+        result_dir = rootdir+'/namo_results/mcts_iter_350/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
 
-    result_dir += algo_name +'/'
+    result_dir += algo_name
+    result_dir += '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     if algo_name.find('voo')!=-1:
         result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_' + str(c1) + '/'
     print result_dir
     return result_dir
 
 
-def get_mcts_results(domain_name, algo_name, widening_parameter, c1):
-    result_dir = get_result_dir(domain_name, algo_name, widening_parameter, c1)
+def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks):
+    result_dir = get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks)
     search_times = []
     success = []
     search_rwd_times = []
@@ -112,15 +113,20 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1):
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
-    max_time = 310
-    organized_times = range(10, max_time, 10)
+    max_time = 10000
+    organized_times = range(100, max_time, 100)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
         episode_max_rwds_wrt_organized_times = []
         for organized_time in organized_times:
-            episode_times = np.array(rwd_time)[:, 0]
-            episode_rwds = np.array(rwd_time)[:, 2]
+            if isinstance(rwd_time,dict):
+                rwd_time_temp = rwd_time['namo']
+                episode_times = np.array(rwd_time_temp)[:, 0]
+                episode_rwds = np.array(rwd_time_temp)[:, 2]
+            else:
+                episode_times = np.array(rwd_time)[:, 0]
+                episode_rwds = np.array(rwd_time)[:, 2]
             idxs = episode_times < organized_time
             if np.any(idxs):
                 max_rwd = np.max(episode_rwds[idxs])
@@ -131,8 +137,9 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
     return np.array(all_episode_data),organized_times
 
+
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(350)
+    organized_times = range(10, 350, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -161,8 +168,9 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='convbelt')
-    parser.add_argument('-w', type=str, default='none')
+    parser.add_argument('-w', type=float, default=0.8)
     parser.add_argument('-c1', type=float, default=1.0)
+    parser.add_argument('-n_feasibility_checks', type=int, default=100)
 
     args = parser.parse_args()
     widening_parameter = args.w
@@ -180,11 +188,11 @@ def plot_across_algorithms():
     for algo_idx, algo in enumerate(algo_names):
         print algo
         try:
-            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter,args.c1)
+            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
+                                                args.n_feasibility_checks)
         except:
             continue
-        search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
-        print search_rwd_times.mean(axis=0)[25], search_rwd_times.var(axis=0)[25]
+        search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
 
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="

@@ -38,12 +38,11 @@ class VOOGenerator(Generator):
         rnd = np.random.random() # this should lie outside
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
                                        np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
+        print "VOO sampling..."
         for i in range(n_iter):
             if is_sample_from_best_v_region:
-                #print 'Sampling from best V region'
                 action_parameters = self.sample_from_best_voronoi_region(node)
             else:
-                #print 'Sampling from uniform'
                 action_parameters = self.sample_from_uniform()
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
 
@@ -95,7 +94,10 @@ class VOOGenerator(Generator):
         other_dists = np.array([-1])
         counter = 1
 
-        best_evaled_action = self.evaled_actions[np.argmax(self.evaled_q_values)]
+        best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values))
+        best_action_idxs = best_action_idxs.reshape((len(best_action_idxs, )))
+        best_action_idx = np.random.choice(best_action_idxs)
+        best_evaled_action = self.evaled_actions[best_action_idx]
         other_actions = self.evaled_actions
 
         while np.any(best_dist > other_dists):

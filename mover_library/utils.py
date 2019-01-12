@@ -522,11 +522,21 @@ def se2_distance(base_a1, base_a2, c1, c2):
     distance = c1*base_distance + c2*angle_distance
     return distance
 
+
 def convert_base_pose_to_se2(base_pose):
     base_pose = base_pose.squeeze()
     a, b = pol2cart(1, base_pose[-1])
     x, y = base_pose[0], base_pose[1]
     return np.array([x, y, a, b])
+
+
+def convert_se2_to_base_pose(basepose_se2):
+    basepose_se2 = basepose_se2.squeeze()
+
+    phi = cart2pol(basepose_se2[2], basepose_se2[3])
+    import pdb;pdb.set_trace()
+    return np.array([basepose_se2[0], basepose_se2[1], phi])
+
 
 def place_parameter_distance(param1, param2, c1=1):
     return se2_distance(param1, param2, c1, 1)
