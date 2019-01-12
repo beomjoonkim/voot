@@ -29,10 +29,7 @@ class StationaryForSE2Distance(Stationary):
         """
         Converts the values to polar coordinates
         """
-        try:
-            assert X.shape[-1] == 3
-        except:
-            import pdb;pdb.set_trace()
+        assert X.shape[-1] == 3
 
         X = self.convert_base_pose_to_polar_coordinate(X)
         if X2 is not None:
