@@ -47,10 +47,10 @@ class GPUCBGenerator(Generator):
 
         for i in range(n_iter):
             if i > n_iter*0.5 or len(self.evaled_actions) == 0:
-                print "GP sampling from uniform", n_iter*0.5, n_iter, len(self.evaled_actions)
+                #print "GP sampling from uniform", n_iter*0.5, n_iter, len(self.evaled_actions)
                 action_parameters = self.sample_from_uniform()
             else:
-                print "GP sampling from GP"
+                #print "GP sampling from GP"
                 action_parameters = self.choose_next_point(node)
 
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
