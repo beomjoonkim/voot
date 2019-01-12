@@ -19,6 +19,7 @@ import time
 from generators.doo_utils.doo import BinaryDOOTree, DOOTreeNode
 sys.path.append('../mover_library/')
 from utils import get_pick_domain, get_place_domain
+from generators.gpucb import GPUCBGenerator
 
 
 DEBUG = True
@@ -26,10 +27,7 @@ DEBUG = True
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560':
     from mcts_graphics import write_dot_file
-    from generators.gpucb import GPUCBGenerator
 
-if socket.gethostname() == 'phaedra':
-    from generators.gpucb import GPUCBGenerator
 
 
 def create_doo_agent(operator):
