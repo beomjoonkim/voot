@@ -74,6 +74,9 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         return motion, status
 
     def check_two_arm_pick_feasibility(self, obj, action):
+        if action['base_pose'] is None:
+            return None, "NoPath"
+
         motion_planning_region = self.problem_env.get_region_containing(obj)
         goal_robot_xytheta = action['base_pose']
 
@@ -92,6 +95,9 @@ class NamoDomainNamoPlanner(NAMOPlanner):
 
 
     def check_two_arm_place_feasibility(self, namo_obj, action, obj_placement_region):
+        if action['base_pose'] is None:
+            return None, "NoPath", self.curr_namo_object_names
+
         motion_planning_region_name = 'entire_region'
 
         goal_robot_xytheta = action['base_pose']

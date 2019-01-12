@@ -116,7 +116,6 @@ class FetchPlanner:
         status = "NoPath"
         if is_base_feasible:
             motion, status = self.problem_env.get_arm_base_motion_plan(full_place_config, motion_planning_region.name)
-        import pdb;pdb.set_trace()
 
         if not is_base_feasible or status != 'HasSolution':
             self.problem_env.disable_objects_in_region(motion_planning_region.name)
@@ -131,30 +130,14 @@ class FetchPlanner:
         return motion, status
 
     def check_two_arm_pick_feasibility(self, obj, action, target_region):
+        if action['base_pose'] is None:
+            return None, "NoSolution"
+
         curr_region = self.problem_env.get_region_containing(obj)
         motion_planning_region_name = target_region.name if curr_region.name == target_region.name else 'entire_region'
         goal_robot_xytheta = action['base_pose']
         motion, status = self.get_motion_plan_with_disabling(goal_robot_xytheta, motion_planning_region_name, False)
-        """
-        #self.problem_env.disable_objects_in_region('bridge_region')
-        if self.problem_env.check_base_pose_feasible(goal_robot_xytheta, obj, target_region):
-            motion, status = self.problem_env.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
-            if status == 'NoPath':
-                self.problem_env.disable_objects_in_region(curr_region.name)
-                obj.Enable(True)
-                motion, status = self.problem_env.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
-                self.problem_env.enable_objects_in_region(curr_region.name)
-        else:
-            self.problem_env.disable_objects_in_region(curr_region.name)
-            obj.Enable(True)
-            if self.problem_env.check_base_pose_feasible(goal_robot_xytheta, obj, target_region):
-                motion, status = self.problem_env.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
-            else:
-                motion = None
-                status = 'NoPath'
-            # todo where does it enable the objects in the bridge region?
-            self.problem_env.enable_objects_in_region(curr_region.name)
-        """
+
 
         return motion, status
 

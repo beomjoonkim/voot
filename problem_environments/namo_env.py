@@ -113,6 +113,8 @@ class NAMO(ProblemEnvironment):
 
 
     def check_base_pose_feasible(self, base_pose, obj, region):
+        if base_pose is None:
+            return False
         if not self.is_collision_at_base_pose(base_pose, obj) \
                 and self.is_in_region_at_base_pose(base_pose, obj, robot_region=region,
                                                    obj_region=region):
