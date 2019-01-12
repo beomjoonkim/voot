@@ -49,14 +49,11 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
-        rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        rootdir = './test_results/'
+        #rootdir = './test_results/'
     else:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        rootdir = './test_results/'
-        #if domain_name == 'namo':
-        #    rootdir = './test_results/'
+        #rootdir = './test_results/'
 
     if domain_name == 'convbelt':
         if algo_name.find('voo')!=-1:
@@ -179,7 +176,7 @@ def plot_across_algorithms():
         algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3']
     else:
         #algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'voo_0.5']
-        algo_names = ['unif', 'voo_0.3']
+        algo_names = ['unif', 'voo_0.2','voo_0.4', 'voo_0.3']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
@@ -192,8 +189,7 @@ def plot_across_algorithms():
                                                 args.n_feasibility_checks)
         except:
             continue
-        search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
-
+        search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     plt.show()
