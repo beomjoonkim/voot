@@ -23,8 +23,12 @@ from utils import get_pick_domain, get_place_domain
 
 DEBUG = True
 
-if socket.gethostname() == 'dell-XPS-15-9560':
+hostname = socket.gethostname()
+if hostname == 'dell-XPS-15-9560':
     from mcts_graphics import write_dot_file
+    from generators.gpucb import GPUCBGenerator
+
+if socket.gethostname() == 'phaedra':
     from generators.gpucb import GPUCBGenerator
 
 
