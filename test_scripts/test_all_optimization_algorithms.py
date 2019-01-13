@@ -15,13 +15,12 @@ import seaborn as sns
 import pickle
 import time
 import sys
-import os
 
-dim_x = int(sys.argv[3])
 NUMMAX = 10
+dim_x = 10
 A = np.random.rand(NUMMAX, dim_x)*10
 C = np.random.rand(NUMMAX)
-n_iter = 200
+n_iter = 150
 
 def shekel_arg0(sol):
     return shekel(sol, A, C)[0]
@@ -109,7 +108,7 @@ def doo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
-def try_many_epsilons(algorithm):
+def select_epsilon(algorithm):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
@@ -130,10 +129,8 @@ def try_many_epsilons(algorithm):
 def main():
     problem_idx = sys.argv[1]
     algo_name = sys.argv[2]
-
-    save_dir = './test_results/function_optimization/'+'dim_'+str(dim_x)+'/'+algo_name+'/'
-    if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
+    color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
+    color_names = color_dict.keys()[1:]
 
     if algo_name == 'uniform':
         algorithm = random_search
@@ -147,9 +144,17 @@ def main():
         print "Wrong algo name"
         return
 
-    epsilons, max_ys, time_takens = try_many_epsilons(algorithm)
-    pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
-                open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+    for algo_idx, algo_name in ['uniform', 'voo', 'doo', 'gpucb']:
+        epsilons, max_ys, time_takens = select_epsilon(algorithm)
+        best_epsilon_index = np.argmax(np.array(max_ys)[:, -1])
+        epsilon = epsilons[best_epsilon_index]
+        max_y = max_ys[best_epsilon_index]
+        time_takens = time_takens[best_epsilon_index]
+
+        sns.tsplot(max_y, range(n_iter), ci=95, condition=algorithm.__name__+'_'+str(epsilon),
+                   color=color_dict[color_names[algo_idx]])
+        plt.show()
+    import pdb;pdb.set_trace()
 
 if __name__ == '__main__':
     main()

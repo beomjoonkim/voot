@@ -3,6 +3,7 @@ import numpy as np
 class VOO:
     def __init__(self, domain, explr_p, distance_fn=None):
         self.domain = domain
+        self.dim_x = domain.shape[-1]
         self.explr_p = explr_p
         if distance_fn is None:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
@@ -28,8 +29,9 @@ class VOO:
         other_best_evaled_xs = evaled_x
 
         while np.any(best_dist > other_dists):
-            variance = 0.5*(self.domain[1] - self.domain[0]) / (counter+len(other_dists))
+            variance = (self.domain[1] - self.domain[0]) / np.power(counter, 1./2) #/ (counter+len(other_dists))
             new_x = np.random.normal(best_evaled_x, variance)
+            #new_x = self.sample_from_uniform()
             new_x = np.clip(new_x, self.domain[0], self.domain[1])
 
             best_dist = self.distance_fn(new_x, best_evaled_x)
