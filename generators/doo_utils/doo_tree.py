@@ -18,13 +18,14 @@ class DOOTreeNode:
 
 
 class BinaryDOOTree:
-    def __init__(self, domain, distance_fn):
+    def __init__(self, domain, explr_p, distance_fn):
         self.root = None
         self.leaves = []
         self.nodes = []
         self.domain = domain
         self.nodes = []
         self.distance_fn = distance_fn
+        self.explr_p = explr_p
 
     def create_node(self, x_value, cell_min, cell_max, parent_node):
         return DOOTreeNode(x_value, cell_min, cell_max, parent_node, self.distance_fn)
@@ -48,7 +49,7 @@ class BinaryDOOTree:
         max_upper_bound = -np.inf
         for leaf_node in self.leaves:
             try:
-                node_upper_bound = leaf_node.f_value + leaf_node.delta_h
+                node_upper_bound = leaf_node.f_value + self.explr_p*leaf_node.delta_h
             except:
                 import pdb;pdb.set_trace()
             if node_upper_bound > max_upper_bound:

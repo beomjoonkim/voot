@@ -18,9 +18,9 @@ class DOOGenerator(Generator):
         self.explr_p = explr_p
         if operator_name == 'two_arm_pick':
             pick_param_distance_for_obj = lambda x,y: pick_parameter_distance(node.obj, x, y)
-            self.doo_tree = BinaryDOOTree(self.domain, pick_param_distance_for_obj)  # this depends on the problem
+            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, pick_param_distance_for_obj)  # this depends on the problem
         elif operator_name == 'two_arm_place':
-            self.doo_tree = BinaryDOOTree(self.domain, place_parameter_distance)  # this depends on the problem
+            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, place_parameter_distance)  # this depends on the problem
         else:
             print "Wrong operator name"
             return -1
