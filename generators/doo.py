@@ -23,13 +23,13 @@ class DOOGenerator(Generator):
             self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, place_parameter_distance)  # this depends on the problem
         else:
             print "Wrong operator name"
-            return -1
+            sys.exit(-1)
         self.update_flag = 'update_me'
 
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
         self.doo_tree.update_evaled_values(self.evaled_actions, self.evaled_q_values)
-        #print 'beginning', [l.f_value for l in self.doo_tree.leaves]
+        print "DOO sampling..."
 
         for i in range(n_iter):
             action_parameters, doo_node = self.choose_next_point()
@@ -42,10 +42,7 @@ class DOOGenerator(Generator):
             else:
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
-                #print 'infeasible', [l.f_value for l in self.doo_tree.leaves]
                 self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
-                #print 'infeasible', [l.f_value for l in self.doo_tree.leaves]
-
         return action
 
     def choose_next_point(self):

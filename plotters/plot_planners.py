@@ -54,6 +54,8 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
     elif algo_name.find('unif') != -1:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
     else:
+        epsilon = algo_name.split('_')[1]
+        algo_name = algo_name.split('_')[0]
         rootdir = './test_results/'
 
     if domain_name == 'convbelt':
@@ -68,7 +70,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
     if algo_name.find('voo')!=-1:
         result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_' + str(c1) + '/'
     elif algo_name.find('doo') !=-1:
-        result_dir += 'eps_'+ str(-1.0)+'/' + 'c1_' + str(c1) + '/'
+        result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_' + str(c1) + '/'
     print result_dir
     return result_dir
 
@@ -167,7 +169,7 @@ def plot_across_algorithms():
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-w', type=float, default=0.8)
     parser.add_argument('-c1', type=float, default=1.0)
-    parser.add_argument('-n_feasibility_checks', type=int, default=100)
+    parser.add_argument('-n_feasibility_checks', type=int, default=50)
 
     args = parser.parse_args()
     widening_parameter = args.w
@@ -175,7 +177,7 @@ def plot_across_algorithms():
     if args.domain == 'namo':
         algo_names = ['unif', 'voo_0.2', 'voo_0.3', 'voo_0.4']
     else:
-        algo_names = ['unif', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'doo']
+        algo_names = ['unif', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'doo_1.0']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
@@ -183,11 +185,8 @@ def plot_across_algorithms():
     averages = []
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        try:
-            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
-                                                args.n_feasibility_checks)
-        except:
-            continue
+        search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
+                                            args.n_feasibility_checks)
         search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
