@@ -57,9 +57,13 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
         rootdir = './test_results/'
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
     if domain_name == 'convbelt':
-        result_dir = rootdir+'/convbelt_results/mcts_iter_350/uct_0.0_widening_'+ str(widening_parameter)+'_'
+        if algo_name.find('doo') !=-1:
+            result_dir = rootdir+'/convbelt_results/mcts_iter_500/uct_0.0_widening_'+ str(widening_parameter)+'_'
+        else:
+            result_dir = rootdir+'/convbelt_results/mcts_iter_1000/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
         result_dir = rootdir+'/namo_results/mcts_iter_1000/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
@@ -138,7 +142,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 350, 10)
+    organized_times = range(10, 1000, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -177,7 +181,7 @@ def plot_across_algorithms():
     if args.domain == 'namo':
         algo_names = ['unif', 'voo_0.2', 'voo_0.3', 'voo_0.4']
     else:
-        algo_names = ['unif', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'doo_1.0']
+        algo_names = ['doo_5.0', 'doo_20.0', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
@@ -187,7 +191,7 @@ def plot_across_algorithms():
         print algo
         search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
                                             args.n_feasibility_checks)
-        search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     plt.show()

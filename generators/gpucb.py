@@ -65,12 +65,8 @@ class GPUCBGenerator(Generator):
 
     def choose_next_point(self, node):
         if node.operator == 'two_arm_place':
-            evaled_actions_in_se2 = [convert_base_pose_to_se2(action) for action in self.evaled_actions]
             evaled_actions_in_se2 = self.evaled_actions
             next_point = self.gp_optimizer.choose_next_point(evaled_actions_in_se2, self.evaled_q_values)
-            #is_in_cartesian = len(next_point) == 3
-            #if not is_in_cartesian:
-            #    next_point = convert_se2_to_base_pose(next_point)
         else:
             next_point = self.gp_optimizer.choose_next_point(self.evaled_actions, self.evaled_q_values)
         return next_point
