@@ -7,14 +7,23 @@ from planners.mcts_utils import make_action_executable
 
 from utils import pick_parameter_distance, place_parameter_distance
 from doo_utils.doo_tree import BinaryDOOTree
+from utils import pick_parameter_distance, place_parameter_distance
 import matplotlib.pyplot as plt
 
 
 class DOOGenerator(Generator):
-    def __init__(self, operator_name, problem_env, explr_p):
+    def __init__(self, node, problem_env, explr_p):
+        operator_name = node.operator
         Generator.__init__(self, operator_name, problem_env)
         self.explr_p = explr_p
-        self.doo_tree = BinaryDOOTree(self.domain)  # this depends on the problem
+        if operator_name == 'two_arm_pick':
+            pick_param_distance_for_obj = lambda x,y: pick_parameter_distance(node.obj, x, y)
+            self.doo_tree = BinaryDOOTree(self.domain, pick_param_distance_for_obj)  # this depends on the problem
+        elif operator_name == 'two_arm_place':
+            self.doo_tree = BinaryDOOTree(self.domain, place_parameter_distance)  # this depends on the problem
+        else:
+            print "Wrong operator name"
+            return -1
         self.update_flag = 'update_me'
 
     def sample_next_point(self, node, n_iter):

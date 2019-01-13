@@ -68,7 +68,7 @@ class MCTS:
             self.is_satisficing_problem = False
         """
 
-    def create_sampling_agent(self, operator_name):
+    def create_sampling_agent(self, node, operator_name):
         if self.sampling_strategy == 'unif':
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
@@ -76,7 +76,7 @@ class MCTS:
         elif self.sampling_strategy == 'gpucb':
             return GPUCBGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'doo':
-            return DOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
+            return DOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
         else:
             print "Wrong sampling strategy"
             return -1
@@ -111,7 +111,7 @@ class MCTS:
 
         # perhaps move to tree node constructor
         if not self.high_level_planner.is_goal_reached():
-            node.sampling_agent = self.create_sampling_agent(operator)
+            node.sampling_agent = self.create_sampling_agent(node, operator)
         node.objs_in_collision = objs_in_collision
         node.parent_action_reward = reward
         node.parent_action = parent_action

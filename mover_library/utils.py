@@ -534,7 +534,6 @@ def convert_se2_to_base_pose(basepose_se2):
     basepose_se2 = basepose_se2.squeeze()
 
     phi = cart2pol(basepose_se2[2], basepose_se2[3])
-    import pdb;pdb.set_trace()
     return np.array([basepose_se2[0], basepose_se2[1], phi])
 
 
