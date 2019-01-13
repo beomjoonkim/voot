@@ -75,7 +75,6 @@ def sample_ir(obj, robot, env, region, n_iter=300):
     return None
 
 
-
 def sample_ir_multiple_regions(obj, robot, env, multiple_regions):
     arm_len = 0.9844  # determined by spreading out the arm and measuring the dist from shoulder to ee
     # grasp_pos = Tgrasp[0:-1,3]

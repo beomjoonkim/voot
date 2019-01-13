@@ -84,7 +84,7 @@ def main():
     parser.add_argument('-seed', type=int, default=50)
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1)
-    parser.add_argument('-n_feasibility_checks', type=int, default=100)
+    parser.add_argument('-n_feasibility_checks', type=int, default=50)
     args = parser.parse_args()
 
     if args.debug:

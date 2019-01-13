@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-sys.path.append('../mover_library/')
+sys.path.append('./mover_library/')
 from samplers import *
 from utils import get_pick_domain, get_place_domain
 

@@ -1,102 +1,72 @@
 import sys
 import numpy as np
+
 sys.path.append('../mover_library/')
 from generator import Generator
+from planners.mcts_utils import make_action_executable
+
 from utils import pick_parameter_distance, place_parameter_distance
-from doo_utils.doo import  BinaryDOOTree
-
-
+from doo_utils.doo_tree import BinaryDOOTree
+import matplotlib.pyplot as plt
 
 
 class DOOGenerator(Generator):
     def __init__(self, operator_name, problem_env, explr_p):
         Generator.__init__(self, operator_name, problem_env)
         self.explr_p = explr_p
-        self.doo_optimizer = BinaryDOOTree(self.domain)  # this depends on the problem
+        self.doo_tree = BinaryDOOTree(self.domain)  # this depends on the problem
+        self.update_flag = 'update_me'
 
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
+        self.doo_tree.update_evaled_values(self.evaled_actions, self.evaled_q_values)
+        #print 'beginning', [l.f_value for l in self.doo_tree.leaves]
 
         for i in range(n_iter):
-            action_parameters = self.doo_optimizer.choose_next_point(self.evaled_actions, self.evaled_q_values)
-            action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
+            action_parameters, doo_node = self.choose_next_point()
+            action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
 
             if status == 'HasSolution':
+                self.doo_tree.expand_node(self.update_flag, doo_node)
                 print "Found feasible sample"
                 break
             else:
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
-                pass
+                #print 'infeasible', [l.f_value for l in self.doo_tree.leaves]
+                self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
+                #print 'infeasible', [l.f_value for l in self.doo_tree.leaves]
 
         return action
 
-    def sample_from_best_voronoi_region(self, node):
-        # todo write below
-        operator = node.operator
-        obj = node.obj
-        region = node.region
-        if operator == 'two_arm_pick':
-            params = self.sample_pick_from_best_voroi_region()
-        elif operator == 'two_arm_place':
-            params = self.sample_place_from_best_voroi_region()
-        return params
-
-    def sample_place_from_best_voroi_region(self):
-        best_dist = np.inf
-        other_dists = np.array([-1])
-        counter = 1
-
-        best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values)).squeeze()
-        best_action_idx = np.random.choice(best_action_idxs)
-        best_evaled_action = self.evaled_actions[best_action_idx]
-        other_actions = self.evaled_actions
-
-        while np.any(best_dist > other_dists):
-            print "Gaussian place sampling, counter", counter
-            variance = (self.domain[1] - self.domain[0]) / counter
-            new_parameters = np.random.normal(best_evaled_action, variance)
-
-            new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
-            best_dist = place_parameter_distance(new_parameters, best_evaled_action)
-            other_dists = np.array([place_parameter_distance(other, new_parameters) for other in other_actions])
-            counter += 1
-        return new_parameters
-
-    def sample_pick_from_best_voroi_region(self):
-        best_dist = np.inf
-        other_dists = np.array([-1])
-        counter = 1
-
-        best_evaled_action = self.evaled_actions[np.argmax(self.evaled_q_values)]
-        other_actions = self.evaled_actions
-
-        '''
-        grasp_params = pick_parameters[0:3]
-        portion = pick_parameters[3]
-        base_angle = pick_parameters[4]
-        facing_angle = pick_parameters[5]
-        '''
-
-        while np.any(best_dist > other_dists):
-            print "Gaussian pick sampling, counter", counter
-            best_ir_parameters = best_evaled_action[3:]
-
-            var_ir = np.array([0.3, 30*np.pi/180., 10*np.pi/180]) / float(counter)
-            ir_parameters = np.random.normal(best_ir_parameters, var_ir)
-
-            best_action_grasp_params = best_evaled_action[0:3]
-            var_grasp = np.array([0.5, 0.2, 0.2]) / float(counter)
-            grasp_params = np.random.normal(best_action_grasp_params, var_grasp)
-
-            new_parameters = np.hstack([grasp_params, ir_parameters])
-            new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
-            best_dist = pick_parameter_distance(new_parameters, best_evaled_action, self.domain)
-            other_dists = np.array([pick_parameter_distance(other, new_parameters, self.domain) for other in
-                                    other_actions])
-            counter += 1
-
-        return new_parameters
+    def choose_next_point(self):
+        next_node = self.doo_tree.get_next_node_to_evaluate()
+        x_to_evaluate = next_node.x_value
+        return x_to_evaluate, next_node
 
 
+def main():
+    domain = np.array([[-10, -10], [10, 10]])
+    doo_tree = BinaryDOOTree(domain)
 
+    target_fcn = lambda x, y: -(x**2+y**2)
+
+    plt.figure()
+    evaled_points = []
+    for i in range(100):
+        next_node = doo_tree.get_next_node_to_evaluate()
+        x_to_evaluate = next_node.x_value
+        fval = target_fcn(x_to_evaluate[0], x_to_evaluate[1])
+        doo_tree.expand_node(fval, next_node)
+
+        evaled_points.append(x_to_evaluate)
+        print evaled_points
+        plt.scatter(np.array(evaled_points)[:, 0], np.array(evaled_points)[:, 1])
+        plt.xlim(-10, 10)
+        plt.ylim(-10, 10)
+        plt.show()
+
+    import pdb;pdb.set_trace()
+
+if __name__ == '__main__':
+    main()
