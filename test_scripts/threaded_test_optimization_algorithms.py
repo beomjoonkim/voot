@@ -11,7 +11,7 @@ def worker_p(config):
     command = 'python ./test_scripts/test_optimization_algorithms.py ' + str(problem_idx) + ' ' +algo_name + ' ' + str(dim)
 
     print command
-    #os.system(command)
+    os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -22,7 +22,7 @@ def main():
     algo_name = sys.argv[1]
     configs= []
     for dim in [2,6,10,20]:
-        for t in range(100):
+        for t in range(200):
             configs.append([t, algo_name, dim])
 
     n_workers = int(30)
