@@ -17,7 +17,7 @@ import time
 import sys
 import os
 
-problem_idx = sys.argv[1]
+problem_idx = int(sys.argv[1])
 algo_name = sys.argv[2]
 dim_x = int(sys.argv[3])
 NUMMAX = 10
