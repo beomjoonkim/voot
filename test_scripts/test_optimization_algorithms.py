@@ -17,11 +17,18 @@ import time
 import sys
 import os
 
+problem_idx = sys.argv[1]
+algo_name = sys.argv[2]
 dim_x = int(sys.argv[3])
 NUMMAX = 10
+
+np.random.seed(problem_idx)
 A = np.random.rand(NUMMAX, dim_x)*10
 C = np.random.rand(NUMMAX)
-n_iter = 200
+if algo_name !='gpucb' and dim_x == 20:
+    n_iter = 1000
+else:
+    n_iter = 200
 
 def shekel_arg0(sol):
     return shekel(sol, A, C)[0]
@@ -59,7 +66,6 @@ def voo(explr_p):
     times = []
     stime = time.time()
     for i in range(n_iter):
-        print i
         x = voo.choose_next_point(evaled_x, evaled_y)
         y = shekel_arg0(x)
         evaled_x.append(x)
@@ -128,8 +134,6 @@ def try_many_epsilons(algorithm):
     return epsilons, max_ys, time_takens
 
 def main():
-    problem_idx = sys.argv[1]
-    algo_name = sys.argv[2]
 
     save_dir = './test_results/function_optimization/'+'dim_'+str(dim_x)+'/'+algo_name+'/'
     if not os.path.isdir(save_dir):
