@@ -1,0 +1,1431 @@
+(dp0
+S'epsilons'
+p1
+(lp2
+I0
+asS'max_ys'
+p3
+(lp4
+(lp5
+cnumpy.core.multiarray
+scalar
+p6
+(cnumpy
+dtype
+p7
+(S'f8'
+p8
+I0
+I1
+tp9
+Rp10
+(I3
+S'<'
+p11
+NNNI-1
+I-1
+I0
+tp12
+bS'\xdf\xdc\x95\xf6\xb5^\xb0?'
+p13
+tp14
+Rp15
+ag6
+(g10
+S'\x18\xf3\\\x95\xbcI\xb4?'
+p16
+tp17
+Rp18
+ag6
+(g10
+S'\x18\xf3\\\x95\xbcI\xb4?'
+p19
+tp20
+Rp21
+ag6
+(g10
+S'\x18\xf3\\\x95\xbcI\xb4?'
+p22
+tp23
+Rp24
+ag6
+(g10
+S'QbBL\xef\xb5\xb5?'
+p25
+tp26
+Rp27
+ag6
+(g10
+S'\xcc9\x08\xa6\xfc\xcb\xb8?'
+p28
+tp29
+Rp30
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p31
+tp32
+Rp33
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p34
+tp35
+Rp36
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p37
+tp38
+Rp39
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p40
+tp41
+Rp42
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p43
+tp44
+Rp45
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p46
+tp47
+Rp48
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p49
+tp50
+Rp51
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p52
+tp53
+Rp54
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p55
+tp56
+Rp57
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p58
+tp59
+Rp60
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p61
+tp62
+Rp63
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p64
+tp65
+Rp66
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p67
+tp68
+Rp69
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p70
+tp71
+Rp72
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p73
+tp74
+Rp75
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p76
+tp77
+Rp78
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p79
+tp80
+Rp81
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p82
+tp83
+Rp84
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p85
+tp86
+Rp87
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p88
+tp89
+Rp90
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p91
+tp92
+Rp93
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p94
+tp95
+Rp96
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p97
+tp98
+Rp99
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p100
+tp101
+Rp102
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p103
+tp104
+Rp105
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p106
+tp107
+Rp108
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p109
+tp110
+Rp111
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p112
+tp113
+Rp114
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p115
+tp116
+Rp117
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p118
+tp119
+Rp120
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p121
+tp122
+Rp123
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p124
+tp125
+Rp126
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p127
+tp128
+Rp129
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p130
+tp131
+Rp132
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p133
+tp134
+Rp135
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p136
+tp137
+Rp138
+ag6
+(g10
+S'hey\xd5\x94\x0b\xbb?'
+p139
+tp140
+Rp141
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p142
+tp143
+Rp144
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p145
+tp146
+Rp147
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p148
+tp149
+Rp150
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p151
+tp152
+Rp153
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p154
+tp155
+Rp156
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p157
+tp158
+Rp159
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p160
+tp161
+Rp162
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p163
+tp164
+Rp165
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p166
+tp167
+Rp168
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p169
+tp170
+Rp171
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p172
+tp173
+Rp174
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p175
+tp176
+Rp177
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p178
+tp179
+Rp180
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p181
+tp182
+Rp183
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p184
+tp185
+Rp186
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p187
+tp188
+Rp189
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p190
+tp191
+Rp192
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p193
+tp194
+Rp195
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p196
+tp197
+Rp198
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p199
+tp200
+Rp201
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p202
+tp203
+Rp204
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p205
+tp206
+Rp207
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p208
+tp209
+Rp210
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p211
+tp212
+Rp213
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p214
+tp215
+Rp216
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p217
+tp218
+Rp219
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p220
+tp221
+Rp222
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p223
+tp224
+Rp225
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p226
+tp227
+Rp228
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p229
+tp230
+Rp231
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p232
+tp233
+Rp234
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p235
+tp236
+Rp237
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p238
+tp239
+Rp240
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p241
+tp242
+Rp243
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p244
+tp245
+Rp246
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p247
+tp248
+Rp249
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p250
+tp251
+Rp252
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p253
+tp254
+Rp255
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p256
+tp257
+Rp258
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p259
+tp260
+Rp261
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p262
+tp263
+Rp264
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p265
+tp266
+Rp267
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p268
+tp269
+Rp270
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p271
+tp272
+Rp273
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p274
+tp275
+Rp276
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p277
+tp278
+Rp279
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p280
+tp281
+Rp282
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p283
+tp284
+Rp285
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p286
+tp287
+Rp288
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p289
+tp290
+Rp291
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p292
+tp293
+Rp294
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p295
+tp296
+Rp297
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p298
+tp299
+Rp300
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p301
+tp302
+Rp303
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p304
+tp305
+Rp306
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p307
+tp308
+Rp309
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p310
+tp311
+Rp312
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p313
+tp314
+Rp315
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p316
+tp317
+Rp318
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p319
+tp320
+Rp321
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p322
+tp323
+Rp324
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p325
+tp326
+Rp327
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p328
+tp329
+Rp330
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p331
+tp332
+Rp333
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p334
+tp335
+Rp336
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p337
+tp338
+Rp339
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p340
+tp341
+Rp342
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p343
+tp344
+Rp345
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p346
+tp347
+Rp348
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p349
+tp350
+Rp351
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p352
+tp353
+Rp354
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p355
+tp356
+Rp357
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p358
+tp359
+Rp360
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p361
+tp362
+Rp363
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p364
+tp365
+Rp366
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p367
+tp368
+Rp369
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p370
+tp371
+Rp372
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p373
+tp374
+Rp375
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p376
+tp377
+Rp378
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p379
+tp380
+Rp381
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p382
+tp383
+Rp384
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p385
+tp386
+Rp387
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p388
+tp389
+Rp390
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p391
+tp392
+Rp393
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p394
+tp395
+Rp396
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p397
+tp398
+Rp399
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p400
+tp401
+Rp402
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p403
+tp404
+Rp405
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p406
+tp407
+Rp408
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p409
+tp410
+Rp411
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p412
+tp413
+Rp414
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p415
+tp416
+Rp417
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p418
+tp419
+Rp420
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p421
+tp422
+Rp423
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p424
+tp425
+Rp426
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p427
+tp428
+Rp429
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p430
+tp431
+Rp432
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p433
+tp434
+Rp435
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p436
+tp437
+Rp438
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p439
+tp440
+Rp441
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p442
+tp443
+Rp444
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p445
+tp446
+Rp447
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p448
+tp449
+Rp450
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p451
+tp452
+Rp453
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p454
+tp455
+Rp456
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p457
+tp458
+Rp459
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p460
+tp461
+Rp462
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p463
+tp464
+Rp465
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p466
+tp467
+Rp468
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p469
+tp470
+Rp471
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p472
+tp473
+Rp474
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p475
+tp476
+Rp477
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p478
+tp479
+Rp480
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p481
+tp482
+Rp483
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p484
+tp485
+Rp486
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p487
+tp488
+Rp489
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p490
+tp491
+Rp492
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p493
+tp494
+Rp495
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p496
+tp497
+Rp498
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p499
+tp500
+Rp501
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p502
+tp503
+Rp504
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p505
+tp506
+Rp507
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p508
+tp509
+Rp510
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p511
+tp512
+Rp513
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p514
+tp515
+Rp516
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p517
+tp518
+Rp519
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p520
+tp521
+Rp522
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p523
+tp524
+Rp525
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p526
+tp527
+Rp528
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p529
+tp530
+Rp531
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p532
+tp533
+Rp534
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p535
+tp536
+Rp537
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p538
+tp539
+Rp540
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p541
+tp542
+Rp543
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p544
+tp545
+Rp546
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p547
+tp548
+Rp549
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p550
+tp551
+Rp552
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p553
+tp554
+Rp555
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p556
+tp557
+Rp558
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p559
+tp560
+Rp561
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p562
+tp563
+Rp564
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p565
+tp566
+Rp567
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p568
+tp569
+Rp570
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p571
+tp572
+Rp573
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p574
+tp575
+Rp576
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p577
+tp578
+Rp579
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p580
+tp581
+Rp582
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p583
+tp584
+Rp585
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p586
+tp587
+Rp588
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p589
+tp590
+Rp591
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p592
+tp593
+Rp594
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p595
+tp596
+Rp597
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p598
+tp599
+Rp600
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p601
+tp602
+Rp603
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p604
+tp605
+Rp606
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p607
+tp608
+Rp609
+ag6
+(g10
+S'\xf4\xff\xd4v\x98 \xc8?'
+p610
+tp611
+Rp612
+aasS'time_takens'
+p613
+(lp614
+(lp615
+F0.0003428459167480469
+aF0.0005669593811035156
+aF0.0007798671722412109
+aF0.0009970664978027344
+aF0.0012049674987792969
+aF0.0014128684997558594
+aF0.0016188621520996094
+aF0.0018248558044433594
+aF0.0020399093627929688
+aF0.0022459030151367188
+aF0.0024559497833251953
+aF0.002660989761352539
+aF0.002866029739379883
+aF0.003075838088989258
+aF0.003283977508544922
+aF0.0034918785095214844
+aF0.0037000179290771484
+aF0.003905057907104492
+aF0.0041179656982421875
+aF0.004324913024902344
+aF0.004533052444458008
+aF0.00473785400390625
+aF0.00495600700378418
+aF0.005168914794921875
+aF0.005385875701904297
+aF0.0055999755859375
+aF0.005811929702758789
+aF0.015012979507446289
+aF0.015233993530273438
+aF0.01544189453125
+aF0.01565384864807129
+aF0.01586294174194336
+aF0.016078948974609375
+aF0.016286849975585938
+aF0.0164949893951416
+aF0.016705036163330078
+aF0.016916990280151367
+aF0.017132997512817383
+aF0.017346858978271484
+aF0.01755690574645996
+aF0.017766952514648438
+aF0.01798391342163086
+aF0.01819586753845215
+aF0.018409013748168945
+aF0.018620014190673828
+aF0.01882791519165039
+aF0.01905083656311035
+aF0.019263029098510742
+aF0.019476890563964844
+aF0.019687891006469727
+aF0.019897937774658203
+aF0.0201108455657959
+aF0.02031993865966797
+aF0.020529985427856445
+aF0.020747900009155273
+aF0.020962953567504883
+aF0.02115797996520996
+aF0.021368026733398438
+aF0.021579980850219727
+aF0.021795988082885742
+aF0.05218195915222168
+aF0.05241203308105469
+aF0.05264401435852051
+aF0.05285787582397461
+aF0.05307483673095703
+aF0.05328702926635742
+aF0.05349993705749512
+aF0.053711891174316406
+aF0.0539250373840332
+aF0.054144859313964844
+aF0.05436086654663086
+aF0.05457305908203125
+aF0.054789066314697266
+aF0.05501389503479004
+aF0.055229902267456055
+aF0.05544590950012207
+aF0.055661916732788086
+aF0.055873870849609375
+aF0.056097984313964844
+aF0.056311845779418945
+aF0.05652594566345215
+aF0.05673694610595703
+aF0.05695796012878418
+aF0.057170867919921875
+aF0.05738496780395508
+aF0.05759596824645996
+aF0.05781292915344238
+aF0.05803084373474121
+aF0.05824685096740723
+aF0.058461904525756836
+aF0.05867600440979004
+aF0.058892011642456055
+aF0.05911087989807129
+aF0.059326887130737305
+aF0.05954384803771973
+aF0.059758901596069336
+aF0.05998086929321289
+aF0.060196876525878906
+aF0.060417890548706055
+aF0.060632944107055664
+aF0.06084799766540527
+aF0.06994891166687012
+aF0.07017993927001953
+aF0.07039690017700195
+aF0.07061100006103516
+aF0.0708310604095459
+aF0.07105493545532227
+aF0.07127499580383301
+aF0.07150101661682129
+aF0.07171893119812012
+aF0.07194995880126953
+aF0.07216906547546387
+aF0.07238602638244629
+aF0.07260584831237793
+aF0.07282400131225586
+aF0.07304596900939941
+aF0.07326388359069824
+aF0.07348084449768066
+aF0.073699951171875
+aF0.07391786575317383
+aF0.0741419792175293
+aF0.07435798645019531
+aF0.07457399368286133
+aF0.07479596138000488
+aF0.07501983642578125
+aF0.07523894309997559
+aF0.07545995712280273
+aF0.07568097114562988
+aF0.0758969783782959
+aF0.07611989974975586
+aF0.0763399600982666
+aF0.07655906677246094
+aF0.07677698135375977
+aF0.07700085639953613
+aF0.07722091674804688
+aF0.0774390697479248
+aF0.07765984535217285
+aF0.077880859375
+aF0.08245706558227539
+aF0.08268499374389648
+aF0.08290600776672363
+aF0.0831289291381836
+aF0.08334803581237793
+aF0.08356904983520508
+aF0.08379101753234863
+aF0.08402085304260254
+aF0.08424186706542969
+aF0.08445096015930176
+aF0.0846719741821289
+aF0.08489394187927246
+aF0.08511805534362793
+aF0.08533787727355957
+aF0.08555984497070312
+aF0.08577799797058105
+aF0.08602190017700195
+aF0.08624100685119629
+aF0.08646106719970703
+aF0.08668684959411621
+aF0.08691191673278809
+aF0.08714985847473145
+aF0.08739089965820312
+aF0.08762097358703613
+aF0.08785486221313477
+aF0.08809900283813477
+aF0.0883328914642334
+aF0.08856391906738281
+aF0.08879494667053223
+aF0.08903789520263672
+aF0.0892798900604248
+aF0.08951306343078613
+aF0.08974504470825195
+aF0.08998799324035645
+aF0.09021997451782227
+aF0.09046101570129395
+aF0.09071207046508789
+aF0.09098196029663086
+aF0.09122991561889648
+aF0.09147906303405762
+aF0.09172892570495605
+aF0.0919809341430664
+aF0.09221792221069336
+aF0.09246087074279785
+aF0.09270501136779785
+aF0.09296488761901855
+aF0.0932159423828125
+aF0.09345293045043945
+aF0.09369087219238281
+aF0.09392189979553223
+aF0.09417486190795898
+aF0.09438300132751465
+aF0.09459495544433594
+aF0.09481406211853027
+aF0.09505987167358398
+aF0.0953059196472168
+aF0.09554290771484375
+aF0.09578084945678711
+aF0.09602999687194824
+aF0.09627199172973633
+aF0.09651899337768555
+aF0.0967550277709961
+aas.
