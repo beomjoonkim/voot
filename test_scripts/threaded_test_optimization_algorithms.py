@@ -20,12 +20,23 @@ def worker_wrapper_multi_input(multi_args):
 
 def main():
     algo_name = sys.argv[1]
-    configs= []
-    for dim in [2,6,10,20]:
-        for t in range(200):
-            configs.append([t, algo_name, dim])
+    if algo_name == 'gpucb':
+      dims = [int(sys.argv[2])]
+      pidxs = sys.argv[3].split(',')
+      pidxs = range(int(pidxs[0]),int(pidxs[1]))
+    else:
+      dims = [2,6,10,20]
+      pidxs = range(200)
 
-    n_workers = int(30)
+    configs= []
+    for dim in dims:
+        for t in pidxs:
+            configs.append([t, algo_name, dim])
+    if algo_name == 'gpucb':
+        n_workers = int(10)
+    else:
+        n_workers = int(30)
+
     print configs
     pool = ThreadPool(n_workers)
     results = pool.map(worker_wrapper_multi_input, configs)
