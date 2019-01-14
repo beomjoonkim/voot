@@ -21,6 +21,8 @@ problem_idx = sys.argv[1]
 algo_name = sys.argv[2]
 dim_x = int(sys.argv[3])
 NUMMAX = 10
+
+np.random.seed(problem_idx)
 A = np.random.rand(NUMMAX, dim_x)*10
 C = np.random.rand(NUMMAX)
 if algo_name !='gpucb' and dim_x == 20:
