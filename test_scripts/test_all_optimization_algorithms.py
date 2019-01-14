@@ -17,11 +17,8 @@ import time
 import sys
 
 NUMMAX = 10
-dim_x = 10
-
-n_iter = 200
-
-
+dim_x = 20
+n_iter = 1000
 domain = np.array([[0]*dim_x, [10]*dim_x])
 
 
@@ -139,7 +136,7 @@ def main():
     doo_max_ys = []
     voo_max_ys = []
     unif_max_ys = []
-    for i in range(50):
+    for i in range(20):
         obj_fcn = make_obj_fcn()
         for algo_idx, algorithm in enumerate([doo, voo, random_search]):
             if algorithm == doo:
