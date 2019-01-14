@@ -9,6 +9,8 @@ class VOO:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
 
     def choose_next_point(self, evaled_x, evaled_y):
+        if len(evaled_x) == 0:
+            return (self.domain[1] + self.domain[0]) / 2.0
         rnd = np.random.random() # this should lie outside
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(evaled_x) > 1
         if is_sample_from_best_v_region:
@@ -29,8 +31,12 @@ class VOO:
         other_best_evaled_xs = evaled_x
 
         while np.any(best_dist > other_dists):
-            variance = (self.domain[1] - self.domain[0]) / np.power(counter, 1./2) #/ (counter+len(other_dists))
+            #if self.dim_x == 2:
+            #    variance = (self.domain[1] - self.domain[0]) / np.power(counter+len(other_dists), 1)
+            #else:
+            variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
             new_x = np.random.normal(best_evaled_x, variance)
+
             #new_x = self.sample_from_uniform()
             new_x = np.clip(new_x, self.domain[0], self.domain[1])
 

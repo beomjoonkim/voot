@@ -18,14 +18,11 @@ import sys
 
 NUMMAX = 10
 dim_x = 10
-A = np.random.rand(NUMMAX, dim_x)*10
-C = np.random.rand(NUMMAX)
-n_iter = 150
 
-def shekel_arg0(sol):
-    return shekel(sol, A, C)[0]
+n_iter = 200
 
-domain =np.array( [[0]*dim_x,[10]*dim_x] )
+
+domain = np.array([[0]*dim_x, [10]*dim_x])
 
 
 def gpucb(explr_p):
@@ -40,17 +37,21 @@ def gpucb(explr_p):
     times = []
     stime = time.time()
     for i in range(n_iter):
-        x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
-        y = shekel_arg0(x)
-        evaled_x.append(x)
-        evaled_y.append(y)
+        if i < 50:
+            x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
+            y = shekel_arg0(x)
+            evaled_x.append(x)
+            evaled_y.append(y)
+        else:
+            evaled_x.append(x)
+            evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
 
     return evaled_x, evaled_y, max_y, times
 
 
-def voo(explr_p):
+def voo(explr_p,obj_fcn):
     evaled_x = []
     evaled_y = []
     max_y = []
@@ -60,7 +61,7 @@ def voo(explr_p):
     for i in range(n_iter):
         print i
         x = voo.choose_next_point(evaled_x, evaled_y)
-        y = shekel_arg0(x)
+        y = obj_fcn(x)
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
@@ -68,7 +69,7 @@ def voo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
-def random_search(epsilon):
+def random_search(epsilon, obj_fcn):
     evaled_x = []
     evaled_y = []
     max_y = []
@@ -79,7 +80,7 @@ def random_search(epsilon):
     stime = time.time()
     for i in range(n_iter):
         x= np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
-        y = shekel_arg0(x)
+        y = obj_fcn(x)
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
@@ -87,7 +88,7 @@ def random_search(epsilon):
     return evaled_x, evaled_y, max_y, times
 
 
-def doo(explr_p):
+def doo(explr_p,obj_fcn):
     distance_fn = lambda x, y: np.linalg.norm(x - y)
     doo_tree = BinaryDOOTree(domain, explr_p, distance_fn)
 
@@ -99,7 +100,7 @@ def doo(explr_p):
     for i in range(n_iter):
         next_node = doo_tree.get_next_node_to_evaluate()
         x_to_evaluate = next_node.x_value
-        fval = shekel_arg0(x_to_evaluate)
+        fval = obj_fcn(x_to_evaluate)
         doo_tree.expand_node(fval, next_node)
         evaled_x.append(x_to_evaluate)
         evaled_y.append(fval)
@@ -108,11 +109,11 @@ def doo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
-def select_epsilon(algorithm):
+def select_epsilon(algorithm, obj_fcn):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
-        epsilons = [0, 0.1, 1, 2, 3]
+        epsilons = [0.01, 0.1, 1, 2, 3]
     elif algorithm.__name__ == 'gpucb':
         epsilons = [0.1, 0.2, 0.3]
     else:
@@ -121,39 +122,44 @@ def select_epsilon(algorithm):
     max_ys = []
     time_takens = []
     for epsilon in epsilons:
-        evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
+        evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, obj_fcn)
         max_ys.append(max_y)
         time_takens.append(time_taken)
     return epsilons, max_ys, time_takens
 
+def make_obj_fcn():
+    A = np.random.rand(NUMMAX, dim_x) * 10
+    C = np.random.rand(NUMMAX)
+    return lambda x: shekel(x, A, C)[0]
+
 def main():
-    problem_idx = sys.argv[1]
-    algo_name = sys.argv[2]
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
 
-    if algo_name == 'uniform':
-        algorithm = random_search
-    elif algo_name == 'voo':
-        algorithm = voo
-    elif algo_name == 'doo':
-        algorithm = doo
-    elif algo_name == 'gpucb':
-        algorithm = gpucb
-    else:
-        print "Wrong algo name"
-        return
-
-    for algo_idx, algo_name in ['uniform', 'voo', 'doo', 'gpucb']:
-        epsilons, max_ys, time_takens = select_epsilon(algorithm)
-        best_epsilon_index = np.argmax(np.array(max_ys)[:, -1])
-        epsilon = epsilons[best_epsilon_index]
-        max_y = max_ys[best_epsilon_index]
-        time_takens = time_takens[best_epsilon_index]
-
-        sns.tsplot(max_y, range(n_iter), ci=95, condition=algorithm.__name__+'_'+str(epsilon),
-                   color=color_dict[color_names[algo_idx]])
-        plt.show()
+    doo_max_ys = []
+    voo_max_ys = []
+    unif_max_ys = []
+    for i in range(50):
+        obj_fcn = make_obj_fcn()
+        for algo_idx, algorithm in enumerate([doo, voo, random_search]):
+            if algorithm == doo:
+                epsilon = 0.01
+            elif algorithm == voo:
+                epsilon = 0.3
+            else:
+                epsilon = 0
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, obj_fcn)
+            max_y = np.array(max_y)
+            if algorithm == doo:
+                doo_max_ys.append(max_y)
+            elif algorithm == voo:
+                voo_max_ys.append(max_y)
+            else:
+                unif_max_ys.append(max_y)
+    sns.tsplot(doo_max_ys, range(n_iter), ci=95, condition='doo', color=color_dict[color_names[0]])
+    sns.tsplot(voo_max_ys, range(n_iter), ci=95, condition='voo', color=color_dict[color_names[1]])
+    sns.tsplot(unif_max_ys, range(n_iter), ci=95, condition='unif', color=color_dict[color_names[2]])
+    plt.show()
     import pdb;pdb.set_trace()
 
 if __name__ == '__main__':
