@@ -27,7 +27,6 @@ if algo_name !='gpucb' and dim_x == 20:
     n_iter = 1000
 else:
     n_iter = 200
-import pdb;pdb.set_trace()
 
 def shekel_arg0(sol):
     return shekel(sol, A, C)[0]
