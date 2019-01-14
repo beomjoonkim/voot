@@ -64,7 +64,6 @@ def voo(explr_p):
     times = []
     stime = time.time()
     for i in range(n_iter):
-        print i
         x = voo.choose_next_point(evaled_x, evaled_y)
         y = shekel_arg0(x)
         evaled_x.append(x)
