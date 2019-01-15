@@ -136,7 +136,7 @@ def plot_across_algorithms():
         #sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
-    savefig('Number of function evaluations', 'Average rewards', fname='./plotters/fcn_optimization_'+str(args.dim))
+    savefig('Number of function evaluations', 'Best function values', fname='./plotters/fcn_optimization_'+str(args.dim))
 
 
 if __name__ == '__main__':
