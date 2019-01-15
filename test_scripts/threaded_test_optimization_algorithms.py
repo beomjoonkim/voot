@@ -13,7 +13,7 @@ def worker_p(config):
               + ' ' + str(dim) + ' ' + str(n_iter)
 
     print command
-    #os.system(command)
+    os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -25,6 +25,7 @@ def main():
     dims = [int(sys.argv[2])]
     n_iter = sys.argv[3]
     pidxs = sys.argv[4].split(',')
+    pidxs = range(int(pidxs[0]),int(pidxs[1]))
 
     configs= []
     for dim in dims:
