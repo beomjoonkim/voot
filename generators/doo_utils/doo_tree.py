@@ -49,6 +49,7 @@ class BinaryDOOTree:
         max_upper_bound = -np.inf
         for leaf_node in self.leaves:
             node_upper_bound = leaf_node.f_value + self.explr_p*leaf_node.delta_h
+            #print leaf_node.x_value, leaf_node.f_value, self.explr_p*leaf_node.delta_h,node_upper_bound
             if node_upper_bound > max_upper_bound:
                 best_leaf = leaf_node
                 max_upper_bound = node_upper_bound
@@ -88,11 +89,8 @@ class BinaryDOOTree:
             is_parent_node_children_all_evaluated = node.parent.l_child.f_value is not None \
                                                     and node.parent.r_child.f_value is not None
             if is_parent_node_children_all_evaluated:
-                #print node.x_value, node.f_value, node.parent.l_child.cell_min, node.parent.l_child.cell_max
-                #print node.x_value, node.f_value, node.parent.r_child.cell_min, node.parent.r_child.cell_max
                 self.add_to_leaf(node.parent.l_child)
                 self.add_to_leaf(node.parent.r_child)
-                #print "Both children evaluated", node.parent.l_child.f_value, node.parent.r_child.f_value
 
     def add_to_leaf(self, node):
         parent_node = node.parent
@@ -109,14 +107,7 @@ class BinaryDOOTree:
     def update_evaled_values(self, evaled_x, evaled_y):
         for node in self.nodes:
             node.f_value = self.find_evaled_f_value(node.x_value, evaled_x, evaled_y)
-            """
-            if node.f_value == 'update_me':
-                node.f_value = self.find_evaled_f_value(node.x_value, evaled_x, evaled_y)
-            if node.l_child.f_value == 'update_me':
-                node.l_child._f_value = self.find_evaled_f_value(node.l_child.x_value, evaled_x, evaled_y)
-            if node.r_child.f_value == 'update_me':
-                node.r_child._f_value = self.find_evaled_f_value(node.r_child.x_value, evaled_x, evaled_y)
-            """
+
 
     @staticmethod
     def add_node_to_tree(node, parent_node, side):

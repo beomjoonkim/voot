@@ -82,6 +82,7 @@ def random_search(epsilon, obj_fcn):
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
+    import pdb;pdb.set_trace()
     return evaled_x, evaled_y, max_y, times
 
 
@@ -118,6 +119,7 @@ def select_epsilon(algorithm, obj_fcn):
 
     max_ys = []
     time_takens = []
+    import pdb;pdb.set_trace()
     for epsilon in epsilons:
         evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, obj_fcn)
         max_ys.append(max_y)

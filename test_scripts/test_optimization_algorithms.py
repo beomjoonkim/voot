@@ -30,7 +30,7 @@ C = np.random.rand(NUMMAX)
 def shekel_arg0(sol):
     return shekel(sol, A, C)[0]
 
-domain =np.array( [[0]*dim_x,[10]*dim_x] )
+domain =np.array( [[0.]*dim_x,[10.]*dim_x] )
 
 
 def gpucb(explr_p):
@@ -65,6 +65,8 @@ def voo(explr_p):
     stime = time.time()
     for i in range(n_iter):
         x = voo.choose_next_point(evaled_x, evaled_y)
+        if len(x.shape) == 0:
+            x=np.array([x])
         y = shekel_arg0(x)
         evaled_x.append(x)
         evaled_y.append(y)
@@ -83,7 +85,12 @@ def random_search(epsilon):
     times = []
     stime = time.time()
     for i in range(n_iter):
-        x= np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
+        if i==0:
+            x = (domain_min+domain_max)/2.0
+        else:
+            x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
+        if len(x.shape) == 0:
+            x = np.array([x])
         y = shekel_arg0(x)
         evaled_x.append(x)
         evaled_y.append(y)
@@ -117,9 +124,9 @@ def try_many_epsilons(algorithm):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
-        epsilons = [0, 0.1, 1, 2, 3]
+        epsilons = [1,0, 0.01, 0.05, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
-        epsilons = [0.1, 0.2, 0.3]
+        epsilons = [0.3]
     else:
         epsilons = [0]
 

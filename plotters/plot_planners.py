@@ -63,9 +63,9 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         if algo_name.find('doo') !=-1:
             result_dir = rootdir+'/convbelt_results/mcts_iter_500/uct_0.0_widening_'+ str(widening_parameter)+'_'
         else:
-            result_dir = rootdir+'/convbelt_results/mcts_iter_1000/uct_0.0_widening_'+ str(widening_parameter)+'_'
+            result_dir = rootdir+'/convbelt_results/mcts_iter_500/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
-        result_dir = rootdir+'/namo_results/mcts_iter_1000/uct_0.0_widening_' + str(widening_parameter)+'_'
+        result_dir = rootdir+'/namo_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
 
@@ -89,10 +89,14 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             result = pickle.load(open(result_dir+fin,'r'))
         else:
             result = pickle.load(open(result_dir+fin,'r'))
-        search_rwd_times.append(result['search_time'])
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
+            is_success = result['search_time']['namo'][-1][-1]
+            if is_success:
+                result['search_time']['namo'][-1][-2] *= 2
+        search_rwd_times.append(result['search_time'])
 
+        search_rwd_times.append(result['search_time'])
         if domain_name=='convbelt':
             is_success = result['plan'] is not None
             is_success = np.any(np.array(result['search_time'])[:, 2] >= 4)
@@ -104,7 +108,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             is_success = result['search_time']['namo'][-1][-1]
             success.append(is_success)
             if is_success:
-              search_times.append(result['search_time']['namo'][-1][0])
+                search_times.append(result['search_time']['namo'][-1][0])
 
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
@@ -165,7 +169,6 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 
 
 
-
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='convbelt')
@@ -177,9 +180,9 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['unif', 'voo_0.3']
+        algo_names = ['unif', 'voo_0.3','doo_30.0']
     else:
-        algo_names = ['voo_0.4', 'doo_25.0', 'unif']
+        algo_names = ['voo_0.3','doo_25.0','unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]

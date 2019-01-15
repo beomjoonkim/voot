@@ -23,6 +23,8 @@ def savefig(xlabel,ylabel,fname=''):
 
 def get_result_dir(algo_name, dimension):
     result_dir = './test_results/function_optimization/'+'dim_'+str(dimension)+'/'+algo_name+'/'
+    if algo_name == 'gpucb' and dimension == 10:
+        result_dir = './test_results/function_optimization/'+'dim_'+str(dimension)+'/'+algo_name+'/' +'n_eval_200/'
     return result_dir
 
 
@@ -39,9 +41,12 @@ def get_results(algo_name, dimension):
         max_ys = np.array(result['max_ys'])
         optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
-        max_y_values.append(max_y)
-        time_takens.append(result['time_takens'][optimal_epsilon_idx])
-    print len(max_y_values)
+        if dimension == 2:
+            max_y_values.append(max_y[:100])
+            time_takens.append(result['time_takens'][optimal_epsilon_idx][:100])
+        else:
+            max_y_values.append(max_y)
+            time_takens.append(result['time_takens'][optimal_epsilon_idx])
     return np.array(max_y_values), np.array(time_takens)
 
 
@@ -102,10 +107,15 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['voo', 'gpucb', 'uniform', 'doo']
+    algo_names = ['gpucb', 'doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_names = color_dict.keys()[1:]
+    color_names = color_dict.keys()
+    color_dict[color_names[0]] =[0., 0.5570478679, 0.]
+    color_dict[color_names[1]] =[0,0,0]
+    color_dict[color_names[2]] =[1,0,0]
+    color_dict[color_names[3]] =[0,0,1]
+
 
     for algo_idx, algo in enumerate(algo_names):
         print algo
@@ -122,12 +132,11 @@ def plot_across_algorithms():
         search_rwd_times = search_rwd_times[mask]
         time_takens = time_takens[mask]
         n_samples = search_rwd_times.shape[-1]
+        print n_samples
         #sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
-    plt.show()
-    import pdb;pdb.set_trace()
-    savefig('Number of simulations', 'Average rewards', fname='./plotters/'+args.domain+'_w_'+args.w)
+    savefig('Number of function evaluations', 'Average rewards', fname='./plotters/fcn_optimization_'+str(args.dim))
 
 
 if __name__ == '__main__':
