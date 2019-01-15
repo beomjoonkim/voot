@@ -8,7 +8,8 @@ def worker_p(config):
     problem_idx = config[0]
     algo_name = config[1]
     dim = config[2]
-    command = 'python ./test_scripts/test_optimization_algorithms.py ' + str(problem_idx) + ' ' +algo_name + ' ' + str(dim)
+    command = 'python ./test_scripts/test_optimization_algorithms.py ' + str(problem_idx) + ' ' +algo_name \
+              + ' ' + str(dim)
 
     print command
     os.system(command)

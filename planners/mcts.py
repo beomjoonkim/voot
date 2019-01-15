@@ -109,6 +109,7 @@ class MCTS:
         node = TreeNode(curr_obj, curr_region, operator,
                         self.exploration_parameters, depth, state_saver, self.sampling_strategy, is_init_node)
 
+        #node.operator = operator
         # perhaps move to tree node constructor
         if not self.high_level_planner.is_goal_reached():
             node.sampling_agent = self.create_sampling_agent(node, operator)
@@ -168,7 +169,8 @@ class MCTS:
                     curr_region = curr_obj_region
             else:
                 curr_region = self.high_level_planner.get_next_region()
-            node.sampling_agent = self.create_sampling_agent(operator)
+            node.operator = operator
+            node.sampling_agent = self.create_sampling_agent(node, operator)
             node.region = curr_region
             node.obj = curr_obj
             node.operator = operator
@@ -307,13 +309,13 @@ class MCTS:
             print 'Is pick time? ', self.environment.is_pick_time()
             print "Executing action ", action
 
-        #if self.high_level_planner.is_debugging:
-        #    import pdb;pdb.set_trace()
+        if self.high_level_planner.is_debugging:
+            import pdb;pdb.set_trace()
         next_state, reward, parent_motion, objs_in_collision = self.apply_action(curr_node, action, check_feasibility, parent_motion)
         print 'Reward ', reward
         self.high_level_planner.update_task_plan_indices(reward, action['operator_name']) # create the next node based on the updated task plan progress
-        #if self.high_level_planner.is_debugging:
-        #   import pdb;pdb.set_trace()
+        if self.high_level_planner.is_debugging:
+           import pdb;pdb.set_trace()
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, objs_in_collision, is_init_node=False)

@@ -71,9 +71,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
 
     result_dir += algo_name
     result_dir += '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
-    if algo_name.find('voo')!=-1:
-        result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_' + str(c1) + '/'
-    elif algo_name.find('doo') !=-1:
+    if algo_name.find('voo')!=-1 or algo_name.find('doo') !=-1 or algo_name.find('gpucb') !=-1:
         result_dir += 'eps_'+ str(epsilon)+'/' + 'c1_' + str(c1) + '/'
     print result_dir
     return result_dir
@@ -142,7 +140,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 1000, 10)
+    organized_times = range(10, 500, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -179,9 +177,9 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['unif', 'voo_0.2', 'voo_0.3', 'voo_0.4']
+        algo_names = ['unif', 'voo_0.3']
     else:
-        algo_names = ['doo_5.0', 'doo_20.0', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'unif']
+        algo_names = ['voo_0.4', 'doo_25.0', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
@@ -191,7 +189,7 @@ def plot_across_algorithms():
         print algo
         search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
                                             args.n_feasibility_checks)
-        search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
+        search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     plt.show()

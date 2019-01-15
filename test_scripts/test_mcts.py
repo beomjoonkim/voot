@@ -72,7 +72,7 @@ def get_task_plan(domain_name, problem_env):
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-widening_parameter', type=float, default=0.9)
+    parser.add_argument('-widening_parameter', type=float, default=0.8)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)

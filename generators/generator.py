@@ -29,6 +29,7 @@ class Generator:
             self.feasibility_checker = PlaceFeasibilityChecker(problem_env)
         else:
             import pdb;pdb.set_trace()
+            raise ValueError
 
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()

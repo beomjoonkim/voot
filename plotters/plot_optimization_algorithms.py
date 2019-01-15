@@ -98,7 +98,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['voo','uniform','doo']
+    algo_names = ['voo', 'uniform', 'doo']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
@@ -106,8 +106,17 @@ def plot_across_algorithms():
     for algo_idx, algo in enumerate(algo_names):
         print algo
         search_rwd_times = get_results(algo, n_dim)
-        import pdb;pdb.set_trace()
-        sns.tsplot(search_rwd_times, range(200), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
+        mask = np.ones(len(search_rwd_times), dtype=bool)
+        #too_large = np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
+        #print search_rwd_times
+        if n_dim == 2:
+            mask[[14,36]] = False
+        elif n_dim==20:
+            mask[125] = False
+        search_rwd_times = search_rwd_times[mask]
+
+        n_samples = search_rwd_times.shape[-1]
+        sns.tsplot(search_rwd_times, range(1, n_samples+1), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     plt.show()
     savefig('Number of simulations', 'Average rewards', fname='./plotters/'+args.domain+'_w_'+args.w)
