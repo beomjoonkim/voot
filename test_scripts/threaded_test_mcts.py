@@ -2,6 +2,7 @@ import os
 import sys
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
 import argparse
+import time
 
 
 def worker_p(config):
@@ -23,6 +24,7 @@ def worker_p(config):
 
 
 def worker_wrapper_multi_input(multi_args):
+    time.sleep(1)
     return worker_p(multi_args)
 
 
@@ -44,7 +46,7 @@ def main():
     widening_parameters = args.w if args.w is not None else [0.8]
     mcts_iter = args.mcts_iter
     c1s = args.c1 if args.c1 is not None else [1]
-    n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [100]
+    n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
     trials = range(200)
     configs = []
 
