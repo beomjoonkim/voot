@@ -30,7 +30,9 @@ def get_results(algo_name, dimension):
     result_dir = get_result_dir(algo_name, dimension)
     search_times = []
     max_y_values = []
+    time_takens = []
     for fin in os.listdir(result_dir):
+    #for fin in os.listdir('./test_results/function_optimization/'+'dim_'+str(dimension)+'/gpucb/'):
         if fin.find('.pkl') == -1:
             continue
         result = pickle.load(open(result_dir+fin, 'r'))
@@ -38,7 +40,9 @@ def get_results(algo_name, dimension):
         optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
         max_y_values.append(max_y)
-    return np.array(max_y_values)
+        time_takens.append(result['time_takens'][optimal_epsilon_idx])
+    print len(max_y_values)
+    return np.array(max_y_values), np.array(time_takens)
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
@@ -98,27 +102,31 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['voo', 'uniform', 'doo']
+    algo_names = ['voo', 'gpucb', 'uniform', 'doo']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
 
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        search_rwd_times = get_results(algo, n_dim)
+        search_rwd_times, time_takens = get_results(algo, n_dim)
         mask = np.ones(len(search_rwd_times), dtype=bool)
-        #too_large = np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
-        #print search_rwd_times
+        too_large = np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
+        """
         if n_dim == 2:
-            mask[[14,36]] = False
-        elif n_dim==20:
+            import pdb;pdb.set_trace()
+        if n_dim == 20:
             mask[125] = False
+        """
+        mask[too_large] = False
         search_rwd_times = search_rwd_times[mask]
-
+        time_takens = time_takens[mask]
         n_samples = search_rwd_times.shape[-1]
-        sns.tsplot(search_rwd_times, range(1, n_samples+1), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
+        #sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
+        sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
     plt.show()
+    import pdb;pdb.set_trace()
     savefig('Number of simulations', 'Average rewards', fname='./plotters/'+args.domain+'_w_'+args.w)
 
 

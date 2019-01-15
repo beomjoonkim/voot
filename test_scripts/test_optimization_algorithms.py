@@ -20,15 +20,12 @@ import os
 problem_idx = int(sys.argv[1])
 algo_name = sys.argv[2]
 dim_x = int(sys.argv[3])
+n_iter = int(sys.argv[4])
 NUMMAX = 10
 
 np.random.seed(problem_idx)
 A = np.random.rand(NUMMAX, dim_x)*10
 C = np.random.rand(NUMMAX)
-if algo_name !='gpucb' and dim_x == 20:
-    n_iter = 1000
-else:
-    n_iter = 200
 
 def shekel_arg0(sol):
     return shekel(sol, A, C)[0]
@@ -139,6 +136,10 @@ def main():
     save_dir = './test_results/function_optimization/'+'dim_'+str(dim_x)+'/'+algo_name+'/'
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
+
+    if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
+        print "Already done"
+        return
 
     if algo_name == 'uniform':
         algorithm = random_search

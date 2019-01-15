@@ -5,14 +5,15 @@ import argparse
 
 
 def worker_p(config):
-    problem_idx = config[0]
-    algo_name = config[1]
-    dim = config[2]
+    n_iter = config[0]
+    problem_idx = config[1]
+    algo_name = config[2]
+    dim = config[3]
     command = 'python ./test_scripts/test_optimization_algorithms.py ' + str(problem_idx) + ' ' +algo_name \
-              + ' ' + str(dim)
+              + ' ' + str(dim) + ' ' + str(n_iter)
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -21,18 +22,14 @@ def worker_wrapper_multi_input(multi_args):
 
 def main():
     algo_name = sys.argv[1]
-    if algo_name == 'gpucb':
-      dims = [int(sys.argv[2])]
-      pidxs = sys.argv[3].split(',')
-      pidxs = range(int(pidxs[0]),int(pidxs[1]))
-    else:
-      dims = [2,6,10,20]
-      pidxs = range(200)
+    dims = [int(sys.argv[2])]
+    n_iter = sys.argv[3]
+    pidxs = sys.argv[4].split(',')
 
     configs= []
     for dim in dims:
         for t in pidxs:
-            configs.append([t, algo_name, dim])
+            configs.append([n_iter, t, algo_name, dim])
     if algo_name == 'gpucb':
         n_workers = int(10)
     else:
