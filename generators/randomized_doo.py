@@ -24,6 +24,5 @@ class RandomizedDOOGenerator(DOOGenerator):
         x_to_evaluate = np.random.uniform(next_node.cell_min, next_node.cell_max, (1, self.dim_x)).squeeze()
         next_node.evaluated_x = x_to_evaluate
         x_to_evaluate = self.unnormalize_x_value(x_to_evaluate)
-
         return x_to_evaluate, next_node
 

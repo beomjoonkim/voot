@@ -17,6 +17,7 @@ import pickle
 import time
 import sys
 import os
+import socket
 
 problem_idx = int(sys.argv[1])
 algo_name = sys.argv[2]
@@ -161,7 +162,12 @@ def try_many_epsilons(algorithm):
     return epsilons, max_ys, time_takens
 
 def main():
-    save_dir = './test_results/function_optimization/'+obj_fcn +'/dim_'+str(dim_x)+'/'+algo_name+'/'
+    hostname = socket.gethostname()
+    if hostname == 'dell-XPS-15-9560' or hostname == 'phaedra':
+        save_dir = './test_results/function_optimization/'+obj_fcn +'/dim_'+str(dim_x)+'/'+algo_name+'/'
+    else:
+        save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/'+obj_fcn +'/dim_'+str(dim_x)+'/'+algo_name+'/'
+
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 
