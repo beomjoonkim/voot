@@ -9,6 +9,7 @@ from mcts_utils import make_action_hashable, is_action_hashable
 from generators.uniform import UniformGenerator
 from generators.voo import VOOGenerator
 from generators.doo import DOOGenerator
+from generators.randomized_doo import RandomizedDOOGenerator
 
 ## openrave helper libraries
 sys.path.append('../mover_library/')
@@ -77,6 +78,8 @@ class MCTS:
             return GPUCBGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'doo':
             return DOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
+        elif self.sampling_strategy == 'randomized_doo':
+            return RandomizedDOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
         else:
             print "Wrong sampling strategy"
             return -1

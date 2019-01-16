@@ -118,7 +118,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
-    max_time = 10000
+    max_time = 1000
     organized_times = range(100, max_time, 100)
 
     all_episode_data = []
@@ -175,28 +175,43 @@ def plot_across_algorithms():
     parser.add_argument('-w', type=float, default=0.8)
     parser.add_argument('-c1', type=float, default=1.0)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
+    parser.add_argument('--t', action='store_true')
 
     args = parser.parse_args()
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['unif', 'voo_0.3','doo_30.0']
+        algo_names = ['voo_0.3', 'unif']
     else:
-        algo_names = ['voo_0.3','doo_25.0','unif']
+        algo_names = ['doo_25.0', 'voo_0.3', 'unif']
+
+
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
+    color_names = color_dict.keys()
+    color_dict[color_names[0]] =[0., 0.5570478679, 0.]
+    color_dict[color_names[1]] =[0,0,0]
+    color_dict[color_names[2]] =[1,0,0]
+    color_dict[color_names[3]] =[0,0,1]
+
 
     averages = []
     for algo_idx, algo in enumerate(algo_names):
         print algo
         search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
                                             args.n_feasibility_checks)
-        search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        if args.t:
+            search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
+        else:
+            search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
         print  "===================="
-    plt.show()
-    savefig('Number of simulations', 'Average rewards', fname='./plotters/'+args.domain+'_w_'+args.w)
+
+    if args.t:
+        savefig('Times (s)', 'Average rewards', fname='./plotters/t_'+args.domain+'_w_'+str(args.w))
+    else:
+        savefig('Number of evaluations', 'Average rewards', fname='./plotters/'+args.domain+'_w_'+str(args.w))
 
 
 if __name__ == '__main__':
