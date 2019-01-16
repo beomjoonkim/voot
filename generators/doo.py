@@ -8,7 +8,9 @@ from planners.mcts_utils import make_action_executable
 from utils import pick_parameter_distance, place_parameter_distance
 from doo_utils.doo_tree import BinaryDOOTree
 from utils import pick_parameter_distance, place_parameter_distance
+
 import matplotlib.pyplot as plt
+import copy
 
 
 class DOOGenerator(Generator):
@@ -16,11 +18,18 @@ class DOOGenerator(Generator):
         operator_name = node.operator
         Generator.__init__(self, operator_name, problem_env)
         self.explr_p = explr_p
+        self.x_min = copy.deepcopy(self.domain[0])
+        self.x_max = copy.deepcopy(self.domain[1])
+        self.domain[0] = (self.domain[0] - self.x_min) / (self.x_max-self.x_min)
+        self.domain[1] = (self.domain[1] - self.x_min) / (self.x_max-self.x_min)
+
         if operator_name == 'two_arm_pick':
             pick_param_distance_for_obj = lambda x,y: pick_parameter_distance(node.obj, x, y)
-            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, pick_param_distance_for_obj)  # this depends on the problem
+            euclidean_dist = lambda x,y: np.linalg.norm(x-y)
+            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, euclidean_dist)  # this depends on the problem
         elif operator_name == 'two_arm_place':
-            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, place_parameter_distance)  # this depends on the problem
+            euclidean_dist = lambda x,y: np.linalg.norm(x-y)
+            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, euclidean_dist)  # this depends on the problem
         else:
             print "Wrong operator name"
             sys.exit(-1)
@@ -28,13 +37,15 @@ class DOOGenerator(Generator):
 
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
-        self.doo_tree.update_evaled_values(self.evaled_actions, self.evaled_q_values)
+
+        normalized_evaled_actions = [self.normalize_x_value(a) for a in self.evaled_actions]
+        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values)
         print "DOO sampling..."
 
         for i in range(n_iter):
+            print i
             action_parameters, doo_node = self.choose_next_point()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
-
             if status == 'HasSolution':
                 self.doo_tree.expand_node(self.update_flag, doo_node)
                 print "Found feasible sample"
@@ -43,13 +54,20 @@ class DOOGenerator(Generator):
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
+        import pdb;pdb.set_trace()
         return action
 
     def choose_next_point(self):
         next_node = self.doo_tree.get_next_node_to_evaluate()
         x_to_evaluate = next_node.x_value
+        x_to_evaluate = self.unnormalize_x_value(x_to_evaluate)
         return x_to_evaluate, next_node
 
+    def unnormalize_x_value(self, x_value):
+        return x_value * (self.x_max - self.x_min) + self.x_min
+
+    def normalize_x_value(self, x_value):
+        return (x_value - self.x_min) / (self.x_max - self.x_min)
 
 def main():
     domain = np.array([[-10, -10], [10, 10]])

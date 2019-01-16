@@ -1,4 +1,5 @@
 from deap.benchmarks import shekel
+from deap import benchmarks
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
@@ -21,6 +22,7 @@ problem_idx = int(sys.argv[1])
 algo_name = sys.argv[2]
 dim_x = int(sys.argv[3])
 n_iter = int(sys.argv[4])
+obj_fcn = sys.argv[5]
 NUMMAX = 10
 
 np.random.seed(problem_idx)
@@ -28,7 +30,8 @@ A = np.random.rand(NUMMAX, dim_x)*10
 C = np.random.rand(NUMMAX)
 
 def shekel_arg0(sol):
-    return shekel(sol, A, C)[0]
+    return benchmarks.schwefel(sol)[0]
+    #return shekel(sol, A, C)[0]
 
 domain =np.array( [[0.]*dim_x,[10.]*dim_x] )
 
@@ -139,8 +142,7 @@ def try_many_epsilons(algorithm):
     return epsilons, max_ys, time_takens
 
 def main():
-
-    save_dir = './test_results/function_optimization/'+'dim_'+str(dim_x)+'/'+algo_name+'/'
+    save_dir = './test_results/function_optimization/'+obj_fcn +'/dim_'+str(dim_x)+'/'+algo_name+'/'
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 

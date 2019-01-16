@@ -53,8 +53,10 @@ class BinaryDOOTree:
             if node_upper_bound > max_upper_bound:
                 best_leaf = leaf_node
                 max_upper_bound = node_upper_bound
-
-        is_node_children_added = not(best_leaf.l_child is None)
+        try:
+            is_node_children_added = not(best_leaf.l_child is None)
+        except:
+            import pdb;pdb.set_trace()
         if is_node_children_added:
             is_left_child_evaluated = best_leaf.l_child.f_value is not None
             is_right_child_evaluated = best_leaf.r_child.f_value is not None
@@ -99,7 +101,7 @@ class BinaryDOOTree:
             self.leaves.remove(parent_node)
 
     def find_evaled_f_value(self, target_x_value, evaled_x, evaled_y):
-        is_in_array = [np.array_equal(target_x_value, a) for a in evaled_x]
+        is_in_array = [np.all(np.isclose(target_x_value,a)) for a in evaled_x]
         is_action_included = np.any(is_in_array)
         assert is_action_included, 'action that needs to be updated does not have a value'
         return evaled_y[np.where(is_in_array)[0][0]]
@@ -107,7 +109,6 @@ class BinaryDOOTree:
     def update_evaled_values(self, evaled_x, evaled_y):
         for node in self.nodes:
             node.f_value = self.find_evaled_f_value(node.x_value, evaled_x, evaled_y)
-
 
     @staticmethod
     def add_node_to_tree(node, parent_node, side):

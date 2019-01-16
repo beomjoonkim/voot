@@ -9,8 +9,9 @@ def worker_p(config):
     problem_idx = config[1]
     algo_name = config[2]
     dim = config[3]
+    obj_fcn = config[4]
     command = 'python ./test_scripts/test_optimization_algorithms.py ' + str(problem_idx) + ' ' +algo_name \
-              + ' ' + str(dim) + ' ' + str(n_iter)
+              + ' ' + str(dim) + ' ' + str(n_iter) + ' ' + str(obj_fcn)
 
     print command
     os.system(command)
@@ -26,11 +27,12 @@ def main():
     n_iter = sys.argv[3]
     pidxs = sys.argv[4].split(',')
     pidxs = range(int(pidxs[0]),int(pidxs[1]))
+    obj_fcn = sys.argv[5]
 
     configs= []
     for dim in dims:
         for t in pidxs:
-            configs.append([n_iter, t, algo_name, dim])
+            configs.append([n_iter, t, algo_name, dim, obj_fcn])
     if algo_name == 'gpucb':
         n_workers = int(10)
     else:
