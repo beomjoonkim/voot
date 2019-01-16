@@ -25,15 +25,32 @@ n_iter = int(sys.argv[4])
 obj_fcn = sys.argv[5]
 NUMMAX = 10
 
-np.random.seed(problem_idx)
-A = np.random.rand(NUMMAX, dim_x)*10
-C = np.random.rand(NUMMAX)
+if obj_fcn == 'skekel':
+    np.random.seed(problem_idx)
+    A = np.random.rand(NUMMAX, dim_x)*10
+    C = np.random.rand(NUMMAX)
 
-def shekel_arg0(sol):
-    return benchmarks.schwefel(sol)[0]
-    #return shekel(sol, A, C)[0]
+if obj_fcn == 'shekel':
+    domain =np.array([[0.]*dim_x, [10.]*dim_x])
+elif obj_fcn == 'schwefel':
+    domain = np.array([[-500.]*dim_x, [500.]*dim_x])
+elif obj_fcn == 'rastrigin':
+    domain = np.array([[-5.12]*dim_x, [5.12]*dim_x])
+else:
+    domain = np.array([[-600.]*dim_x, [600.]*dim_x])
 
-domain =np.array( [[0.]*dim_x,[10.]*dim_x] )
+def get_objective_function(sol):
+    if obj_fcn == 'shekel':
+        return shekel(sol, A, C)[0]
+    elif obj_fcn == 'schwefel':
+        return benchmarks.schwefel(sol)[0]
+    elif obj_fcn == 'griewank':
+        return benchmarks.griewank(sol)[0]
+    elif obj_fcn == 'rastrigin':
+        return benchmarks.rastrigin(sol)[0]
+    else:
+        print "wrong function name"
+        sys.exit(-1)
 
 
 def gpucb(explr_p):
@@ -50,7 +67,7 @@ def gpucb(explr_p):
     for i in range(n_iter):
         print 'gp iteration ',i
         x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
-        y = shekel_arg0(x)
+        y = get_objective_function(x)
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
@@ -70,7 +87,7 @@ def voo(explr_p):
         x = voo.choose_next_point(evaled_x, evaled_y)
         if len(x.shape) == 0:
             x=np.array([x])
-        y = shekel_arg0(x)
+        y = get_objective_function(x)
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
@@ -94,7 +111,7 @@ def random_search(epsilon):
             x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
         if len(x.shape) == 0:
             x = np.array([x])
-        y = shekel_arg0(x)
+        y = get_objective_function(x)
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
@@ -112,10 +129,12 @@ def doo(explr_p):
     times = []
     stime = time.time()
     for i in range(n_iter):
-        next_node = doo_tree.get_next_node_to_evaluate()
-        x_to_evaluate = next_node.x_value
-        fval = shekel_arg0(x_to_evaluate)
+        next_node = doo_tree.get_next_point_and_node_to_evaluate()
+        x_to_evaluate = next_node.cell_mid_point
+        next_node.evaluated_x = x_to_evaluate
+        fval = get_objective_function(x_to_evaluate)
         doo_tree.expand_node(fval, next_node)
+
         evaled_x.append(x_to_evaluate)
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
@@ -148,7 +167,7 @@ def main():
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
-        return
+        #return
 
     if algo_name == 'uniform':
         algorithm = random_search
