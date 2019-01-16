@@ -112,7 +112,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['doo', 'voo', 'uniform']
+    algo_names = ['gpucb','doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -132,7 +132,11 @@ def plot_across_algorithms():
         if n_dim == 20:
             mask[125] = False
         """
-        mask[too_large] = False
+        if algo == 'voo':
+            mask[too_large] = False
+        if algo == 'doo' and args.obj_fcn == 'shekel' and args.dim == 2:
+            mask[too_large] = False
+
         search_rwd_times = search_rwd_times[mask]
         time_takens = time_takens[mask]
         n_samples = search_rwd_times.shape[-1]
