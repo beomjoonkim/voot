@@ -43,7 +43,6 @@ class DOOGenerator(Generator):
         print "DOO sampling..."
 
         for i in range(n_iter):
-            print i
             action_parameters, doo_node = self.choose_next_point()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
             if status == 'HasSolution':
@@ -54,7 +53,6 @@ class DOOGenerator(Generator):
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
-        import pdb;pdb.set_trace()
         return action
 
     def choose_next_point(self):
@@ -90,7 +88,6 @@ def main():
         plt.ylim(-10, 10)
         plt.show()
 
-    import pdb;pdb.set_trace()
 
 if __name__ == '__main__':
     main()
