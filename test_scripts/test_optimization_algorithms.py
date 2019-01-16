@@ -30,8 +30,10 @@ A = np.random.rand(NUMMAX, dim_x)*10
 C = np.random.rand(NUMMAX)
 
 def shekel_arg0(sol):
-    return benchmarks.schwefel(sol)[0]
-    #return shekel(sol, A, C)[0]
+    if obj_fcn == 'shekel':
+        return shekel(sol, A, C)[0]
+    else:
+        return benchmarks.schwefel(sol)[0]
 
 domain =np.array( [[0.]*dim_x,[10.]*dim_x] )
 
