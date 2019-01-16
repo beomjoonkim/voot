@@ -28,6 +28,7 @@ def get_result_dir(algo_name, dimension, obj_fcn):
         result_dir = './test_results/function_optimization/'+'dim_'+str(dimension)+'/'+algo_name+'/'
         if algo_name == 'gpucb' and dimension == 10:
             result_dir = './test_results/function_optimization/'+'dim_'+str(dimension)+'/'+algo_name+'/' +'n_eval_200/'
+    result_dir = './test_results/function_optimization/'+str(obj_fcn) + '/dim_'+str(dimension)+'/'+algo_name+'/'
     return result_dir
 
 
@@ -111,7 +112,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['doo', 'voo', 'uniform']
+    algo_names = ['gpucb','doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -119,7 +120,6 @@ def plot_across_algorithms():
     color_dict[color_names[1]] =[0,0,0]
     color_dict[color_names[2]] =[1,0,0]
     color_dict[color_names[3]] =[0,0,1]
-
 
     for algo_idx, algo in enumerate(algo_names):
         print algo
@@ -132,7 +132,11 @@ def plot_across_algorithms():
         if n_dim == 20:
             mask[125] = False
         """
-        mask[too_large] = False
+        if algo == 'voo':
+            mask[too_large] = False
+        if algo == 'doo' and args.obj_fcn == 'shekel' and args.dim == 2:
+            mask[too_large] = False
+
         search_rwd_times = search_rwd_times[mask]
         time_takens = time_takens[mask]
         n_samples = search_rwd_times.shape[-1]

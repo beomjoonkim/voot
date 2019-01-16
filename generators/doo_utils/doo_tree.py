@@ -27,6 +27,8 @@ class BinaryDOOTree:
         self.nodes = []
         self.distance_fn = distance_fn
         self.explr_p = explr_p
+        self.x_to_node = {}
+        self.node_to_update = None
 
     def create_node(self, cell_mid_point, cell_min, cell_max, parent_node):
         new_node = DOOTreeNode(cell_mid_point, cell_min, cell_max, parent_node, self.distance_fn)
@@ -53,10 +55,7 @@ class BinaryDOOTree:
             if node_upper_bound > max_upper_bound:
                 best_leaf = leaf_node
                 max_upper_bound = node_upper_bound
-        try:
-            is_node_children_added = not(best_leaf.l_child is None)
-        except:
-            import pdb;pdb.set_trace()
+        is_node_children_added = not(best_leaf.l_child is None)
         if is_node_children_added:
             is_left_child_evaluated = best_leaf.l_child.f_value is not None
             is_right_child_evaluated = best_leaf.r_child.f_value is not None
@@ -81,6 +80,11 @@ class BinaryDOOTree:
         return node
 
     def expand_node(self, fval, node):
+        if fval == 'update_me':
+            self.node_to_update = node
+        else:
+            self.node_to_update = None
+
         node.update_node_f_value(fval)
         self.nodes.append(node)
 
@@ -101,14 +105,37 @@ class BinaryDOOTree:
             self.leaves.remove(parent_node)
 
     def find_evaled_f_value(self, target_x_value, evaled_x, evaled_y):
+        # it all gets stuck here most of the time.
+        # This is likely because there are so many self.nodes and that there are so many evaled_x
+        # create a mapping between the node to the evaled_x value
         is_in_array = [np.all(np.isclose(target_x_value, a)) for a in evaled_x]
         is_action_included = np.any(is_in_array)
         assert is_action_included, 'action that needs to be updated does not have a value'
         return evaled_y[np.where(is_in_array)[0][0]]
 
-    def update_evaled_values(self, evaled_x, evaled_y):
-        for node in self.nodes:
-            node.f_value = self.find_evaled_f_value(node.evaluated_x, evaled_x, evaled_y)
+    def update_evaled_values(self, evaled_x, evaled_y, infeasible_reward):
+        if len(evaled_x) == 0:
+            return
+
+        feasible_idxs = np.array(evaled_y) > infeasible_reward
+        evaled_x_to_update = np.array(evaled_x)[feasible_idxs, :]  # only the feasible ones get their f values updated
+        evaled_y_to_update = np.array(evaled_y)[feasible_idxs]
+
+        if len(evaled_x_to_update) > 0:
+            for l in self.leaves:
+                if l.f_value != infeasible_reward and l.f_value != 'update_me':
+                    l.f_value = self.find_evaled_f_value(l.evaluated_x, evaled_x_to_update, evaled_y_to_update)
+
+        if self.node_to_update is not None:
+            if len(evaled_x_to_update) > 0:
+                self.node_to_update.f_value = self.find_evaled_f_value(self.node_to_update.evaluated_x, evaled_x, evaled_y)
+            else:
+                self.node_to_update.f_value = infeasible_reward
+
+
+
+        #for node in self.nodes:
+        #    node.f_value = self.find_evaled_f_value(node.evaluated_x, evaled_x, evaled_y)
 
     @staticmethod
     def add_node_to_tree(node, parent_node, side):

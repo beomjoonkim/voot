@@ -34,7 +34,7 @@ def main():
         for t in pidxs:
             configs.append([n_iter, t, algo_name, dim, obj_fcn])
     if algo_name == 'gpucb':
-        n_workers = int(10)
+        n_workers = int(3)
     else:
         n_workers = int(30)
 

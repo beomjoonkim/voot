@@ -39,7 +39,8 @@ class DOOGenerator(Generator):
         self.update_evaled_values(node)
 
         normalized_evaled_actions = [self.normalize_x_value(a) for a in self.evaled_actions]
-        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values)
+        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values,
+                                           self.problem_env.infeasible_reward)
         print "DOO sampling..."
 
         for i in range(n_iter):
@@ -53,13 +54,15 @@ class DOOGenerator(Generator):
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
+
         return action
 
     def choose_next_point(self):
-        next_node  = self.doo_tree.get_next_point_and_node_to_evaluate()
+        next_node = self.doo_tree.get_next_point_and_node_to_evaluate()
         next_node.evaluated_x = next_node.cell_mid_point
         x_to_evaluate = next_node.cell_mid_point
         x_to_evaluate = self.unnormalize_x_value(x_to_evaluate)
+        next_node.evaluated_x = x_to_evaluate
         return x_to_evaluate, next_node
 
     def unnormalize_x_value(self, x_value):
