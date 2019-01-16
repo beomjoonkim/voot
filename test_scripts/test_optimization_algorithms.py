@@ -25,7 +25,7 @@ n_iter = int(sys.argv[4])
 obj_fcn = sys.argv[5]
 NUMMAX = 10
 
-if obj_fcn == 'skekel':
+if obj_fcn == 'shekel':
     np.random.seed(problem_idx)
     A = np.random.rand(NUMMAX, dim_x)*10
     C = np.random.rand(NUMMAX)
