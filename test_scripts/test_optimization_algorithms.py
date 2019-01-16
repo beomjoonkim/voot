@@ -111,6 +111,7 @@ def random_search(epsilon):
         if len(x.shape) == 0:
             x = np.array([x])
         y = get_objective_function(x)
+        import pdb;pdb.set_trace()
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))

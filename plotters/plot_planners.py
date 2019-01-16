@@ -181,9 +181,9 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0', 'unif', 'unif']
     else:
-        algo_names = ['doo_25.0', 'voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0', 'doo_25.0', 'voo_0.3', 'unif']
 
 
 

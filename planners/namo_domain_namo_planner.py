@@ -93,7 +93,6 @@ class NamoDomainNamoPlanner(NAMOPlanner):
 
         return motion, status
 
-
     def check_two_arm_place_feasibility(self, namo_obj, action, obj_placement_region):
         if action['base_pose'] is None:
             return None, "NoPath", self.curr_namo_object_names
