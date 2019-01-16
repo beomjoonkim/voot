@@ -52,7 +52,6 @@ def get_objective_function(sol):
         print "wrong function name"
         sys.exit(-1)
 
-
 def gpucb(explr_p):
     gp = StandardContinuousGP(dim_x)
     acq_fcn = UCB(zeta=explr_p, gp=gp)
