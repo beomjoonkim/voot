@@ -18,7 +18,7 @@ from samplers import *
 from utils import *
 
 import time
-from generators.doo_utils.doo import BinaryDOOTree, DOOTreeNode
+from generators.doo_utils.doo_tree import BinaryDOOTree, DOOTreeNode
 sys.path.append('../mover_library/')
 from utils import get_pick_domain, get_place_domain
 from generators.gpucb import GPUCBGenerator
