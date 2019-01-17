@@ -32,7 +32,7 @@ def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-sampling', type=str, default='unif')
     parser.add_argument('-domain', type=str, default='convbelt')
-    parser.add_argument('-mcts_iter', type=int, default=50)
+    parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-w', nargs='+', type=float)
     parser.add_argument('-c1', nargs='+', type=float)
     parser.add_argument('-n_feasibility_checks', nargs='+', type=int)
