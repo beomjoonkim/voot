@@ -100,8 +100,8 @@ class NAMO(ProblemEnvironment):
 
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
 
-    def set_init_namo_object_names(self):
-        self.namo_planner.init_namo_object_names = self.namo_planner.curr_namo_object_names
+    def set_init_namo_object_names(self, object_names):
+        self.namo_planner.init_namo_object_names = object_names
 
     def disable_objects_in_region(self, region_name):
         for object in self.objects:

@@ -163,7 +163,10 @@ class MCTS:
         self.s0_node.is_init_node = True
         self.found_solution = False
         if self.environment.is_solving_namo:
-            self.environment.set_init_namo_object_names()
+            if node.parent.operator =='two_arm_place' and self.environment.is_solving_namo:
+                self.environment.set_init_namo_object_names([o.GetName() for o in node.objs_in_collision])
+                self.high_level_planner.task_plan[0]['region'] = node.objs_in_collision
+                self.environment.reset_to_init_state(node)
 
     def switch_init_node_for_changing_problem(self, node):
         #if node.is_goal_node:
@@ -211,13 +214,13 @@ class MCTS:
             is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
             we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                 else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
-            we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 100
+            we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 50
 
             if is_pick_node and we_have_feasible_action:
                 best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
                 best_node = self.s0_node.children[best_action]
                 self.switch_init_node(best_node)
-            elif not is_pick_node and we_evaluated_the_node_enough:
+            elif (not is_pick_node) and we_evaluated_the_node_enough:
                 best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
                 best_node = self.s0_node.children[best_action]
                 self.switch_init_node(best_node)
