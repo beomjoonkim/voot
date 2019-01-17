@@ -87,10 +87,9 @@ def main():
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     args = parser.parse_args()
 
-    if args.debug:
-        sd = args.seed
-        print "RANDOM SEED SET", np.random.seed(sd)
-        print "RANDOM SEED SET", random.seed(sd)
+    print "Problem number ",args.problem_idx
+    print "RANDOM SEED SET", np.random.seed(args.problem_idx)
+    print "RANDOM SEED SET", random.seed(args.problem_idx)
 
     save_dir = make_save_dir(args)
     stat_file_name = save_dir + str(args.problem_idx)+'.pkl'
