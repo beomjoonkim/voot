@@ -32,11 +32,12 @@ def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-sampling', type=str, default='unif')
     parser.add_argument('-domain', type=str, default='convbelt')
-    parser.add_argument('-mcts_iter', type=int, default=50)
+    parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-w', nargs='+', type=float)
     parser.add_argument('-c1', nargs='+', type=float)
     parser.add_argument('-n_feasibility_checks', nargs='+', type=int)
     parser.add_argument('-epsilon', nargs='+', type=float)
+    parser.add_argument('-pidxs', nargs='+', type=int)
 
     args = parser.parse_args()
 
@@ -47,7 +48,7 @@ def main():
     mcts_iter = args.mcts_iter
     c1s = args.c1 if args.c1 is not None else [1]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
-    trials = range(200)
+    trials = range(args.pidxs[0],args.pidxs[1])
     configs = []
 
     for n_feasibility_check in n_feasibility_checks:
