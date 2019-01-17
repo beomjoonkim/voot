@@ -5,6 +5,7 @@ from samplers import gaussian_randomly_place_in_region
 from generator import Generator
 from utils import pick_parameter_distance, place_parameter_distance
 from planners.mcts_utils import make_action_executable
+import time
 
 
 class VOOGenerator(Generator):
@@ -57,13 +58,11 @@ class VOOGenerator(Generator):
         self.update_evaled_values(node)
 
         rnd = np.random.random() # this should lie outside
-        try:
-            is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
+        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
                                        np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
-        except:
-            import pdb;pdb.set_trace()
 
         print "VOO sampling..."
+        stime=time.time()
         for i in range(n_iter):
             if is_sample_from_best_v_region:
                 action_parameters = self.sample_from_best_voronoi_region(node)
@@ -76,11 +75,13 @@ class VOOGenerator(Generator):
                 self.evaled_q_values.append('update_me')
                 self.idx_to_update = len(self.evaled_actions)-1
                 print "Found feasible sample"
+                print "VOO time",time.time()-stime
                 break
             else:
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 self.idx_to_update = None
 
+        print "VOO time",time.time()-stime
         return action
 
     def sample_from_best_voronoi_region(self, node):

@@ -111,6 +111,8 @@ def recursive_write_tree_on_graph(curr_node, graph):
         node.attr['color'] = "blue"
 
     for child_idx, child in enumerate(curr_node.children.values()):
+        if child.parent_action['base_pose'] is None:
+            continue
         child_string_form = get_node_info_in_string(child, child_idx)
         graph.add_edge(string_form, child_string_form)  # connect an edge from parent to child
         edge = graph.get_edge(string_form, child_string_form)
