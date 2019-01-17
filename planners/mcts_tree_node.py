@@ -3,10 +3,8 @@ import sys
 from mcts_utils import is_action_hashable, make_action_hashable, make_action_executable
 
 
-
 def UCT_upperbound(n, n_sa):
     return 2 * np.log(n) / float(n_sa)
-
 
 
 class TreeNode:
@@ -30,6 +28,7 @@ class TreeNode:
         self.depth = depth
         self.sum_rewards = 0
         self.operator = None
+        self.sampling_agent = None
 
         self.state_saver = state_saver
         self.obj = obj

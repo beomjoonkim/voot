@@ -29,15 +29,15 @@ class NamoDomainNamoPlanner(NAMOPlanner):
             place_collisions = self.problem_env.get_objs_in_collision(place_path, curr_region.name)
 
         ### fetch pick path collisions
-        two_arm_place_object(self.fetching_obj, self.robot, self.fetch_pick_op_instance['action'])
+        #two_arm_place_object(self.fetching_obj, self.robot, self.fetch_pick_op_instance['action'])
         pick_collisions = self.problem_env.get_objs_in_collision(pick_path, curr_region.name)
 
         collisions = pick_collisions
-        if self.fetch_place_op_instance is not None:
-            collisions += [p for p in place_collisions if p not in collisions]
+        #if self.fetch_place_op_instance is not None:
+        #    collisions += [p for p in place_collisions if p not in collisions]
 
         # go back to the original robot state
-        two_arm_place_object(self.fetching_obj, self.problem_env.robot, self.fetch_pick_op_instance['action'])
+        #two_arm_place_object(self.fetching_obj, self.problem_env.robot, self.fetch_pick_op_instance['action'])
 
         return collisions
 
@@ -157,13 +157,17 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         self.high_level_controller.set_task_plan([{'region': namo_region, 'objects': new_collisions}])
         return motion, "HasSolution", self.curr_namo_object_names
 
+    def get_initial_namo_objects(self):
+        return [self.env.GetKinBody(obj) for obj in self.init_namo_object_names ]
+
     def namo_domain_solve_single_object(self, initial_collision_names, mcts):
         # get the initial collisions
+        """
         pick_collisions = initial_collision_names['pick_collisions']
         place_collisions = initial_collision_names['place_collisions']
         initial_collision_names = pick_collisions
         initial_collision_names += [tmp for tmp in place_collisions if tmp not in pick_collisions]
-        self.init_namo_object_names_on_place_path = place_collisions
+        """
         self.init_namo_object_names = initial_collision_names
         self.curr_namo_object_names = copy.deepcopy(self.init_namo_object_names)
 
@@ -175,20 +179,18 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         self.problem_env.high_level_planner = self.high_level_controller
 
         # setup the task plan
-        prenamo_initial_node = self.fetch_goal_node
-        namo_plan = None
-        goal_node = None
-        self.problem_env.namo_planner = self
-        self.high_level_controller.set_task_plan(namo_problem_for_obj)
-        mcts.update_init_node_obj()
+        #prenamo_initial_node = self.fetch_goal_node
+        #mcts.update_init_node_obj()
+        #mcts.switch_init_node_for_changing_problem(prenamo_initial_node)
 
-        mcts.switch_init_node(prenamo_initial_node)
+        self.high_level_controller.set_task_plan(namo_problem_for_obj)
+        self.problem_env.namo_planner = self
         self.problem_env.is_solving_namo = True
+        mcts.s0_node.objs_in_collision = self.get_initial_namo_objects()
         search_time_to_reward, namo_plan, goal_node = mcts.search(n_iter=self.high_level_controller.n_iter,
                                                                   n_optimal_iter=self.high_level_controller.n_optimal_iter,
                                                                   max_time=self.high_level_controller.max_time)
         self.problem_env.is_solving_namo = False
-
         return search_time_to_reward, namo_plan, goal_node
 
     def namo_domain_initialize_namo_problem(self, fetch_plan, fetch_goal_node):

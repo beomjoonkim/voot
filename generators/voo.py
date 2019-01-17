@@ -61,7 +61,7 @@ class VOOGenerator(Generator):
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
                                        np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
 
-        print "VOO sampling..."
+        print "VOO sampling...from best v-region?",is_sample_from_best_v_region
         stime=time.time()
         for i in range(n_iter):
             if is_sample_from_best_v_region:
@@ -75,13 +75,13 @@ class VOOGenerator(Generator):
                 self.evaled_q_values.append('update_me')
                 self.idx_to_update = len(self.evaled_actions)-1
                 print "Found feasible sample"
-                print "VOO time",time.time()-stime
+                print "VOO time", time.time()-stime
                 break
             else:
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 self.idx_to_update = None
 
-        print "VOO time",time.time()-stime
+        print "VOO time", time.time()-stime
         return action
 
     def sample_from_best_voronoi_region(self, node):

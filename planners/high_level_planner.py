@@ -92,8 +92,8 @@ class HighLevelPlanner:
 
     def is_goal_reached(self):
         if self.problem_env.name == 'namo' and self.problem_env.is_solving_fetching:
-            if len(self.problem_env.robot.GetGrabbed())  > 0:
-                return self.problem_env.robot.GetGrabbed()[0] ==self.fetch_planner.fetching_object
+            if len(self.problem_env.robot.GetGrabbed()) > 0:
+                return self.problem_env.robot.GetGrabbed()[0] == self.fetch_planner.fetching_object
             else:
                 return False
         if self.problem_env.is_solving_namo:
@@ -130,86 +130,6 @@ class HighLevelPlanner:
             stitched_plan = namo_plan + fetch_plan
         return stitched_plan
 
-    def todo_solve_abstract_pick_and_place_for_region(self, objects, target_packing_region):
-        plan = []
-        next_init_node = None
-        for object in objects:
-            #fetch_plan, goal_node = self.fetch_planner.solve_fetching_single_obj(object, target_packing_region, self.mcts, next_init_node)
-            #pklsave(fetch_plan)
-            fetch_plan = pklload()
-            initial_collision_names = self.fetch_planner.get_initial_collisions(fetch_plan)
-
-            fetch_pick_path_entrance = self.fetch_planner.get_fetch_pick_entrance_config(fetch_plan, object)
-            fetch_pick_path_exit = self.fetch_planner.get_fetch_pick_exit_config(fetch_plan, object)
-            fetch_place_path_entrance = self.fetch_planner.get_fetch_place_entrance_config(fetch_plan, object,
-                                                                                           target_packing_region)
-            self.problem_env.high_level_planner = self
-            self.problem_env.reset_to_init_state(self.mcts.s0_node)
-            goal_node = self.mcts.s0_node
-            import pdb;pdb.set_trace()
-
-            # define the four different NAMO problems
-            self.namo_planner.initialize_namo_problem(fetch_plan, object, goal_node, fetch_pick_path_exit,
-                                                      fetch_place_path_entrance, target_packing_region.name)
-            # First NAMO problem up until the pick path entrance
-            curr_robot_conf = fetch_plan[0]['path'][0]
-            namo_plan, goal_node = self.namo_planner.solve_single_object(curr_robot_conf, fetch_pick_path_entrance,
-                                                                         self.problem_env.get_region_containing(self.robot),
-                                                                         initial_collision_names,
-                                                                         self.mcts)
-            namo_plan = pklsave(namo_plan, 'namo_plan')
-            import pdb;pdb.set_trace()
-
-            # Second NAMO problem up from pick path entrance to pick path exit
-            namo_plan = pklload('namo_plan')
-            self.problem_env.apply_plan(namo_plan)
-            fetching_region = self.problem_env.get_region_containing(object)
-            c_init = fetch_pick_path_entrance
-            c_goal = fetch_pick_path_exit
-            self.namo_planner.fetch_place_path = namo_plan[-1]['path']['fetching_place_motion']
-            self.problem_env.set_arm_base_config(c_init)
-            self.mcts.s0_node.state_saver = DynamicEnvironmentStateSaver(self.env)
-            namo_plan2, goal_node2 = self.namo_planner.solve_single_object(c_init, c_goal,
-                                                                           fetching_region,
-                                                                           initial_collision_names, self.mcts)
-            import pdb;pdb.set_trace()
-
-
-            ## post-contact
-            # Third NAMO problem from pick path exit to place path entrance
-
-            # Fourth NAMO problem from place path entrance to fetch_place_conf
-
-
-            print 'Solved fetching', object
-            import pdb;pdb.set_trace()
-            #if len(initial_collision_names) == 0:
-            #    object.Enable(False)
-            #    next_init_node = goal_node
-            #    continue
-            #goal_node.state_saver = DynamicEnvironmentStateSaver(self.problem_env.env)
-
-            goal_node = self.mcts.s0_node
-            self.namo_planner.initialize_namo_problem(fetch_plan, object, initial_collision_names, fetch_place_path,
-                                                      goal_node, target_packing_region.name)
-            namo_plan, goal_node = self.namo_planner.solve_single_object(object, fetch_pick_conf, fetch_place_path,
-                                                                         self.mcts)
-            object.Enable(False)
-            # todo:
-            #   restore the goal node from namo
-            #   apply fetch plan
-            self.mcts.switch_init_node(goal_node)
-            print "Solved"
-
-            # todo:
-            #   - The plan, in case when NAMO is involved, should be arranged as follows:
-            #   1. NAMO plan
-            #   2. A pick operator instance, gotten from fetch_plan, but whose path field is replaced by the NAMO plan's
-            #      last place step, ['path']['pick_plan'] field
-
-            concrete_pick_plan = self.stitch_fetch_and_namo_plans(fetch_plan, namo_plan)
-            import pdb;pdb.set_trace()
-
     def solve_convbelt(self, objects, target_packing_region):
         plan = []
         next_init_node = None
@@ -228,23 +148,31 @@ class HighLevelPlanner:
 
     def solve_namo(self, object, target_packing_region):
         next_init_node = None
-        fetch_search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_fetching_single_object(object,
-                                                                                                      target_packing_region,
-                                                                                                      self.mcts,
-                                                                                                      next_init_node)
+        #fetch_search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_fetching_single_object(object,
+        #                                                                                              target_packing_region,
+        #                                                                                              self.mcts,
+        #                                                                                              next_init_node)
 
-        initial_collision_names = self.fetch_planner.get_initial_collisions(fetch_plan)
-
+        self.problem_env.disable_objects()
+        object[0].Enable(True)
+        pick_pi = PickWithBaseUnif(self.problem_env)
+        pick_action = pick_pi.predict(object[0], self.problem_env.regions['entire_region'], n_iter=10000)
+        fetching_path, status= self.problem_env.get_base_motion_plan(pick_action['base_pose'])
+        self.namo_planner.fetch_pick_path = fetching_path
+        self.problem_env.enable_objects()
+        initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
+        initial_collision_names = [o.GetName() for o in initial_collisions]
 
         print "Solved fetching"
-        self.namo_planner.namo_domain_initialize_namo_problem(fetch_plan, goal_node)
-        namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(initial_collision_names,
+        #self.namo_planner.namo_domain_initialize_namo_problem(fetch_plan, goal_node)
+        namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(
+                                                                                 initial_collision_names,
                                                                                  self.mcts)
-        search_time_to_reward = {'fetch': fetch_search_time_to_reward, 'namo': namo_search_time_to_reward}
+        search_time_to_reward = {'fetch': [], 'namo': namo_search_time_to_reward}
         if namo_plan is None:
             plan = None
         else:
-            plan = fetch_plan+namo_plan
+            plan = namo_plan
         return search_time_to_reward, plan, goal_node
 
     def search(self):
