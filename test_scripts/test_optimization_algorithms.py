@@ -149,7 +149,7 @@ def try_many_epsilons(algorithm):
     elif algorithm.__name__ == 'doo':
         epsilons = [1,0, 0.01, 0.05, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
-        epsilons = [0.1, 0.3, 0.5]
+        epsilons = [1]
     else:
         epsilons = [0]
 
