@@ -149,7 +149,7 @@ class MCTS:
         leaves = self.tree.get_leaf_nodes()
         goal_nodes = [leaf for leaf in leaves if leaf.is_goal_node]
         if len(goal_nodes) > 1:
-            best_traj_reward, curr_node = self.tree.get_best_trajectory_sum_rewards_and_node()
+            best_traj_reward, curr_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             #curr_node = [leaf for leaf in goal_nodes if leaf.sum_ancestor_action_rewards == best_traj_reward][0]
         else:
             curr_node = goal_nodes[0]
@@ -211,7 +211,8 @@ class MCTS:
             #   if this is place node, we have a feasible place, we visited >100 times, then switch to the
             #   most visited node
 
-            if self.environment.is_solving_namo:
+            #if self.environment.is_solving_namo:
+            if False:
                 is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
@@ -243,7 +244,7 @@ class MCTS:
                     write_dot_file(self.tree, iteration, 'solving_fetching')
 
             # log the reward vs. time
-            best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node()
+            best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, self.found_solution])
 
             if self.found_solution:

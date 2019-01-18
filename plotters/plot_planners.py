@@ -59,7 +59,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
-    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/root_switching'
+    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/root_switching/no_infeasible_place/'
     if domain_name == 'convbelt':
         result_dir = rootdir+'/convbelt_results/mcts_iter_500/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
@@ -182,7 +182,7 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['randomizeddoo_1.0', 'voo_0.1', 'unif']
+        algo_names = ['voo_0.3', 'unif']
     else:
         algo_names = ['randomizeddoo_1.0',  'voo_0.3', 'unif']
 

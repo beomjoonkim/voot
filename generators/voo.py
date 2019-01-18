@@ -27,7 +27,7 @@ class VOOGenerator(Generator):
         if self.idx_to_update is not None:
             found = False
             for a, q in zip(executed_actions_in_node, executed_action_values_in_node):
-                if np.all(np.isclose(self.evaled_actions[self.idx_to_update],make_action_executable(a)['action_parameters'])):
+                if np.all(np.isclose(self.evaled_actions[self.idx_to_update], make_action_executable(a)['action_parameters'])):
                     found = True
                     break
             try:

@@ -33,7 +33,7 @@ class MCTSTree:
     def get_goal_nodes(self):
         return [n for n in self.nodes if len(n.children.keys()) == 0 and n.is_goal_node]
 
-    def get_best_trajectory_sum_rewards_and_node(self):
+    def get_best_trajectory_sum_rewards_and_node(self, discount_factor):
         sumR_list = []
         leaf_nodes_for_curr_init_state = []
         leaf_nodes = self.get_leaf_nodes()
@@ -44,11 +44,16 @@ class MCTSTree:
             # todo take discounting into account
             # collect all rewards into an array
             # dot it with \gamma, gamma^2, ... and so on.
+            reward_list = []
             while not curr_node.is_init_node:
                 if curr_node.parent is None and not curr_node.is_init_node:
                     break
-                sumR += curr_node.parent.reward_history[make_action_hashable(curr_node.parent_action)][0]
+                #sumR += curr_node.parent.reward_history[make_action_hashable(curr_node.parent_action)][0]
+                reward_list.append(curr_node.parent.reward_history[make_action_hashable(curr_node.parent_action)][0])
                 curr_node = curr_node.parent
+            len(reward_list)
+            discount_rates = [np.power(discount_factor, i) for i in range(len(reward_list))]
+            sumR = np.dot(discount_rates[::-1], reward_list)
 
             # exclude the ones that are not the descendents of the current init node
             if not(curr_node.parent is None and not curr_node.is_init_node):
