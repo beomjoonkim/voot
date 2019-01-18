@@ -34,9 +34,14 @@ def make_save_dir(args):
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
 
-    save_dir = ROOTDIR + '/test_results/root_switching/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
-               + str(uct_parameter) + '_widening_' \
-               + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
+    if domain == 'namo':
+        save_dir = ROOTDIR + '/test_results/root_switching/no_infeasible_place/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
+                   + str(uct_parameter) + '_widening_' \
+                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
+    else:
+        save_dir = ROOTDIR + '/test_results/root_switching/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
+                   + str(uct_parameter) + '_widening_' \
+                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
 
     if sampling_strategy != 'unif':
         save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
