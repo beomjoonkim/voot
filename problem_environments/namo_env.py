@@ -71,12 +71,15 @@ class NAMO(ProblemEnvironment):
                     reward = np.exp(-len(objs_in_collision))
             elif self.is_solving_namo:
                 if operator_name == 'two_arm_place':
-                    #reward = len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names)
-                    reward = np.exp(len(self.namo_planner.fixed_init_namo_object_names) - len(new_namo_obj_names))
+                    if len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names) > 0:
+                        reward = len(self.namo_planner.fixed_init_namo_object_names) - len(new_namo_obj_names)
+                    else:
+                        reward = len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names)
+
                     objs_in_collision = [self.env.GetKinBody(name) for name in new_namo_obj_names]
                 else:
                     objs_in_collision = [self.env.GetKinBody(name) for name in self.namo_planner.curr_namo_object_names]
-                    reward = 1
+                    reward = 0.1
         else:
             reward = self.infeasible_reward
 
@@ -112,7 +115,6 @@ class NAMO(ProblemEnvironment):
         for object in self.objects:
             object.Enable(True)
 
-
     def disable_objects(self):
         for object in self.objects:
             object.Enable(False)
@@ -120,7 +122,6 @@ class NAMO(ProblemEnvironment):
     def enable_objects(self):
         for object in self.objects:
             object.Enable(True)
-
 
     def check_base_pose_feasible(self, base_pose, obj, region):
         if base_pose is None:

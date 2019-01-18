@@ -103,7 +103,6 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         pick_base_pose = get_body_xytheta(self.problem_env.robot)
         pick_conf = self.problem_env.robot.GetDOFValues()
 
-
         namo_status = 'NoPath'
         namo_place_motion = None
         if self.problem_env.check_base_pose_feasible(goal_robot_xytheta, namo_obj,
@@ -131,11 +130,13 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         """
 
         # if new collisions is more than or equal to the current collisions, don't bother executing it
+        """
         if len(self.curr_namo_object_names) <= len(new_collisions):
             print "There are more or equal number of collisions on the new path"
             print len(self.curr_namo_object_names), len(new_collisions)
             print namo_obj, new_collisions
             return None, "NoPath", self.curr_namo_object_names
+        """
 
         # otherwise, update the new namo objects
         self.prev_namo_object_names = self.curr_namo_object_names
