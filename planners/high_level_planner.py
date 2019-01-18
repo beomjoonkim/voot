@@ -121,15 +121,6 @@ class HighLevelPlanner:
             # todo what is the optimal reward?
             return True
 
-    def stitch_fetch_and_namo_plans(self, fetch_plan, namo_plan):
-        if len(namo_plan) == 0:
-            stitched_plan = fetch_plan
-        else:
-            pick_path_to_target_from_last_obstacle_clearance = namo_plan[-1]['path']['pick_motion']
-            fetch_plan[0]['path'] = pick_path_to_target_from_last_obstacle_clearance
-            stitched_plan = namo_plan + fetch_plan
-        return stitched_plan
-
     def solve_convbelt(self, objects, target_packing_region):
         plan = []
         next_init_node = None

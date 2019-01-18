@@ -1,0 +1,67 @@
+<Environment>
+  <camtrans>0 -4 6</camtrans>
+  <camrotationaxis>-1 0 0 150</camrotationaxis>
+  <camfocal>0</camfocal>
+
+  <Robot file="robots/pr2-beta-static.zae">
+    <translation>-1 1 0.075</translation>
+  </Robot>
+
+
+  <KinBody name="table1" file="data/table.kinbody.xml">
+    <Translation>+0 -1.5 0.7495</Translation>
+    <rotationaxis>0 0 1 90</rotationaxis>
+    <KinBody name="computer">
+      <modelsdir>..</modelsdir>
+      <translation>0 0. 0</translation>
+      <rotationmat>1 0 0 0 0 -1 0 1 0</rotationmat>
+      <Body type="dynamic">
+        <Geom type="trimesh">
+          <render>models/furniture/computer.iv</render>
+          <data>models/furniture/computer.iv</data>
+        </Geom>
+      </Body>
+    </KinBody>
+    <KinBody name = "lowerbox">
+    <Translation >0  0 -0.75285</Translation>
+      <RotationAxis>0 0 1 90</RotationAxis>
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 0 0.3775</Translation>
+        <extents>.26 0.63 0.3775</extents>
+        <diffuseColor>0.7 0.7 0.2</diffuseColor>
+      </Geom>
+    </Body>
+    </KinBody>
+  </KinBody>
+
+  <KinBody name="shelf1" file="data/ikeashelf.kinbody.xml">
+    <Translation>1.58315845, -2.33205483,  0.010004 </Translation>
+    <rotationaxis>0 0 1 90</rotationaxis>
+  </KinBody>
+  <Robot>
+
+  <KinBody name = "Cabinet" file="data/cabinet1.kinbody.xml">
+      <Translation >2.2 0.5 0.75285</Translation>
+      <RotationAxis>0 0 1 180</RotationAxis>
+      <KinBody name = "LowerCabinet">
+      <Translation >0  0 -0.75285</Translation>
+        <RotationAxis>0 0 1 90</RotationAxis>
+        <Body type="dynamic">
+          <Geom type="box">
+          <Translation>0 0 0.3775</Translation>
+          <extents>.36 0.23 0.3775</extents>
+          <diffuseColor>0.7 0.7 0.2</diffuseColor>
+        </Geom>
+      </Body>
+    </KinBody>
+  </KinBody>
+  </Robot>
+
+
+  <KinBody name="shelf2" file="data/ikeashelf.kinbody.xml">
+    <Translation>1.58315845, 2.33205483,  0.010004 </Translation>
+    <rotationaxis>0 0 1 270</rotationaxis>
+  </KinBody>
+
+</Environment>

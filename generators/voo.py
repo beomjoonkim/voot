@@ -58,10 +58,11 @@ class VOOGenerator(Generator):
         self.update_evaled_values(node)
 
         rnd = np.random.random() # this should lie outside
-        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
-                                       np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
-
-        print "VOO sampling...from best v-region?", is_sample_from_best_v_region
+        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 #and \
+                                       #np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
+        if is_sample_from_best_v_region:
+            print 'Sample from best region'
+        #print "VOO sampling...from best v-region?", is_sample_from_best_v_region
         stime=time.time()
         for i in range(n_iter):
             if is_sample_from_best_v_region:
@@ -74,14 +75,14 @@ class VOOGenerator(Generator):
             if status == 'HasSolution':
                 self.evaled_q_values.append('update_me')
                 self.idx_to_update = len(self.evaled_actions)-1
-                print "Found feasible sample"
-                print "VOO time", time.time()-stime
+                #print "Found feasible sample"
+                #print "VOO time", time.time()-stime
                 break
             else:
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 self.idx_to_update = None
 
-        print "VOO time", time.time()-stime
+        #print "VOO time", time.time()-stime
         return action
 
     def sample_from_best_voronoi_region(self, node):
@@ -91,6 +92,8 @@ class VOOGenerator(Generator):
         if operator == 'two_arm_pick':
             params = self.sample_pick_from_best_voroi_region(obj)
         elif operator == 'two_arm_place':
+            params = self.sample_place_from_best_voroi_region()
+        elif operator == 'next_base_pose':
             params = self.sample_place_from_best_voroi_region()
         return params
 
@@ -104,6 +107,7 @@ class VOOGenerator(Generator):
         best_action_idx = np.random.choice(best_action_idxs)
         best_evaled_action = self.evaled_actions[best_action_idx]
         other_actions = self.evaled_actions
+        # todo closest to any one of the best
 
         while np.any(best_dist > other_dists):
             #print "Gaussian place sampling, counter", counter, len(other_dists)
@@ -126,6 +130,7 @@ class VOOGenerator(Generator):
         best_action_idx = np.random.choice(best_action_idxs)
         best_evaled_action = self.evaled_actions[best_action_idx]
         other_actions = self.evaled_actions
+        # todo closest to any one of the best
 
         while np.any(best_dist > other_dists):
             variance = (self.domain[1] - self.domain[0]) / np.exp(counter)

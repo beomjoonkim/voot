@@ -14,7 +14,7 @@ class UniformGenerator(Generator):
             action_parameters = self.sample_from_uniform()
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
             if status == 'HasSolution':
-                print "Found feasible sample"
+                #print "Found feasible sample"
                 break
         return action
 

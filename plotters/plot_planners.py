@@ -59,10 +59,11 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
-    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/root_switching/no_infeasible_place/'
     if domain_name == 'convbelt':
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/root_switching/'
         result_dir = rootdir+'/convbelt_results/mcts_iter_500/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//no_infeasible_place/'
         if algo_name.find('plaindoo') !=-1:
             result_dir = rootdir+'/namo_results/mcts_iter_500/uct_0.0_widening_0.5_doo'
         else:
@@ -89,7 +90,10 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
         if algo_name == 'voo':
             result = pickle.load(open(result_dir+fin,'r'))
         else:
-            result = pickle.load(open(result_dir+fin,'r'))
+            try:
+                result = pickle.load(open(result_dir+fin,'r'))
+            except:
+                continue
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
             is_success = result['search_time']['namo'][-1][-1]
@@ -182,7 +186,7 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0','voo_0.3', 'unif']
     else:
         algo_names = ['randomizeddoo_1.0',  'voo_0.3', 'unif']
 

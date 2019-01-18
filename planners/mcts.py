@@ -24,7 +24,7 @@ from utils import get_pick_domain, get_place_domain
 from generators.gpucb import GPUCBGenerator
 
 
-DEBUG = True
+DEBUG = False
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560':
@@ -48,11 +48,15 @@ class MCTS:
         self.progressive_widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
         self.time_limit = np.inf
-        self.discount_rate = 0.9
+        if domain_name == 'mcr':
+            self.discount_rate = 0.999
+        else:
+            self.discount_rate = 0.9
         self.environment = environment
         self.high_level_planner = high_level_planner
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
+        self.depth_limit = 10
 
         self.s0_node = self.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
@@ -204,6 +208,7 @@ class MCTS:
         time_to_search = 0
         search_time_to_reward = []
         optimal_iter = 0
+        n_node_switch = 0
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             # todo switch node
@@ -229,6 +234,22 @@ class MCTS:
                     best_node = self.s0_node.children[best_action]
                     self.switch_init_node(best_node)
 
+            if self.environment.name == 'mcr':
+                we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
+                    else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
+                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 10
+                if we_have_feasible_action and we_evaluated_the_node_enough:
+                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    best_node = self.s0_node.children[best_action]
+                    self.switch_init_node(best_node)
+                    n_node_switch+=1
+                    print "Node switch"
+
+            if iteration == 1000 or iteration == 1999:
+                # it would have made 150 steps
+                print n_node_switch
+                self.environment.env.SetViewer('qtcoin')
+                import pdb;pdb.set_trace()
             self.environment.reset_to_init_state(self.s0_node)
 
             stime = time.time()
@@ -321,8 +342,12 @@ class MCTS:
             if not curr_node.is_goal_and_already_visited:
                 self.found_solution = True
                 curr_node.is_goal_node = True
+                import pdb;pdb.set_trace()
                 print "Solution found, returning the goal reward", self.goal_reward
             return self.goal_reward
+
+        if depth == self.depth_limit:
+            return 0
 
         if DEBUG:
             print "At depth ", depth
@@ -347,7 +372,8 @@ class MCTS:
         if self.high_level_planner.is_debugging:
             import pdb;pdb.set_trace()
         next_state, reward, parent_motion, objs_in_collision = self.apply_action(curr_node, action, check_feasibility, parent_motion)
-        print 'Reward ', reward
+        if DEBUG:
+            print 'Reward ', reward
         self.high_level_planner.update_task_plan_indices(reward, action['operator_name']) # create the next node based on the updated task plan progress
         if self.high_level_planner.is_debugging:
            import pdb;pdb.set_trace()
@@ -406,6 +432,9 @@ class MCTS:
             next_state, reward, path, objs_in_collision = self.environment.apply_one_arm_pick_action(action, node.obj, node.region, check_feasibility, parent_motion)
         elif which_operator == 'one_arm_place':
             next_state, reward, path, objs_in_collision = self.environment.apply_one_arm_place_action(action, node.obj, node.region, check_feasibility, parent_motion)
+        elif which_operator == 'next_base_pose':
+            next_state, reward, path, objs_in_collision = self.environment.apply_next_base_pose(action, node, check_feasibility, parent_motion)
+
         return next_state, reward, path, objs_in_collision
 
     def sample_action(self, node):

@@ -3,17 +3,17 @@ from openravepy import *
 import numpy as np
 import sys
 
-
-sys.path.append('../mover_library/')
 from manipulation.constants import PARALLEL_LEFT_ARM, REST_LEFT_ARM, HOLDING_LEFT_ARM, FOLDED_LEFT_ARM, \
     FAR_HOLDING_LEFT_ARM, LOWER_TOP_HOLDING_LEFT_ARM, REGION_Z_OFFSET
 
+sys.path.append('./mover_library/')
+
 from utils import *
-from samplers import sample_pick
 from manipulation.bodies.bodies import place_body, place_body_on_floor
-#from utils import randomly_place_region
+from utils import randomly_place_region
 from manipulation.primitives.transforms import set_point
 from manipulation.regions import create_region, AARegion
+
 from motion_planner import collision_fn, base_extend_fn, base_sample_fn, base_distance_fn, smooth_path, rrt_connect
 
 import os
@@ -34,16 +34,16 @@ OBST_TRANSPARENCY = .25
 
 
 def randomly_place_region(env, body, region):
-    if env.GetKinBody(get_name(body)) is None:
-        env.Add(body)
+    if env.GetKinBody(get_name(body)) is None: env.Add(body)
     while True:
         set_quat(body, quat_from_z_rot(uniform(0, 2 * PI)))
         aabb = aabb_from_body(body)
         cspace = region.cspace(aabb)
         if cspace is None: continue
-        set_point(body, np.array([uniform(*range) for range in cspace] + [region.z + aabb.extents()[2] + BODY_PLACEMENT_Z_OFFSET]) - aabb.pos() + get_point(body))
-        if not body_collision(env, body):
-            return
+        set_point(body, np.array([uniform(*range) for range in cspace] + [
+            region.z + aabb.extents()[2] + BODY_PLACEMENT_Z_OFFSET]) - aabb.pos() + get_point(body))
+        if not body_collision(env, body): return
+
 
 def generate_rand(min, max):
     return np.random.rand() * (max - min) + min
@@ -134,31 +134,38 @@ def create_bottom_walls(x_lim, y_lim, env):
 
 def create_doors(x_lim, y_lim, door_x, door_y, door_width, th, env):
     if th == 0:
-        right_wall_size = (door_y - door_width / 2.0 - (-y_lim)) / 2.0
+        middle_wall_size = (door_y - door_width / 2.0 - (-y_lim)) / 4.0
         left_wall_size = (y_lim - door_width / 2.0 - door_y) / 2.0
+        middle_door_y = door_y - middle_wall_size - (door_width / 2.)
+        right_wall_size =(y_lim/2.0 - middle_door_y ) / 2.0
+
     elif th == np.pi / 2.:
         right_wall_size = (door_x - door_width / 2.0 - (-x_lim)) / 2.0
         left_wall_size = (x_lim - door_width / 2.0 - door_x) / 2.0
 
     left_wall = box_body(env,
                          0.04 * 2, left_wall_size * 2, 1 * 2,
-                         name='left_wall',
+                         name='left_wall'+str(np.random.rand()),
                          color=(0, 0, 0))
     right_wall = box_body(env,
-                          0.04 * 2, right_wall_size * 2, 1 * 2,
-                          name='right_wall',
-                          color=(0, 0, 1))
-    if th == 0:
-        place_body(env, left_wall, (door_x, door_y + left_wall_size + (door_width / 2.), th),
-                   base_name='bottom_wall')
-        place_body(env, right_wall, (door_x, door_y - right_wall_size - (door_width / 2.), th),
-                   base_name='bottom_wall')
-    else:
-        place_body(env, left_wall, (door_x + left_wall_size + (door_width / 2.), door_y, th),
-                   base_name='bottom_wall')
-        place_body(env, right_wall, (door_x - right_wall_size - (door_width / 2.), door_y, th),
-                   base_name='bottom_wall')
+                         0.04 * 2, right_wall_size * 2, 1 * 2,
+                          name='right_wall'+str(np.random.rand()),
+                          color=(0, 0, 0))
 
+    middle_wall = box_body(env,
+                          0.04 * 2, middle_wall_size * 2, 1 * 2,
+                          name='middle_wall'+str(np.random.rand()),
+                          color=(0, 0, 0))
+    place_body(env, left_wall, (door_x, door_y + left_wall_size + (door_width / 2.), th),
+               base_name='bottom_wall')
+    place_body(env, middle_wall, (door_x, door_y - middle_wall_size - (door_width / 2.), th),
+               base_name='bottom_wall')
+    place_body(env, right_wall, (door_x, middle_door_y-door_width-middle_wall_size-door_width, th), base_name='bottom_wall')
+
+    wall_in_room_l = box_body(env, 0.04 * 2, 1, 2, name='wall_in_room_l' + str(np.random.rand()), color=(0, 0, 0))
+    wall_in_room_r = box_body(env, 0.04 * 2, 1, 2, name='wall_in_room_r' + str(np.random.rand()), color=(0, 0, 0))
+    place_body(env, wall_in_room_l, (3.3,0, np.pi/2), base_name='bottom_wall')
+    place_body(env, wall_in_room_r, (5.5,0, np.pi/2), base_name='bottom_wall')
 
 def create_box_bodies(body_shape, color, name, n_objs, env):
     if color == 'green':
@@ -274,9 +281,9 @@ def set_fixed_object_poses(env, x_lim, y_lim):
                base_name='bottom_wall')
     place_body(env, env.GetKinBody('shelf2'), (x_lim + x_lim / 2.0 - 1.5, y_lim - 0.2, np.pi * 3 / 2),
                base_name='bottom_wall')
-    place_body(env, env.GetKinBody('table2'), (x_lim + x_lim / 2.0 - 0.5, y_lim - 3, np.pi * 3 / 2),
+    place_body(env, env.GetKinBody('table2'), (x_lim + x_lim / 2.0 - 0.5, y_lim - 2, np.pi * 3 / 2),
                base_name='bottom_wall')
-    place_body(env, env.GetKinBody('computer_chair'), (4.2, -1.5, 0), base_name='bottom_wall')
+    #place_body(env, env.GetKinBody('computer_chair'), (4.2, -1.5, 0), base_name='bottom_wall')
     obj_poses = {obj.GetName(): get_pose(obj) for obj in objects}
     return obj_poses
 
@@ -284,8 +291,8 @@ def set_fixed_object_poses(env, x_lim, y_lim):
 def create_shelves(env, shelf_shapes, shelf_xs, table_name):
     center_shelf_width = shelf_shapes['center_shelf_width']
     center_shelf_height = shelf_shapes['center_shelf_height']
-    #left_shelf_width = shelf_shapes['left_shelf_width']
-    #left_shelf_height = shelf_shapes['left_shelf_height']
+    left_shelf_width = shelf_shapes['left_shelf_width']
+    left_shelf_height = shelf_shapes['left_shelf_height']
     right_shelf_width = shelf_shapes['right_shelf_width']
     right_shelf_height = shelf_shapes['right_shelf_height']
     center_shelf_top_height = shelf_shapes['center_shelf_top_height']
@@ -302,14 +309,13 @@ def create_shelves(env, shelf_shapes, shelf_xs, table_name):
                                      obst_height=center_shelf_top_height, name_idx=2,
                                      stacked_obj_name='back_wall_1', table_name=table_name)
 
-    """
     left_region = create_shelf(env, obst_x=left_x, obst_width=left_shelf_width,
                                obst_height=left_shelf_height, name_idx=3, stacked_obj_name=table_name,
                                table_name=table_name)
     left_top_region = create_shelf(env, obst_x=left_x, obst_width=left_shelf_width,
                                    obst_height=left_shelf_top_height, name_idx=4,
                                    stacked_obj_name='back_wall_3', table_name=table_name)
-    """
+
     right_region = create_shelf(env, obst_x=right_x, obst_width=right_shelf_width,
                                 obst_height=right_shelf_height, name_idx=5, stacked_obj_name=table_name,
                                 table_name=table_name)
@@ -317,21 +323,20 @@ def create_shelves(env, shelf_shapes, shelf_xs, table_name):
                                     obst_height=right_shelf_top_height, name_idx=6,
                                     stacked_obj_name='back_wall_5', table_name=table_name)
     regions = {'center': center_region, 'center_top': center_top_region,
-    #           'left': left_region, 'left_top': left_top_region}
+               'left': left_region, 'left_top': left_top_region,
                'right': right_region, 'right_top': right_top_region}
     return regions
 
 
 def generate_shelf_obj_shapes():
     max_obj_height = 0.28
-    min_obj_height = 0.15
-    n_objs = 3
-    l_obj_shapes = [[0.05, 0.05, generate_rand(min_obj_height, max_obj_height)] for _ in range(n_objs)]
-    ltop_obj_shapes = [[0.05, 0.05, generate_rand(min_obj_height, max_obj_height)] for _ in range(n_objs)]
-    c_obj_shapes = [[0.05, 0.05, generate_rand(min_obj_height, max_obj_height)] for _ in range(n_objs)]
-    ctop_obj_shapes = [[0.05, 0.05, generate_rand(min_obj_height, max_obj_height)] for _ in range(n_objs)]
-    r_obj_shapes = [[0.05, 0.05, generate_rand(min_obj_height, max_obj_height)] for _ in range(n_objs)]
-    rtop_obj_shapes = [[0.05, 0.05, generate_rand(min_obj_height, max_obj_height)] for _ in range(n_objs)]
+    n_objs = 7
+    l_obj_shapes = [[0.05, 0.05, generate_rand(0.05, max_obj_height)] for _ in range(n_objs)]
+    ltop_obj_shapes = [[0.05, 0.05, generate_rand(0.05, max_obj_height)] for _ in range(n_objs)]
+    c_obj_shapes = [[0.05, 0.05, generate_rand(0.05, max_obj_height)] for _ in range(n_objs)]
+    ctop_obj_shapes = [[0.05, 0.05, generate_rand(0.05, max_obj_height)] for _ in range(n_objs)]
+    r_obj_shapes = [[0.05, 0.05, generate_rand(0.05, max_obj_height)] for _ in range(n_objs)]
+    rtop_obj_shapes = [[0.05, 0.05, generate_rand(0.05, max_obj_height)] for _ in range(n_objs)]
 
     obj_shapes = {'l_obj_shapes': l_obj_shapes, 'ltop_obj_shapes': ltop_obj_shapes,
                   'c_obj_shapes': c_obj_shapes, 'ctop_obj_shapes': ctop_obj_shapes,
@@ -341,11 +346,11 @@ def generate_shelf_obj_shapes():
 
 
 def create_shelf_objs(env, obj_shapes):
-    n_objs = 3
-    #left_objs = create_box_bodies(obj_shapes['l_obj_shapes'], color='green', name='l_obst', n_objs=n_objs,
-    #                              env=env)
-    #left_top_objs = create_box_bodies(obj_shapes['ltop_obj_shapes'], color='green', name='ltop_obst',
-    #                                  n_objs=n_objs, env=env)
+    n_objs = 7
+    left_objs = create_box_bodies(obj_shapes['l_obj_shapes'], color='green', name='l_obst', n_objs=n_objs,
+                                  env=env)
+    left_top_objs = create_box_bodies(obj_shapes['ltop_obj_shapes'], color='green', name='ltop_obst',
+                                      n_objs=n_objs, env=env)
     center_objs = create_box_bodies(obj_shapes['c_obj_shapes'], color='blue', name='c_obst', n_objs=n_objs,
                                     env=env)
     center_top_objs = create_box_bodies(obj_shapes['ctop_obj_shapes'], color='blue', name='ctop_obst',
@@ -354,9 +359,8 @@ def create_shelf_objs(env, obj_shapes):
                                    n_objs=n_objs, env=env)
     right_top_objs = create_box_bodies(obj_shapes['rtop_obj_shapes'], color='red', name='rtop_obst',
                                        n_objs=n_objs, env=env)
-    objects = {#'left': left_objs, 'left_top': left_top_objs,
-               'center': center_objs, 'center_top': center_top_objs,
-               'right': right_objs, 'right_top': right_top_objs}
+    objects = {'left': left_objs, 'left_top': left_top_objs, 'center': center_objs,
+               'center_top': center_top_objs, 'right': right_objs, 'right_top': right_top_objs}
     return objects
 
 
@@ -366,12 +370,10 @@ def place_objs_in_region(objs, region, env):
 
 
 def generate_poses_and_place_shelf_objs(objects, regions, env):
-    """
     left_objs = objects['left']
     left_region = regions['left']
     left_top_objs = objects['left_top']
     left_top_region = regions['left_top']
-    """
     right_objs = objects['right']
     right_region = regions['right']
     right_top_objs = objects['right_top']
@@ -381,8 +383,8 @@ def generate_poses_and_place_shelf_objs(objects, regions, env):
     center_top_objs = objects['center_top']
     center_top_region = regions['center_top']
 
-    #place_objs_in_region(left_objs, left_region, env)
-    #place_objs_in_region(left_top_objs, left_top_region, env)
+    place_objs_in_region(left_objs, left_region, env)
+    place_objs_in_region(left_top_objs, left_top_region, env)
     place_objs_in_region(center_objs, center_region, env)
     place_objs_in_region(center_top_objs, center_top_region, env)
     place_objs_in_region(right_objs, right_region, env)
@@ -397,6 +399,24 @@ def set_fixed_obj_poses(env):
     shelf = env.GetKinBody('shelf1')
 
 
+def get_motion_plan(env, goal, x_extents, y_extents, x, y):
+    robot = env.GetRobots()[0]
+    d_fn = base_distance_fn(robot, x_extents, y_extents, x, y)
+    s_fn = base_sample_fn(robot, x_extents, y_extents, x, y)
+    e_fn = base_extend_fn(robot)
+    c_fn = collision_fn(env, robot)
+    q_init = robot.GetActiveDOFValues()
+
+    n_iterations = [20, 50, 100, 500, 1000]
+    for n_iter in n_iterations:
+        path = rrt_connect(q_init, goal, d_fn, s_fn, e_fn, c_fn, iterations=n_iter)
+        if path is not None:
+            path = smooth_path(path, e_fn, c_fn)
+            return path, "HasSolution"
+
+    return None, 'NoPath'
+
+
 def create_environment_region(name, xy, extents, z=None):
     if z is None:
         z = 0.138
@@ -408,140 +428,122 @@ def create_environment_region(name, xy, extents, z=None):
              z, color=np.array((1, 1, 0, 0.25)))
     return region
 
-
-def mover_problem(env):
-    x_extents = 3.5
-    y_extents = 3.16
-    door_width = 1.5  # generate_rand(1, 1.5)
-    door_x = (-x_extents + 1.5 + x_extents - 1.5) / 2.0 - x_extents * 0.3 + 4
-    door_y = (-y_extents + 1.5 + y_extents - 1.5) / 2.0
-    door_th = 0
-
-    # todo move all the kitchen objects by 0.5
-
-    fdir = os.path.dirname(os.path.abspath(__file__))
-    env.Load(fdir + '/resources/mover_env.xml')
-    # set_xy(env.GetKinBody('kitchen'), 0, 0.5)
-
-    robot = env.GetRobots()[0]
-    # left arm IK
-    robot.SetActiveManipulator('leftarm')
-    manip = robot.GetActiveManipulator()
-    ee = manip.GetEndEffector()
-    ikmodel1 = databases.inversekinematics.InverseKinematicsModel(robot=robot,
-                                                                  iktype=IkParameterization.Type.Transform6D,
-                                                                  forceikfast=True, freeindices=None,
-                                                                  freejoints=None, manip=None)
-    if not ikmodel1.load():
-        ikmodel1.autogenerate()
-
-    # right arm torso IK
-    robot.SetActiveManipulator('rightarm_torso')
-    manip = robot.GetActiveManipulator()
-    ee = manip.GetEndEffector()
-    ikmodel2 = databases.inversekinematics.InverseKinematicsModel(robot=robot,
-                                                                  iktype=IkParameterization.Type.Transform6D)
-                                                                  #forceikfast=True, freeindices=None,
-                                                                  #freejoints=None, manip=None)
-    if not ikmodel2.load():
-        ikmodel2.autogenerate()
+def place_object_with_gaussian_noise(obj, reference_xytheta, env, scale=0.3):
+    obj_xytheta = reference_xytheta + np.random.normal(loc=0, scale=scale, size=(3,))
+    set_quat(obj, quat_from_angle_vector(obj_xytheta[-1], np.array([0, 0, 1])))
+    set_xy(obj, obj_xytheta[0], obj_xytheta[1])
+    while env.CheckCollision(obj):
+        obj_xytheta = obj_xytheta + np.random.normal(loc=0, scale=scale, size=(3,))
+        set_quat(obj, quat_from_angle_vector(obj_xytheta[-1], np.array([0, 0, 1])))
+        set_xy(obj, obj_xytheta[0], obj_xytheta[1])
 
 
-    create_bottom_walls(x_extents, y_extents, env)
-    create_doors(x_extents, y_extents, door_x, door_y, door_width, door_th, env)
-    set_config(robot, FOLDED_LEFT_ARM, robot.GetManipulator('leftarm').GetArmIndices())
-    set_config(robot, mirror_arm_config(FOLDED_LEFT_ARM), robot.GetManipulator('rightarm').GetArmIndices())
-    fixed_obj_poses = set_fixed_object_poses(env, x_extents, y_extents)
-    shelf_shapes, shelf_xs = generate_shelf_shapes()
-    shelf_regions = create_shelves(env, shelf_shapes, shelf_xs, 'table2')
-    env.SetViewer('qtcoin')
+class MoverProblem:
+    def __init__(self, env, problem_config=None):
+        self.env = env
+        fdir = os.path.dirname(os.path.abspath(__file__))
+        self.env.Load(fdir + '/resources/mover_env.xml')
+        self.robot = self.env.GetRobots()[0]
+        set_xy(self.env.GetKinBody('kitchen'), -0.3, 1.3)
 
-    obj_shapes = generate_shelf_obj_shapes()
-    shelf_objects = create_shelf_objs(env, obj_shapes)
-    shelf_obj_poses = generate_poses_and_place_shelf_objs(shelf_objects, shelf_regions, env)
-    for region_name, region in zip(shelf_regions.keys(), shelf_regions.values()):
-        region.name = region_name+'_shelf_region'
+        # bottom wall creation
+        x_extents = 4
+        y_extents = 4
+        create_bottom_walls(x_extents, y_extents, self.env)
 
+        # door creation
+        # self.env.Remove(self.env.GetKinBody('left_wall')); self.env.Remove(self.env.GetKinBody('right_wall'))
+        door_width = 1.  # generate_rand(1, 1.5)
+        door_x = (-x_extents + 1.5 + x_extents - 1.5) / 2.0 - x_extents * 0.3 + 4
+        door_y = (-y_extents + 1.5 + y_extents - 1.5) / 2.0 + 2
+        door_th = 0
+        create_doors(x_extents, y_extents, door_x, door_y, door_width, door_th, self.env)
 
-    home_region_xy = [x_extents/2.0, 0]
-    home_region_xy_extents = [x_extents, y_extents]
-    home_region = AARegion('home_region',((-x_extents + x_extents / 2.0, x_extents + x_extents / 2.0), (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
+        set_config(self.robot, HOLDING_LEFT_ARM, self.robot.GetManipulator('leftarm').GetArmIndices())
+        set_config(self.robot, mirror_arm_config(FOLDED_LEFT_ARM),
+                   self.robot.GetManipulator('rightarm').GetArmIndices())
 
-    loading_region_xy = [1.8, -6.7]
-    loading_region_xy_extents = [2.5, 1.85]
-    loading_region = AARegion('loading_region', ((loading_region_xy[0] - loading_region_xy_extents[0],
-                                                  loading_region_xy[0] + loading_region_xy_extents[0]),
-                                                 (loading_region_xy[1] - loading_region_xy_extents[1],
-                                                  loading_region_xy[1] + loading_region_xy_extents[1])),
-                              z=0.138, color=np.array((1, 1, 0, 0.25)))
-    bridge_region_name = 'bridge_region'
-    bridge_region_xy = [0.7, -4.1]
-    bridge_region_extents = [1, 1.0]
-    bridge_region = create_environment_region(bridge_region_name, bridge_region_xy, bridge_region_extents)
+        fixed_obj_poses = set_fixed_object_poses(self.env, x_extents, y_extents)
+        shelf_shapes, shelf_xs = generate_shelf_shapes()
+        shelf_regions = create_shelves(self.env, shelf_shapes, shelf_xs, 'table2')
+        obj_shapes = generate_shelf_obj_shapes()
+        shelf_objects = create_shelf_objs(self.env, obj_shapes)
+        shelf_obj_poses = generate_poses_and_place_shelf_objs(shelf_objects, shelf_regions, self.env)
 
-    entire_region_xy = [x_extents/2.0, -3]
-    entire_region_xy_extents = [x_extents, y_extents+2.5]
-    entire_region = AARegion('entire_region',((-entire_region_xy_extents[0] + entire_region_xy[0], entire_region_xy_extents[0] + entire_region_xy[0]), (-entire_region_xy_extents[1]+entire_region_xy[1], entire_region_xy_extents[1]+entire_region_xy[1])), z=0.135, color=np.array((1, 1, 0, 0.25)))
+        self.kitchen_region = AARegion('kitchen_region',
+                                       ((-x_extents + 2, x_extents * 0.2 + 2), (1 - y_extents / 2, 1 + y_extents / 2)),
+                                       z=0.135, color=np.array((1, 1, 0, 0.25)))
+        set_xy(self.env.GetKinBody('computer_table'), 5.5, -2.5)
 
-    packing_boxes = [b for b in env.GetBodies() if b.GetName().find('packing_box') != -1]
-
-    #place_objs_in_region(packing_boxes, loading_region, env)
-    #place_objs_in_region([robot], loading_region, env)
-
-    place_objs_in_region(packing_boxes[0:5], home_region, env)
-    place_objs_in_region(packing_boxes[5:], home_region, env)
-    place_objs_in_region([robot], loading_region, env)
-    #xy = get_body_xytheta(env.GetKinBody('rectangular_packing_box1'))[0,0:2]
-    #set_obj_xytheta(np.array([2.46, 1.3244, 0]), env.GetKinBody('rectangular_packing_box1'))
-    set_obj_xytheta(np.array([-0.46, -1.3244, 0]), robot)
-
-    box_regions = {}
-    for box in packing_boxes:
-        box_region = AARegion.create_on_body(box)
-        box_region.color = (1., 1., 0., 0.25)
-        box_regions[box.GetName()] = box_region
-        if box == packing_boxes[0]:
-            xytheta = get_body_xytheta(box)
-            set_obj_xytheta([xytheta[0,0],xytheta[0,1],0],box)
-            box_region.draw(env)
-    open_gripper(robot)
-    temp_objects_to_pack = [body for body in env.GetBodies() if
-                       body.GetName().find('box') == -1 and body.GetName().find('wall') == -1 and
-                       body.GetName().find('sink') == -1 and body.GetName().find('kitchen') == -1 and
-                       body.GetName().find('entrance') == -1 and body.GetName().find('pr2') == -1 and
-                       body.GetName().find('floorwalls') == -1 and body.GetName().find('table') == -1 and
-                       body.GetName().find('obst') == -1]
+        self.home_region_xy = [x_extents / 2.0, 0]
+        self.home_region_xy_extents = [x_extents, y_extents]
+        self.home_region = AARegion('home_region',
+                                    ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]),
+                                     (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
+        #randomly_place_region(self.env, self.robot, self.home_region)
+        self.init_base_config = np.array([-1., -3., 0.])
+        self.goal_base_config = np.array([4.5, 3, np.pi/2.0])
 
 
-    # packing boxes are packed in the order given in packing_boxes
-    # 1. packing boxes in the home
-    # 2. big objects in the truck
-    # 3. small objects in the box
-    # 4. shelf objects in the box
-    # 5. boxes in the truck
+        # randomly placed objects
+        kitchen_chairs = [body for body in self.env.GetBodies() if body.GetName().find('chair') != -1
+                          and body.GetName().find('computer') == -1]
+        packing_boxes = [b for b in self.env.GetBodies() if b.GetName().find('packing_box') != -1]
+        roomba = self.env.GetKinBody('roomba_625x')
+        computer_chair = self.env.GetKinBody('computer_chair')
+        table = self.env.GetKinBody('table')
 
-    big_objects_to_pack = [body for body in env.GetBodies()
-                           if body.GetName().find('chair') != -1 or body.GetName().find('shelf') !=-1]
+        self.is_new_env = problem_config is None
+        if self.is_new_env:
+            # computer chair location
+            computer_chair_xytheta = [4.8, -2.5, 0]
+            place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
 
-    objects_to_pack = [obj for obj in temp_objects_to_pack if obj not in big_objects_to_pack]
-    problem_config = {'shelf_objects': shelf_objects,
-                      'packing_boxes': packing_boxes,
-                      'objects_to_pack': objects_to_pack,
-                      'big_objects_to_pack': big_objects_to_pack,
-                      'home_region': home_region,
-                      'loading_region': loading_region,
-                      'entire_region': entire_region,
-                      'entire_region_xy': entire_region_xy,
-                      'entire_region_extents': entire_region_xy_extents,
-                      'bridge_region': bridge_region,
-                      'bridge_region_xy': bridge_region_xy,
-                      'bridge_region_extents': bridge_region_extents,
-                      'env': env,
-                      'loading_region_xy': loading_region_xy,
-                      'loading_region_extents': loading_region_xy_extents,
-                      'home_region_xy': home_region_xy,
-                      'home_region_extents': home_region_xy_extents,
-                      'shelf_regions': shelf_regions,
-                      'box_regions': box_regions}
+            # kitchen table location
+            table_xytheta = [0.91704, 0.8, 0]
+            place_object_with_gaussian_noise(table, table_xytheta, self.env, scale=0.1)
 
-    return problem_config
+            # place other objects
+            place_objs_in_region(packing_boxes, self.home_region, self.env)
+            place_objs_in_region([self.robot], self.home_region, self.env)
+            place_objs_in_region([roomba], self.home_region, self.env)
+            place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
+        else:
+            set_obj_xytheta(problem_config['computer_chair_pose'], computer_chair)
+            set_obj_xytheta(problem_config['roomba_pose'], roomba)
+            set_obj_xytheta(problem_config['table_pose'], table)
+
+            place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
+            for obj_pose, obj in zip(problem_config['kitchen_chair_poses'], kitchen_chairs):
+                set_obj_xytheta(obj_pose, obj)
+
+            place_objs_in_region(packing_boxes, self.home_region, self.env)
+            for obj_pose,obj in zip(problem_config['packing_box_poses'], packing_boxes):
+                set_obj_xytheta(obj_pose, obj)
+
+        self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
+        self.movable_objects = [roomba, computer_chair] + packing_boxes + kitchen_chairs
+        set_robot_config(self.init_base_config, self.robot)
+
+    def get_problem_config(self):
+        problem_config = {'objects':self.movable_objects,
+                          'entire_region':self.home_region,
+                          'init_base_config':self.init_base_config,
+                          'goal_base_config':self.goal_base_config}
+        return problem_config
+
+    def disable_objects_in_region(self, region):
+        # todo do it for the shelf objects too
+        for obj in self.movable_objects:
+            if region.contains(obj.ComputeAABB()):
+                obj.Enable(False)
+
+    def enable_objects_in_region(self, region):
+        for obj in self.movable_objects:
+            if region.contains(obj.ComputeAABB()):
+                obj.Enable(True)
+
+
+
+
+
