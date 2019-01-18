@@ -46,12 +46,13 @@ class DOOGenerator(Generator):
         for i in range(n_iter):
             action_parameters, doo_node = self.choose_next_point()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
+            self.evaled_actions.append(action_parameters)
             if status == 'HasSolution':
                 self.doo_tree.expand_node(self.update_flag, doo_node)
+                self.evaled_q_values.append(self.update_flag)
                 print "Found feasible sample"
                 break
             else:
-                self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
 

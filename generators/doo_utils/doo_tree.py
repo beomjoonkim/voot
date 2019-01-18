@@ -117,22 +117,23 @@ class BinaryDOOTree:
         if len(evaled_x) == 0:
             return
 
-        feasible_idxs = np.array(evaled_y) > infeasible_reward
+        feasible_idxs = np.array(evaled_y) != infeasible_reward
         evaled_x_to_update = np.array(evaled_x)[feasible_idxs, :]  # only the feasible ones get their f values updated
         evaled_y_to_update = np.array(evaled_y)[feasible_idxs]
 
         if len(evaled_x_to_update) > 0:
             for l in self.leaves:
                 if l.f_value != infeasible_reward and l.f_value != 'update_me':
-                    l.f_value = self.find_evaled_f_value(l.evaluated_x, evaled_x_to_update, evaled_y_to_update)
+                    try:
+                        l.f_value = self.find_evaled_f_value(l.evaluated_x, evaled_x_to_update, evaled_y_to_update)
+                    except:
+                        import pdb;pdb.set_trace()
 
         if self.node_to_update is not None:
             if len(evaled_x_to_update) > 0:
                 self.node_to_update.f_value = self.find_evaled_f_value(self.node_to_update.evaluated_x, evaled_x, evaled_y)
             else:
                 self.node_to_update.f_value = infeasible_reward
-
-
 
         #for node in self.nodes:
         #    node.f_value = self.find_evaled_f_value(node.evaluated_x, evaled_x, evaled_y)
