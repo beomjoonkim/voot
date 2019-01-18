@@ -71,11 +71,15 @@ class NAMO(ProblemEnvironment):
                     reward = np.exp(-len(objs_in_collision))
             elif self.is_solving_namo:
                 if operator_name == 'two_arm_place':
-                    reward = len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names)
+                    if len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names) > 0:
+                        reward = len(self.namo_planner.fixed_init_namo_object_names) - len(new_namo_obj_names)
+                    else:
+                        reward = -1
+
                     objs_in_collision = [self.env.GetKinBody(name) for name in new_namo_obj_names]
                 else:
                     objs_in_collision = [self.env.GetKinBody(name) for name in self.namo_planner.curr_namo_object_names]
-                    reward = 1
+                    reward = 0.1
         else:
             reward = self.infeasible_reward
 
@@ -85,14 +89,23 @@ class NAMO(ProblemEnvironment):
         saver = node.state_saver
         saver.Restore()  # this call re-enables objects that are disabled
         self.curr_state = self.get_state()
-        self.placements = copy.deepcopy(self.initial_placements)
 
         if not self.init_which_opreator != 'two_arm_pick':
             grab_obj(self.robot, self.curr_obj)
+
+        is_parent_action_pick = node.parent_action['operator_name'].find('pick') != -1 \
+                                    if node.parent_action is not None else False
+        if is_parent_action_pick:
+            two_arm_pick_object(node.parent.obj, self.robot, node.parent_action)
+
         if self.is_solving_namo:
             self.namo_planner.reset()
         self.high_level_planner.reset_task_plan_indices()
+
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
+
+    def set_init_namo_object_names(self, object_names):
+        self.namo_planner.init_namo_object_names = object_names
 
     def disable_objects_in_region(self, region_name):
         for object in self.objects:
@@ -102,7 +115,6 @@ class NAMO(ProblemEnvironment):
         for object in self.objects:
             object.Enable(True)
 
-
     def disable_objects(self):
         for object in self.objects:
             object.Enable(False)
@@ -110,7 +122,6 @@ class NAMO(ProblemEnvironment):
     def enable_objects(self):
         for object in self.objects:
             object.Enable(True)
-
 
     def check_base_pose_feasible(self, base_pose, obj, region):
         if base_pose is None:
@@ -141,8 +152,11 @@ class NAMO(ProblemEnvironment):
 
         reward, objs_in_collision = self.determine_reward('two_arm_pick', obj, motion_plan, status)
         if status == 'HasSolution':
-            two_arm_pick_object(obj, self.robot, action)
-            curr_state = self.get_state()
+            try:
+                two_arm_pick_object(obj, self.robot, action)
+                curr_state = self.get_state()
+            except:
+                import pdb;pdb.set_trace()
         else:
             curr_state = self.get_state()
 
@@ -166,11 +180,14 @@ class NAMO(ProblemEnvironment):
             if self.is_solving_namo:
                 new_namo_objs = node.children[make_action_hashable(action)].objs_in_collision
                 new_namo_obj_names = [namo_obj.GetName() for namo_obj in new_namo_objs]
-                self.namo_planner.prev_namo_object_names = [namo_obj.GetName() for namo_obj in node.parent.objs_in_collision]
-                self.namo_planner.curr_namo_object_names = [namo_obj.GetName() for namo_obj in new_namo_objs]
+                try:
+                    self.namo_planner.prev_namo_object_names = [namo_obj.GetName() for namo_obj in node.parent.objs_in_collision]
+                    self.namo_planner.curr_namo_object_names = [namo_obj.GetName() for namo_obj in new_namo_objs]
+                except:
+                    import pdb;pdb.set_trace()
 
-                self.namo_planner.fetch_pick_path = node.children[make_action_hashable(action)].parent_motion['fetch_pick_path']
-                self.namo_planner.fetch_place_path = node.children[make_action_hashable(action)].parent_motion['fetch_place_path']
+                #self.namo_planner.fetch_pick_path = node.children[make_action_hashable(action)].parent_motion['fetch_pick_path']
+                #self.namo_planner.fetch_place_path = node.children[make_action_hashable(action)].parent_motion['fetch_place_path']
 
                 # todo update the task-plan?
                 self.high_level_planner.set_task_plan([{'region': self.regions['entire_region'], 'objects': new_namo_objs}])

@@ -40,8 +40,8 @@ def get_results(algo_name, dimension, obj_fcn):
     search_times = []
     max_y_values = []
     time_takens = []
-    for fin in os.listdir(result_dir):
-    #for fin in os.listdir('./test_results//function_optimization/shekel/'+'dim_'+str(dimension)+'/gpucb/'):
+    #for fin in os.listdir(result_dir):
+    for fin in os.listdir('./test_results//function_optimization/shekel/'+'dim_'+str(dimension)+'/gpucb/'):
         if fin.find('.pkl') == -1:
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
@@ -141,6 +141,7 @@ def plot_across_algorithms():
         if algo == 'doo' and args.obj_fcn == 'shekel' and args.dim == 2:
             mask[too_large] = False
         """
+        mask[too_large] = False
 
         search_rwd_times = search_rwd_times[mask]
         time_takens = time_takens[mask]

@@ -18,7 +18,7 @@ from samplers import *
 from utils import *
 
 import time
-from generators.doo_utils.doo import BinaryDOOTree, DOOTreeNode
+from generators.doo_utils.doo_tree import BinaryDOOTree, DOOTreeNode
 sys.path.append('../mover_library/')
 from utils import get_pick_domain, get_place_domain
 from generators.gpucb import GPUCBGenerator
@@ -84,7 +84,6 @@ class MCTS:
             print "Wrong sampling strategy"
             return -1
 
-
     def update_init_node_obj(self):
         self.s0_node.obj = self.high_level_planner.get_next_obj()
         self.s0_node.operator = self.environment.which_operator(self.s0_node.obj)
@@ -112,8 +111,6 @@ class MCTS:
         node = TreeNode(curr_obj, curr_region, operator,
                         self.exploration_parameters, depth, state_saver, self.sampling_strategy, is_init_node)
 
-        #node.operator = operator
-        # perhaps move to tree node constructor
         if not self.high_level_planner.is_goal_reached():
             node.sampling_agent = self.create_sampling_agent(node, operator)
         node.objs_in_collision = objs_in_collision
@@ -159,25 +156,37 @@ class MCTS:
         return curr_node
 
     def switch_init_node(self, node):
+        self.environment.reset_to_init_state(node)
+        self.s0_node.is_init_node = False
+
+        self.s0_node = node
+        self.s0_node.is_init_node = True
+        self.found_solution = False
+        if self.environment.is_solving_namo:
+            if node.parent.operator =='two_arm_place' and self.environment.is_solving_namo:
+                self.environment.set_init_namo_object_names([o.GetName() for o in node.objs_in_collision])
+                self.high_level_planner.task_plan[0]['region'] = node.objs_in_collision
+                self.environment.reset_to_init_state(node)
+
+    def switch_init_node_for_changing_problem(self, node):
         #if node.is_goal_node:
-        if True:
-            curr_obj = self.high_level_planner.get_next_obj()
-            operator = self.environment.which_operator(curr_obj)
-            if operator.find('pick') != -1:
-                curr_obj_region = self.environment.get_region_containing(curr_obj)
-                curr_robot_region = self.environment.get_region_containing(self.environment.robot)
-                if curr_obj_region.name.find('shelf') != -1:
-                    curr_region = curr_robot_region
-                else:
-                    curr_region = curr_obj_region
+        curr_obj = self.high_level_planner.get_next_obj()
+        operator = self.environment.which_operator(curr_obj)
+        if operator.find('pick') != -1:
+            curr_obj_region = self.environment.get_region_containing(curr_obj)
+            curr_robot_region = self.environment.get_region_containing(self.environment.robot)
+            if curr_obj_region.name.find('shelf') != -1:
+                curr_region = curr_robot_region
             else:
-                curr_region = self.high_level_planner.get_next_region()
-            node.operator = operator
+                curr_region = curr_obj_region
+        else:
+            curr_region = self.high_level_planner.get_next_region()
+        node.operator = operator
+        if node.sampling_agent is None:
             node.sampling_agent = self.create_sampling_agent(node, operator)
-            node.region = curr_region
-            node.obj = curr_obj
-            node.operator = operator
-            node.is_goal_and_already_visited = True
+        node.region = curr_region
+        node.obj = curr_obj
+        node.operator = operator
 
         current_leaf_nodes = self.tree.get_leaf_nodes()
         for l in current_leaf_nodes:
@@ -197,10 +206,34 @@ class MCTS:
         optimal_iter = 0
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
+            # todo switch node
+            #   if this is pick node and we have a feasible pick, then switch to the most visited node
+            #   if this is place node, we have a feasible place, we visited >100 times, then switch to the
+            #   most visited node
+
+            if self.environment.is_solving_namo:
+                is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
+                we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
+                    else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
+                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 50
+
+                if is_pick_node and we_have_feasible_action:
+                    print "Node switching from pick node"
+                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    best_node = self.s0_node.children[best_action]
+                    self.switch_init_node(best_node)
+                elif (not is_pick_node) and we_evaluated_the_node_enough:
+                    print "Node switching from place node"
+                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    best_node = self.s0_node.children[best_action]
+                    self.switch_init_node(best_node)
+
             self.environment.reset_to_init_state(self.s0_node)
+
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
+
             if socket.gethostname() == 'dell-XPS-15-9560':
                 if self.environment.is_solving_namo:
                     write_dot_file(self.tree, iteration, 'solving_namo')
@@ -214,8 +247,6 @@ class MCTS:
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, self.found_solution])
 
             if self.found_solution:
-                # todo next:
-                #   - verify the solution
                 optimal_iter += 1
                 plan = self.retrace_best_plan(best_node)
                 goal_node = best_node

@@ -42,7 +42,7 @@ class VOO:
 
             best_dist = self.distance_fn(new_x, best_evaled_x)
             other_dists = np.array([self.distance_fn(other, new_x) for other in other_best_evaled_xs])
-            counter+=1
+            counter += 1
         return new_x
 
     def sample_from_uniform(self):

@@ -59,6 +59,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         rootdir = './test_results/'
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
+    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/root_switching'
     if domain_name == 'convbelt':
         result_dir = rootdir+'/convbelt_results/mcts_iter_500/uct_0.0_widening_'+ str(widening_parameter)+'_'
     elif domain_name == 'namo':
@@ -92,8 +93,8 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
             is_success = result['search_time']['namo'][-1][-1]
-            if is_success:
-                result['search_time']['namo'][-1][-2] *= 2
+            #if is_success:
+            #    result['search_time']['namo'][-1][-2] *= 2
         search_rwd_times.append(result['search_time'])
 
         search_rwd_times.append(result['search_time'])
@@ -181,9 +182,9 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['randomizeddoo_1.0', 'voo_0.2','voo_0.3','voo_0.1','voo_0.4','unif']
+        algo_names = ['randomizeddoo_1.0', 'voo_0.1', 'unif']
     else:
-        algo_names = ['randomizeddoo_1.0', 'doo_25.0', 'voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0',  'voo_0.3', 'unif']
 
 
 
@@ -205,6 +206,7 @@ def plot_across_algorithms():
             search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
         else:
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+        """
         if algo.find('randomizeddoo') != -1:
             algo_name = 'rand_doo'.upper()
         elif algo.find('doo_25.0') != -1:
@@ -213,8 +215,11 @@ def plot_across_algorithms():
             algo_name = 'voo'.upper()
         elif algo.find('unif') != -1:
             algo_name = 'uniform'.upper()
+        """
+        algo_name=algo
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo_name, color=color_dict[color_names[algo_idx]])
         print  "===================="
+    plt.show()
 
     if args.t:
         savefig('Times (s)', 'Average rewards', fname='./plotters/t_'+args.domain+'_w_'+str(args.w))

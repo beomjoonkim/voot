@@ -40,6 +40,10 @@ class MCTSTree:
         for n in self.get_leaf_nodes():
             sumR = 0
             curr_node = n
+
+            # todo take discounting into account
+            # collect all rewards into an array
+            # dot it with \gamma, gamma^2, ... and so on.
             while not curr_node.is_init_node:
                 if curr_node.parent is None and not curr_node.is_init_node:
                     break
