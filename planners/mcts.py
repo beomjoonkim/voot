@@ -211,19 +211,22 @@ class MCTS:
             #   if this is place node, we have a feasible place, we visited >100 times, then switch to the
             #   most visited node
 
-            is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
-            we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
-                else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
-            we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 50
+            if self.environment.is_solving_namo:
+                is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
+                we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
+                    else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
+                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 50
 
-            if is_pick_node and we_have_feasible_action:
-                best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
-                best_node = self.s0_node.children[best_action]
-                self.switch_init_node(best_node)
-            elif (not is_pick_node) and we_evaluated_the_node_enough:
-                best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
-                best_node = self.s0_node.children[best_action]
-                self.switch_init_node(best_node)
+                if is_pick_node and we_have_feasible_action:
+                    print "Node switching from pick node"
+                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    best_node = self.s0_node.children[best_action]
+                    self.switch_init_node(best_node)
+                elif (not is_pick_node) and we_evaluated_the_node_enough:
+                    print "Node switching from place node"
+                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    best_node = self.s0_node.children[best_action]
+                    self.switch_init_node(best_node)
 
             self.environment.reset_to_init_state(self.s0_node)
 

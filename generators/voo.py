@@ -61,7 +61,7 @@ class VOOGenerator(Generator):
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
                                        np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
 
-        print "VOO sampling...from best v-region?",is_sample_from_best_v_region
+        print "VOO sampling...from best v-region?", is_sample_from_best_v_region
         stime=time.time()
         for i in range(n_iter):
             if is_sample_from_best_v_region:

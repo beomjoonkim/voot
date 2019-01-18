@@ -168,6 +168,7 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         initial_collision_names = pick_collisions
         initial_collision_names += [tmp for tmp in place_collisions if tmp not in pick_collisions]
         """
+        self.fixed_init_namo_object_names = copy.deepcopy(initial_collision_names)
         self.init_namo_object_names = initial_collision_names
         self.curr_namo_object_names = copy.deepcopy(self.init_namo_object_names)
 

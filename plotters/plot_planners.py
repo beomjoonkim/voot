@@ -93,8 +93,8 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
             is_success = result['search_time']['namo'][-1][-1]
-            if is_success:
-                result['search_time']['namo'][-1][-2] *= 2
+            #if is_success:
+            #    result['search_time']['namo'][-1][-2] *= 2
         search_rwd_times.append(result['search_time'])
 
         search_rwd_times.append(result['search_time'])
@@ -182,9 +182,9 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0', 'voo_0.1', 'unif']
     else:
-        algo_names = ['randomizeddoo_1.0', 'doo_25.0', 'voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0',  'voo_0.3', 'unif']
 
 
 
@@ -219,6 +219,7 @@ def plot_across_algorithms():
         algo_name=algo
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo_name, color=color_dict[color_names[algo_idx]])
         print  "===================="
+    plt.show()
 
     if args.t:
         savefig('Times (s)', 'Average rewards', fname='./plotters/t_'+args.domain+'_w_'+str(args.w))

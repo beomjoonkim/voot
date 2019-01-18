@@ -71,7 +71,8 @@ class NAMO(ProblemEnvironment):
                     reward = np.exp(-len(objs_in_collision))
             elif self.is_solving_namo:
                 if operator_name == 'two_arm_place':
-                    reward = len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names)
+                    #reward = len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names)
+                    reward = np.exp(len(self.namo_planner.fixed_init_namo_object_names) - len(new_namo_obj_names))
                     objs_in_collision = [self.env.GetKinBody(name) for name in new_namo_obj_names]
                 else:
                     objs_in_collision = [self.env.GetKinBody(name) for name in self.namo_planner.curr_namo_object_names]
