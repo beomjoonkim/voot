@@ -74,8 +74,7 @@ class NAMO(ProblemEnvironment):
                     if len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names) > 0:
                         reward = len(self.namo_planner.fixed_init_namo_object_names) - len(new_namo_obj_names)
                     else:
-                        reward = -1
-
+                        reward = 0
                     objs_in_collision = [self.env.GetKinBody(name) for name in new_namo_obj_names]
                 else:
                     objs_in_collision = [self.env.GetKinBody(name) for name in self.namo_planner.curr_namo_object_names]

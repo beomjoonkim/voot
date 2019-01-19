@@ -46,7 +46,7 @@ class MCTSTree:
             # dot it with \gamma, gamma^2, ... and so on.
             reward_list = []
             while not curr_node.is_init_node:
-                if curr_node.parent is None and not curr_node.is_init_node:
+                if curr_node.parent is None: # and not curr_node.is_init_node:
                     break
                 #sumR += curr_node.parent.reward_history[make_action_hashable(curr_node.parent_action)][0]
                 reward_list.append(curr_node.parent.reward_history[make_action_hashable(curr_node.parent_action)][0])
@@ -54,6 +54,7 @@ class MCTSTree:
             len(reward_list)
             discount_rates = [np.power(discount_factor, i) for i in range(len(reward_list))]
             sumR = np.dot(discount_rates[::-1], reward_list)
+            #sumR = np.sum(reward_list)
 
             # exclude the ones that are not the descendents of the current init node
             if not(curr_node.parent is None and not curr_node.is_init_node):

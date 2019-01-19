@@ -58,13 +58,14 @@ class VOOGenerator(Generator):
         self.update_evaled_values(node)
 
         rnd = np.random.random() # this should lie outside
-        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 #and \
-                                       #np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
+        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
+                                       np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
         if is_sample_from_best_v_region:
             print 'Sample from best region'
         #print "VOO sampling...from best v-region?", is_sample_from_best_v_region
         stime=time.time()
         for i in range(n_iter):
+            #print i
             if is_sample_from_best_v_region:
                 action_parameters = self.sample_from_best_voronoi_region(node)
             else:
@@ -110,7 +111,7 @@ class VOOGenerator(Generator):
         # todo closest to any one of the best
 
         while np.any(best_dist > other_dists):
-            #print "Gaussian place sampling, counter", counter, len(other_dists)
+            print "Gaussian place sampling, counter", counter, len(other_dists)
             variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
             new_parameters = np.random.normal(best_evaled_action, variance)
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
@@ -127,9 +128,12 @@ class VOOGenerator(Generator):
 
         best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values))
         best_action_idxs = best_action_idxs.reshape((len(best_action_idxs, )))
+
         best_action_idx = np.random.choice(best_action_idxs)
         best_evaled_action = self.evaled_actions[best_action_idx]
         other_actions = self.evaled_actions
+        #if len(best_action_idxs) > 1:
+        #    import pdb;pdb.set_trace()
         # todo closest to any one of the best
 
         while np.any(best_dist > other_dists):
@@ -137,11 +141,14 @@ class VOOGenerator(Generator):
             new_parameters = np.random.normal(best_evaled_action, variance)
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
 
-            best_dist = pick_parameter_distance(obj, new_parameters, best_evaled_action)
+            best_dists = [pick_parameter_distance(obj, new_parameters, self.evaled_actions[idx]) for idx in best_action_idxs]
             other_dists = np.array([pick_parameter_distance(obj, other, new_parameters) for other in
                                     other_actions])
+            for best_dist in best_dists:
+                if np.all(best_dist < other_dists):
+                    break
             counter += 1
-            #print "Gaussian pick sampling, variance and counter", variance, counter, len(other_dists)
+            print "Gaussian pick sampling, variance and counter", variance, counter, len(other_dists)
 
         return new_parameters
 

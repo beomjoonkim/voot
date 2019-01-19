@@ -35,7 +35,7 @@ class Mover(ProblemEnvironment):
 
         self.init_base_conf = self.problem_config['init_base_config']
         self.goal_base_conf = self.problem_config['goal_base_config']
-        self.infeasible_reward = -1000
+        self.infeasible_reward = -2
         self.name = 'mcr'
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.collision_fn = collision_fn(self.env, self.robot)
@@ -68,7 +68,7 @@ class Mover(ProblemEnvironment):
 
     def determine_reward(self, robot_conf):
         distance_penalization = np.exp(-se2_distance(robot_conf, self.goal_base_conf, 1, 1))
-        collision_penalization = -(self.collision_fn(robot_conf)*1)*1
+        collision_penalization = -(self.collision_fn(robot_conf))*distance_penalization*2
         return distance_penalization + collision_penalization
 
     def reset_to_init_state(self, node):

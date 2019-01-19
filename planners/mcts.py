@@ -24,7 +24,7 @@ from utils import get_pick_domain, get_place_domain
 from generators.gpucb import GPUCBGenerator
 
 
-DEBUG = False
+DEBUG = True
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560':
@@ -56,7 +56,7 @@ class MCTS:
         self.high_level_planner = high_level_planner
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
-        self.depth_limit = 10
+        self.depth_limit = 300
 
         self.s0_node = self.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
@@ -216,12 +216,11 @@ class MCTS:
             #   if this is place node, we have a feasible place, we visited >100 times, then switch to the
             #   most visited node
 
-            #if self.environment.is_solving_namo:
-            if False:
+            if self.environment.is_solving_namo:
                 is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
-                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 50
+                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 30
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
@@ -237,10 +236,9 @@ class MCTS:
             if self.environment.name == 'mcr':
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
-                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 10
+                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 20
                 if we_have_feasible_action and we_evaluated_the_node_enough:
-                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
-                    best_node = self.s0_node.children[best_action]
+                    best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
                     self.switch_init_node(best_node)
                     n_node_switch+=1
                     print "Node switch"
@@ -249,7 +247,6 @@ class MCTS:
                 # it would have made 150 steps
                 print n_node_switch
                 self.environment.env.SetViewer('qtcoin')
-                import pdb;pdb.set_trace()
             self.environment.reset_to_init_state(self.s0_node)
 
             stime = time.time()
@@ -342,7 +339,6 @@ class MCTS:
             if not curr_node.is_goal_and_already_visited:
                 self.found_solution = True
                 curr_node.is_goal_node = True
-                import pdb;pdb.set_trace()
                 print "Solution found, returning the goal reward", self.goal_reward
             return self.goal_reward
 
