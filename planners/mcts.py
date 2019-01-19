@@ -67,7 +67,7 @@ class MCTS:
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
         if self.environment.name == 'namo':
-            self.goal_reward = 10
+            self.goal_reward = 100
         else:
             self.goal_reward = 0
         self.n_feasibility_checks = n_feasibility_checks

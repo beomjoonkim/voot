@@ -65,9 +65,9 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
     elif domain_name == 'namo':
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//no_infeasible_place/'
         if algo_name.find('plaindoo') !=-1:
-            result_dir = rootdir+'/namo_results/mcts_iter_500/uct_0.0_widening_0.5_doo'
+            result_dir = rootdir+'/namo_results/mcts_iter_300/uct_0.0_widening_0.5_doo'
         else:
-            result_dir = rootdir+'/namo_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter)+'_'
+            result_dir = rootdir+'/namo_results/mcts_iter_300/uct_0.0_widening_' + str(widening_parameter)+'_'
     else:
         return -1
     if algo_name.find('plaindoo') == -1:
@@ -186,7 +186,7 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['randomizeddoo_1.0','voo_0.3', 'unif']
+        algo_names = ['voo_0.3', 'unif']
     else:
         algo_names = ['randomizeddoo_1.0',  'voo_0.3', 'unif']
 
