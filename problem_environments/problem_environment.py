@@ -195,8 +195,9 @@ class ProblemEnvironment:
             else:
                 n_iterations = [20, 50, 100, 500, 1000]
 
-        #print "Base motion planning..."
+        print "Base motion planning..."
         path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
+        print "Done!"
         return path, status
 
     def get_arm_motion_plan(self, goal, manip_name=None):

@@ -74,7 +74,7 @@ class NAMO(ProblemEnvironment):
                         reward = np.exp(-distance_travelled)
                     else:
                         distance_travelled = get_trajectory_length(motion_plan['place_motion'])
-                        reward = -distance_travelled
+                        reward = max(-distance_travelled, self.infeasible_reward)
                     objs_in_collision = [self.env.GetKinBody(name) for name in new_namo_obj_names]
                 else:
                     objs_in_collision = [self.env.GetKinBody(name) for name in self.namo_planner.curr_namo_object_names]

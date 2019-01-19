@@ -27,7 +27,7 @@ sys.setrecursionlimit(15000)
 
 
 
-DEBUG = True
+DEBUG = False
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560':
@@ -66,7 +66,10 @@ class MCTS:
         self.original_s0_node = self.s0_node
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
-        self.goal_reward = 0
+        if self.environment.name == 'namo':
+            self.goal_reward = 10
+        else:
+            self.goal_reward = 0
         self.n_feasibility_checks = n_feasibility_checks
 
         """
@@ -173,7 +176,7 @@ class MCTS:
         self.s0_node.is_init_node = True
         self.found_solution = False
         if self.environment.is_solving_namo:
-            if node.parent.operator =='two_arm_place' and self.environment.is_solving_namo:
+            if (node.parent is None) or (node.parent.operator =='two_arm_place' and self.environment.is_solving_namo):
                 self.environment.set_init_namo_object_names([o.GetName() for o in node.objs_in_collision])
                 self.high_level_planner.task_plan[0]['region'] = node.objs_in_collision
                 self.environment.reset_to_init_state(node)
@@ -223,6 +226,7 @@ class MCTS:
                 is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
+                # it will actually never switch.
                 we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 50
 
                 if is_pick_node and we_have_feasible_action:
@@ -239,16 +243,6 @@ class MCTS:
                     switch_counter = 0
 
             switch_counter += 1
-            if self.environment.name == 'mcr':
-                we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
-                    else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
-                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 20
-                if we_have_feasible_action and we_evaluated_the_node_enough:
-                    best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
-                    self.switch_init_node(best_node)
-                    n_node_switch+=1
-                    print "Node switch"
-
             self.environment.reset_to_init_state(self.s0_node)
 
             stime = time.time()
@@ -269,6 +263,7 @@ class MCTS:
             print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2])
 
             if self.found_solution:
+                import pdb;pdb.set_trace()
                 optimal_iter += 1
                 plan = self.retrace_best_plan(best_node)
                 goal_node = best_node
@@ -277,11 +272,8 @@ class MCTS:
                     break
                 elif not self.optimal_score_achieved(best_traj_rwd):
                     plan = self.retrace_best_plan(best_node)
-                    # reset the node to the original s0_node
                 self.switch_init_node(self.original_s0_node)
-
-                #elif optimal_iter > n_optimal_iter:
-                #    break
+                self.found_solution = False
             else:
                 plan = None
                 goal_node = None
