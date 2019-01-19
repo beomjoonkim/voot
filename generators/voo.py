@@ -3,7 +3,7 @@ import numpy as np
 sys.path.append('../mover_library/')
 from samplers import gaussian_randomly_place_in_region
 from generator import Generator
-from utils import pick_parameter_distance, place_parameter_distance
+from utils import pick_parameter_distance, place_parameter_distance, se2_distance
 from planners.mcts_utils import make_action_executable
 import time
 
@@ -17,6 +17,7 @@ class VOOGenerator(Generator):
         self.c1 = c1
         self.feasible_actions = []
         self.feasible_q_values = []
+        self.idx_to_update  = None
 
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()
@@ -62,7 +63,6 @@ class VOOGenerator(Generator):
                                        np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
         if is_sample_from_best_v_region:
             print 'Sample from best region'
-        #print "VOO sampling...from best v-region?", is_sample_from_best_v_region
         stime=time.time()
         for i in range(n_iter):
             #print i
@@ -72,18 +72,25 @@ class VOOGenerator(Generator):
                 action_parameters = self.sample_from_uniform()
             action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
 
-            self.evaled_actions.append(action_parameters)
             if status == 'HasSolution':
+                self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append('update_me')
                 self.idx_to_update = len(self.evaled_actions)-1
                 #print "Found feasible sample"
                 #print "VOO time", time.time()-stime
                 break
             else:
-                self.evaled_q_values.append(self.problem_env.infeasible_reward)
-                self.idx_to_update = None
+                pass
+                #self.evaled_q_values.append(self.problem_env.infeasible_reward)
+                #self.idx_to_update = None
 
         #print "VOO time", time.time()-stime
+        """
+        if status == 'HasSolution':
+            print 'Found feasible'
+        else:
+            print 'Didnt find feasible'
+        """
         return action
 
     def sample_from_best_voronoi_region(self, node):

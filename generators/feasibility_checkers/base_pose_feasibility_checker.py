@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('../mover_library/')
 from mover_library.motion_planner import collision_fn
-from utils import get_body_xytheta
+from utils import get_body_xytheta, set_robot_config
 
 class BasePoseFeasibilityChecker(object):
     def __init__(self, problem_env):
@@ -16,6 +16,7 @@ class BasePoseFeasibilityChecker(object):
         new_q = robot_xytheta + action
 
         self.problem_env.disable_objects() # note that this class is only for mcr purpose
+        set_robot_config(new_q, self.problem_env.robot)
         if self.collision_fn(new_q) or \
                 (not self.problem_env.regions['entire_region'].contains(self.robot.ComputeAABB())):
             action = {'operator_name': 'next_base_pose', 'base_pose': None,
@@ -26,6 +27,7 @@ class BasePoseFeasibilityChecker(object):
                       'action_parameters': action}
             status = 'HasSolution'
         self.problem_env.enable_objects()
+        set_robot_config(robot_xytheta, self.problem_env.robot)
 
         return action, status
 

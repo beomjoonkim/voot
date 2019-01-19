@@ -35,7 +35,7 @@ class Mover(ProblemEnvironment):
 
         self.init_base_conf = self.problem_config['init_base_config']
         self.goal_base_conf = self.problem_config['goal_base_config']
-        self.infeasible_reward = -2
+        self.infeasible_reward = 0 #-1
         self.name = 'mcr'
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.collision_fn = collision_fn(self.env, self.robot)
@@ -56,20 +56,24 @@ class Mover(ProblemEnvironment):
         new_robot_config = clean_pose_data(new_robot_config).squeeze()
         if abs(new_robot_config[-1]) > 2*np.pi:
             import pdb;pdb.set_trace()
+        prev_robot_config =get_body_xytheta(self.robot)
         set_robot_config(new_robot_config, self.robot)
 
 
         curr_state = None
-        reward = self.determine_reward(new_robot_config)
+        reward = self.determine_reward(prev_robot_config, new_robot_config)
         return curr_state, reward, new_robot_config, []
 
     def get_region_containing(self, obj):
         return self.regions['entire_region']
 
-    def determine_reward(self, robot_conf):
-        distance_penalization = np.exp(-se2_distance(robot_conf, self.goal_base_conf, 1, 1))
-        collision_penalization = -(self.collision_fn(robot_conf))*distance_penalization*2
-        return distance_penalization + collision_penalization
+    def determine_reward(self, prev, new):
+        # this reward function does not prevent slow progress
+        prev_dist_to_goal = se2_distance(prev, self.goal_base_conf, 1, 1)
+        new_dist_to_goal = se2_distance(new, self.goal_base_conf, 1, 1)
+        distance_reward = -new_dist_to_goal # 1 if prev_dist_to_goal - new_dist_to_goal > 0 else 0
+        collision_reward = -(self.collision_fn(new))*1
+        return distance_reward + collision_reward
 
     def reset_to_init_state(self, node):
         node.state_saver.Restore()

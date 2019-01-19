@@ -11,14 +11,14 @@ from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 ## NAMO problem environment
 from problem_environment import ProblemEnvironment
 from NAMO_problem import NAMO_problem
+from mover_problem import MoverProblem
 
 ## openrave_wrapper imports
 from manipulation.bodies.bodies import set_color
 
 ## mover library utility functions
-sys.path.append('../mover_library/')
-from utils import set_robot_config, get_body_xytheta, check_collision_except,  grab_obj, \
-    simulate_path, two_arm_pick_object, two_arm_place_object
+from mover_library.utils import set_robot_config, get_body_xytheta, check_collision_except,  grab_obj, \
+    two_arm_pick_object, two_arm_place_object, get_trajectory_length
 from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 
 OBJECT_ORIGINAL_COLOR = (0, 0, 0)
@@ -29,25 +29,22 @@ TARGET_OBJ_COLOR = (1, 0, 0)
 class NAMO(ProblemEnvironment):
     def __init__(self):
         ProblemEnvironment.__init__(self)
-
-        self.problem_config = NAMO_problem(self.env)
+        problem = MoverProblem(self.env)
+        self.problem_config = problem.get_problem_config()
         self.robot = self.env.GetRobots()[0]
-
         self.objects = self.problem_config['objects']
-        for obj in self.objects:
-            set_color(obj, OBJECT_ORIGINAL_COLOR)
+        self.regions = {'entire_region': self.problem_config['entire_region']}
+        self.init_base_conf = self.problem_config['init_base_config']
+        self.goal_base_conf = self.problem_config['goal_base_config']
 
-        self.target_object = self.problem_config['target_obj']
-        set_color(self.target_object, TARGET_OBJ_COLOR)
-
-        self.regions = {'entire_region': self.problem_config['entire_region'],
-                        'loading_region': self.problem_config['loading_region']}
-
-        self.init_base_conf = np.array([-1, 1, 0])
+        self.init_saver = DynamicEnvironmentStateSaver(self.env)
+        self.robot = self.env.GetRobots()[0]
+        self.objects = self.problem_config['objects']
+        self.regions = {'entire_region': self.problem_config['entire_region']}
         self.infeasible_reward = -2
         self.is_init_pick_node = True
         self.name = 'namo'
-        self.init_saver = self.problem_config['initial_saver']
+        self.init_saver = DynamicEnvironmentStateSaver(self.env)
 
     def get_objs_in_region(self, region_name):
         movable_objs = self.objects
@@ -72,13 +69,16 @@ class NAMO(ProblemEnvironment):
             elif self.is_solving_namo:
                 if operator_name == 'two_arm_place':
                     if len(self.namo_planner.prev_namo_object_names) - len(new_namo_obj_names) > 0:
-                        reward = len(self.namo_planner.fixed_init_namo_object_names) - len(new_namo_obj_names)
+                        len(self.namo_planner.fixed_init_namo_object_names) - len(new_namo_obj_names)
+                        distance_travelled = get_trajectory_length(motion_plan['place_motion'])
+                        reward = np.exp(-distance_travelled)
                     else:
-                        reward = 0
+                        distance_travelled = get_trajectory_length(motion_plan['place_motion'])
+                        reward = -distance_travelled
                     objs_in_collision = [self.env.GetKinBody(name) for name in new_namo_obj_names]
                 else:
                     objs_in_collision = [self.env.GetKinBody(name) for name in self.namo_planner.curr_namo_object_names]
-                    reward = 0.1
+                    reward = 0
         else:
             reward = self.infeasible_reward
 
@@ -190,7 +190,6 @@ class NAMO(ProblemEnvironment):
 
                 # todo update the task-plan?
                 self.high_level_planner.set_task_plan([{'region': self.regions['entire_region'], 'objects': new_namo_objs}])
-
         reward, objs_in_collision = self.determine_reward('two_arm_place', target_obj, plan, status, new_namo_obj_names)
         #if reward > 1:
         #    import pdb;pdb.set_trace()

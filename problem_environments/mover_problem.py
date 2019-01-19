@@ -459,7 +459,7 @@ class MoverProblem:
         door_th = 0
         create_doors(x_extents, y_extents, door_x, door_y, door_width, door_th, self.env)
 
-        set_config(self.robot, HOLDING_LEFT_ARM, self.robot.GetManipulator('leftarm').GetArmIndices())
+        set_config(self.robot, FOLDED_LEFT_ARM, self.robot.GetManipulator('leftarm').GetArmIndices())
         set_config(self.robot, mirror_arm_config(FOLDED_LEFT_ARM),
                    self.robot.GetManipulator('rightarm').GetArmIndices())
 
@@ -477,12 +477,12 @@ class MoverProblem:
 
         self.home_region_xy = [x_extents / 2.0, 0]
         self.home_region_xy_extents = [x_extents, y_extents]
-        self.home_region = AARegion('home_region',
+        self.home_region = AARegion('entire_region',
                                     ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]),
                                      (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
         #randomly_place_region(self.env, self.robot, self.home_region)
         self.init_base_config = np.array([-1., -3., 0.])
-        self.goal_base_config = np.array([4.5, 3, np.pi/2.0])
+        self.goal_base_config = np.array([-0,2.5,np.pi/2.])
 
 
         # randomly placed objects
@@ -506,7 +506,7 @@ class MoverProblem:
             # place other objects
             place_objs_in_region(packing_boxes, self.home_region, self.env)
             place_objs_in_region([self.robot], self.home_region, self.env)
-            place_objs_in_region([roomba], self.home_region, self.env)
+            #place_objs_in_region([roomba], self.home_region, self.env)
             place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
         else:
             set_obj_xytheta(problem_config['computer_chair_pose'], computer_chair)
@@ -521,15 +521,50 @@ class MoverProblem:
             for obj_pose,obj in zip(problem_config['packing_box_poses'], packing_boxes):
                 set_obj_xytheta(obj_pose, obj)
 
+        robot=self.robot
+        # left arm IK
+        robot.SetActiveManipulator('leftarm')
+        manip = robot.GetActiveManipulator()
+        ee = manip.GetEndEffector()
+        ikmodel1 = databases.inversekinematics.InverseKinematicsModel(robot=robot,
+                                                                      iktype=IkParameterization.Type.Transform6D,
+                                                                      forceikfast=True, freeindices=None,
+                                                                      freejoints=None, manip=None)
+        if not ikmodel1.load():
+            ikmodel1.autogenerate()
+
+        # right arm torso IK
+        robot.SetActiveManipulator('rightarm_torso')
+        manip = robot.GetActiveManipulator()
+        ee = manip.GetEndEffector()
+        ikmodel2 = databases.inversekinematics.InverseKinematicsModel(robot=robot, \
+                                                                      iktype=IkParameterization.Type.Transform6D, \
+                                                                      forceikfast=True, freeindices=None, \
+                                                                      freejoints=None, manip=None)
+        if not ikmodel2.load():
+            ikmodel2.autogenerate()
+
+
+
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
         self.movable_objects = [roomba, computer_chair] + packing_boxes + kitchen_chairs
         set_robot_config(self.init_base_config, self.robot)
 
+        chair1 = kitchen_chairs[0]
+        chair2 = kitchen_chairs[1]
+        chair3 = kitchen_chairs[2]
+        set_obj_xytheta([0.01477438, 1.59858884, 6.20038223], chair1)
+        set_obj_xytheta([0.1, 0.7, 0], chair2)
+        set_obj_xytheta([1.812, 1.079,0.0148], chair3)
+        set_obj_xytheta([4, 2.9, 0], packing_boxes[2])
+
     def get_problem_config(self):
-        problem_config = {'objects':self.movable_objects,
-                          'entire_region':self.home_region,
-                          'init_base_config':self.init_base_config,
-                          'goal_base_config':self.goal_base_config}
+        problem_config = {'objects': self.movable_objects,
+                          'entire_region': self.home_region,
+                          'init_base_config': self.init_base_config,
+                          'goal_base_config': self.goal_base_config,
+                          'entire_region_xy': self.home_region_xy,
+                          'entire_region_extents': self.home_region_xy_extents}
         return problem_config
 
     def disable_objects_in_region(self, region):

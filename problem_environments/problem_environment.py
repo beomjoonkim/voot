@@ -131,7 +131,7 @@ class ProblemEnvironment:
             path = rrt_connect(q_init, goal, d_fn, s_fn, e_fn, c_fn, iterations=n_iter)
             if path is not None:
                 path = smooth_path(path, e_fn, c_fn)
-                print "Path Found, took %.2f"%(time.time()-stime)
+                #print "Path Found, took %.2f"%(time.time()-stime)
 
                 if self.env.GetViewer() is not None:
                     remove_drawn_configs('goal', self.env)
@@ -140,7 +140,7 @@ class ProblemEnvironment:
         if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
             remove_drawn_configs('goal', self.env)
 
-        print "Path not found, took %.2f"%(time.time()-stime)
+        #print "Path not found, took %.2f"%(time.time()-stime)
         return None, 'NoPath'
 
     def get_arm_base_motion_plan(self, goal, region_name=None, manip_name=None):
@@ -195,7 +195,7 @@ class ProblemEnvironment:
             else:
                 n_iterations = [20, 50, 100, 500, 1000]
 
-        print "Base motion planning..."
+        #print "Base motion planning..."
         path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
         return path, status
 

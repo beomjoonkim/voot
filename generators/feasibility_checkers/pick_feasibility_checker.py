@@ -61,7 +61,7 @@ class PickFeasibilityChecker(object):
                     if not self.env.CheckCollision(self.robot):
                         two_arm_place_object(obj, self.robot, pick_action)
                         set_robot_config(self.problem_env.init_base_conf, self.robot)
-                        print "Sampling pick succeeded"
+                        #print "Sampling pick succeeded"
                         return g_config
                     else:
                         two_arm_place_object(obj, self.robot, pick_action)
@@ -70,7 +70,7 @@ class PickFeasibilityChecker(object):
                     two_arm_pick_object(obj, self.robot, pick_action)
                     if not self.env.CheckCollision(self.robot):
                         two_arm_place_object(obj, self.robot, pick_action)
-                        print "Sampling pick succeeded"
+                        #print "Sampling pick succeeded"
                         return g_config
                     else:
                         two_arm_place_object(obj, self.robot, pick_action)

@@ -163,12 +163,7 @@ class NamoDomainNamoPlanner(NAMOPlanner):
 
     def namo_domain_solve_single_object(self, initial_collision_names, mcts):
         # get the initial collisions
-        """
-        pick_collisions = initial_collision_names['pick_collisions']
-        place_collisions = initial_collision_names['place_collisions']
-        initial_collision_names = pick_collisions
-        initial_collision_names += [tmp for tmp in place_collisions if tmp not in pick_collisions]
-        """
+
         self.fixed_init_namo_object_names = copy.deepcopy(initial_collision_names)
         self.init_namo_object_names = initial_collision_names
         self.curr_namo_object_names = copy.deepcopy(self.init_namo_object_names)

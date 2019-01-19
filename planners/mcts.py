@@ -23,6 +23,9 @@ sys.path.append('../mover_library/')
 from utils import get_pick_domain, get_place_domain
 from generators.gpucb import GPUCBGenerator
 
+sys.setrecursionlimit(15000)
+
+
 
 DEBUG = True
 
@@ -59,6 +62,8 @@ class MCTS:
         self.depth_limit = 300
 
         self.s0_node = self.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
+
+        self.original_s0_node = self.s0_node
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
         self.goal_reward = 0
@@ -137,7 +142,8 @@ class MCTS:
         plan = []
         #curr_node = self.get_best_goal_node()
         curr_node = best_node
-        while not curr_node.is_init_node:
+        #while not curr_node.is_init_node:
+        while not curr_node.parent is None:
             action = curr_node.parent_action
             path = curr_node.parent_motion
             obj = curr_node.parent.obj
@@ -209,30 +215,30 @@ class MCTS:
         search_time_to_reward = []
         optimal_iter = 0
         n_node_switch = 0
+        switch_counter = 0
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
-            # todo switch node
-            #   if this is pick node and we have a feasible pick, then switch to the most visited node
-            #   if this is place node, we have a feasible place, we visited >100 times, then switch to the
-            #   most visited node
 
             if self.environment.is_solving_namo:
                 is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
-                we_evaluated_the_node_enough = we_have_feasible_action and np.sum(self.s0_node.N.values()) > 30
+                we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 50
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
                     best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
                     best_node = self.s0_node.children[best_action]
                     self.switch_init_node(best_node)
+                    switch_counter = 0
                 elif (not is_pick_node) and we_evaluated_the_node_enough:
                     print "Node switching from place node"
                     best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
                     best_node = self.s0_node.children[best_action]
                     self.switch_init_node(best_node)
+                    switch_counter = 0
 
+            switch_counter += 1
             if self.environment.name == 'mcr':
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
@@ -243,10 +249,6 @@ class MCTS:
                     n_node_switch+=1
                     print "Node switch"
 
-            if iteration == 1000 or iteration == 1999:
-                # it would have made 150 steps
-                print n_node_switch
-                self.environment.env.SetViewer('qtcoin')
             self.environment.reset_to_init_state(self.s0_node)
 
             stime = time.time()
@@ -264,6 +266,7 @@ class MCTS:
             # log the reward vs. time
             best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, self.found_solution])
+            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2])
 
             if self.found_solution:
                 optimal_iter += 1
@@ -272,10 +275,13 @@ class MCTS:
                 if self.optimal_score_achieved(best_traj_rwd):
                     print "Optimal score found"
                     break
-                elif optimal_iter > n_optimal_iter:
-                    break
                 elif not self.optimal_score_achieved(best_traj_rwd):
                     plan = self.retrace_best_plan(best_node)
+                    # reset the node to the original s0_node
+                self.switch_init_node(self.original_s0_node)
+
+                #elif optimal_iter > n_optimal_iter:
+                #    break
             else:
                 plan = None
                 goal_node = None

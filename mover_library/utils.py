@@ -280,6 +280,12 @@ def draw_configs(configs, env, name='point', colors=None, transparency=0.1):
             th = config[2]
             set_quat(new_body, quat_from_z_rot(th))
 
+def get_trajectory_length(trajectory):
+    dists = 0
+    for i in range(len(trajectory)-1):
+        dists+=se2_distance(trajectory[i+1], trajectory[i], 1, 1)
+    return dists
+
 
 def clean_pose_data(pose_data):
     # fixes angle to be between 0 to 2pi

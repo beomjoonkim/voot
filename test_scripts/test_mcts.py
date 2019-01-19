@@ -68,7 +68,7 @@ def make_problem_env(domain_name):
 
 def get_task_plan(domain_name, problem_env):
     if domain_name == 'namo':
-        task_plan = [{'region': problem_env.regions['loading_region'], 'objects': [problem_env.target_object]}]
+        task_plan = [{'region': problem_env.regions['entire_region'], 'objects': [problem_env.objects[0]]}] # dummy
     elif domain_name == 'convbelt':
         task_plan = [{'region': problem_env.regions['object_region'], 'objects': problem_env.objects}]
     else:
