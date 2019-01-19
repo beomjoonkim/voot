@@ -52,7 +52,6 @@ class PlaceFeasibilityChecker:
     @staticmethod
     def compute_robot_base_pose_given_object_pose(obj, robot, obj_pose, T_r_wrt_o):
         original_robot_T = robot.GetTransform()
-
         release_obj(robot, obj)
         set_obj_xytheta(obj_pose, obj)
         new_T_robot = np.dot(obj.GetTransform(), T_r_wrt_o)

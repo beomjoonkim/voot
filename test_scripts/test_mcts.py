@@ -3,11 +3,9 @@ from problem_environments.namo_env import NAMO
 from problem_environments.mover_env import Mover
 
 from planners.high_level_planner import HighLevelPlanner
+from planners.mcr_high_level_planner import MCRHighLevelPlanner
+from planners.mcts import MCTS
 
-
-from sampling_strategies.voo import VOO, MoverVOO
-from sampling_strategies.uniform import Uniform
-from sampling_strategies.doo import DOO
 
 import argparse
 import cPickle as pickle
@@ -35,13 +33,19 @@ def make_save_dir(args):
     c1 = args.c1
 
     if domain == 'namo':
-        save_dir = ROOTDIR + '/test_results//no_infeasible_place/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
+        save_dir = ROOTDIR + '/test_results//root_switching/no_infeasible_place/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
-    else:
+    elif domain == 'convbelt':
         save_dir = ROOTDIR + '/test_results/root_switching/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
+    elif domain == 'mcr':
+        save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' \
+                   + str(mcts_iter) + '/uct_' \
+                   + str(uct_parameter) + '_widening_' \
+                   + str(widening_parameter) + '_' + sampling_strategy + \
+                   '_n_feasible_checks_' + str(n_feasibility_checks)
 
     if sampling_strategy != 'unif':
         save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
@@ -64,7 +68,7 @@ def make_problem_env(domain_name):
 
 def get_task_plan(domain_name, problem_env):
     if domain_name == 'namo':
-        task_plan = [{'region': problem_env.regions['loading_region'], 'objects': [problem_env.target_object]}]
+        task_plan = [{'region': problem_env.regions['entire_region'], 'objects': [problem_env.objects[0]]}] # dummy
     elif domain_name == 'convbelt':
         task_plan = [{'region': problem_env.regions['object_region'], 'objects': problem_env.objects}]
     else:
@@ -72,6 +76,20 @@ def get_task_plan(domain_name, problem_env):
         task_plan = [{'region': problem_env.box_regions[packing_boxes[0].GetName()],
                       'objects': problem_env.shelf_objs[0:5]}]
     return task_plan
+
+
+def instantiate_mcts(args, problem_env, domain_name, high_level_planner):
+    uct_parameter = args.uct
+    widening_parameter = args.widening_parameter
+    sampling_strategy = args.sampling_strategy
+    sampling_strategy_exploration_parameter = args.epsilon
+    n_feasibility_checks = args.n_feasibility_checks
+    c1 = args.c1
+
+    mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
+                sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
+                problem_env, domain_name, high_level_planner)
+    return mcts
 
 
 def main():
@@ -103,14 +121,21 @@ def main():
         return -1
 
     problem_env = make_problem_env(args.domain)
-    task_plan = get_task_plan(args.domain, problem_env)
 
     if args.v:
         problem_env.env.SetViewer('qtcoin')
 
-    hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
-    hierarchical_planner.set_mcts_parameters(args)
-    search_time_to_reward, plan, optimal_score_achieved = hierarchical_planner.search()
+    if args.domain == 'convbelt' or args.domain == 'namo':
+        task_plan = get_task_plan(args.domain, problem_env)
+        hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
+        hierarchical_planner.set_mcts_parameters(args)
+        search_time_to_reward, plan, optimal_score_achieved = hierarchical_planner.search()
+    else:
+        # todo continue from here
+        high_level_planner = MCRHighLevelPlanner(problem_env, 'mcr', args.debug)
+        mcts = instantiate_mcts(args, problem_env,'mcr', high_level_planner)
+        search_time_to_reward, plan, optimal_score_achieved = mcts.search(args.mcts_iter)
+        import pdb;pdb.set_trace()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
                  'is_optimal_score': optimal_score_achieved}, open(save_dir + '/' + str(args.problem_idx)+'.pkl', 'wb'))

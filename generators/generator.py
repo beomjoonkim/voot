@@ -6,8 +6,8 @@ from utils import get_pick_domain, get_place_domain
 
 from feasibility_checkers.pick_feasibility_checker import PickFeasibilityChecker
 from feasibility_checkers.place_feasibility_checker import PlaceFeasibilityChecker
+from feasibility_checkers.base_pose_feasibility_checker import BasePoseFeasibilityChecker
 from planners.mcts_utils import make_action_executable
-
 
 class Generator:
     def __init__(self, operator_name, problem_env):
@@ -27,8 +27,10 @@ class Generator:
 
             self.domain = place_domain
             self.feasibility_checker = PlaceFeasibilityChecker(problem_env)
+        elif operator_name == 'next_base_pose':
+            self.domain = np.array([[-0.2,-0.2,-20.*np.pi/180.0],[0.2,0.2,20*np.pi/180.0]])
+            self.feasibility_checker = BasePoseFeasibilityChecker(self.problem_env)
         else:
-            import pdb;pdb.set_trace()
             raise ValueError
 
     def update_evaled_values(self, node):

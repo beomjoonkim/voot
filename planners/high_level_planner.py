@@ -118,17 +118,7 @@ class HighLevelPlanner:
         elif self.problem_env.is_solving_packing:
             return best_traj_rwd == n_objs_to_manipulate
         elif self.problem_env.is_solving_namo:
-            # todo what is the optimal reward?
-            return True
-
-    def stitch_fetch_and_namo_plans(self, fetch_plan, namo_plan):
-        if len(namo_plan) == 0:
-            stitched_plan = fetch_plan
-        else:
-            pick_path_to_target_from_last_obstacle_clearance = namo_plan[-1]['path']['pick_motion']
-            fetch_plan[0]['path'] = pick_path_to_target_from_last_obstacle_clearance
-            stitched_plan = namo_plan + fetch_plan
-        return stitched_plan
+            return False
 
     def solve_convbelt(self, objects, target_packing_region):
         plan = []
@@ -154,12 +144,18 @@ class HighLevelPlanner:
         #                                                                                              next_init_node)
 
         self.problem_env.disable_objects()
+        fetching_path,_ = self.problem_env.get_base_motion_plan(self.problem_env.goal_base_conf)
+
+        """
         object[0].Enable(True)
         pick_pi = PickWithBaseUnif(self.problem_env)
         pick_action = pick_pi.predict(object[0], self.problem_env.regions['entire_region'], n_iter=10000)
         fetching_path, status= self.problem_env.get_base_motion_plan(pick_action['base_pose'])
         self.namo_planner.fetch_pick_path = fetching_path
+        """
         self.problem_env.enable_objects()
+        self.namo_planner.fetch_pick_path = fetching_path
+
         initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
         initial_collision_names = [o.GetName() for o in initial_collisions]
 
@@ -179,7 +175,7 @@ class HighLevelPlanner:
         for plan_step in self.abstract_task_plan:
             # get the first region
             target_packing_region = plan_step['region']
-            target_packing_region.draw(self.problem_env.env)
+            #target_packing_region.draw(self.problem_env.env)
             # get the list of objects to be packed
             objects = plan_step['objects']
 
