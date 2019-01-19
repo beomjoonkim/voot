@@ -227,7 +227,7 @@ class MCTS:
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
-                we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 50
+                we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 20
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
@@ -263,7 +263,6 @@ class MCTS:
             print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2])
 
             if self.found_solution:
-                import pdb;pdb.set_trace()
                 optimal_iter += 1
                 plan = self.retrace_best_plan(best_node)
                 goal_node = best_node
