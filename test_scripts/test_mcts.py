@@ -119,8 +119,7 @@ def main():
     print "RANDOM SEED SET", random.seed(args.random_seed)
 
     save_dir = make_save_dir(args)
-    stat_file_name = save_dir + str(args.problem_idx)+'.pkl'
-    print stat_file_name
+    stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
     if os.path.isfile(stat_file_name):
         print "already done"
         return -1
@@ -142,8 +141,7 @@ def main():
         import pdb;pdb.set_trace()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
-                 'is_optimal_score': optimal_score_achieved}, open(save_dir + '/rand_seed_'+str(args.random_seed)+
-                                                                   '_pidx_' + str(args.problem_idx)+'.pkl', 'wb'))
+                 'is_optimal_score': optimal_score_achieved}, open(stat_file_name, 'wb'))
 
     problem_env.problem_config['env'].Destroy()
     openravepy.RaveDestroy()
