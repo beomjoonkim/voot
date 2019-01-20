@@ -108,10 +108,13 @@ def main():
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
-    parser.add_argument('-random_seed', type=int, default=0)
-    args = parser.parse_args()
+    parser.add_argument('-random_seed', type=int, default=-1)
 
-    print "Problem number ",args.problem_idx
+    args = parser.parse_args()
+    if args.random_seed == -1:
+        args.random_seed = args.problem_idx # for conveyor belt domain
+
+    print "Problem number ", args.problem_idx
     print "RANDOM SEED SET", np.random.seed(args.random_seed)
     print "RANDOM SEED SET", random.seed(args.random_seed)
 
@@ -139,7 +142,8 @@ def main():
         import pdb;pdb.set_trace()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
-                 'is_optimal_score': optimal_score_achieved}, open(save_dir + '/' + str(args.problem_idx)+'.pkl', 'wb'))
+                 'is_optimal_score': optimal_score_achieved}, open(save_dir + '/rand_seed_'+str(args.random_seed)+
+                                                                   '_pidx_' + str(args.problem_idx)+'.pkl', 'wb'))
 
     problem_env.problem_config['env'].Destroy()
     openravepy.RaveDestroy()
