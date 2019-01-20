@@ -147,18 +147,14 @@ class HighLevelPlanner:
         self.problem_env.disable_objects()
         fetching_path,_ = self.problem_env.get_base_motion_plan(self.problem_env.goal_base_conf,'entire_region')
         self.problem_env.enable_objects()
-        self.namo_planner.fetch_pick_path = fetching_path
         """
         fetching_path = pickle.load(open('./problem_environments/mover_domain_problems/fetching_path_'
                                           + str(self.problem_env.problem_idx) +'.pkl','r'))
         initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
         initial_collision_names = [o.GetName() for o in initial_collisions]
         print len(initial_collision_names)
-        import pdb;pdb.set_trace()
-
-        import pdb;pdb.set_trace()
         print "Solved fetching"
-        #self.namo_planner.namo_domain_initialize_namo_problem(fetch_plan, goal_node)
+        self.namo_planner.fetch_pick_path = fetching_path
         namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(
                                                                                  initial_collision_names,
                                                                                  self.mcts)
