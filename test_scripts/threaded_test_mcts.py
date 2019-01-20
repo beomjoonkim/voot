@@ -65,7 +65,7 @@ def main():
                                   'n_feasibility_checks': n_feasibility_check}
                         configs.append(config)
 
-    n_workers = int(30)
+    n_workers = int(10)
     print configs
     pool = ThreadPool(n_workers)
     results = pool.map(worker_wrapper_multi_input, configs)
