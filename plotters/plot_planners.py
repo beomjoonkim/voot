@@ -21,28 +21,6 @@ def savefig(xlabel, ylabel, fname=''):
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
-def get_stripstream_results(domain_name):
-    if domain_name == 'convbelt':
-        result_dir = './test_results/convbelt_results/stripstream/'
-    else:
-        result_dir = './test_results/convbelt_results/stripstream/'
-    search_times = []
-    success = []
-    for fin in os.listdir(result_dir):
-        if fin.find('.pkl') == -1:
-            continue
-        try:
-            result = pickle.load(open(result_dir + fin, 'r'))
-        except:
-            print fin
-        is_success = result['plan'] is not None
-        success.append(is_success)
-        if is_success:
-            search_times.append(result['search_time'])
-    print "stripstream time and success rate:"
-    print np.array(search_times).mean()
-    print np.array(success).mean()
-    print len(search_times)
 
 
 def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks):
@@ -63,7 +41,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/root_switching/'
         result_dir = rootdir + '/convbelt_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
     elif domain_name == 'namo':
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//no_infeasible_place/'
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
         if algo_name.find('plaindoo') != -1:
             result_dir = rootdir + '/namo_results/mcts_iter_500/uct_0.0_widening_0.5_doo'
         else:
@@ -120,7 +98,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
-    max_time = 1000
+    max_time = 500
     organized_times = range(100, max_time, 100)
 
     all_episode_data = []

@@ -549,6 +549,8 @@ class MoverProblem:
             self.init_base_config = np.array([5.07548914, 0.80471634, 3.2622907])
             self.goal_base_config = np.array([-1, -3, -0])
             set_robot_config(self.init_base_config, self.robot)
+            set_obj_xytheta([4, 3, 3], packing_boxes[5])
+            set_obj_xytheta([3.5, 1, 3], packing_boxes[7])
             self.set_obj_poses(problem_idx)
 
     def save_obj_poses(self, problem_idx):
@@ -559,7 +561,6 @@ class MoverProblem:
         obj_poses = pickle.load(open('./problem_environments/mover_domain_problems/' + str(problem_idx) + '.pkl', 'r'))
         for obj_name, obj_pose in zip(obj_poses.keys(), obj_poses.values()):
             set_obj_xytheta(obj_pose, self.env.GetKinBody(obj_name))
-
 
     def get_problem_config(self):
         problem_config = {'objects': self.movable_objects,
