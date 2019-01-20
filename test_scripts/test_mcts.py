@@ -35,17 +35,17 @@ def make_save_dir(args):
     if domain == 'namo':
         save_dir = ROOTDIR + '/test_results//root_switching/no_infeasible_place/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
-                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
+                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     elif domain == 'convbelt':
         save_dir = ROOTDIR + '/test_results/root_switching/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
-                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks)
+                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     elif domain == 'mcr':
         save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' \
                    + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + \
-                   '_n_feasible_checks_' + str(n_feasibility_checks)
+                   '_n_feasible_checks_' + str(n_feasibility_checks) + '/'
 
     if sampling_strategy != 'unif':
         save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
@@ -56,9 +56,9 @@ def make_save_dir(args):
     return save_dir
 
 
-def make_problem_env(domain_name):
+def make_problem_env(domain_name, problem_idx):
     if domain_name == 'namo':
-        problem_env = NAMO()
+        problem_env = NAMO(problem_idx)
     elif domain_name == 'convbelt':
         problem_env = ConveyorBelt()
     else:
@@ -108,20 +108,24 @@ def main():
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
-    args = parser.parse_args()
+    parser.add_argument('-random_seed', type=int, default=-1)
 
-    print "Problem number ",args.problem_idx
-    print "RANDOM SEED SET", np.random.seed(args.problem_idx)
-    print "RANDOM SEED SET", random.seed(args.problem_idx)
+    args = parser.parse_args()
+    if args.random_seed == -1:
+        args.random_seed = args.problem_idx # for conveyor belt domain
+
+    print "Problem number ", args.problem_idx
+    print "RANDOM SEED SET", np.random.seed(args.random_seed)
+    print "RANDOM SEED SET", random.seed(args.random_seed)
 
     save_dir = make_save_dir(args)
     stat_file_name = save_dir + str(args.problem_idx)+'.pkl'
+    print stat_file_name
     if os.path.isfile(stat_file_name):
         print "already done"
         return -1
 
-    problem_env = make_problem_env(args.domain)
-
+    problem_env = make_problem_env(args.domain, args.problem_idx)
     if args.v:
         problem_env.env.SetViewer('qtcoin')
 
@@ -138,7 +142,8 @@ def main():
         import pdb;pdb.set_trace()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
-                 'is_optimal_score': optimal_score_achieved}, open(save_dir + '/' + str(args.problem_idx)+'.pkl', 'wb'))
+                 'is_optimal_score': optimal_score_achieved}, open(save_dir + '/rand_seed_'+str(args.random_seed)+
+                                                                   '_pidx_' + str(args.problem_idx)+'.pkl', 'wb'))
 
     problem_env.problem_config['env'].Destroy()
     openravepy.RaveDestroy()

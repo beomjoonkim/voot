@@ -20,8 +20,8 @@ class DOOGenerator(Generator):
         self.explr_p = explr_p
         self.x_min = copy.deepcopy(self.domain[0])
         self.x_max = copy.deepcopy(self.domain[1])
-        self.domain[0] = (self.domain[0] - self.x_min) / (self.x_max-self.x_min)
-        self.domain[1] = (self.domain[1] - self.x_min) / (self.x_max-self.x_min)
+        self.domain[0] = self.normalize_x_value(self.domain[0])  # (self.domain[0] - self.x_min) / (self.x_max-self.x_min)
+        self.domain[1] = self.normalize_x_value(self.domain[1])  # (self.domain[1] - self.x_min) / (self.x_max-self.x_min)
 
         if operator_name == 'two_arm_pick':
             pick_param_distance_for_obj = lambda x,y: pick_parameter_distance(node.obj, x, y)
@@ -39,8 +39,7 @@ class DOOGenerator(Generator):
         self.update_evaled_values(node)
 
         normalized_evaled_actions = [self.normalize_x_value(a) for a in self.evaled_actions]
-        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values,
-                                           self.problem_env.infeasible_reward)
+        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values, self.problem_env.infeasible_reward)
         print "DOO sampling..."
 
         for i in range(n_iter):
@@ -63,7 +62,6 @@ class DOOGenerator(Generator):
         next_node.evaluated_x = next_node.cell_mid_point
         x_to_evaluate = next_node.cell_mid_point
         x_to_evaluate = self.unnormalize_x_value(x_to_evaluate)
-        next_node.evaluated_x = x_to_evaluate
         return x_to_evaluate, next_node
 
     def unnormalize_x_value(self, x_value):
