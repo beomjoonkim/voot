@@ -117,6 +117,7 @@ def main():
 
     save_dir = make_save_dir(args)
     stat_file_name = save_dir + str(args.problem_idx)+'.pkl'
+    print stat_file_name
     if os.path.isfile(stat_file_name):
         print "already done"
         return -1
