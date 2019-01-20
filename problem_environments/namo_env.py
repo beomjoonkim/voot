@@ -36,6 +36,7 @@ class NAMO(ProblemEnvironment):
         self.regions = {'entire_region': self.problem_config['entire_region']}
         self.init_base_conf = self.problem_config['init_base_config']
         self.goal_base_conf = self.problem_config['goal_base_config']
+        self.problem_idx = self.problem_config['problem_idx']
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.robot = self.env.GetRobots()[0]

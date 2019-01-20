@@ -490,6 +490,12 @@ class MoverProblem:
         packing_boxes = [b for b in self.env.GetBodies() if b.GetName().find('packing_box') != -1]
         computer_chair = self.env.GetKinBody('computer_chair')
         table = self.env.GetKinBody('table')
+        # kitchen table location
+        if problem_idx == 0:
+            table_xytheta = [0.91704, 0.8, 0]
+        else:
+            table_xytheta = [2.01704, 2, 0]
+        set_obj_xytheta(table_xytheta, table)
 
         self.is_new_env = problem_config is None
 
@@ -497,10 +503,7 @@ class MoverProblem:
         computer_chair_xytheta = [4.8, -2.5, 0]
         place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
 
-        # kitchen table location
-        table_xytheta = [0.91704, 0.8, 0]
-        #place_object_with_gaussian_noise(table, table_xytheta, self.env, scale=0.1)
-        set_obj_xytheta(table_xytheta, table)
+
 
         # place other objects
         place_objs_in_region(packing_boxes, self.home_region, self.env)
@@ -536,18 +539,13 @@ class MoverProblem:
         self.movable_objects = [computer_chair] + packing_boxes + kitchen_chairs
 
         self.env.SetViewer('qtcoin')
-
+        self.problem_idx = problem_idx
         if problem_idx == 0:
             self.init_base_config = np.array([-1., -3., 0.])
             self.goal_base_config = np.array([-0,2.5,np.pi/2.])
             set_robot_config(self.init_base_config, self.robot)
             self.set_obj_poses(problem_idx)
         elif problem_idx == 1:
-            self.goal_base_config = np.array([4, 2.5, np.pi / 2])
-            self.init_base_config = np.array([1, -1., 0.])
-            set_robot_config(self.init_base_config, self.robot)
-            self.set_obj_poses(problem_idx)
-        elif problem_idx == 2:
             self.init_base_config = np.array([5.07548914, 0.80471634, 3.2622907])
             self.goal_base_config = np.array([-1, -3, -0])
             set_robot_config(self.init_base_config, self.robot)
@@ -569,7 +567,8 @@ class MoverProblem:
                           'init_base_config': self.init_base_config,
                           'goal_base_config': self.goal_base_config,
                           'entire_region_xy': self.home_region_xy,
-                          'entire_region_extents': self.home_region_xy_extents}
+                          'entire_region_extents': self.home_region_xy_extents,
+                          'problem_idx':self.problem_idx}
         return problem_config
 
     def disable_objects_in_region(self, region):
