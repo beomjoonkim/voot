@@ -144,7 +144,7 @@ class HighLevelPlanner:
         #                                                                                              next_init_node)
 
         self.problem_env.disable_objects()
-        fetching_path,_ = self.problem_env.get_base_motion_plan(self.problem_env.goal_base_conf)
+        fetching_path,_ = self.problem_env.get_base_motion_plan(self.problem_env.goal_base_conf,'entire_region')
 
         """
         object[0].Enable(True)
@@ -158,7 +158,9 @@ class HighLevelPlanner:
 
         initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
         initial_collision_names = [o.GetName() for o in initial_collisions]
+        print len(initial_collision_names)
 
+        import pdb;pdb.set_trace()
         print "Solved fetching"
         #self.namo_planner.namo_domain_initialize_namo_problem(fetch_plan, goal_node)
         namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(

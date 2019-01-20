@@ -27,9 +27,9 @@ TARGET_OBJ_COLOR = (1, 0, 0)
 
 
 class NAMO(ProblemEnvironment):
-    def __init__(self):
+    def __init__(self, problem_idx):
         ProblemEnvironment.__init__(self)
-        problem = MoverProblem(self.env)
+        problem = MoverProblem(self.env, problem_idx)
         self.problem_config = problem.get_problem_config()
         self.robot = self.env.GetRobots()[0]
         self.objects = self.problem_config['objects']
@@ -116,10 +116,14 @@ class NAMO(ProblemEnvironment):
 
     def disable_objects(self):
         for object in self.objects:
+            if object is None:
+                continue
             object.Enable(False)
 
     def enable_objects(self):
         for object in self.objects:
+            if object is None:
+                continue
             object.Enable(True)
 
     def check_base_pose_feasible(self, base_pose, obj, region):

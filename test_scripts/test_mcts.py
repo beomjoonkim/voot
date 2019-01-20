@@ -56,9 +56,9 @@ def make_save_dir(args):
     return save_dir
 
 
-def make_problem_env(domain_name):
+def make_problem_env(domain_name, problem_idx):
     if domain_name == 'namo':
-        problem_env = NAMO()
+        problem_env = NAMO(problem_idx)
     elif domain_name == 'convbelt':
         problem_env = ConveyorBelt()
     else:
@@ -108,11 +108,12 @@ def main():
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
+    parser.add_argument('-random_seed', type=int, default=0)
     args = parser.parse_args()
 
     print "Problem number ",args.problem_idx
-    print "RANDOM SEED SET", np.random.seed(args.problem_idx)
-    print "RANDOM SEED SET", random.seed(args.problem_idx)
+    print "RANDOM SEED SET", np.random.seed(args.random_seed)
+    print "RANDOM SEED SET", random.seed(args.random_seed)
 
     save_dir = make_save_dir(args)
     stat_file_name = save_dir + str(args.problem_idx)+'.pkl'
@@ -120,8 +121,7 @@ def main():
         print "already done"
         return -1
 
-    problem_env = make_problem_env(args.domain)
-
+    problem_env = make_problem_env(args.domain, args.problem_idx)
     if args.v:
         problem_env.env.SetViewer('qtcoin')
 
