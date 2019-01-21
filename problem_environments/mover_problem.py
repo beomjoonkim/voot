@@ -442,6 +442,7 @@ def place_object_with_gaussian_noise(obj, reference_xytheta, env, scale=0.3):
 class MoverProblem:
     def __init__(self, env, problem_idx, problem_config=None):
         self.env = env
+        self.env.SetViewer('qtcoin')
         fdir = os.path.dirname(os.path.abspath(__file__))
         self.env.Load(fdir + '/resources/mover_env.xml')
         self.robot = self.env.GetRobots()[0]
@@ -464,7 +465,12 @@ class MoverProblem:
         set_config(self.robot, mirror_arm_config(FOLDED_LEFT_ARM),
                    self.robot.GetManipulator('rightarm').GetArmIndices())
 
+
         fixed_obj_poses = set_fixed_object_poses(self.env, x_extents, y_extents)
+
+        shelf_table = env.GetKinBody('table2')
+        if problem_idx == 1:
+            set_obj_xytheta([-1.5, -3, np.pi/2], shelf_table)
         shelf_shapes, shelf_xs = generate_shelf_shapes()
         shelf_regions = create_shelves(self.env, shelf_shapes, shelf_xs, 'table2')
         obj_shapes = generate_shelf_obj_shapes()
@@ -493,20 +499,23 @@ class MoverProblem:
         # kitchen table location
         if problem_idx == 0:
             table_xytheta = [0.91704, 0.8, 0]
+            set_obj_xytheta(table_xytheta, table)
+            computer_chair_xytheta = [4.8, -2.5, 0]
+            place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
         else:
-            table_xytheta = [1.51704, 2, np.pi/2]
-        set_obj_xytheta(table_xytheta, table)
+            set_obj_xytheta([2, -3.2, -np.pi/2], env.GetKinBody('computer_table'))
+            set_obj_xytheta([1, -3.2, 0], env.GetKinBody('computer_chair'))
 
         self.is_new_env = problem_config is None
-
         # computer chair location
-        computer_chair_xytheta = [4.8, -2.5, 0]
-        place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
-
-
 
         # place other objects
-        place_objs_in_region(packing_boxes, self.home_region, self.env)
+        if problem_idx==0:
+            place_objs_in_region(packing_boxes, self.home_region, self.env)
+        else:
+            place_objs_in_region(packing_boxes, self.kitchen_region, self.env)
+
+
         place_objs_in_region([self.robot], self.home_region, self.env)
         place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
 
@@ -538,7 +547,6 @@ class MoverProblem:
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
         self.movable_objects = [computer_chair] + packing_boxes + kitchen_chairs
 
-        self.env.SetViewer('qtcoin')
         self.problem_idx = problem_idx
         if problem_idx == 0:
             self.init_base_config = np.array([-1., -3., 0.])
@@ -546,12 +554,20 @@ class MoverProblem:
             set_robot_config(self.init_base_config, self.robot)
             self.set_obj_poses(problem_idx)
         elif problem_idx == 1:
-            self.init_base_config = np.array([5.07548914, 0.80471634, 3.2622907])
-            self.goal_base_config = np.array([-1, -3, -0])
+            self.goal_base_config = np.array([-0,2.5,np.pi/2.])
+            self.init_base_config = np.array([-1.5, -1.5, np.pi/2.])
             set_robot_config(self.init_base_config, self.robot)
+            set_obj_xytheta([3, 2, 43 * np.pi / 180.], env.GetKinBody('shelf1'))
+            set_obj_xytheta([-0.13, 0.45, 3], packing_boxes[2])
             self.set_obj_poses(problem_idx)
-            set_obj_xytheta([4.5, 0, 135 * np.pi / 180.], packing_boxes[5])
-            set_obj_xytheta([4, -1, 3.26], packing_boxes[-1])
+            '''
+            set_obj_xytheta([-.5, -1.5, 0], packing_boxes[-2])
+            set_obj_xytheta([-0.2, -0.2, -np.pi * 2.5 / 2.], packing_boxes[-3])
+            '''
+
+            #self.set_obj_poses(problem_idx)
+            #set_obj_xytheta([4.5, 0, 135 * np.pi / 180.], packing_boxes[5])
+            #set_obj_xytheta([4, -1, 3.26], packing_boxes[-1])
 
 
     def save_obj_poses(self, problem_idx):

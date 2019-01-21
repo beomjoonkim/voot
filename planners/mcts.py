@@ -233,17 +233,15 @@ class MCTS:
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
             reward_lists.append(reward_list)
             print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), found_solution_permanent
+            plan = [self.retrace_best_plan(best_node), best_traj_rwd, found_solution_permanent]
 
             if self.found_solution:
                 found_solution_permanent = True
                 optimal_iter += 1
-                plan = self.retrace_best_plan(best_node)
                 goal_node = best_node
                 if self.optimal_score_achieved(best_traj_rwd):
                     print "Optimal score found"
                     break
-                elif not self.optimal_score_achieved(best_traj_rwd):
-                    plan = self.retrace_best_plan(best_node)
                 if self.environment.is_solving_namo and len(self.s0_node.objs_in_collision) == 0:
                     self.switch_init_node(self.original_s0_node)
                 else:
@@ -258,6 +256,7 @@ class MCTS:
                 break
 
         self.environment.reset_to_init_state(self.s0_node)
+        import pdb;pdb.set_trace()
         return search_time_to_reward, plan, goal_node, reward_lists
 
     def optimal_score_achieved(self, best_traj_rwd):

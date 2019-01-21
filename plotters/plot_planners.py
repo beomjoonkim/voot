@@ -1,4 +1,4 @@
-import pickle
+import cPickle as pickle
 import argparse
 import os
 import numpy as np
@@ -74,11 +74,10 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
                 continue
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
-        try:
-            max_rwds.append(np.max([np.sum(p) for p in result['reward_list']]))
-        except:
-            continue
-
+        #try:
+        #    max_rwds.append(np.max([np.sum(p) for p in result['reward_list']]))
+        #except:
+        #    continue
         search_rwd_times.append(result['search_time'])
         if domain_name == 'convbelt':
             is_success = result['plan'] is not None
@@ -96,7 +95,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
     print 'success', np.array(success).mean()
-    print 'max_rwd mean', np.mean(max_rwds)
+   # print 'max_rwd mean', np.mean(max_rwds)
     print 'n', len(success)
     return search_rwd_times
 
@@ -164,7 +163,7 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
+        algo_names = ['randomizeddoo_1.0','unif', 'voo_0.3' ]
     else:
         algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif']
 

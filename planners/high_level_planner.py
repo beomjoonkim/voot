@@ -138,8 +138,12 @@ class HighLevelPlanner:
 
     def solve_namo(self, object, target_packing_region):
 
-        fetching_path = pickle.load(open('./problem_environments/mover_domain_problems/fetching_path_'
-                                          + str(self.problem_env.problem_idx) +'.pkl','r'))
+        """
+        self.problem_env.disable_objects()
+        fetching_path,status = self.problem_env.get_base_motion_plan(self.problem_env.problem_config['goal_base_config'])
+        self.problem_env.enable_objects()
+        """
+        fetching_path = pickle.load(open('./problem_environments/mover_domain_problems/fetching_path_'+ str(self.problem_env.problem_idx) +'.pkl','r'))
         initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
         initial_collision_names = [o.GetName() for o in initial_collisions]
         print len(initial_collision_names)
@@ -166,7 +170,7 @@ class HighLevelPlanner:
             # get the object ordering
             obj_plan = self.compute_object_ordering(objects)
             if self.problem_env.name == 'convbelt':
-                search_time_to_reward, fetch_plan, _ , reward_list= self.solve_convbelt(objects, target_packing_region)
+                search_time_to_reward, fetch_plan, _, reward_list= self.solve_convbelt(objects, target_packing_region)
             elif self.problem_env.name == 'namo':
                 search_time_to_reward, fetch_plan, _, reward_list = self.solve_namo(objects, target_packing_region)
         return search_time_to_reward, fetch_plan, True, reward_list
