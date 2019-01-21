@@ -24,7 +24,6 @@ class DOOGenerator(Generator):
         self.domain[1] = self.normalize_x_value(self.domain[1])  # (self.domain[1] - self.x_min) / (self.x_max-self.x_min)
 
         if operator_name == 'two_arm_pick':
-            pick_param_distance_for_obj = lambda x,y: pick_parameter_distance(node.obj, x, y)
             euclidean_dist = lambda x,y: np.linalg.norm(x-y)
             self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, euclidean_dist)  # this depends on the problem
         elif operator_name == 'two_arm_place':
@@ -45,15 +44,16 @@ class DOOGenerator(Generator):
         for i in range(n_iter):
             action_parameters, doo_node = self.choose_next_point()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
-            self.evaled_actions.append(action_parameters)
             if status == 'HasSolution':
+                self.evaled_actions.append(action_parameters)
                 self.doo_tree.expand_node(self.update_flag, doo_node)
                 self.evaled_q_values.append(self.update_flag)
                 print "Found feasible sample"
                 break
             else:
-                self.evaled_q_values.append(self.problem_env.infeasible_reward)
-                self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
+                #self.evaled_q_values.append(self.problem_env.infeasible_reward)
+                #self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
+                pass
 
         return action
 

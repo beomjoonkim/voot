@@ -51,6 +51,8 @@ class BinaryDOOTree:
     def find_leaf_with_max_upper_bound_value(self):
         max_upper_bound = -np.inf
         for leaf_node in self.leaves:
+            if leaf_node.f_value is None:
+                return leaf_node
             node_upper_bound = leaf_node.f_value + self.explr_p*leaf_node.delta_h
             if node_upper_bound > max_upper_bound:
                 best_leaf = leaf_node
