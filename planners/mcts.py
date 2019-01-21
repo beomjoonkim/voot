@@ -51,8 +51,8 @@ class MCTS:
         self.progressive_widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
         self.time_limit = np.inf
-        if domain_name == 'mcr':
-            self.discount_rate = 0.999
+        if domain_name == 'namo':
+            self.discount_rate = 0.99
         else:
             self.discount_rate = 0.9
         self.environment = environment
@@ -67,7 +67,7 @@ class MCTS:
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
         if self.environment.name == 'namo':
-            self.goal_reward = 100
+            self.goal_reward = 2
         else:
             self.goal_reward = 0
         self.n_feasibility_checks = n_feasibility_checks
@@ -176,40 +176,9 @@ class MCTS:
         self.s0_node.is_init_node = True
         self.found_solution = False
         if self.environment.is_solving_namo:
-            if (node.parent is None) or (node.parent.operator =='two_arm_place' and self.environment.is_solving_namo):
-                self.environment.set_init_namo_object_names([o.GetName() for o in node.objs_in_collision])
-                self.high_level_planner.task_plan[0]['region'] = node.objs_in_collision
-                self.environment.reset_to_init_state(node)
-
-    def switch_init_node_for_changing_problem(self, node):
-        #if node.is_goal_node:
-        curr_obj = self.high_level_planner.get_next_obj()
-        operator = self.environment.which_operator(curr_obj)
-        if operator.find('pick') != -1:
-            curr_obj_region = self.environment.get_region_containing(curr_obj)
-            curr_robot_region = self.environment.get_region_containing(self.environment.robot)
-            if curr_obj_region.name.find('shelf') != -1:
-                curr_region = curr_robot_region
-            else:
-                curr_region = curr_obj_region
-        else:
-            curr_region = self.high_level_planner.get_next_region()
-        node.operator = operator
-        if node.sampling_agent is None:
-            node.sampling_agent = self.create_sampling_agent(node, operator)
-        node.region = curr_region
-        node.obj = curr_obj
-        node.operator = operator
-
-        current_leaf_nodes = self.tree.get_leaf_nodes()
-        for l in current_leaf_nodes:
-            l.is_goal_node = False
-
-        self.environment.reset_to_init_state(node)
-        self.s0_node.is_init_node = False
-        self.s0_node = node
-        self.s0_node.is_init_node = True
-        self.found_solution = False
+            self.environment.set_init_namo_object_names([o.GetName() for o in node.objs_in_collision])
+            self.high_level_planner.task_plan[0]['objects'] = node.objs_in_collision
+            self.environment.reset_to_init_state(node)
 
     def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
@@ -227,7 +196,7 @@ class MCTS:
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
-                we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 20
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
@@ -271,7 +240,11 @@ class MCTS:
                     break
                 elif not self.optimal_score_achieved(best_traj_rwd):
                     plan = self.retrace_best_plan(best_node)
-                self.switch_init_node(self.s0_node)
+                if self.environment.is_solving_namo and len(self.s0_node.objs_in_collision) == 0:
+                    self.switch_init_node(self.original_s0_node)
+                else:
+                    self.switch_init_node(self.s0_node)
+
                 self.found_solution = False
             else:
                 plan = None
@@ -337,6 +310,7 @@ class MCTS:
                 self.found_solution = True
                 curr_node.is_goal_node = True
                 print "Solution found, returning the goal reward", self.goal_reward
+                self.update_node_statistics(curr_node, curr_node.parent_action, self.goal_reward, self.goal_reward)
             return self.goal_reward
 
         if depth == self.depth_limit:
