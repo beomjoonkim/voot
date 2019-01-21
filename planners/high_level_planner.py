@@ -154,7 +154,6 @@ class HighLevelPlanner:
         initial_collision_names = [o.GetName() for o in initial_collisions]
         print len(initial_collision_names)
         print "Solved fetching"
-        import pdb;pdb.set_trace()
         self.namo_planner.fetch_pick_path = fetching_path
         namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(
                                                                                  initial_collision_names,
