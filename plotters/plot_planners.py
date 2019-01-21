@@ -23,7 +23,7 @@ def savefig(xlabel, ylabel, fname=''):
 
 
 
-def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks):
+def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks, mcts_iter):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
@@ -42,7 +42,8 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         result_dir = rootdir + '/convbelt_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
     elif domain_name == 'namo':
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
-        result_dir = rootdir + '/namo_results/mcts_iter_510/uct_0.0_widening_' + str(widening_parameter) + '_'
+        result_dir = rootdir + '/namo_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
+        result_dir = rootdir + '/namo_results/mcts_iter_'+str(mcts_iter)+'/uct_0.0_widening_' + str(widening_parameter) + '_'
     else:
         return -1
     if algo_name.find('plaindoo') == -1:
@@ -54,11 +55,12 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
     return result_dir
 
 
-def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks):
-    result_dir = get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks)
+def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks,mcts_iter):
+    result_dir = get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks,mcts_iter)
     search_times = []
     success = []
     search_rwd_times = []
+    max_rwds = []
     for fin in os.listdir(result_dir):
         sd = int(fin.split('_')[2])
         if fin.find('.pkl') == -1:
@@ -72,7 +74,10 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
                 continue
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
-        search_rwd_times.append(result['search_time'])
+        try:
+            max_rwds.append(np.max([np.sum(p) for p in result['reward_list']]))
+        except:
+            continue
 
         search_rwd_times.append(result['search_time'])
         if domain_name == 'convbelt':
@@ -91,6 +96,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
     print 'success', np.array(success).mean()
+    print 'max_rwd mean', np.mean(max_rwds)
     print 'n', len(success)
     return search_rwd_times
 
@@ -150,6 +156,7 @@ def plot_across_algorithms():
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-w', type=float, default=0.8)
     parser.add_argument('-c1', type=float, default=1.0)
+    parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('--t', action='store_true')
 
@@ -157,7 +164,7 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
     else:
         algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif']
 
@@ -173,21 +180,12 @@ def plot_across_algorithms():
     for algo_idx, algo in enumerate(algo_names):
         print algo
         search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
-                                            args.n_feasibility_checks)
+                                            args.n_feasibility_checks, args.mcts_iter)
         if args.t:
             search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
         else:
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
-        """
-        if algo.find('randomizeddoo') != -1:
-            algo_name = 'rand_doo'.upper()
-        elif algo.find('doo_25.0') != -1:
-            algo_name = 'doo'.upper()
-        elif algo.find('voo') != -1:
-            algo_name = 'voo'.upper()
-        elif algo.find('unif') != -1:
-            algo_name = 'uniform'.upper()
-        """
+
         algo_name = algo
         plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo_name,
                           color=color_dict[color_names[algo_idx]])
