@@ -271,7 +271,7 @@ class MCTS:
                     break
                 elif not self.optimal_score_achieved(best_traj_rwd):
                     plan = self.retrace_best_plan(best_node)
-                #self.switch_init_node(self.original_s0_node)
+                self.switch_init_node(self.s0_node)
                 self.found_solution = False
             else:
                 plan = None
