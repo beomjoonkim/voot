@@ -130,24 +130,14 @@ class HighLevelPlanner:
             _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node, True, None)
         self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.mcts.tree.root = self.mcts.s0_node
-        search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_packing(objects,
+        search_time_to_reward, fetch_plan, goal_node, reward_list = self.fetch_planner.solve_packing(objects,
                                                                                         target_packing_region,
                                                                                         self.mcts,
                                                                                         next_init_node)
         return search_time_to_reward, fetch_plan, goal_node
 
     def solve_namo(self, object, target_packing_region):
-        next_init_node = None
-        #fetch_search_time_to_reward, fetch_plan, goal_node = self.fetch_planner.solve_fetching_single_object(object,
-        #                                                                                              target_packing_region,
-        #                                                                                              self.mcts,
-        #                                                                                              next_init_node)
 
-        """
-        self.problem_env.disable_objects()
-        fetching_path,_ = self.problem_env.get_base_motion_plan(self.problem_env.goal_base_conf,'entire_region')
-        self.problem_env.enable_objects()
-        """
         fetching_path = pickle.load(open('./problem_environments/mover_domain_problems/fetching_path_'
                                           + str(self.problem_env.problem_idx) +'.pkl','r'))
         initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
@@ -155,7 +145,7 @@ class HighLevelPlanner:
         print len(initial_collision_names)
         print "Solved fetching"
         self.namo_planner.fetch_pick_path = fetching_path
-        namo_search_time_to_reward, namo_plan, goal_node = self.namo_planner.namo_domain_solve_single_object(
+        namo_search_time_to_reward, namo_plan, goal_node, reward_list = self.namo_planner.namo_domain_solve_single_object(
                                                                                  initial_collision_names,
                                                                                  self.mcts)
         search_time_to_reward = {'fetch': [], 'namo': namo_search_time_to_reward}
@@ -163,7 +153,7 @@ class HighLevelPlanner:
             plan = None
         else:
             plan = namo_plan
-        return search_time_to_reward, plan, goal_node
+        return search_time_to_reward, plan, goal_node, reward_list
 
     def search(self):
         for plan_step in self.abstract_task_plan:

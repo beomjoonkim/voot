@@ -132,7 +132,7 @@ def main():
         task_plan = get_task_plan(args.domain, problem_env)
         hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
         hierarchical_planner.set_mcts_parameters(args)
-        search_time_to_reward, plan, optimal_score_achieved = hierarchical_planner.search()
+        search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
     else:
         # todo continue from here
         high_level_planner = MCRHighLevelPlanner(problem_env, 'mcr', args.debug)
@@ -141,6 +141,7 @@ def main():
         import pdb;pdb.set_trace()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
+                 'reward_list': reward_list,
                  'is_optimal_score': optimal_score_achieved}, open(stat_file_name, 'wb'))
 
     problem_env.problem_config['env'].Destroy()

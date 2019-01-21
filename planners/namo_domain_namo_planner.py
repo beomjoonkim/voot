@@ -184,11 +184,11 @@ class NamoDomainNamoPlanner(NAMOPlanner):
         self.problem_env.namo_planner = self
         self.problem_env.is_solving_namo = True
         mcts.s0_node.objs_in_collision = self.get_initial_namo_objects()
-        search_time_to_reward, namo_plan, goal_node = mcts.search(n_iter=self.high_level_controller.n_iter,
-                                                                  n_optimal_iter=self.high_level_controller.n_optimal_iter,
-                                                                  max_time=self.high_level_controller.max_time)
+        search_time_to_reward, namo_plan, goal_node, reward_list = mcts.search(n_iter=self.high_level_controller.n_iter,
+                                                                              n_optimal_iter=self.high_level_controller.n_optimal_iter,
+                                                                              max_time=self.high_level_controller.max_time)
         self.problem_env.is_solving_namo = False
-        return search_time_to_reward, namo_plan, goal_node
+        return search_time_to_reward, namo_plan, goal_node, reward_list
 
     def namo_domain_initialize_namo_problem(self, fetch_plan, fetch_goal_node):
         self.fetching_obj = self.env.GetKinBody(fetch_plan[0]['obj_name'])

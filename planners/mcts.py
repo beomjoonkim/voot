@@ -229,8 +229,9 @@ class MCTS:
 
             # log the reward vs. time
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
-            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, reward_list, self.found_solution])
-            print np.array(search_time_to_reward)[:, -3], np.max(np.array(search_time_to_reward)[:, -3]), found_solution_permanent
+            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
+            import pdb;pdb.set_trace()
+            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), found_solution_permanent
 
             if self.found_solution:
                 found_solution_permanent = True
@@ -256,7 +257,7 @@ class MCTS:
                 break
 
         self.environment.reset_to_init_state(self.s0_node)
-        return search_time_to_reward, plan, goal_node
+        return search_time_to_reward, plan, goal_node, reward_list
 
     def optimal_score_achieved(self, best_traj_rwd):
         # return best_traj_rwd == self.environment.optimal_score
