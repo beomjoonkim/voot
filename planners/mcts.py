@@ -256,7 +256,6 @@ class MCTS:
                 break
 
         self.environment.reset_to_init_state(self.s0_node)
-        import pdb;pdb.set_trace()
         return search_time_to_reward, plan, goal_node, reward_lists
 
     def optimal_score_achieved(self, best_traj_rwd):
