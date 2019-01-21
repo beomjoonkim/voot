@@ -553,7 +553,6 @@ class MoverProblem:
             set_obj_xytheta([4.5, 0, 135 * np.pi / 180.], packing_boxes[5])
             set_obj_xytheta([4, -1, 3.26], packing_boxes[-1])
 
-            import pdb;pdb.set_trace()
 
     def save_obj_poses(self, problem_idx):
         obj_poses = {obj.GetName(): get_body_xytheta(obj) for obj in self.movable_objects}
