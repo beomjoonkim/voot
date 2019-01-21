@@ -166,10 +166,10 @@ class HighLevelPlanner:
             # get the object ordering
             obj_plan = self.compute_object_ordering(objects)
             if self.problem_env.name == 'convbelt':
-                search_time_to_reward, fetch_plan, _ = self.solve_convbelt(objects, target_packing_region)
+                search_time_to_reward, fetch_plan, _ , reward_list= self.solve_convbelt(objects, target_packing_region)
             elif self.problem_env.name == 'namo':
-                search_time_to_reward, fetch_plan, _ = self.solve_namo(objects, target_packing_region)
-        return search_time_to_reward, fetch_plan, True
+                search_time_to_reward, fetch_plan, _, reward_list = self.solve_namo(objects, target_packing_region)
+        return search_time_to_reward, fetch_plan, True, reward_list
 
     @staticmethod
     def compute_object_ordering(objects):

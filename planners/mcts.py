@@ -230,7 +230,6 @@ class MCTS:
             # log the reward vs. time
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
-            import pdb;pdb.set_trace()
             print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), found_solution_permanent
 
             if self.found_solution:

@@ -46,6 +46,7 @@ class NAMO(ProblemEnvironment):
         self.is_init_pick_node = True
         self.name = 'namo'
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
+        self.problem_config['env'] = self.env
 
     def get_objs_in_region(self, region_name):
         movable_objs = self.objects
