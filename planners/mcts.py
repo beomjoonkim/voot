@@ -188,6 +188,7 @@ class MCTS:
         optimal_iter = 0
         n_node_switch = 0
         switch_counter = 0
+        found_solution_permanent = False
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
 
@@ -229,9 +230,10 @@ class MCTS:
             # log the reward vs. time
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, reward_list, self.found_solution])
-            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2])
+            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), found_solution_permanent
 
             if self.found_solution:
+                found_solution_permanent = True
                 optimal_iter += 1
                 plan = self.retrace_best_plan(best_node)
                 goal_node = best_node
