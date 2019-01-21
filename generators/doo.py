@@ -24,13 +24,11 @@ class DOOGenerator(Generator):
         self.domain[1] = self.normalize_x_value(self.domain[1])  # (self.domain[1] - self.x_min) / (self.x_max-self.x_min)
 
         if operator_name == 'two_arm_pick':
-            pick_param_distance_for_obj = lambda x,y: pick_parameter_distance(node.obj, x, y)
-            #euclidean_dist = lambda x,y: np.linalg.norm(x-y)
-            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, pick_param_distance_for_obj)  # this depends on the problem
+            euclidean_dist = lambda x,y: np.linalg.norm(x-y)
+            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, euclidean_dist)  # this depends on the problem
         elif operator_name == 'two_arm_place':
-            #euclidean_dist = lambda x,y: np.linalg.norm(x-y)
-            place_dist = lambda x,y: place_parameter_distance(x, y, 1)
-            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, place_dist)  # this depends on the problem
+            euclidean_dist = lambda x,y: np.linalg.norm(x-y)
+            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, euclidean_dist)  # this depends on the problem
         else:
             print "Wrong operator name"
             sys.exit(-1)
@@ -67,11 +65,9 @@ class DOOGenerator(Generator):
         return x_to_evaluate, next_node
 
     def unnormalize_x_value(self, x_value):
-        return x_value
         return x_value * (self.x_max - self.x_min) + self.x_min
 
     def normalize_x_value(self, x_value):
-        return x_value
         return (x_value - self.x_min) / (self.x_max - self.x_min)
 
 def main():
