@@ -8,19 +8,6 @@
     <translation>-1 1 0.075</translation>
   </Robot>
 
-    <Robot name="roomba_625x">
-        <Translation>1.8 1.18 .2</Translation>
-        <KinBody>
-            <Body name="base" type="dynamic">
-            <Translation>0 0 -.03</Translation>
-            <Geom type="trimesh">
-            <render>roomba625.wrl 0.025</render>
-            <data>roomba625.wrl 0.025</data>
-            </Geom>
-            </Body>
-        </KinBody>
-    </Robot>
-
 
 	<Robot name="fridge">
 		<translation>-.87 -2.0 1.55</translation>

@@ -6,9 +6,8 @@ import sys
 from manipulation.constants import PARALLEL_LEFT_ARM, REST_LEFT_ARM, HOLDING_LEFT_ARM, FOLDED_LEFT_ARM, \
     FAR_HOLDING_LEFT_ARM, LOWER_TOP_HOLDING_LEFT_ARM, REGION_Z_OFFSET
 
-sys.path.append('./mover_library/')
 
-from utils import *
+from mover_library.utils import *
 from manipulation.bodies.bodies import place_body, place_body_on_floor
 from utils import randomly_place_region
 from manipulation.primitives.transforms import set_point
@@ -17,6 +16,7 @@ from manipulation.regions import create_region, AARegion
 from motion_planner import collision_fn, base_extend_fn, base_sample_fn, base_distance_fn, smooth_path, rrt_connect
 
 import os
+import pickle
 import random
 
 # obj definitions
@@ -166,6 +166,7 @@ def create_doors(x_lim, y_lim, door_x, door_y, door_width, th, env):
     wall_in_room_r = box_body(env, 0.04 * 2, 1, 2, name='wall_in_room_r' + str(np.random.rand()), color=(0, 0, 0))
     place_body(env, wall_in_room_l, (3.3,0, np.pi/2), base_name='bottom_wall')
     place_body(env, wall_in_room_r, (5.5,0, np.pi/2), base_name='bottom_wall')
+
 
 def create_box_bodies(body_shape, color, name, n_objs, env):
     if color == 'green':
@@ -439,7 +440,7 @@ def place_object_with_gaussian_noise(obj, reference_xytheta, env, scale=0.3):
 
 
 class MoverProblem:
-    def __init__(self, env, problem_config=None):
+    def __init__(self, env, problem_idx, problem_config=None):
         self.env = env
         fdir = os.path.dirname(os.path.abspath(__file__))
         self.env.Load(fdir + '/resources/mover_env.xml')
@@ -481,45 +482,33 @@ class MoverProblem:
                                     ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]),
                                      (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
         #randomly_place_region(self.env, self.robot, self.home_region)
-        self.init_base_config = np.array([-1., -3., 0.])
-        self.goal_base_config = np.array([-0,2.5,np.pi/2.])
 
 
         # randomly placed objects
         kitchen_chairs = [body for body in self.env.GetBodies() if body.GetName().find('chair') != -1
                           and body.GetName().find('computer') == -1]
         packing_boxes = [b for b in self.env.GetBodies() if b.GetName().find('packing_box') != -1]
-        roomba = self.env.GetKinBody('roomba_625x')
         computer_chair = self.env.GetKinBody('computer_chair')
         table = self.env.GetKinBody('table')
+        # kitchen table location
+        if problem_idx == 0:
+            table_xytheta = [0.91704, 0.8, 0]
+        else:
+            table_xytheta = [1.51704, 2, np.pi/2]
+        set_obj_xytheta(table_xytheta, table)
 
         self.is_new_env = problem_config is None
-        if self.is_new_env:
-            # computer chair location
-            computer_chair_xytheta = [4.8, -2.5, 0]
-            place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
 
-            # kitchen table location
-            table_xytheta = [0.91704, 0.8, 0]
-            place_object_with_gaussian_noise(table, table_xytheta, self.env, scale=0.1)
+        # computer chair location
+        computer_chair_xytheta = [4.8, -2.5, 0]
+        place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
 
-            # place other objects
-            place_objs_in_region(packing_boxes, self.home_region, self.env)
-            place_objs_in_region([self.robot], self.home_region, self.env)
-            #place_objs_in_region([roomba], self.home_region, self.env)
-            place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
-        else:
-            set_obj_xytheta(problem_config['computer_chair_pose'], computer_chair)
-            set_obj_xytheta(problem_config['roomba_pose'], roomba)
-            set_obj_xytheta(problem_config['table_pose'], table)
 
-            place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
-            for obj_pose, obj in zip(problem_config['kitchen_chair_poses'], kitchen_chairs):
-                set_obj_xytheta(obj_pose, obj)
 
-            place_objs_in_region(packing_boxes, self.home_region, self.env)
-            for obj_pose,obj in zip(problem_config['packing_box_poses'], packing_boxes):
-                set_obj_xytheta(obj_pose, obj)
+        # place other objects
+        place_objs_in_region(packing_boxes, self.home_region, self.env)
+        place_objs_in_region([self.robot], self.home_region, self.env)
+        place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
 
         robot=self.robot
         # left arm IK
@@ -547,30 +536,31 @@ class MoverProblem:
 
 
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
-        self.movable_objects = [roomba, computer_chair] + packing_boxes + kitchen_chairs
-        set_robot_config(self.init_base_config, self.robot)
+        self.movable_objects = [computer_chair] + packing_boxes + kitchen_chairs
 
-        chair1 = kitchen_chairs[0]
-        chair2 = kitchen_chairs[1]
-        chair3 = kitchen_chairs[2]
-        set_obj_xytheta([0.01477438, 1.59858884, 6.20038223], chair1)
-        set_obj_xytheta([0.1, 0.7, 0], chair2)
-        set_obj_xytheta([1.812, 1.079,0.0148], chair3)
-        set_obj_xytheta([4, 2.9, 0], packing_boxes[2])
-        obj_poses = [[1.8, 1.18, 0.0], [4.424161391985022, -2.266752893250427, 5.799015952912204],
-         [1.7883249642389383, -0.6721077563172024, 1.098423216114005],
-         [2.0626569551208296, -1.3920703991515504, 3.5758408031076803], [4.0, 2.9, 0.0],
-         [5.426377860624516, -1.0897430967748267, 1.508783850261589],
-         [-0.3366590992718556, -1.257584644979849, 0.009576968375244856],
-         [3.4688151272436354, -0.5990494766731846, 2.5275185759503076],
-         [-0.5931948867524244, 0.20888020842689733, 1.6287707966289573],
-         [2.4524287337205806, 1.9292497296323612, 3.061580065330972],
-         [0.01477438000000024, 1.5985888400000003, 6.200382229999999], [0.09999999999999998, 0.7, 0.0],
-         [1.812, 1.079, 0.014800000000007248], [-0.5077573405647646, 2.5631341787497357, 5.489328869891892]]
-        for obj_pose,obj in zip(obj_poses, self.movable_objects):
-            set_obj_xytheta(obj_pose, obj)
+        self.env.SetViewer('qtcoin')
+        self.problem_idx = problem_idx
+        if problem_idx == 0:
+            self.init_base_config = np.array([-1., -3., 0.])
+            self.goal_base_config = np.array([-0,2.5,np.pi/2.])
+            set_robot_config(self.init_base_config, self.robot)
+            self.set_obj_poses(problem_idx)
+        elif problem_idx == 1:
+            self.init_base_config = np.array([5.07548914, 0.80471634, 3.2622907])
+            self.goal_base_config = np.array([-1, -3, -0])
+            set_robot_config(self.init_base_config, self.robot)
+            set_obj_xytheta([4, 3, 3], packing_boxes[5])
+            set_obj_xytheta([3.5, 1, 3], packing_boxes[7])
+            self.set_obj_poses(problem_idx)
 
-        set_obj_xytheta([0.89576597, 0.71045334, 0.03869025], table)
+    def save_obj_poses(self, problem_idx):
+        obj_poses = {obj.GetName(): get_body_xytheta(obj) for obj in self.movable_objects}
+        pickle.dump(obj_poses, open('./problem_environments/mover_domain_problems/' + str(problem_idx) +'.pkl','wb'))
+
+    def set_obj_poses(self, problem_idx):
+        obj_poses = pickle.load(open('./problem_environments/mover_domain_problems/' + str(problem_idx) + '.pkl', 'r'))
+        for obj_name, obj_pose in zip(obj_poses.keys(), obj_poses.values()):
+            set_obj_xytheta(obj_pose, self.env.GetKinBody(obj_name))
 
     def get_problem_config(self):
         problem_config = {'objects': self.movable_objects,
@@ -578,7 +568,8 @@ class MoverProblem:
                           'init_base_config': self.init_base_config,
                           'goal_base_config': self.goal_base_config,
                           'entire_region_xy': self.home_region_xy,
-                          'entire_region_extents': self.home_region_xy_extents}
+                          'entire_region_extents': self.home_region_xy_extents,
+                          'problem_idx':self.problem_idx}
         return problem_config
 
     def disable_objects_in_region(self, region):
