@@ -42,10 +42,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         result_dir = rootdir + '/convbelt_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
     elif domain_name == 'namo':
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
-        if algo_name.find('plaindoo') != -1:
-            result_dir = rootdir + '/namo_results/mcts_iter_500/uct_0.0_widening_0.5_doo'
-        else:
-            result_dir = rootdir + '/namo_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
+        result_dir = rootdir + '/namo_results/mcts_iter_1000/uct_0.0_widening_' + str(widening_parameter) + '_'
     else:
         return -1
     if algo_name.find('plaindoo') == -1:
@@ -133,7 +130,6 @@ def get_max_rwds_wrt_samples(search_rwd_times):
             if isinstance(rwd_time, dict):
                 rwd_time_temp = rwd_time['namo']
                 episode_times = np.array(rwd_time_temp)[:, 1]
-                # episode_rwds = np.array(rwd_time_temp)[:, -1]
                 episode_rwds = np.array(rwd_time_temp)[:, 2]
             else:
                 episode_times = np.array(rwd_time)[:, 1]

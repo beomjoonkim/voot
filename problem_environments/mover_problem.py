@@ -494,7 +494,7 @@ class MoverProblem:
         if problem_idx == 0:
             table_xytheta = [0.91704, 0.8, 0]
         else:
-            table_xytheta = [2.01704, 2, 0]
+            table_xytheta = [1.51704, 2, np.pi/2]
         set_obj_xytheta(table_xytheta, table)
 
         self.is_new_env = problem_config is None
