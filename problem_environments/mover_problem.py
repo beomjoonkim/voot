@@ -549,9 +549,11 @@ class MoverProblem:
             self.init_base_config = np.array([5.07548914, 0.80471634, 3.2622907])
             self.goal_base_config = np.array([-1, -3, -0])
             set_robot_config(self.init_base_config, self.robot)
-            set_obj_xytheta([4, 3, 3], packing_boxes[5])
-            set_obj_xytheta([3.5, 1, 3], packing_boxes[7])
             self.set_obj_poses(problem_idx)
+            set_obj_xytheta([4.5, 0, 135 * np.pi / 180.], packing_boxes[5])
+            set_obj_xytheta([4, -1, 3.26], packing_boxes[-1])
+
+            import pdb;pdb.set_trace()
 
     def save_obj_poses(self, problem_idx):
         obj_poses = {obj.GetName(): get_body_xytheta(obj) for obj in self.movable_objects}

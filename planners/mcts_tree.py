@@ -59,4 +59,4 @@ class MCTSTree:
             # exclude the ones that are not the descendents of the current init node
             sumR_list.append(sumR)
             leaf_nodes_for_curr_init_state.append(n)
-        return max(sumR_list), leaf_nodes_for_curr_init_state[np.argmax(sumR_list)]
+        return max(sumR_list), leaf_nodes_for_curr_init_state[np.argmax(sumR_list)], reward_lists

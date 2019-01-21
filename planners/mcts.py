@@ -162,7 +162,7 @@ class MCTS:
         leaves = self.tree.get_leaf_nodes()
         goal_nodes = [leaf for leaf in leaves if leaf.is_goal_node]
         if len(goal_nodes) > 1:
-            best_traj_reward, curr_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
+            best_traj_reward, curr_node,_  = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             #curr_node = [leaf for leaf in goal_nodes if leaf.sum_ancestor_action_rewards == best_traj_reward][0]
         else:
             curr_node = goal_nodes[0]
@@ -227,8 +227,8 @@ class MCTS:
                     write_dot_file(self.tree, iteration, 'solving_fetching')
 
             # log the reward vs. time
-            best_traj_rwd, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
-            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, self.found_solution])
+            best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
+            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, reward_list, self.found_solution])
             print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2])
 
             if self.found_solution:

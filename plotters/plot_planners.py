@@ -42,7 +42,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         result_dir = rootdir + '/convbelt_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
     elif domain_name == 'namo':
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
-        result_dir = rootdir + '/namo_results/mcts_iter_1000/uct_0.0_widening_' + str(widening_parameter) + '_'
+        result_dir = rootdir + '/namo_results/mcts_iter_510/uct_0.0_widening_' + str(widening_parameter) + '_'
     else:
         return -1
     if algo_name.find('plaindoo') == -1:
@@ -60,6 +60,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     success = []
     search_rwd_times = []
     for fin in os.listdir(result_dir):
+        sd = int(fin.split('_')[2])
         if fin.find('.pkl') == -1:
             continue
         if algo_name == 'voo':
@@ -82,7 +83,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             # search_times.append(np.array(result['search_time'])[:,0][-1])
             success.append(is_success)
         else:
-            is_success = result['search_time']['namo'][-1][-1]
+            is_success = np.any(np.array(result['search_time']['namo'])[:,-1])
             success.append(is_success)
             if is_success:
                 search_times.append(result['search_time']['namo'][-1][0])
