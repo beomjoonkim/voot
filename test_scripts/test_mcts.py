@@ -38,7 +38,7 @@ def make_save_dir(args):
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     elif domain == 'convbelt':
-        save_dir = ROOTDIR + '/test_results/root_switching/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
+        save_dir = ROOTDIR + '/test_results//' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     elif domain == 'mcr':
