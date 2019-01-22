@@ -72,7 +72,7 @@ class HighLevelPlanner:
                          self.problem_env, self.domain_name, self)
 
     def update_task_plan_indices(self, reward, operator_used):
-        if self.problem_env.is_solving_fetching:
+        if self.problem_env.is_solving_packing:
             made_progress = reward > 0 and operator_used.find('place') != -1
             if made_progress:
                 self.obj_plan_idx += 1
@@ -86,26 +86,21 @@ class HighLevelPlanner:
         self.task_plan = task_plan
         self.reset_task_plan_indices()
 
+    def set_object_index(self, object_index):
+        self.obj_plan_idx = object_index
+
     def reset_task_plan_indices(self):
         self.obj_plan_idx = 0
         self.task_plan_idx = 0
 
     def is_goal_reached(self):
-        if self.problem_env.name == 'namo' and self.problem_env.is_solving_fetching:
-            if len(self.problem_env.robot.GetGrabbed()) > 0:
-                return self.problem_env.robot.GetGrabbed()[0] == self.fetch_planner.fetching_object
-            else:
-                return False
         if self.problem_env.is_solving_namo:
             return len(self.task_plan[0]['objects']) == 0 # done if all obstacles are cleared
         else:
-            return self.task_plan_idx >= len(self.task_plan)
+            return self.obj_plan_idx >= len(self.problem_env.objects)
 
     def get_next_obj(self):
-        try:
-            return self.task_plan[self.task_plan_idx]['objects'][self.obj_plan_idx]
-        except:
-            import pdb;pdb.set_trace()
+        return self.task_plan[self.task_plan_idx]['objects'][self.obj_plan_idx]
 
     def get_next_region(self):
         return self.task_plan[self.task_plan_idx]['region']
@@ -116,7 +111,7 @@ class HighLevelPlanner:
         if self.problem_env.is_solving_fetching:
             return best_traj_rwd == 2
         elif self.problem_env.is_solving_packing:
-            return best_traj_rwd == n_objs_to_manipulate
+            return self.obj_plan_idx >= len(self.problem_env.objects)
         elif self.problem_env.is_solving_namo:
             return False
 
@@ -130,6 +125,7 @@ class HighLevelPlanner:
             _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node, True, None)
         self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.mcts.tree.root = self.mcts.s0_node
+        self.problem_env.is_solving_packing = True
         search_time_to_reward, fetch_plan, goal_node, reward_list = self.fetch_planner.solve_packing(objects,
                                                                                         target_packing_region,
                                                                                         self.mcts,

@@ -84,11 +84,6 @@ class ConveyorBelt(ProblemEnvironment):
         pick_path = None
         return curr_state, reward, g_config, pick_path
 
-    def update_next_obj_to_pick(self, place_action):
-        self.placements.append(place_action)
-        if len(self.placements) < len(self.objects):
-            self.curr_obj = self.objs_to_move[len(self.placements)]  # update the next object to be picked
-
     def apply_two_arm_pick_action(self, action, node, check_feasibility, parent_motion):
         if action['g_config'] is None:
             curr_state = self.get_state()
@@ -135,31 +130,16 @@ class ConveyorBelt(ProblemEnvironment):
             curr_state = self.get_state()
             return curr_state, self.infeasible_reward, None, []
 
-    def reset_to_init_state_stripstream(self):
-        self.init_saver.Restore()
-        self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
-
     def reset_to_init_state(self, node):
         saver = node.state_saver
         saver.Restore()  # this call re-enables objects that are disabled
         self.curr_state = self.get_state()
-        self.placements = copy.deepcopy(self.initial_placements)
 
-        self.curr_obj = self.objs_to_move[len(self.placements)] # todo change it for NAMO domain
-        if self.init_operator != 'two_arm_pick':
-            grab_obj(self.robot, self.curr_obj)
-        self.high_level_planner.reset_task_plan_indices()
+        if node.operator != 'two_arm_pick':
+            grab_obj(self.robot, node.obj)
+
+        self.high_level_planner.set_object_index(np.where([node.obj == o for o in self.objects])[0][0])
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
-
-    def is_goal_reached(self):
-        return len(self.placements) == 5
-
-    def set_init_state(self, saver):
-        self.init_saver = saver
-        self.initial_placements = copy.deepcopy(saver.placements)
-        # I think you should restore first?
-        self.init_which_opreator = saver.which_operator
-        self.objs_to_move = self.objects[len(saver.placements):]
 
     def disable_objects(self):
         for o in self.objects:

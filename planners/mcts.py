@@ -179,6 +179,13 @@ class MCTS:
             self.environment.set_init_namo_object_names([o.GetName() for o in node.objs_in_collision])
             self.high_level_planner.task_plan[0]['objects'] = node.objs_in_collision
             self.environment.reset_to_init_state(node)
+        elif self.environment.is_solving_packing:
+            curr_obj_plan = self.high_level_planner.task_plan[0]['objects']
+            for obj_idx, curr_obj in enumerate(curr_obj_plan):
+                if not self.environment.regions['object_region'].contains(curr_obj.ComputeAABB()):
+                    break
+            self.high_level_planner.set_object_index(obj_idx)
+            self.environment.reset_to_init_state(node)
 
     def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
@@ -192,12 +199,12 @@ class MCTS:
         reward_lists = []
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
-            if self.environment.is_solving_namo or self.environment.is_solving_fetching:
+            if self.environment.is_solving_namo or self.environment.is_solving_packing:
                 is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 2
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 1
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
