@@ -130,7 +130,7 @@ class HighLevelPlanner:
                                                                                         target_packing_region,
                                                                                         self.mcts,
                                                                                         next_init_node)
-        return search_time_to_reward, fetch_plan, goal_node
+        return search_time_to_reward, fetch_plan, goal_node, reward_list
 
     def solve_namo(self, object, target_packing_region):
 

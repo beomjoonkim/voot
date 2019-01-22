@@ -61,6 +61,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     success = []
     search_rwd_times = []
     max_rwds = []
+    success_idxs = []
     for fin in os.listdir(result_dir):
         if domain_name == 'namo':
             sd = int(fin.split('_')[2])
@@ -88,11 +89,15 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             is_success = np.any(np.array(result['search_time']['namo'])[:,-1])
             success.append(is_success)
             if is_success:
+                import pdb;pdb.set_trace()
+                success_idxs.append( np.where(np.array(result['search_time']['namo'])[:,-1])[0][0] )
+                import pdb;pdb.set_trace()
                 search_times.append(result['search_time']['namo'][-1][0])
 
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
     print 'success', np.array(success).mean()
+    print 'ff solution',np.array(success_idxs).mean()
    # print 'max_rwd mean', np.mean(max_rwds)
     print 'n', len(success)
     return search_rwd_times

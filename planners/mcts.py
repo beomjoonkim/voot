@@ -239,7 +239,7 @@ class MCTS:
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
             reward_lists.append(reward_list)
             print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), reward_list, found_solution_permanent
-            plan = [self.retrace_best_plan(best_node), best_traj_rwd, found_solution_permanent]
+            plan = [self.retrace_best_plan(best_node), best_traj_rwd, self.found_solution]
 
             if self.found_solution:
                 found_solution_permanent = True
