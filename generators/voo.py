@@ -117,7 +117,7 @@ class VOOGenerator(Generator):
         other_actions = self.evaled_actions
         # todo closest to any one of the best
 
-        while np.any(best_dist > other_dists):
+        while np.any(best_dist > other_dists) or counter < 1000:
             print "Gaussian place sampling, counter", counter, len(other_dists)
             variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
             new_parameters = np.random.normal(best_evaled_action, variance)
@@ -143,7 +143,7 @@ class VOOGenerator(Generator):
         #    import pdb;pdb.set_trace()
         # todo closest to any one of the best
 
-        while np.any(best_dist > other_dists):
+        while np.any(best_dist > other_dists) or counter < 1000:
             variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
             new_parameters = np.random.normal(best_evaled_action, variance)
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
