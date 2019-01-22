@@ -21,7 +21,6 @@ def worker_p(config):
         ' -mcts_iter ' + str(mcts_iter) + ' -c1 '+str(c1) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed)
 
-
     print command
     os.system(command)
 
@@ -55,7 +54,6 @@ def main():
     trials = range(args.pidxs[0], args.pidxs[1])
     seeds = range(args.random_seeds[0], args.random_seeds[1])
     configs = []
-
     for n_feasibility_check in n_feasibility_checks:
         for c1 in c1s:
             for e in epsilons:

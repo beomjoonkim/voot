@@ -21,6 +21,7 @@ class ConveyorBelt(ProblemEnvironment):
         self.problem_config = create_conveyor_belt_problem(self.env, obj_setup)
         if obj_setup is None:
             self.save_object_setup()
+            sys.exit(-1)
         self.objects = self.problem_config['objects']
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None

@@ -131,7 +131,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 500, 10)
+    organized_times = range(10, 400, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
