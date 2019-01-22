@@ -62,7 +62,8 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     search_rwd_times = []
     max_rwds = []
     for fin in os.listdir(result_dir):
-        sd = int(fin.split('_')[2])
+        if domain_name == 'namo':
+            sd = int(fin.split('_')[2])
         if fin.find('.pkl') == -1:
             continue
         if algo_name == 'voo':
@@ -74,10 +75,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
                 continue
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
-        #try:
-        #    max_rwds.append(np.max([np.sum(p) for p in result['reward_list']]))
-        #except:
-        #    continue
+
         search_rwd_times.append(result['search_time'])
         if domain_name == 'convbelt':
             is_success = result['plan'] is not None
@@ -127,7 +125,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 500, 10)
+    organized_times = range(10, 600, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -163,7 +161,7 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['randomizeddoo_1.0','unif', 'voo_0.3' ]
+        algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif' ]
     else:
         algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif']
 

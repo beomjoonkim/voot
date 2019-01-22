@@ -33,11 +33,12 @@ def make_save_dir(args):
     c1 = args.c1
 
     if domain == 'namo':
-        save_dir = ROOTDIR + '/test_results//root_switching/no_infeasible_place/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
+        save_dir = ROOTDIR + '/test_results//root_switching/no_infeasible_place/' + domain + '_results/' + 'mcts_iter_'\
+                   + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     elif domain == 'convbelt':
-        save_dir = ROOTDIR + '/test_results/root_switching/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
+        save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     elif domain == 'mcr':
@@ -128,17 +129,10 @@ def main():
     if args.v:
         problem_env.env.SetViewer('qtcoin')
 
-    if args.domain == 'convbelt' or args.domain == 'namo':
-        task_plan = get_task_plan(args.domain, problem_env)
-        hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
-        hierarchical_planner.set_mcts_parameters(args)
-        search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
-    else:
-        # todo continue from here
-        high_level_planner = MCRHighLevelPlanner(problem_env, 'mcr', args.debug)
-        mcts = instantiate_mcts(args, problem_env,'mcr', high_level_planner)
-        search_time_to_reward, plan, optimal_score_achieved = mcts.search(args.mcts_iter)
-        import pdb;pdb.set_trace()
+    task_plan = get_task_plan(args.domain, problem_env)
+    hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
+    hierarchical_planner.set_mcts_parameters(args)
+    search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
                  'reward_list': reward_list,
