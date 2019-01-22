@@ -38,9 +38,10 @@ def make_save_dir(args):
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
     elif domain == 'convbelt':
-        save_dir = ROOTDIR + '/test_results//' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
+        save_dir = ROOTDIR + '/test_results//' + domain + '_results//' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
+
     elif domain == 'mcr':
         save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' \
                    + str(mcts_iter) + '/uct_' \
@@ -119,7 +120,6 @@ def main():
     print "Random seed set: ", args.random_seed
     np.random.seed(args.random_seed)
     random.seed(args.random_seed)
-
     save_dir = make_save_dir(args)
     stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
     if os.path.isfile(stat_file_name):
@@ -134,6 +134,7 @@ def main():
     hierarchical_planner.set_mcts_parameters(args)
 
     search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
+    # todo check if search_time_to_reward returns a solution
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
                  'reward_list': reward_list,

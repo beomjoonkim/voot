@@ -442,7 +442,6 @@ def place_object_with_gaussian_noise(obj, reference_xytheta, env, scale=0.3):
 class MoverProblem:
     def __init__(self, env, problem_idx, problem_config=None):
         self.env = env
-        self.env.SetViewer('qtcoin')
         fdir = os.path.dirname(os.path.abspath(__file__))
         self.env.Load(fdir + '/resources/mover_env.xml')
         self.robot = self.env.GetRobots()[0]

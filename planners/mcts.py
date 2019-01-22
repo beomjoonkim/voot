@@ -228,7 +228,8 @@ class MCTS:
 
             if socket.gethostname() == 'dell-XPS-15-9560':
                 if self.environment.is_solving_namo:
-                    write_dot_file(self.tree, iteration, 'solving_namo')
+                    pass
+                    #write_dot_file(self.tree, iteration, 'solving_namo')
                 elif self.environment.is_solving_packing:
                     write_dot_file(self.tree, iteration, 'solving_packing')
                 elif self.environment.is_solving_fetching:
@@ -237,6 +238,7 @@ class MCTS:
             # log the reward vs. time
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
+
             reward_lists.append(reward_list)
             print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), reward_list, found_solution_permanent
             plan = [self.retrace_best_plan(best_node), best_traj_rwd, self.found_solution]

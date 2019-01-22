@@ -19,6 +19,8 @@ class ConveyorBelt(ProblemEnvironment):
         ProblemEnvironment.__init__(self)
         obj_setup = self.load_object_setup()
         self.problem_config = create_conveyor_belt_problem(self.env, obj_setup)
+        if obj_setup is None:
+            self.save_object_setup()
         self.objects = self.problem_config['objects']
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
@@ -44,8 +46,12 @@ class ConveyorBelt(ProblemEnvironment):
         self.name = 'convbelt'
 
     def load_object_setup(self):
-        obj_setup = pickle.load(open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'r'))
-        return obj_setup
+        object_setup_file_name = './problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl'
+        if os.path.isfile(object_setup_file_name):
+            obj_setup = pickle.load(open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'r'))
+            return obj_setup
+        else:
+            return None
 
     def save_object_setup(self):
         object_configs = {'object_poses': self.problem_config['obj_poses'],
