@@ -106,7 +106,7 @@ def load_objects(env, obj_shapes, obj_poses, color):
     i = 0
     nobj = len(obj_shapes.keys())
     for obj_name in obj_shapes.keys():
-        xytheta = obj_poses[obj_name]
+        xytheta = obj_poses[obj_name].squeeze()
         width, length, height = obj_shapes[obj_name]
         quat = quat_from_z_rot(xytheta[-1])
 
@@ -121,8 +121,14 @@ def load_objects(env, obj_shapes, obj_poses, color):
     return OBJECTS
 
 
-def two_tables_through_door(env, obj_shapes=None, obj_poses=None,
-                            obst_shapes=None, obst_poses=None):
+def create_conveyor_belt_problem(env, obj_setup=None):
+
+    if obj_setup is not None:
+        obj_shapes = obj_setup['object_shapes']
+        obj_poses = obj_setup['object_poses']
+        obst_shapes = obj_setup['obst_shapes']
+        obst_poses = obj_setup['obst_poses']
+
     fdir=os.path.dirname(os.path.abspath(__file__))
     env.Load(fdir + '/convbelt_env.xml')
     robot = env.GetRobots()[0]
@@ -189,12 +195,12 @@ def two_tables_through_door(env, obj_shapes=None, obj_poses=None,
                           ((-2.51, 10 * max_width + conv_x), (-2.51, 2.51)),
                           z=0.0001, color=np.array((1, 1, 0, 0.25)))
 
-    if obj_shapes == None:
+    if obj_setup is None:
         OBJECTS, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
     else:
         OBJECTS = load_objects(env, obj_shapes, obj_poses, color=(0, 1, 0))
 
-    if obst_shapes == None:
+    if obj_setup is None:
         OBSTACLES, obst_shapes, obst_poses = create_obstacles(env, loading_regions)
     else:
         OBSTACLES = load_objects(env, obst_shapes, obst_poses, color=(0, 0, 1))

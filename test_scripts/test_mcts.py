@@ -61,7 +61,7 @@ def make_problem_env(domain_name, problem_idx):
     if domain_name == 'namo':
         problem_env = NAMO(problem_idx)
     elif domain_name == 'convbelt':
-        problem_env = ConveyorBelt()
+        problem_env = ConveyorBelt(problem_idx)
     else:
         problem_env = Mover()
     return problem_env
@@ -113,11 +113,12 @@ def main():
 
     args = parser.parse_args()
     if args.random_seed == -1:
-        args.random_seed = args.problem_idx # for conveyor belt domain
+        args.random_seed = args.problem_idx     # for conveyor belt domain
 
     print "Problem number ", args.problem_idx
-    print "RANDOM SEED SET", np.random.seed(args.random_seed)
-    print "RANDOM SEED SET", random.seed(args.random_seed)
+    print "Random seed set: ", args.random_seed
+    np.random.seed(args.random_seed)
+    random.seed(args.random_seed)
 
     save_dir = make_save_dir(args)
     stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
@@ -128,7 +129,6 @@ def main():
     problem_env = make_problem_env(args.domain, args.problem_idx)
     if args.v:
         problem_env.env.SetViewer('qtcoin')
-
     task_plan = get_task_plan(args.domain, problem_env)
     hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
     hierarchical_planner.set_mcts_parameters(args)

@@ -54,7 +54,7 @@ class MCTS:
         if domain_name == 'namo':
             self.discount_rate = 0.99
         else:
-            self.discount_rate = 0.9
+            self.discount_rate = 0.99
         self.environment = environment
         self.high_level_planner = high_level_planner
         self.sampling_strategy = sampling_strategy
@@ -232,7 +232,7 @@ class MCTS:
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
             reward_lists.append(reward_list)
-            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), found_solution_permanent
+            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), reward_list, found_solution_permanent
             plan = [self.retrace_best_plan(best_node), best_traj_rwd, found_solution_permanent]
 
             if self.found_solution:

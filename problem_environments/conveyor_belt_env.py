@@ -4,22 +4,21 @@ import copy
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__))+'/../mover_library/')
-from conveyor_belt_problem import two_tables_through_door
+from conveyor_belt_problem import create_conveyor_belt_problem
 from problem_environment import ProblemEnvironment
+import cPickle as pickle
 
-from utils import compute_occ_vec, set_robot_config, remove_drawn_configs, \
-    draw_configs, clean_pose_data, draw_robot_at_conf, \
-    check_collision_except, release_obj, grab_obj, two_arm_pick_object, two_arm_place_object
-
-from utils import *
+from mover_library.utils import *
 from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 
 
 class ConveyorBelt(ProblemEnvironment):
-    def __init__(self):
+    def __init__(self, problem_idx):
+        self.problem_idx = problem_idx
         ProblemEnvironment.__init__(self)
-        self.problem_config = two_tables_through_door(self.env)
+        obj_setup = self.load_object_setup()
+        self.problem_config = create_conveyor_belt_problem(self.env, obj_setup)
         self.objects = self.problem_config['objects']
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
@@ -40,9 +39,20 @@ class ConveyorBelt(ProblemEnvironment):
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.is_init_pick_node = True
-        self.init_operator = 'two_arm_place'
         self.init_obj = self.objects[0]
+        self.init_operator = 'two_arm_place'
         self.name = 'convbelt'
+
+    def load_object_setup(self):
+        obj_setup = pickle.load(open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'r'))
+        return obj_setup
+
+    def save_object_setup(self):
+        object_configs = {'object_poses': self.problem_config['obj_poses'],
+                          'object_shapes': self.problem_config['obj_shapes'],
+                          'obst_poses': self.problem_config['obst_poses'],
+                          'obst_shapes': self.problem_config['obst_shapes']}
+        pickle.dump(object_configs, open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'wb'))
 
     def apply_two_arm_pick_action_stripstream(self, action, obj=None, do_check_reachability=False):
         leftarm_manip = self.robot.GetManipulator('leftarm')
