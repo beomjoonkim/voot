@@ -204,7 +204,7 @@ class MCTS:
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 1
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
