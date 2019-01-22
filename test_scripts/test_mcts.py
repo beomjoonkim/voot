@@ -132,6 +132,7 @@ def main():
     task_plan = get_task_plan(args.domain, problem_env)
     hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
     hierarchical_planner.set_mcts_parameters(args)
+
     search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,

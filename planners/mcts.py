@@ -199,7 +199,7 @@ class MCTS:
         reward_lists = []
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
-            if self.environment.is_solving_namo or self.environment.is_solving_packing:
+            if self.environment.is_solving_namo: #or self.environment.is_solving_packing:
                 is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward

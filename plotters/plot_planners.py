@@ -21,8 +21,6 @@ def savefig(xlabel, ylabel, fname=''):
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
-
-
 def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks, mcts_iter):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
@@ -89,9 +87,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             is_success = np.any(np.array(result['search_time']['namo'])[:,-1])
             success.append(is_success)
             if is_success:
-                import pdb;pdb.set_trace()
                 success_idxs.append( np.where(np.array(result['search_time']['namo'])[:,-1])[0][0] )
-                import pdb;pdb.set_trace()
                 search_times.append(result['search_time']['namo'][-1][0])
 
     print "mcts time and success rate:"
@@ -168,7 +164,7 @@ def plot_across_algorithms():
     if args.domain == 'namo':
         algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif' ]
     else:
-        algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif']
+        algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
