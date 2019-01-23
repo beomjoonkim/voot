@@ -137,8 +137,8 @@ class ProblemEnvironment:
                     remove_drawn_configs('goal', self.env)
                 return path, "HasSolution"
 
-        if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
-            remove_drawn_configs('goal', self.env)
+        #if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
+        #    remove_drawn_configs('goal', self.env)
 
         #print "Path not found, took %.2f"%(time.time()-stime)
         return None, 'NoPath'

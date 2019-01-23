@@ -568,6 +568,8 @@ class MoverProblem:
             self.init_base_config = np.array([-1.5, -1.5, np.pi/2.])
             set_robot_config(self.init_base_config, self.robot)
             set_obj_xytheta([3, 2, 43 * np.pi / 180.], env.GetKinBody('shelf1'))
+            set_obj_xytheta([3, -1.8, 43 * np.pi / 180.], env.GetKinBody('shelf2'))
+
             set_obj_xytheta([-0.13, 0.45, 3], packing_boxes[2])
             self.set_obj_poses(problem_idx)
             '''

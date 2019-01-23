@@ -149,11 +149,11 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 
 def get_algo_name(raw_name):
     if raw_name.find('randomized_doo') !=-1:
-        return "RandDOO"
+        return "RandDOOT"
     elif raw_name.find('voo') != -1:
-        return 'VOO'
+        return 'VOOT'
     elif raw_name.find('unif') != -1:
-        return "Uniform"
+        return "UniformT"
     else:
         raise ValueError
 
@@ -174,6 +174,7 @@ def plot_across_algorithms():
     if args.domain == 'namo':
         algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif' ]
         #algo_names = ['randomized_doo_1.0', 'voo_0.3' ]
+        algo_names = ['voo_0.3', 'unif' ]
     else:
         algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
         #algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
@@ -182,9 +183,9 @@ def plot_across_algorithms():
     color_names = color_dict.keys()[1:]
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
-    color_dict['RandDOO'] = [0, 0, 0]
-    color_dict['VOO'] = [1, 0, 0]
-    color_dict['Uniform'] = [0, 0, 1]
+    color_dict['RandDOOT'] = [0, 0, 0]
+    color_dict['VOOT'] = [1, 0, 0]
+    color_dict['UniformT'] = [0, 0, 1]
 
 
     # DOO - black
@@ -206,13 +207,15 @@ def plot_across_algorithms():
 
             max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
-        sns.tsplot(search_rwd_times[:,:args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name, color=color_dict[algo_name])
+        sns.tsplot(search_rwd_times[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
+                   color=color_dict[algo_name])
         print "===================="
 
     if args.domain == 'convbelt':
         sns.tsplot([4.51]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
     else:
-        sns.tsplot([2.52]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='95% optimal', color='magenta')
+        pass
+        #sns.tsplot([2.52]*(args.mcts_iter-1), organized_times[:args.mcts_iter], ci=95, condition='95% optimal', color='magenta')
     #if args.domain=='namo':
     #    plt.ylim([2, 4.5])
 

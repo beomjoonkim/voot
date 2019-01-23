@@ -283,7 +283,7 @@ def draw_configs(configs, env, name='point', colors=None, transparency=0.1):
 def get_trajectory_length(trajectory):
     dists = 0
     for i in range(len(trajectory)-1):
-        dists+=se2_distance(trajectory[i+1], trajectory[i], 1, 1)
+        dists += se2_distance(trajectory[i+1], trajectory[i], 1, 1)
     return dists
 
 
@@ -380,27 +380,6 @@ def one_arm_place_object(obj, robot, place_action):
     set_config(robot, g_config, robot.GetManipulator('rightarm_torso').GetArmIndices())
     release_obj(robot, obj)
     open_gripper(robot)
-
-    """
-    leftarm_manip = robot.GetManipulator('leftarm')
-    rightarm_manip = robot.GetManipulator('rightarm')
-    set_config(robot, FOLDED_LEFT_ARM, leftarm_manip.GetArmIndices())
-    set_config(robot, mirror_arm_config(FOLDED_LEFT_ARM), rightarm_manip.GetArmIndices())
-    """
-
-
-"""
-def pick_obj(obj, robot, g_configs, left_manip, right_manip):
-    set_config(robot, g_configs[0], left_manip.GetArmIndices())
-    set_config(robot, g_configs[1], right_manip.GetArmIndices())
-    grab_obj(robot, obj)
-
-
-def place_obj(obj, robot, leftarm_manip, rightarm_manip):
-    release_obj(robot, obj)
-    set_config(robot, FOLDED_LEFT_ARM, leftarm_manip.GetArmIndices())
-    set_config(robot, mirror_arm_config(FOLDED_LEFT_ARM), rightarm_manip.GetArmIndices())
-"""
 
 
 def two_arm_place_object(obj, robot, place_action):
@@ -544,7 +523,7 @@ def convert_se2_to_base_pose(basepose_se2):
 
 
 def place_parameter_distance(param1, param2, c1=1):
-    return se2_distance(param1, param2, c1, 1)
+    return se2_distance(param1, param2, c1, 0)
 
 
 def get_place_domain(region):

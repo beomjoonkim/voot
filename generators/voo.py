@@ -3,7 +3,8 @@ import numpy as np
 sys.path.append('../mover_library/')
 from samplers import gaussian_randomly_place_in_region
 from generator import Generator
-from utils import pick_parameter_distance, place_parameter_distance, se2_distance
+from utils import pick_parameter_distance, place_parameter_distance, se2_distance, visualize_path
+from utils import *
 from planners.mcts_utils import make_action_executable
 import time
 
@@ -18,6 +19,7 @@ class VOOGenerator(Generator):
         self.feasible_actions = []
         self.feasible_q_values = []
         self.idx_to_update  = None
+        self.robot = self.problem_env.robot
 
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()
@@ -35,7 +37,7 @@ class VOOGenerator(Generator):
                 assert found
             except:
                 import pdb;pdb.set_trace()
-
+            #assert self.evaled_q_values[self.idx_to_update] == 'update_me'
             self.evaled_q_values[self.idx_to_update] = q
 
         feasible_idxs = np.where(np.array(executed_action_values_in_node) != self.problem_env.infeasible_reward)[0].tolist()
@@ -60,7 +62,9 @@ class VOOGenerator(Generator):
 
         rnd = np.random.random() # this should lie outside
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
-                                       np.max(self.evaled_q_values) > self.problem_env.infeasible_reward
+                                       np.max(node.reward_history.values()) > 0 #self.problem_env.infeasible_reward
+        #if node.parent is not None and node.parent.Nvisited > 30:
+        #    import pdb;pdb.set_trace()
         if is_sample_from_best_v_region:
             print 'Sample from best region'
         stime=time.time()
@@ -84,13 +88,6 @@ class VOOGenerator(Generator):
                 #self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 #self.idx_to_update = None
 
-        #print "VOO time", time.time()-stime
-        """
-        if status == 'HasSolution':
-            print 'Found feasible'
-        else:
-            print 'Didnt find feasible'
-        """
         return action
 
     def sample_from_best_voronoi_region(self, node):
@@ -100,15 +97,15 @@ class VOOGenerator(Generator):
         if operator == 'two_arm_pick':
             params = self.sample_pick_from_best_voroi_region(obj)
         elif operator == 'two_arm_place':
-            params = self.sample_place_from_best_voroi_region()
+            params = self.sample_place_from_best_voroi_region(node)
         elif operator == 'next_base_pose':
             params = self.sample_place_from_best_voroi_region()
         return params
 
-    def sample_place_from_best_voroi_region(self):
+    def sample_place_from_best_voroi_region(self, node):
         best_dist = np.inf
         other_dists = np.array([-1])
-        counter = 1
+        counter = 0
 
         best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values))
         best_action_idxs = best_action_idxs.reshape((len(best_action_idxs,)))
@@ -118,20 +115,24 @@ class VOOGenerator(Generator):
         # todo closest to any one of the best
 
         while np.any(best_dist > other_dists) and counter < 1000:
-            print "Gaussian place sampling, counter", counter, len(other_dists)
             variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
             new_parameters = np.random.normal(best_evaled_action, variance)
             new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
+            new_parameters = self.sample_from_uniform()
 
             best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
             other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
             counter += 1
+            print "Gaussian place sampling, variance and counter", variance, counter, len(other_dists)
+        #print best_evaled_action
+        #best_action, status = self.feasibility_checker.check_feasibility(node, best_evaled_action)
+        #action, status = self.feasibility_checker.check_feasibility(node, new_parameters)
         return new_parameters
 
     def sample_pick_from_best_voroi_region(self, obj):
         best_dist = np.inf
         other_dists = np.array([-1])
-        counter = 1
+        counter = 0
 
         best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values))
         best_action_idxs = best_action_idxs.reshape((len(best_action_idxs, )))

@@ -52,7 +52,7 @@ class MCTS:
         self.exploration_parameters = exploration_parameters
         self.time_limit = np.inf
         if domain_name == 'namo':
-            self.discount_rate = 0.99
+            self.discount_rate = 0.9
         else:
             self.discount_rate = 0.99
         self.environment = environment
@@ -61,6 +61,8 @@ class MCTS:
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
         self.depth_limit = 300
 
+        self.env = self.environment.env
+        self.robot = self.environment.robot
         self.s0_node = self.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
 
         self.original_s0_node = self.s0_node
@@ -204,19 +206,29 @@ class MCTS:
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
-                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    n_visits_to_each_action = self.s0_node.N.values()
+                    if len(np.unique(n_visits_to_each_action)) == 1:
+                        best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    else:
+                        best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
                     best_node = self.s0_node.children[best_action]
                     self.switch_init_node(best_node)
                     switch_counter = 0
                 elif (not is_pick_node) and we_evaluated_the_node_enough:
                     print "Node switching from place node"
-                    best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    n_visits_to_each_action = self.s0_node.N.values()
+                    if len(np.unique(n_visits_to_each_action)) == 1:
+                        best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+                    else:
+                        best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
                     best_node = self.s0_node.children[best_action]
                     self.switch_init_node(best_node)
+                    print np.sort([child.parent_action_reward for child in self.s0_node.parent.children.values()])
+                    print 'Qvalues', self.s0_node.Q.values()
                     switch_counter = 0
 
             switch_counter += 1
