@@ -113,7 +113,7 @@ def visualize_path(robot, path):
         if is_goal_config:
             draw_robot_at_conf(conf, 0.5, 'path' + str(idx), robot, env)
         else:
-            draw_robot_at_conf(conf, 0.7, 'path' + str(idx), robot, env)
+            draw_robot_at_conf(conf, 0.9, 'path' + str(idx), robot, env)
     raw_input("Continue?")
     remove_drawn_configs('path', env)
 

@@ -497,7 +497,7 @@ class MoverProblem:
         table = self.env.GetKinBody('table')
         # kitchen table location
         if problem_idx == 0:
-            table_xytheta = [0.91704, 0.8, 0]
+            table_xytheta = [1.5, 2.0, np.pi/2]
             set_obj_xytheta(table_xytheta, table)
             computer_chair_xytheta = [4.8, -2.5, 0]
             place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
@@ -549,9 +549,18 @@ class MoverProblem:
         self.problem_idx = problem_idx
         if problem_idx == 0:
             self.init_base_config = np.array([-1., -3., 0.])
-            self.goal_base_config = np.array([-0,2.5,np.pi/2.])
+            self.goal_base_config = np.array([4,2.5,np.pi/2.])
             set_robot_config(self.init_base_config, self.robot)
+            set_obj_xytheta([0.9,0.8,np.pi/2], table)
+            set_obj_xytheta([1.5, 2.0, np.pi / 2], table)
             self.set_obj_poses(problem_idx)
+            set_obj_xytheta([-0.2, -2.5, 0], packing_boxes[4])
+            set_obj_xytheta([4, -0.2, 0], packing_boxes[6])
+            set_obj_xytheta([3, -2, 0], packing_boxes[2])
+            set_obj_xytheta([4.5, -0.8, 39 * np.pi / 180], packing_boxes[5])
+
+            #set_obj_xytheta([],packing_boxes[0])
+
             for obj in self.movable_objects:
                 print obj.GetName(), get_body_xytheta(obj)
         elif problem_idx == 1:

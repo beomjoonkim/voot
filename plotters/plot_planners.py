@@ -55,29 +55,23 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     max_rwds = []
     success_idxs = []
     for fin in os.listdir(result_dir):
-        if fin.find('pidx') == -1:
-            continue
-        sd = int(fin.split('_')[2])
-        file_pidx = int(fin.split('_')[-1].split('.')[0])
-
-        if file_pidx != pidx:
-            continue
-        if fin.find('.pkl') == -1:
-            continue
-        if algo_name == 'voo':
-            result = pickle.load(open(result_dir + fin, 'r'))
-        else:
-            try:
-                result = pickle.load(open(result_dir + fin, 'r'))
-            except:
+        if domain_name == 'namo':
+            if fin.find('pidx') == -1:
                 continue
+            sd = int(fin.split('_')[2])
+            file_pidx = int(fin.split('_')[-1].split('.')[0])
+
+            if file_pidx != pidx:
+                continue
+            if fin.find('.pkl') == -1:
+                continue
+        result = pickle.load(open(result_dir + fin, 'r'))
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
-        print result_dir+fin
         if domain_name == 'convbelt':
             is_success = result['plan'] is not None
             max_rwds.append( np.max(np.array(result['search_time'])[:,2]))
-            print np.max(np.array(result['search_time'])[:, 2]), np.max(result['reward_list'])
+            #print np.max(np.array(result['search_time'])[:, 2]), np.max(result['reward_list'])
 
             search_rwd_times.append(result['search_time'])
             #is_success = np.any(np.array(result['search_time'])[:, 2] >= 4)
@@ -100,8 +94,8 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     print 'success', np.array(success).mean()
     print 'ff solution',np.array(success_idxs).mean()
     print 'max_rwd mean', np.mean(max_rwds)
-    print 'max_rwd std', np.std(max_rwds)
-    print 'max_rwd max', np.max(max_rwds)
+    #print 'max_rwd std', np.std(max_rwds)
+    #print 'max_rwd max', np.max(max_rwds)
     print 'n', len(success)
     return search_rwd_times, np.mean(max_rwds)
 
@@ -133,7 +127,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 1000, 10)
+    organized_times = range(1, 1000, 1)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -147,10 +141,7 @@ def get_max_rwds_wrt_samples(search_rwd_times):
                 episode_times = np.array(rwd_time)[:, 1]
                 episode_rwds = np.array(rwd_time)[:, 2]
             idxs = episode_times <= organized_time
-            if np.any(idxs):
-                max_rwd = np.max(episode_rwds[idxs])
-            else:
-                max_rwd = 0
+            max_rwd = np.max(episode_rwds[idxs])
             episode_max_rwds_wrt_organized_times.append(max_rwd)
         all_episode_data.append(episode_max_rwds_wrt_organized_times)
     return np.array(all_episode_data), organized_times
@@ -184,7 +175,7 @@ def plot_across_algorithms():
         algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif' ]
         #algo_names = ['randomized_doo_1.0', 'voo_0.3' ]
     else:
-        algo_names = ['randomized_doo_1.0', 'voo_0.3','unif']
+        algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
         #algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -204,19 +195,24 @@ def plot_across_algorithms():
     max_rwds = []
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        search_rwd_times, max_rwd = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
-                                                        args.n_feasibility_checks, args.mcts_iter, args.pidx)
-        max_rwds.append(max_rwd)
-        if args.t:
-            search_rwd_times, organized_times = get_max_rwds_wrt_time(search_rwd_times)
+        pkl_fname = './plotters/search_rwd_times_pkl_files/'+args.domain+'_pidx_'+str(args.pidx)+'_'+algo+'.pkl'
+        if os.path.isfile(pkl_fname):
+            search_rwd_times, organized_times, max_rwd = pickle.load(open(pkl_fname,'r'))
         else:
+            search_rwd_times, max_rwd = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
+                                                         args.n_feasibility_checks, args.mcts_iter, args.pidx)
             search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
+            pickle.dump((search_rwd_times, organized_times, max_rwd), open(pkl_fname, 'wb'))
 
+            max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
-        sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo_name, color=color_dict[algo_name])
+        sns.tsplot(search_rwd_times[:,:args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name, color=color_dict[algo_name])
         print "===================="
 
-    sns.tsplot([0.95*np.max(max_rwds)]*len(organized_times), organized_times, ci=95, condition='95% optimal', color='magenta')
+    if args.domain == 'convbelt':
+        sns.tsplot([4.51]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
+    else:
+        sns.tsplot([2.52]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='95% optimal', color='magenta')
     #if args.domain=='namo':
     #    plt.ylim([2, 4.5])
 

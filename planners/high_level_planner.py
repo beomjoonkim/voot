@@ -136,7 +136,7 @@ class HighLevelPlanner:
 
         """
         self.problem_env.disable_objects()
-        fetching_path,status = self.problem_env.get_base_motion_plan(self.problem_env.problem_config['goal_base_config'])
+        fetching_path,status = self.problem_env.get_base_motion_plan(self.problem_env.problem_config['goal_base_config'], region_name='entire_region')
         self.problem_env.enable_objects()
         """
         fetching_path = pickle.load(open('./problem_environments/mover_domain_problems/fetching_path_'+ str(self.problem_env.problem_idx) +'.pkl','r'))
