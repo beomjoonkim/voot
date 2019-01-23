@@ -24,11 +24,10 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         # rootdir = './test_results/'
     elif algo_name.find('unif') != -1:
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-    else:
-        epsilon = algo_name.split('_')[1]
-        algo_name = algo_name.split('_')[0]
-        rootdir = './test_results/'
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+    elif algo_name.find('randomized_doo') !=-1:
+        epsilon = algo_name.split('randomized_doo')[1][1:]
+        algo_name = 'randomized_doo'
+        #rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
     if domain_name == 'convbelt':
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//'
@@ -74,11 +73,13 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
                 continue
         if domain_name == 'namo':
             assert isinstance(result['search_time'], dict)
-
-        search_rwd_times.append(result['search_time'])
+        print result_dir+fin
         if domain_name == 'convbelt':
             is_success = result['plan'] is not None
             max_rwds.append( np.max(np.array(result['search_time'])[:,2]))
+            print np.max(np.array(result['search_time'])[:, 2]), np.max(result['reward_list'])
+
+            search_rwd_times.append(result['search_time'])
             #is_success = np.any(np.array(result['search_time'])[:, 2] >= 4)
             #if is_success:
             #    search_times.append(np.where(np.array(result['search_time'])[:, 2] >= 4)[0][0])
@@ -86,6 +87,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             # search_times.append(np.array(result['search_time'])[:,0][-1])
             success.append(is_success)
         else:
+            search_rwd_times.append(result['search_time'])
             is_success = np.any(np.array(result['search_time']['namo'])[:,-1])
             max_rwds.append( np.max(np.array(result['search_time']['namo'])[:,2]))
             success.append(is_success)
@@ -131,7 +133,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 400, 10)
+    organized_times = range(10, 1000, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -155,7 +157,7 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 
 
 def get_algo_name(raw_name):
-    if raw_name.find('randomizeddoo') !=-1:
+    if raw_name.find('randomized_doo') !=-1:
         return "RandDOO"
     elif raw_name.find('voo') != -1:
         return 'VOO'
@@ -179,9 +181,10 @@ def plot_across_algorithms():
     widening_parameter = args.w
 
     if args.domain == 'namo':
-        algo_names = ['randomizeddoo_1.0', 'voo_0.3', 'unif' ]
+        algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif' ]
+        #algo_names = ['randomized_doo_1.0', 'voo_0.3' ]
     else:
-        algo_names = ['randomizeddoo_1.0', 'voo_0.3','unif']
+        algo_names = ['randomized_doo_1.0', 'voo_0.3','unif']
         #algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -214,6 +217,8 @@ def plot_across_algorithms():
         print "===================="
 
     sns.tsplot([0.95*np.max(max_rwds)]*len(organized_times), organized_times, ci=95, condition='95% optimal', color='magenta')
+    #if args.domain=='namo':
+    #    plt.ylim([2, 4.5])
 
     if args.t:
         savefig('Times (s)', 'Average rewards', fname='./plotters/t_' + args.domain + '_w_' + str(args.w))

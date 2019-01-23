@@ -41,17 +41,23 @@ def main():
     parser.add_argument('-epsilon', nargs='+', type=float)
     parser.add_argument('-pidxs', nargs='+', type=int)
     parser.add_argument('-random_seeds', nargs='+', type=int)
+    parser.add_argument('--pidxs_specified', action='store_true')
 
     args = parser.parse_args()
 
     sampling_strategy = args.sampling
-    epsilons = args.epsilon if args.epsilon is not None else [-1]
+    epsilons = args.epsilon if args.epsilon is not None else [-1.0]
     domain = args.domain
     widening_parameters = args.w if args.w is not None else [0.8]
     mcts_iter = args.mcts_iter
-    c1s = args.c1 if args.c1 is not None else [1]
+    c1s = args.c1 if args.c1 is not None else [1.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
-    trials = range(args.pidxs[0], args.pidxs[1])
+
+    if not args.pidxs_specified:
+        trials = range(args.pidxs[0], args.pidxs[1])
+    else:
+        trials = args.pidxs
+
     seeds = range(args.random_seeds[0], args.random_seeds[1])
     configs = []
     for n_feasibility_check in n_feasibility_checks:

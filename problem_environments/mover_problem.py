@@ -552,6 +552,8 @@ class MoverProblem:
             self.goal_base_config = np.array([-0,2.5,np.pi/2.])
             set_robot_config(self.init_base_config, self.robot)
             self.set_obj_poses(problem_idx)
+            for obj in self.movable_objects:
+                print obj.GetName(), get_body_xytheta(obj)
         elif problem_idx == 1:
             self.goal_base_config = np.array([-0,2.5,np.pi/2.])
             self.init_base_config = np.array([-1.5, -1.5, np.pi/2.])
