@@ -208,10 +208,12 @@ class MCTS:
                 # it will actually never switch.
                 if is_pick_node:
                     we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 10
+                    if switch_counter > 10 and not we_have_feasible_action:
+                        self.switch_init_node(self.original_s0_node)
                 else:
                     we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 30
-                if switch_counter > 30 and not we_have_feasible_action:
-                    self.switch_init_node(self.original_s0_node)
+                    if switch_counter > 30 and not we_have_feasible_action:
+                        self.switch_init_node(self.original_s0_node)
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
