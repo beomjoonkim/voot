@@ -132,6 +132,7 @@ def main():
     task_plan = get_task_plan(args.domain, problem_env)
     hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
     hierarchical_planner.set_mcts_parameters(args)
+    hierarchical_planner.stat_file_name = stat_file_name
 
     search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
     # todo check if search_time_to_reward returns a solution

@@ -51,6 +51,11 @@ class HighLevelPlanner:
         self.env = self.problem_env.env
         self.robot = self.problem_env.robot
 
+    def save_results(self, search_time_rwd, plan, rewards_list, iteration):
+        pickle.dump({'search_time': search_time_rwd, 'plan': plan, 'iteration': iteration,
+                     'reward_list': rewards_list,
+                     }, open(self.stat_file_name, 'wb'))
+
     def set_mcts_parameters(self, args):
         domain = args.domain
         uct_parameter = args.uct
@@ -150,7 +155,7 @@ class HighLevelPlanner:
         namo_search_time_to_reward, namo_plan, goal_node, reward_list = self.namo_planner.namo_domain_solve_single_object(
                                                                                  initial_collision_names,
                                                                                  self.mcts)
-        search_time_to_reward = {'fetch': [], 'namo': namo_search_time_to_reward}
+        search_time_to_reward = namo_search_time_to_reward
         if namo_plan is None:
             plan = None
         else:

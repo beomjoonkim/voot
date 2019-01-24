@@ -206,7 +206,10 @@ class MCTS:
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
                     else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
-                we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 30 #self.s0_node.Nvisited > 30
+                if is_pick_node:
+                    we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 10
+                else:
+                    we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 30
                 if switch_counter > 30 and not we_have_feasible_action:
                     self.switch_init_node(self.original_s0_node)
 
@@ -240,6 +243,7 @@ class MCTS:
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
+            ### logging results
             if socket.gethostname() == 'dell-XPS-15-9560':
                 if self.environment.is_solving_namo:
                     pass
@@ -248,14 +252,15 @@ class MCTS:
                     write_dot_file(self.tree, iteration, 'solving_packing')
                 elif self.environment.is_solving_fetching:
                     write_dot_file(self.tree, iteration, 'solving_fetching')
-
-            # log the reward vs. time
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
-
             reward_lists.append(reward_list)
-            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), reward_list, found_solution_permanent
             plan = [self.retrace_best_plan(best_node), best_traj_rwd, self.found_solution]
+
+            if (iteration % 100 == 0 and iteration != 0) or (iteration == n_iter):
+                self.high_level_planner.save_results(search_time_to_reward, plan, reward_lists, iteration)
+
+            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), reward_list, found_solution_permanent
 
             if self.found_solution:
                 found_solution_permanent = True
