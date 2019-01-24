@@ -211,6 +211,7 @@ def plot_across_algorithms():
             pickle.dump((search_rwd_times, organized_times, max_rwd), open(pkl_fname, 'wb'))
 
             max_rwds.append(max_rwd)
+        print len(organized_times)
         algo_name = get_algo_name(algo)
         sns.tsplot(search_rwd_times[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                    color=color_dict[algo_name])
@@ -219,8 +220,7 @@ def plot_across_algorithms():
     if args.domain == 'convbelt':
         sns.tsplot([4.51]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
     else:
-        pass
-        #sns.tsplot([0.712]*(args.mcts_iter), organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
+        sns.tsplot([1.062]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter], ci=95, condition='Solution reward', color='magenta')
     #if args.domain=='namo':
     #    plt.ylim([2, 4.5])
 
