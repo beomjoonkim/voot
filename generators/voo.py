@@ -123,7 +123,7 @@ class VOOGenerator(Generator):
             best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
             other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
             counter += 1
-            print "Gaussian place sampling, variance and counter", variance, counter, len(other_dists)
+            #print "Gaussian place sampling, variance and counter", variance, counter, len(other_dists)
         #print best_evaled_action
         #best_action, status = self.feasibility_checker.check_feasibility(node, best_evaled_action)
         #action, status = self.feasibility_checker.check_feasibility(node, new_parameters)
@@ -156,7 +156,7 @@ class VOOGenerator(Generator):
                 if np.all(best_dist < other_dists):
                     break
             counter += 1
-            print "Gaussian pick sampling, variance and counter", variance, counter, len(other_dists)
+            #print "Gaussian pick sampling, variance and counter", variance, counter, len(other_dists)
 
         return new_parameters
 
