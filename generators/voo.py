@@ -90,7 +90,7 @@ class VOOGenerator(Generator):
                 pass
                 #self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 #self.idx_to_update = None
-
+        print node.operator + " sampling failed"
         return action
 
     def sample_from_best_voronoi_region(self, node):

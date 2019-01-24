@@ -118,7 +118,7 @@ def randomly_place_in_region(env, body, region):
         if cspace is None: continue
         set_point(body, np.array([uniform(*cspace_range) for cspace_range in cspace] + [
             region.z + aabb.extents()[2] + BODY_PLACEMENT_Z_OFFSET]) - aabb.pos() + get_point(body))
-        if not body_collision(env, body):
+        if not env.CheckCollision(body):
             return get_body_xytheta(body)
     return None
 

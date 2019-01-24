@@ -18,7 +18,9 @@ class ConveyorBelt(ProblemEnvironment):
         self.problem_idx = problem_idx
         ProblemEnvironment.__init__(self)
         obj_setup = self.load_object_setup()
+        #obj_setup = None
         self.problem_config = create_conveyor_belt_problem(self.env, obj_setup)
+        import pdb;pdb.set_trace()
         if obj_setup is None:
             self.save_object_setup()
             sys.exit(-1)
@@ -45,6 +47,9 @@ class ConveyorBelt(ProblemEnvironment):
         self.init_obj = self.objects[0]
         self.init_operator = 'two_arm_place'
         self.name = 'convbelt'
+
+    def get_region_containing(self, obj):
+        return self.regions['entire_region']
 
     def load_object_setup(self):
         object_setup_file_name = './problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl'

@@ -12,18 +12,18 @@
       <Translation>0 0 0</Translation>
       <!--> floor </!-->
       <Geom type="box">
-        <extents>1.75 2.5 0.005</extents>
-        <translation>-0.8 0 -0.005</translation>
+        <extents>2.625 2.5 0.005</extents>
+        <translation>-0.78 -0.010</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
       </Geom>
       <!--side walls-->
       <Geom type="box">
-        <extents>1.75 0.01 0.2</extents>
+        <extents>2.625 0.01 0.2</extents>
         <translation>-0.78 -2.5 0.2</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
       </Geom>
       <Geom type="box">
-        <extents>1.75 0.01 0.2</extents>
+        <extents>2.625 0.01 0.2</extents>
         <translation>-0.78 2.5 0.2</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
       </Geom>
@@ -31,28 +31,28 @@
       <!--back wall-->
       <Geom type="box">
         <extents>0.01 2.5 0.2</extents>
-        <translation>-2.5 0 0.2</translation>
+        <translation>-3.4 0 0.2</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
       </Geom>
 
       <!--conveyor belt-->
       <Geom type="box">
-        <extents>5 0.5 0.005</extents>
-        <translation>3 1.05 -0.005</translation>
+        <extents>8 0.5 0.005</extents>
+        <translation>5 1.05 -0.005</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
       </Geom>
 
       <!--walls near conveyor belt-->
-      <Geom type="box">
+      <!--Geom type="box">
         <extents>0.01 0.5 0.2</extents>
         <translation>0.95 2 0.2</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
-      </Geom>
-      <Geom type="box">
+      </Geom-->
+      <!--Geom type="box">
         <extents>0.01 1.5 0.2</extents>
         <translation>0.95 -1 0.2</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
-      </Geom>
+      </Geom-->
 
       <!--> door left wall </!-->
       <Geom type="box">

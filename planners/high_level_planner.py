@@ -4,8 +4,10 @@ from planners.fetch_planner import FetchPlanner
 from planners.namo_planner import NAMOPlanner
 from planners.namo_domain_namo_planner import NamoDomainNamoPlanner
 from generators.PickUniform import PickWithBaseUnif
-
+from generators.feasibility_checkers.pick_feasibility_checker import PickFeasibilityChecker
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
+
+from utils import get_pick_domain, get_place_domain
 
 import sys
 sys.path.append('../mover_library/')
@@ -123,11 +125,24 @@ class HighLevelPlanner:
     def solve_convbelt(self, objects, target_packing_region):
         plan = []
         next_init_node = None
-        rwd = self.problem_env.infeasible_reward
+        """
         while self.problem_env.infeasible_reward == rwd:
             pick_pi = PickWithBaseUnif(self.problem_env)
             pick_action = pick_pi.predict(objects[0], self.problem_env.regions['entire_region'], n_iter=10000)
             _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node, True, None)
+
+
+        checker = PickFeasibilityChecker(self.problem_env)
+        checked = False
+        while not checked:
+            domain = get_pick_domain
+            dim_parameters = domain.shape[-1]
+            domain_min = domain[0]
+            domain_max = domain[1]
+            np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
+            pick_action = checker.check_feasibility()
+            _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node, True, None)
+        """
         self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.mcts.tree.root = self.mcts.s0_node
         self.problem_env.is_solving_packing = True

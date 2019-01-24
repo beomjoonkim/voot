@@ -33,6 +33,7 @@ class PlaceFeasibilityChecker:
             target_obj_region = obj_region  # for fetching, you want to move it around
         robot_xytheta = self.compute_robot_base_pose_given_object_pose(obj, self.robot, obj_pose, T_r_wrt_o)
         set_robot_config(robot_xytheta, self.robot)
+
         is_base_pose_feasible = not (
                                 self.env.CheckCollision(obj) or self.env.CheckCollision(self.robot)) and \
                                 (target_robot_region.contains(self.robot.ComputeAABB())) and \

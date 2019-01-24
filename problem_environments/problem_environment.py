@@ -172,8 +172,9 @@ class ProblemEnvironment:
     def get_base_motion_plan(self, goal, region_name=None, n_iterations=None):
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
         if region_name is None:
-            d_fn = base_distance_fn(self.robot, x_extents=2.51, y_extents=2.51)
-            s_fn = base_sample_fn(self.robot, x_extents=2.51, y_extents=2.51) # set the x and y
+            assert self.name == 'convbelt'
+            d_fn = base_distance_fn(self.robot, x_extents=-3.51, y_extents=2.51)
+            s_fn = base_sample_fn(self.robot, x_extents=3.51, y_extents=2.51) # set the x and y
         else:
             # todo: combined regions
             if region_name == 'bridge_region':
@@ -191,7 +192,7 @@ class ProblemEnvironment:
         if n_iterations is None:
             if self.name == 'convbelt':
                 #n_iterations = [20, 50, 100, 500, 3000]
-                n_iterations = [20, 50, 100, 500, 1000]
+                n_iterations = [20, 50, 100, 500, 700]
             else:
                 n_iterations = [20, 50, 100, 500, 1000]
 
