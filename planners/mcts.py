@@ -189,6 +189,15 @@ class MCTS:
             self.high_level_planner.set_object_index(obj_idx)
             self.environment.reset_to_init_state(node)
 
+    def choose_next_node_to_descend_to(self):
+        n_visits_to_each_action = self.s0_node.N.values()
+        if len(np.unique(n_visits_to_each_action)) == 1:
+            best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+        else:
+            best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
+        best_node = self.s0_node.children[best_action]
+        return best_node, best_action
+
     def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
         depth = 0
@@ -201,41 +210,35 @@ class MCTS:
         reward_lists = []
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
-            if self.environment.is_solving_namo or self.environment.is_solving_packing:
+            if self.environment.is_solving_namo: #or self.environment.is_solving_packing:
                 is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
                 we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
-                    else np.max(self.s0_node.Q.values()) != self.environment.infeasible_reward
+                    else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
                 if is_pick_node:
                     we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 10
                     if switch_counter > 10 and not we_have_feasible_action:
+                        print 'Going back to s0 node'
                         self.switch_init_node(self.original_s0_node)
                 else:
                     we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 30
                     if switch_counter > 30 and not we_have_feasible_action:
+                        print 'Going back to s0 node'
                         self.switch_init_node(self.original_s0_node)
 
                 if is_pick_node and we_have_feasible_action:
                     print "Node switching from pick node"
-                    n_visits_to_each_action = self.s0_node.N.values()
-                    if len(np.unique(n_visits_to_each_action)) == 1:
-                        best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
-                    else:
-                        best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
-                    best_node = self.s0_node.children[best_action]
+                    best_node, best_action = self.choose_next_node_to_descend_to()
                     self.switch_init_node(best_node)
                     switch_counter = 0
                 elif (not is_pick_node) and we_evaluated_the_node_enough:
                     print "Node switching from place node"
-                    n_visits_to_each_action = self.s0_node.N.values()
-                    if len(np.unique(n_visits_to_each_action)) == 1:
-                        best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
-                    else:
-                        best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
-                    best_node = self.s0_node.children[best_action]
+                    best_node, best_action = self.choose_next_node_to_descend_to()
                     self.switch_init_node(best_node)
-                    print np.sort([child.parent_action_reward for child in self.s0_node.parent.children.values()])
-                    print 'Qvalues', self.s0_node.Q.values()
+                    print 'best child reward', best_node.parent_action_reward
+                    print 'best child Q', self.s0_node.parent.Q[best_action]
+                    print 'best child N', self.s0_node.parent.N[best_action]
+                    print 'Other Q values', self.s0_node.Q.values()
                     switch_counter = 0
 
             switch_counter += 1

@@ -67,6 +67,9 @@ class VOOGenerator(Generator):
         #    import pdb;pdb.set_trace()
         if is_sample_from_best_v_region:
             print 'Sample from best region'
+        else:
+            maxrwd = 0 if len(self.evaled_actions)==0 else np.max(node.reward_history.values())
+            print 'Sample from uniform, max rwd: ', maxrwd
         stime=time.time()
         for i in range(n_iter):
             #print i

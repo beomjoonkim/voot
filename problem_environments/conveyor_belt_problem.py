@@ -49,18 +49,18 @@ max_length = 0.6
 
 
 def create_obstacles(env, loading_regions):
-    NUM_OBSTACLES = 4
-    OBSTACLES = []
+    NUM_obstacles = 4
+    obstacles = []
     obstacle_poses = {}
     obstacle_shapes = {}
     i = 0
-    while len(OBSTACLES) < NUM_OBSTACLES:
+    while len(obstacles) < NUM_OBSTACLES:
         width = np.random.rand(1) * (max_width - min_width) + min_width
         length = np.random.rand(1) * (max_length - min_length) + min_length
         height = np.random.rand(1) * (max_height - min_height) + min_height
         new_body = box_body(env, width, length, height,
-                            name='obst%s' % len(OBSTACLES),
-                            color=(0, (i + .5) / NUM_OBSTACLES, 1))
+                            name='obst%s' % len(obstacles),
+                            color=(0, (i + .5) / NUM_obstacles, 1))
         trans = np.eye(4);
         trans[2, -1] = 0.075
         env.Add(new_body);
@@ -69,40 +69,40 @@ def create_obstacles(env, loading_regions):
                                            loading_regions[np.random.randint(len(loading_regions))])
 
         if not (xytheta is None):
-            obstacle_shapes['obst%s' % len(OBSTACLES)] = [width[0], length[0], height[0]]
-            obstacle_poses['obst%s' % len(OBSTACLES)] = xytheta
-            OBSTACLES.append(new_body)
+            obstacle_shapes['obst%s' % len(obstacles)] = [width[0], length[0], height[0]]
+            obstacle_poses['obst%s' % len(obstacles)] = xytheta
+            obstacles.append(new_body)
         else:
             sys.exit(-1)
             #env.Remove(new_body)
-    return OBSTACLES, obstacle_shapes, obstacle_poses
+    return obstacles, obstacle_shapes, obstacle_poses
 
 
 def create_objects(env, conveyor_belt):
-    NUM_OBJECTS = 8
-    OBJECTS = []
+    NUM_objects = 8
+    objects = []
     obj_shapes = {}
     obj_poses = {}
-    for i in range(NUM_OBJECTS):
+    for i in range(NUM_objects):
         width = np.random.rand(1) * (max_width - min_width) + min_width
         length = np.random.rand(1) * (max_width - min_length) + min_length
         height = np.random.rand(1) * (max_height - min_height) + min_height
         new_body = box_body(env, width, length, height, \
                             name='obj%s' % i, \
-                            color=(0, (i + .5) / NUM_OBJECTS, 0))
+                            color=(0, (i + .5) / NUM_objects, 0))
         trans = np.eye(4);
         trans[2, -1] = 0.075
         env.Add(new_body);
         new_body.SetTransform(trans)
         xytheta = randomly_place_in_region(env, new_body, conveyor_belt)
-        OBJECTS.append(new_body)
+        objects.append(new_body)
         obj_shapes['obj%s' % i] = [width[0], length[0], height[0]]
         obj_poses['obj%s' % i] = xytheta
-    return OBJECTS, obj_shapes, obj_poses
+    return objects, obj_shapes, obj_poses
 
 
 def load_objects(env, obj_shapes, obj_poses, color):
-    OBJECTS = []
+    objects = []
     i = 0
     nobj = len(obj_shapes.keys())
     for obj_name in obj_shapes.keys():
@@ -117,8 +117,8 @@ def load_objects(env, obj_shapes, obj_poses, color):
         env.Add(new_body);
         set_point(new_body, [xytheta[0], xytheta[1], 0.075])
         set_quat(new_body, quat)
-        OBJECTS.append(new_body)
-    return OBJECTS
+        objects.append(new_body)
+    return objects
 
 
 def create_conveyor_belt_problem(env, obj_setup=None):
@@ -196,22 +196,22 @@ def create_conveyor_belt_problem(env, obj_setup=None):
                           z=0.0001, color=np.array((1, 1, 0, 0.25)))
 
     if obj_setup is None:
-        OBJECTS, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
+        objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
     else:
-        OBJECTS = load_objects(env, obj_shapes, obj_poses, color=(0, 1, 0))
+        objects = load_objects(env, obj_shapes, obj_poses, color=(0, 1, 0))
 
     if obj_setup is None:
-        OBSTACLES, obst_shapes, obst_poses = create_obstacles(env, loading_regions)
+        obstacles, obst_shapes, obst_poses = create_obstacles(env, loading_regions)
     else:
-        OBSTACLES = load_objects(env, obst_shapes, obst_poses, color=(0, 0, 1))
+        obstacles = load_objects(env, obst_shapes, obst_poses, color=(0, 0, 1))
 
     initial_saver = DynamicEnvironmentStateSaver(env)
     initial_state = (initial_saver, [])
     init_base_conf = np.array([0, 1.05, 0])
-
+    import pdb;pdb.set_trace()
     problem = {'initial_state': initial_state,
-               'obstacles': OBSTACLES,
-               'objects': OBJECTS,
+               'obstacles': obstacles,
+               'objects': objects,
                'loading_region': loading_region,
                'env': env,
                'obst_shapes': obst_shapes,
