@@ -33,7 +33,7 @@ def make_save_dir(args):
     c1 = args.c1
 
     if domain == 'namo':
-        save_dir = ROOTDIR + '/test_results//root_switching/no_infeasible_place/' + domain + '_results/' + 'mcts_iter_'\
+        save_dir = ROOTDIR + '/test_results//root_switching/no_infeasible_place/no_going_back_to_s0/' + domain + '_results/' + 'mcts_iter_'\
                    + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
