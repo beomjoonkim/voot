@@ -123,6 +123,7 @@ class HighLevelPlanner:
             pick_pi = PickWithBaseUnif(self.problem_env)
             pick_action = pick_pi.predict(objects[0], self.problem_env.regions['entire_region'], n_iter=10000)
             _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node, True, None)
+        import pdb;pdb.set_trace()
         self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.mcts.tree.root = self.mcts.s0_node
         self.problem_env.is_solving_packing = True
@@ -145,6 +146,7 @@ class HighLevelPlanner:
         print len(initial_collision_names)
         print "Solved fetching"
         self.namo_planner.fetch_pick_path = fetching_path
+        import pdb;pdb.set_trace()
         namo_search_time_to_reward, namo_plan, goal_node, reward_list = self.namo_planner.namo_domain_solve_single_object(
                                                                                  initial_collision_names,
                                                                                  self.mcts)

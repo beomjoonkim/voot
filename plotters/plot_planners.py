@@ -54,6 +54,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     search_rwd_times = []
     max_rwds = []
     success_idxs = []
+    success_rewards = []
     for fin in os.listdir(result_dir):
         if domain_name == 'namo':
             if fin.find('pidx') == -1:
@@ -83,17 +84,23 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
         else:
             search_rwd_times.append(result['search_time'])
             is_success = np.any(np.array(result['search_time']['namo'])[:,-1])
-            max_rwds.append( np.max(np.array(result['search_time']['namo'])[:,2]))
+            max_rwds.append(np.max(np.array(result['search_time']['namo'])[:,2]))
             success.append(is_success)
             if is_success:
-                success_idxs.append( np.where(np.array(result['search_time']['namo'])[:,-1])[0][0]+1 )
+                success_idx = np.where(np.array(result['search_time']['namo'])[:,-1])[0][0]
+                success_idxs.append(success_idx+1)
                 search_times.append(result['search_time']['namo'][-1][0])
+                success_rewards.append(result['search_time']['namo'][success_idx][-2])
+            else:
+                #print result['search_time']['namo'][[-1]]
+                pass
 
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
     print 'success', np.array(success).mean()
     print 'ff solution',np.array(success_idxs).mean()
     print 'max_rwd mean', np.mean(max_rwds)
+    print 'ff min score', np.min(success_rewards)
     #print 'max_rwd std', np.std(max_rwds)
     #print 'max_rwd max', np.max(max_rwds)
     print 'n', len(success)
@@ -127,7 +134,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(1, 1000, 1)
+    organized_times = range(10, 1000, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -173,8 +180,6 @@ def plot_across_algorithms():
 
     if args.domain == 'namo':
         algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif' ]
-        #algo_names = ['randomized_doo_1.0', 'voo_0.3' ]
-        algo_names = ['voo_0.3', 'unif' ]
     else:
         algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
         #algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
@@ -215,7 +220,7 @@ def plot_across_algorithms():
         sns.tsplot([4.51]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
     else:
         pass
-        #sns.tsplot([2.52]*(args.mcts_iter-1), organized_times[:args.mcts_iter], ci=95, condition='95% optimal', color='magenta')
+        #sns.tsplot([0.712]*(args.mcts_iter), organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
     #if args.domain=='namo':
     #    plt.ylim([2, 4.5])
 
