@@ -76,7 +76,7 @@ def main():
                                       'seed': seed}
                             configs.append(config)
 
-    n_workers = int(10)
+    n_workers = int(20)
     print configs
     pool = ThreadPool(n_workers)
     results = pool.map(worker_wrapper_multi_input, configs)
