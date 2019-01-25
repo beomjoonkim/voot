@@ -186,14 +186,12 @@ class MCTS:
             self.environment.reset_to_init_state(node)
 
     def choose_next_node_to_descend_to(self):
-        """
         n_visits_to_each_action = self.s0_node.N.values()
         if len(np.unique(n_visits_to_each_action)) == 1:
             # todo descend to the one that has the highest FEASIBLE Q
             best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
         else:
             best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
-        """
         best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
         best_node = self.s0_node.children[best_action]
         return best_node, best_action
@@ -216,13 +214,13 @@ class MCTS:
                     else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
                 if is_pick_node:
-                    we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 10
+                    we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
 
                     #if switch_counter > 10 and not we_have_feasible_action:
                     #    print 'Going back to s0 node'
                     #    self.switch_init_node(self.original_s0_node)
                 else:
-                    we_evaluated_the_node_enough = we_have_feasible_action and switch_counter > 30
+                    we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
                     #if switch_counter > 30 and not we_have_feasible_action:
                     #    print 'Going back to s0 node'
                     #    self.switch_init_node(self.original_s0_node)

@@ -33,7 +33,9 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//'
         result_dir = rootdir + '/convbelt_results/mcts_iter_' +str(mcts_iter)+'/uct_0.0_widening_' + str(widening_parameter) + '_'
     elif domain_name == 'namo':
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/no_going_back_to_s0/'
+        #rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
+
         result_dir = rootdir + '/namo_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
         result_dir = rootdir + '/namo_results/mcts_iter_'+str(mcts_iter)+'/uct_0.0_widening_' + str(widening_parameter) + '_'
     else:
@@ -83,8 +85,9 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             try:
                 search_time = np.array(result['search_time']['namo'])
             except:
-                search_time = np.array(result['search_time'])
-            search_rwd_times.append(search_time)
+                search_time = np.array(result['search_time'])[0:1000,:]
+            print len(search_time)
+            search_rwd_times.append(search_time[0:1000,:])
             is_success = np.any(search_time[:, -1])
             max_rwds.append(np.max(search_time[:, 2]))
             success.append(is_success)
@@ -96,7 +99,6 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             else:
                 #print result['search_time']['namo'][[-1]]
                 pass
-
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
     print 'success', np.array(success).mean()
