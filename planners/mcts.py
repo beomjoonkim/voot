@@ -214,7 +214,7 @@ class MCTS:
                     else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
                 if is_pick_node:
-                    we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+                    we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
 
                     #if switch_counter > 10 and not we_have_feasible_action:
                     #    print 'Going back to s0 node'

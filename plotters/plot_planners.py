@@ -33,7 +33,7 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//'
         result_dir = rootdir + '/convbelt_results/mcts_iter_' +str(mcts_iter)+'/uct_0.0_widening_' + str(widening_parameter) + '_'
     elif domain_name == 'namo':
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/no_going_back_to_s0/'
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/no_going_back_to_s0_no_switch_counter/'
         #rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
 
         result_dir = rootdir + '/namo_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
@@ -85,9 +85,11 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             try:
                 search_time = np.array(result['search_time']['namo'])
             except:
-                search_time = np.array(result['search_time'])[0:1000,:]
+                search_time = np.array(result['search_time'])[0:2000,:]
+            if len(search_time) < 2000:
+                continue
             print len(search_time)
-            search_rwd_times.append(search_time[0:1000,:])
+            search_rwd_times.append(search_time[0:2000,:])
             is_success = np.any(search_time[:, -1])
             max_rwds.append(np.max(search_time[:, 2]))
             success.append(is_success)
@@ -108,7 +110,7 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     print 'ff mean score', np.mean(success_rewards)
     #print 'max_rwd std', np.std(max_rwds)
     #print 'max_rwd max', np.max(max_rwds)
-    print 'n', len(success)
+    print 'n', len(search_rwd_times)
     return search_rwd_times, np.mean(max_rwds)
 
 
@@ -139,7 +141,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 1100, 10)
+    organized_times = range(10, 2100, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -216,7 +218,6 @@ def plot_across_algorithms():
         pickle.dump((search_rwd_times, organized_times, max_rwd), open(pkl_fname, 'wb'))
 
         max_rwds.append(max_rwd)
-        print len(organized_times)
         algo_name = get_algo_name(algo)
         sns.tsplot(search_rwd_times[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                    color=color_dict[algo_name])
@@ -225,14 +226,14 @@ def plot_across_algorithms():
     if args.domain == 'convbelt':
         sns.tsplot([4.51]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
     else:
-        sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter], ci=95, condition='Min solution reward', color='magenta')
+        sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter], ci=95, condition='Avg feasible reward', color='magenta')
     #if args.domain=='namo':
     #    plt.ylim([2, 4.5])
 
     if args.t:
         savefig('Times (s)', 'Average rewards', fname='./plotters/t_' + args.domain + '_w_' + str(args.w))
     else:
-        savefig('Number of evaluations', 'Average rewards', fname='./plotters/' + args.domain + '_pidx_' + str(args.pidx))
+        savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.domain + '_pidx_' + str(args.pidx))
 
 
 if __name__ == '__main__':
