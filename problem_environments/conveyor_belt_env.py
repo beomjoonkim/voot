@@ -18,13 +18,12 @@ class ConveyorBelt(ProblemEnvironment):
         self.problem_idx = problem_idx
         ProblemEnvironment.__init__(self)
         obj_setup = self.load_object_setup()
-        #obj_setup = None
+        obj_setup = None
         self.problem_config = create_conveyor_belt_problem(self.env, obj_setup)
-        import pdb;pdb.set_trace()
-        if obj_setup is None:
-            self.save_object_setup()
-            sys.exit(-1)
-        self.objects = self.problem_config['objects']
+        #if obj_setup is None:
+        #    self.save_object_setup()
+        #    sys.exit(-1)
+        #self.objects = self.problem_config['objects']
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
 
@@ -37,14 +36,13 @@ class ConveyorBelt(ProblemEnvironment):
         self.infeasible_reward = -2
         self.optimal_score = 5
 
-        self.curr_obj = self.objects[0]
+        #self.curr_obj = self.objects[0]
 
         self.curr_state = self.get_state()
         self.objs_to_move = self.objects
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.is_init_pick_node = True
-        self.init_obj = self.objects[0]
         self.init_operator = 'two_arm_place'
         self.name = 'convbelt'
 

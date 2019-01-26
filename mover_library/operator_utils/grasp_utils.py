@@ -127,6 +127,12 @@ def compute_two_arm_grasp(depth_portion, height_portion, theta, obj, robot):
         y_extent = aabb.extents()[1]
         z_extent = aabb.extents()[2]
 
+        if obj.GetName().find('tobj') != -1:
+            aabb = obj.GetLinks()[0].ComputeAABB()
+            x_extent = aabb.extents()[0]
+            y_extent = aabb.extents()[1]
+            z_extent = aabb.extents()[2]
+
         # yaw list is the relative orientation of grasp wrt obj
         yaw_list = [0, PI / 2, PI, 3 * PI / 2]  # iterate through four sides
         grasps = []
@@ -157,6 +163,7 @@ def compute_two_arm_grasp(depth_portion, height_portion, theta, obj, robot):
                 depth = y_extent
 
             # compute the grasp point on the object surface
+            print extent
             grasp_width = grasp_axis * (extent + 0.045)
             grasp_depth = non_grasp_axis * (-depth + 2 * depth * depth_portion)
             grasp_height = np.array([0, 0, 1]) * (z_extent - 2 * z_extent * height_portion)
