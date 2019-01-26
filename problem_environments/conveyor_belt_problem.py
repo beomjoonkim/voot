@@ -33,8 +33,8 @@ from manipulation.bodies.bodies import set_config
 from manipulation.primitives.inverse_kinematics import *
 from manipulation.motion.trajectories import *
 from manipulation.constants import *
-from utils import *
-from samplers import randomly_place_in_region
+from mover_library.samplers import randomly_place_in_region
+from mover_library.utils import *
 
 import pickle
 # obj definitions
@@ -213,11 +213,20 @@ def create_conveyor_belt_problem(env, obj_setup=None):
     #obst_poses = [randomly_place_in_region(env, obj, loading_region) for obj in obstacles]
     #obst_poses = [get_body_xytheta(obj) for obj in obstacles]
 
+    tobj = env.GetKinBody('tobj3')
+    tobj_xytheta = get_body_xytheta(tobj.GetLinks()[1])
+    tobj_xytheta[0, -1] = (160 / 180.0) * np.pi
+    set_obj_xytheta(tobj_xytheta, tobj.GetLinks()[1])
+    objects = []
+    for tobj in env.GetBodies():
+        if tobj.GetName().find('tobj') == -1: continue
+        randomly_place_in_region(env, tobj, conveyor_belt)
+        objects.append(tobj)
 
 
     problem = {'initial_state': initial_state,
                #'obstacles': obstacles,
-               #'objects': objects,
+               'objects': objects,
                'conveyor_belt_region':conveyor_belt,
                'loading_region': loading_region,
                'env': env,

@@ -163,7 +163,6 @@ def compute_two_arm_grasp(depth_portion, height_portion, theta, obj, robot):
                 depth = y_extent
 
             # compute the grasp point on the object surface
-            print extent
             grasp_width = grasp_axis * (extent + 0.045)
             grasp_depth = non_grasp_axis * (-depth + 2 * depth * depth_portion)
             grasp_height = np.array([0, 0, 1]) * (z_extent - 2 * z_extent * height_portion)

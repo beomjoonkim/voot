@@ -214,7 +214,10 @@ class MCTS:
                     else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
                 # it will actually never switch.
                 if is_pick_node:
-                    we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
+                    if self.environment.is_solving_packing:
+                        we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+                    else:
+                        we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
 
                     #if switch_counter > 10 and not we_have_feasible_action:
                     #    print 'Going back to s0 node'
@@ -226,6 +229,7 @@ class MCTS:
                     #    self.switch_init_node(self.original_s0_node)
 
                 if is_pick_node and we_have_feasible_action:
+                    import pdb;pdb.set_trace()
                     print "Node switching from pick node"
                     best_node, best_action = self.choose_next_node_to_descend_to()
                     self.switch_init_node(best_node)

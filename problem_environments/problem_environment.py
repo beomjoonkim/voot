@@ -173,7 +173,7 @@ class ProblemEnvironment:
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
         if region_name is None:
             assert self.name == 'convbelt'
-            d_fn = base_distance_fn(self.robot, x_extents=-3.51, y_extents=2.51)
+            d_fn = base_distance_fn(self.robot, x_extents=3.51, y_extents=2.51)
             s_fn = base_sample_fn(self.robot, x_extents=3.51, y_extents=2.51) # set the x and y
         else:
             # todo: combined regions

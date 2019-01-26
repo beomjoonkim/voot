@@ -23,7 +23,7 @@ class ConveyorBelt(ProblemEnvironment):
         #if obj_setup is None:
         #    self.save_object_setup()
         #    sys.exit(-1)
-        #self.objects = self.problem_config['objects']
+        self.objects = self.problem_config['objects']
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
 
@@ -36,7 +36,7 @@ class ConveyorBelt(ProblemEnvironment):
         self.infeasible_reward = -2
         self.optimal_score = 5
 
-        #self.curr_obj = self.objects[0]
+        self.curr_obj = self.objects[0]
 
         self.curr_state = self.get_state()
         self.objs_to_move = self.objects
