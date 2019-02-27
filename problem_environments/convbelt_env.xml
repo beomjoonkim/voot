@@ -91,7 +91,7 @@
     <Translation >0  0 0.5</Translation>
       <Body type="dynamic">
         <Geom type="box">
-        <Translation>0 -0.2 0.5</Translation>
+        <Translation>0 -0.25 0.5</Translation>
         <extents>.3 0.63 0.2</extents>
         <diffuseColor>0. 0.2 0.</diffuseColor>
       </Geom>
@@ -136,7 +136,7 @@
     <Translation >0 0 0.5</Translation>
       <Body type="dynamic">
         <Geom type="box">
-        <Translation>0.4 0 0.5</Translation>
+        <Translation>0.3 0 0.5</Translation>
         <extents>1 0.1 0.1</extents>
         <diffuseColor>0. 0.2 0.</diffuseColor>
       </Geom>
@@ -159,7 +159,7 @@
     <Translation >0 0 0.2</Translation>
       <Body type="dynamic">
         <Geom type="box">
-        <Translation>0.0 0.8 0.0</Translation>
+        <Translation>0.0 0.8 -0.1</Translation>
         <extents>0.2 0.6 0.2</extents>
         <diffuseColor>0. 0.2 0.</diffuseColor>
       </Geom>

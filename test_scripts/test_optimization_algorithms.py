@@ -22,7 +22,7 @@ import socket
 problem_idx = int(sys.argv[1])
 algo_name = sys.argv[2]
 dim_x = int(sys.argv[3])
-n_iter = int(sys.argv[4])
+n_fcn_evals = int(sys.argv[4])
 obj_fcn = sys.argv[5]
 NUMMAX = 10
 
@@ -40,32 +40,34 @@ elif obj_fcn == 'rastrigin':
 else:
     domain = np.array([[-600.]*dim_x, [600.]*dim_x])
 
+
 def get_objective_function(sol):
     if obj_fcn == 'shekel':
         return shekel(sol, A, C)[0]
     elif obj_fcn == 'schwefel':
-        return benchmarks.schwefel(sol)[0]
+        return -benchmarks.schwefel(sol)[0]
     elif obj_fcn == 'griewank':
         return benchmarks.griewank(sol)[0]
     elif obj_fcn == 'rastrigin':
-        return benchmarks.rastrigin(sol)[0]
+        return -benchmarks.rastrigin(sol)[0]
     else:
         print "wrong function name"
         sys.exit(-1)
+
 
 def gpucb(explr_p):
     gp = StandardContinuousGP(dim_x)
     acq_fcn = UCB(zeta=explr_p, gp=gp)
     gp_format_domain = Domain(0, domain)
-    gp_optimizer = BO(gp, acq_fcn, gp_format_domain)  # this depends on the problem
+    gp_optimizer = BO(gp, acq_fcn, gp_format_domain)  # note: this minimizes the negative acq_fcn
 
     evaled_x = []
     evaled_y = []
     max_y = []
     times = []
     stime = time.time()
-    for i in range(n_iter):
-        print 'gp iteration ',i
+    for i in range(n_fcn_evals):
+        print 'gp iteration ', i
         x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
         y = get_objective_function(x)
         evaled_x.append(x)
@@ -83,15 +85,20 @@ def voo(explr_p):
     voo = VOO(domain, explr_p)
     times = []
     stime = time.time()
-    for i in range(n_iter):
+
+    for i in range(n_fcn_evals):
+        print "%d / %d" % (i, n_fcn_evals)
+        if i > 0:
+            print 'max value is ', np.max(evaled_y)
         x = voo.choose_next_point(evaled_x, evaled_y)
         if len(x.shape) == 0:
-            x=np.array([x])
+            x = np.array([x])
         y = get_objective_function(x)
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
+    print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
 
@@ -104,15 +111,14 @@ def random_search(epsilon):
     domain_max = domain[1]
     times = []
     stime = time.time()
-    for i in range(n_iter):
-        if i==0:
+    for i in range(n_fcn_evals):
+        if i == 0:
             x = (domain_min+domain_max)/2.0
         else:
             x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
         if len(x.shape) == 0:
             x = np.array([x])
         y = get_objective_function(x)
-        import pdb;pdb.set_trace()
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
@@ -129,7 +135,7 @@ def doo(explr_p):
     max_y = []
     times = []
     stime = time.time()
-    for i in range(n_iter):
+    for i in range(n_fcn_evals):
         next_node = doo_tree.get_next_point_and_node_to_evaluate()
         x_to_evaluate = next_node.cell_mid_point
         next_node.evaluated_x = x_to_evaluate
@@ -147,7 +153,7 @@ def try_many_epsilons(algorithm):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
-        epsilons = [1,0, 0.01, 0.05, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 30]
+        epsilons = [1, 0, 0.01, 0.05, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
         epsilons = [1]
     else:
@@ -161,19 +167,21 @@ def try_many_epsilons(algorithm):
         time_takens.append(time_taken)
     return epsilons, max_ys, time_takens
 
+
 def main():
     hostname = socket.gethostname()
     if hostname == 'dell-XPS-15-9560' or hostname == 'phaedra':
-        save_dir = './test_results/function_optimization/'+obj_fcn +'/dim_'+str(dim_x)+'/'+algo_name+'/'
+        save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
     else:
-        save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/'+obj_fcn +'/dim_'+str(dim_x)+'/'+algo_name+'/'
+        save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + \
+                   obj_fcn + '/dim_' + str(dim_x) + '/' + algo_name+'/'
 
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
-        #return
+        return
 
     if algo_name == 'uniform':
         algorithm = random_search

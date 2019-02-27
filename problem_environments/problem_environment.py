@@ -11,7 +11,7 @@ from utils import grab_obj, release_obj, set_robot_config,  check_collision_exce
     two_arm_pick_object, two_arm_place_object, one_arm_pick_object, one_arm_place_object
 
 from motion_planner import collision_fn, base_extend_fn, base_sample_fn, base_distance_fn, extend_fn, distance_fn, \
-    sample_fn,smooth_path, rrt_connect, arm_base_sample_fn, arm_base_distance_fn, arm_base_extend_fn
+    sample_fn, smooth_path, rrt_connect, arm_base_sample_fn, arm_base_distance_fn, arm_base_extend_fn
 import time
 
 
@@ -123,8 +123,8 @@ class ProblemEnvironment:
         return in_region
 
     def get_motion_plan(self, q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations):
-        if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
-            draw_robot_at_conf(goal, 0.5, 'goal', self.robot, self.env)
+        #if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
+        #    draw_robot_at_conf(goal, 0.5, 'goal', self.robot, self.env)
 
         stime = time.time()
         for n_iter in n_iterations:
@@ -133,8 +133,8 @@ class ProblemEnvironment:
                 path = smooth_path(path, e_fn, c_fn)
                 #print "Path Found, took %.2f"%(time.time()-stime)
 
-                if self.env.GetViewer() is not None:
-                    remove_drawn_configs('goal', self.env)
+                #if self.env.GetViewer() is not None:
+                #    remove_drawn_configs('goal', self.env)
                 return path, "HasSolution"
 
         #if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
@@ -192,7 +192,7 @@ class ProblemEnvironment:
         if n_iterations is None:
             if self.name == 'convbelt':
                 #n_iterations = [20, 50, 100, 500, 3000]
-                n_iterations = [20, 50, 100, 500, 700]
+                n_iterations = [20, 50, 100, 500] #700]
             else:
                 n_iterations = [20, 50, 100, 500, 1000]
 

@@ -23,7 +23,7 @@ class Mover(ProblemEnvironment):
     def __init__(self):
         ProblemEnvironment.__init__(self)
 
-        problem = MoverProblem(self.env)
+        problem = MoverProblem(self.env, problem_idx=0)
         self.problem_config = problem.get_problem_config()
         self.robot = self.env.GetRobots()[0]
 

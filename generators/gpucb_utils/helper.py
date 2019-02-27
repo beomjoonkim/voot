@@ -1,14 +1,6 @@
 # Author: Zi Wang
 import numpy as np
-import scipy.optimize
-from sklearn.utils import shuffle
-import cPickle as pickle
-from sklearn.metrics import confusion_matrix
-import os
 from scipy.optimize import minimize
-from scipy.stats import norm
-from scipy.stats import truncnorm
-from functools import partial
 
 EPS = 1e-4
 

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class VOO:
     def __init__(self, domain, explr_p, distance_fn=None):
         self.domain = domain
@@ -9,9 +10,9 @@ class VOO:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
 
     def choose_next_point(self, evaled_x, evaled_y):
-        if len(evaled_x) == 0:
-            return (self.domain[1] + self.domain[0]) / 2.0
-        rnd = np.random.random() # this should lie outside
+        #if len(evaled_x) == 0:
+        #    return (self.domain[1] + self.domain[0]) / 2.0
+        rnd = np.random.random()  # this should lie outside
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(evaled_x) > 1
         if is_sample_from_best_v_region:
             x = self.sample_from_best_voronoi_region(evaled_x,evaled_y)
@@ -43,6 +44,7 @@ class VOO:
             best_dist = self.distance_fn(new_x, best_evaled_x)
             other_dists = np.array([self.distance_fn(other, new_x) for other in other_best_evaled_xs])
             counter += 1
+
         return new_x
 
     def sample_from_uniform(self):

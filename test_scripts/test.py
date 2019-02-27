@@ -23,7 +23,7 @@ for tobj in env.GetBodies():
     randomly_place_in_region(env, tobj, problem.problem_config['conveyor_belt_region'])
     pick_domain = get_pick_domain()
 
-tobj = env.GetKinBody('tobj4')
+tobj = env.GetKinBody('tobj1')
 
 
 def sample_grasp(target_obj):

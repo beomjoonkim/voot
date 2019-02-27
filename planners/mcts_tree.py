@@ -6,6 +6,7 @@ class MCTSTree:
     def __init__(self, root, exploration_parameters):
         self.root = root
         self.nodes = [root]
+        print root
         self.exploration_parameters = exploration_parameters
 
     def has_state(self, state):
@@ -17,6 +18,7 @@ class MCTSTree:
             parent.children[action] = node
         else:
             parent.children[make_action_hashable(action)] = node
+
         self.nodes.append(node)
 
     def is_node_just_added(self, node):
@@ -57,6 +59,7 @@ class MCTSTree:
             sumR = np.dot(discount_rates[::-1], reward_list)
 
             # exclude the ones that are not the descendents of the current init node
+            # todo sumR should be -2 on a node that ended with an infeasible action
             sumR_list.append(sumR)
             leaf_nodes_for_curr_init_state.append(n)
-        return max(sumR_list), leaf_nodes_for_curr_init_state[np.argmax(sumR_list)], max(reward_lists)
+        return np.max(sumR_list), leaf_nodes_for_curr_init_state[np.argmax(sumR_list)], max(reward_lists)

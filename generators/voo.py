@@ -62,17 +62,15 @@ class VOOGenerator(Generator):
 
         rnd = np.random.random() # this should lie outside
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
-                                       np.max(node.reward_history.values()) > 0 #self.problem_env.infeasible_reward
+                                       np.max(node.reward_history.values()) >= 0 #self.problem_env.infeasible_reward
         #if node.parent is not None and node.parent.Nvisited > 30:
         #    import pdb;pdb.set_trace()
         if is_sample_from_best_v_region:
-            print 'Sample from best region'
+            print 'Sample ' + node.operator + ' from best region'
         else:
-            maxrwd = 0 if len(self.evaled_actions)==0 else np.max(node.reward_history.values())
-            print 'Sample from uniform, max rwd: ', maxrwd
-        stime=time.time()
+            maxrwd = None if len(self.evaled_actions)==0 else np.max(node.reward_history.values())
+            print 'Sample ' + node.operator + ' from uniform, max rwd: ', maxrwd
         for i in range(n_iter):
-            #print i
             if is_sample_from_best_v_region:
                 action_parameters = self.sample_from_best_voronoi_region(node)
             else:
@@ -90,7 +88,8 @@ class VOOGenerator(Generator):
                 pass
                 #self.evaled_q_values.append(self.problem_env.infeasible_reward)
                 #self.idx_to_update = None
-        print node.operator + " sampling failed"
+        if status != 'HasSolution':
+            print node.operator + " sampling failed"
         return action
 
     def sample_from_best_voronoi_region(self, node):
@@ -159,7 +158,7 @@ class VOOGenerator(Generator):
                 if np.all(best_dist < other_dists):
                     break
             counter += 1
-            #print "Gaussian pick sampling, variance and counter", variance, counter, len(other_dists)
+            print "Gaussian pick sampling, variance and counter", variance, counter, len(other_dists)
 
         return new_parameters
 

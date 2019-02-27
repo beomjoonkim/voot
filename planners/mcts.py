@@ -27,7 +27,7 @@ sys.setrecursionlimit(15000)
 
 
 
-DEBUG = False
+DEBUG = True
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560':
@@ -228,8 +228,7 @@ class MCTS:
                     #    print 'Going back to s0 node'
                     #    self.switch_init_node(self.original_s0_node)
 
-                if is_pick_node and we_have_feasible_action:
-                    import pdb;pdb.set_trace()
+                if is_pick_node and we_evaluated_the_node_enough:
                     print "Node switching from pick node"
                     best_node, best_action = self.choose_next_node_to_descend_to()
                     self.switch_init_node(best_node)
@@ -260,6 +259,7 @@ class MCTS:
                     write_dot_file(self.tree, iteration, 'solving_packing')
                 elif self.environment.is_solving_fetching:
                     write_dot_file(self.tree, iteration, 'solving_fetching')
+
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
             reward_lists.append(reward_list)

@@ -143,7 +143,7 @@ class HighLevelPlanner:
             pick_action = checker.check_feasibility()
             _, rwd, _, _ = self.problem_env.apply_two_arm_pick_action(pick_action, self.mcts.s0_node, True, None)
         """
-        self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
+        #self.mcts.s0_node = self.mcts.create_node(None, depth=0, reward=0, objs_in_collision=None, is_init_node=True)
         self.mcts.tree.root = self.mcts.s0_node
         self.problem_env.is_solving_packing = True
         search_time_to_reward, fetch_plan, goal_node, reward_list = self.fetch_planner.solve_packing(objects,

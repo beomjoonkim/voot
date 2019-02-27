@@ -3,12 +3,8 @@ import argparse
 import os
 import numpy as np
 
-import matplotlib
-
-# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
-import socket
 
 
 def savefig(xlabel, ylabel, fname=''):
@@ -40,8 +36,8 @@ def get_results(algo_name, dimension, obj_fcn):
     search_times = []
     max_y_values = []
     time_takens = []
-    #for fin in os.listdir(result_dir):
-    for fin in os.listdir('./test_results//function_optimization/shekel/'+'dim_'+str(dimension)+'/gpucb/'):
+    for fin in os.listdir(result_dir):
+    #for fin in os.listdir('./test_results//function_optimization/shekel/'+'dim_'+str(dimension)+'/gpucb/'):
         if fin.find('.pkl') == -1:
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
@@ -117,6 +113,8 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['gpucb', 'doo', 'voo', 'uniform']
+    algo_names = ['doo', 'voo', 'uniform']
+    algo_names = ['doo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -141,7 +139,7 @@ def plot_across_algorithms():
         if algo == 'doo' and args.obj_fcn == 'shekel' and args.dim == 2:
             mask[too_large] = False
         """
-        mask[too_large] = False
+        #mask[too_large] = False
 
         search_rwd_times = search_rwd_times[mask]
         time_takens = time_takens[mask]
