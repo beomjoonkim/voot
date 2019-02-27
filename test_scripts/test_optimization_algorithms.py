@@ -37,6 +37,8 @@ elif obj_fcn == 'schwefel':
     domain = np.array([[-500.]*dim_x, [500.]*dim_x])
 elif obj_fcn == 'rastrigin':
     domain = np.array([[-5.12]*dim_x, [5.12]*dim_x])
+elif obj_fcn == 'ackley':
+    domain = np.array([[-15.]*dim_x, [30.]*dim_x])
 else:
     domain = np.array([[-600.]*dim_x, [600.]*dim_x])
 
@@ -49,6 +51,8 @@ def get_objective_function(sol):
     elif obj_fcn == 'griewank':
         return benchmarks.griewank(sol)[0]
     elif obj_fcn == 'rastrigin':
+        return -benchmarks.rastrigin(sol)[0]
+    elif obj_fcn == 'ackley':
         return -benchmarks.rastrigin(sol)[0]
     else:
         print "wrong function name"
@@ -112,10 +116,10 @@ def random_search(epsilon):
     times = []
     stime = time.time()
     for i in range(n_fcn_evals):
-        if i == 0:
-            x = (domain_min+domain_max)/2.0
-        else:
-            x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
+        #if i == 0:
+        #    x = (domain_min+domain_max)/2.0
+        #else:
+        x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
         if len(x.shape) == 0:
             x = np.array([x])
         y = get_objective_function(x)

@@ -71,6 +71,8 @@ class BinaryDOOTree:
             return best_leaf
 
     def get_next_point_and_node_to_evaluate(self):
+        # how can I vary this?
+        # I can randomly sample a point?
         is_first_evaluation = self.root is None
         if is_first_evaluation:
             cell_mid_point = (self.domain[1] + self.domain[0]) / 2.0
