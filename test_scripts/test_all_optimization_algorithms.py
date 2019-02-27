@@ -82,7 +82,6 @@ def random_search(epsilon, obj_fcn):
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
-    import pdb;pdb.set_trace()
     return evaled_x, evaled_y, max_y, times
 
 
@@ -126,10 +125,12 @@ def select_epsilon(algorithm, obj_fcn):
         time_takens.append(time_taken)
     return epsilons, max_ys, time_takens
 
+
 def make_obj_fcn():
     A = np.random.rand(NUMMAX, dim_x) * 10
     C = np.random.rand(NUMMAX)
     return lambda x: shekel(x, A, C)[0]
+
 
 def main():
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
