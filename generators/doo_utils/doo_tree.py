@@ -74,8 +74,10 @@ class BinaryDOOTree:
         # how can I vary this?
         # I can randomly sample a point?
         is_first_evaluation = self.root is None
+        dim_domain = len(self.domain[0])
         if is_first_evaluation:
-            cell_mid_point = (self.domain[1] + self.domain[0]) / 2.0
+            #cell_mid_point = (self.domain[1] + self.domain[0]) / 2.0
+            cell_mid_point = np.random.uniform(self.domain[0], self.domain[1], (1, dim_domain)).squeeze()
             node = self.create_node(cell_mid_point, self.domain[0], self.domain[1], None)
             self.leaves.append(node)
             self.root = node
