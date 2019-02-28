@@ -126,6 +126,9 @@ def plot_across_algorithms():
     color_dict[color_names[2]] = [1, 0, 0]
     color_dict[color_names[3]] = [0, 0, 1]
 
+    if args.obj_fcn != 'shekel':
+        sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
+
     for algo_idx, algo in enumerate(algo_names):
         print algo
         search_rwd_times, time_takens = get_results(algo, n_dim, args.obj_fcn)
