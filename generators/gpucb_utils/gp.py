@@ -2,11 +2,12 @@ import numpy as np
 import GPy
 from se2_kernel import RBF_SE2
 
+
 class StandardContinuousGP:
     def __init__(self, xdim):
         self.model = None
         self.xdim = xdim
-        self.kern = GPy.kern.RBF(xdim, variance=5)
+        self.kern = GPy.kern.RBF(xdim, variance=5)  # this is tuned anyways with empirical Bayes
 
     def predict(self, x):
         if self.model is None:
