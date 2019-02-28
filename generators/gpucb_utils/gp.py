@@ -6,14 +6,7 @@ class StandardContinuousGP:
     def __init__(self, xdim):
         self.model = None
         self.xdim = xdim
-        #self.kern = GPy.kern.RBF(xdim, variance=500)
-
-        #if self.xdim == 3:
-        #    import pdb;pdb.set_trace()
-        #    self.kern = RBF_SE2(xdim, variance=500)
-        #else:
         self.kern = GPy.kern.RBF(xdim, variance=5)
-
 
     def predict(self, x):
         if self.model is None:

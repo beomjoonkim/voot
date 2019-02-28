@@ -1,5 +1,5 @@
-import numpy as np
 import helper
+
 
 class BO(object):
     def __init__(self, model, acq_fcn, domain, opt_n=1e4):

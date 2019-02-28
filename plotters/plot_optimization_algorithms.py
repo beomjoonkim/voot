@@ -42,7 +42,11 @@ def get_results(algo_name, dimension, obj_fcn):
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
-        optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+        if algo_name == 'doo':
+            idxs = [0, 4, 10, 11, 12]
+            optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
+        else:
+            optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
         if dimension == 2 and obj_fcn == 'shekel':
             max_y_values.append(max_y[:100])
@@ -113,7 +117,7 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['doo', 'voo', 'uniform']
-    algo_names = ['gpucb', 'doo', 'voo', 'uniform']
+    #algo_names = ['gpucb', 'doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -142,11 +146,10 @@ def plot_across_algorithms():
 
         search_rwd_times = search_rwd_times[mask]
         time_takens = time_takens[mask]
-        n_samples = search_rwd_times.shape[-1]
-        print n_samples
         # sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
 
-
+        search_rwd_times = search_rwd_times[:, 0:1000]
+        n_samples = search_rwd_times.shape[-1]
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
         print  "===================="
     savefig('Number of function evaluations', 'Best function values',

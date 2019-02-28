@@ -157,9 +157,9 @@ def try_many_epsilons(algorithm):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
-        epsilons = [1, 0, 0.01, 0.05, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 30]
+        epsilons = [1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
-        epsilons = [1]
+        epsilons = [1, 0.1, 5, 10, 30]
     else:
         epsilons = [0]
 
