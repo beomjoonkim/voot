@@ -43,8 +43,11 @@ def get_results(algo_name, dimension, obj_fcn):
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         if algo_name == 'doo':
-            idxs = [0, 4, 10, 11, 12]
-            optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
+            if obj_fcn != 'griewank':
+                idxs = [0, 4, 10, 11, 12]
+                optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
+            else:
+                optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         else:
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
