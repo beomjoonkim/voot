@@ -153,7 +153,7 @@ def doo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
-def try_many_epsilons(algorithm):
+def get_exploration_parameters(algorithm):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
@@ -171,13 +171,7 @@ def try_many_epsilons(algorithm):
     else:
         epsilons = [0]
 
-    max_ys = []
-    time_takens = []
-    for epsilon in epsilons:
-        evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
-        max_ys.append(max_y)
-        time_takens.append(time_taken)
-    return epsilons, max_ys, time_takens
+    return epsilons
 
 
 def main():
@@ -207,9 +201,18 @@ def main():
         print "Wrong algo name"
         return
 
-    epsilons, max_ys, time_takens = try_many_epsilons(algorithm)
-    pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
-                open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+    epsilons = get_exploration_parameters(algorithm)
+
+    max_ys = []
+    time_takens = []
+    for epsilon in epsilons:
+        evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
+        max_ys.append(max_y)
+        time_takens.append(time_taken)
+        pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
+                        open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+    return epsilons, max_ys, time_takens
+
 
 if __name__ == '__main__':
     main()
