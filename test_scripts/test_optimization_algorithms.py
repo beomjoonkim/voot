@@ -59,7 +59,7 @@ def get_objective_function(sol):
         sys.exit(-1)
 
 
-def gpucb(explr_p):
+def gpucb(explr_p, save_dir):
     gp = StandardContinuousGP(dim_x)
     acq_fcn = UCB(zeta=explr_p, gp=gp)
     gp_format_domain = Domain(0, domain)
@@ -78,6 +78,9 @@ def gpucb(explr_p):
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
+
+        pickle.dump({'epsilon':[explr_p], 'max_ys': [max_y]},
+                    open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
 
     return evaled_x, evaled_y, max_y, times
 
@@ -206,11 +209,12 @@ def main():
     max_ys = []
     time_takens = []
     for epsilon in epsilons:
-        evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
+        evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
         max_ys.append(max_y)
         time_takens.append(time_taken)
-        pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
-                        open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+
+    pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
+                    open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
     return epsilons, max_ys, time_takens
 
 
