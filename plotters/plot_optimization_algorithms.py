@@ -46,6 +46,7 @@ def get_results(algo_name, dimension, obj_fcn):
             idxs = [0, 4, 10, 11, 12]
             optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
         else:
+            import pdb;pdb.set_trace()
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
         if dimension == 2 and obj_fcn == 'shekel':
@@ -116,8 +117,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['doo', 'voo', 'uniform']
-    #algo_names = ['gpucb', 'doo', 'voo', 'uniform']
+    algo_names = ['gpucb', 'doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()

@@ -159,7 +159,15 @@ def try_many_epsilons(algorithm):
     elif algorithm.__name__ == 'doo':
         epsilons = [1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
-        epsilons = [1, 0.1, 5, 10, 30]
+        # schwefel: best epsilon = 0.1 for dimension 10
+        #           best_epsilon = 1 for dimension 20
+        epsilons = [1, 0.1] #, 5, 10, 30]
+        if dim_x == 3:
+            epsilons = [0.1]
+        elif dim_x == 10:
+            epsilons = [1]
+        elif dim_x == 20:
+            epsilons = [1]
     else:
         epsilons = [0]
 
