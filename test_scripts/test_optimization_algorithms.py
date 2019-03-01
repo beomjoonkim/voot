@@ -49,7 +49,7 @@ def get_objective_function(sol):
     elif obj_fcn == 'schwefel':
         return -benchmarks.schwefel(sol)[0]
     elif obj_fcn == 'griewank':
-        return benchmarks.griewank(sol)[0]
+        return -benchmarks.griewank(sol)[0]
     elif obj_fcn == 'rastrigin':
         return -benchmarks.rastrigin(sol)[0]
     elif obj_fcn == 'ackley':
@@ -209,7 +209,11 @@ def main():
     max_ys = []
     time_takens = []
     for epsilon in epsilons:
-        evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
+        if algorithm == 'gpucb':
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
+        else:
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
+
         max_ys.append(max_y)
         time_takens.append(time_taken)
 
