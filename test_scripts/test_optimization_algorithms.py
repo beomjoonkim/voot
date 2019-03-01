@@ -211,7 +211,7 @@ def main():
     max_ys = []
     time_takens = []
     for epsilon in epsilons:
-        if algorithm == 'gpucb':
+        if algo_name == 'gpucb':
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
         else:
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
