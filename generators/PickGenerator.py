@@ -39,10 +39,8 @@ class PickGenerator(object):
         print 'Sampling pick'
         for iter in range(n_iter):
             # sample pick parameters
-            #with self.robot:
-            if True:
+            with self.robot:
                 pick_base_pose = sample_ir(obj, self.robot, self.env, region)
-                import pdb;pdb.set_trace()
             if pick_base_pose is None:
                 return {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None}
             theta, height_portion, depth_portion = sample_grasp_parameters()
@@ -56,6 +54,7 @@ class PickGenerator(object):
                                'grasp_params': grasp_params, 'g_config': g_config}
                 return pick_action
         print "Sampling pick failed"
+        import pdb;pdb.set_trace()
         pick_action = {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None}
         return pick_action
 

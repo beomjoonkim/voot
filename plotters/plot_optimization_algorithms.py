@@ -51,14 +51,17 @@ def get_results(algo_name, dimension, obj_fcn):
         else:
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
+        if len(max_y) < 500:
+            continue
         if dimension == 2 and obj_fcn == 'shekel':
             max_y_values.append(max_y[:100])
             time_takens.append(result['time_takens'][optimal_epsilon_idx][:100])
         else:
             max_y_values.append(max_y)
-            time_takens.append(result['time_takens'][optimal_epsilon_idx])
+
+            #time_takens.append(result['time_takens'][optimal_epsilon_idx])
     print 'number of functions tested ', len(max_y_values)
-    return np.array(max_y_values), np.array(time_takens)
+    return np.array(max_y_values)#, np.array(time_takens)
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
@@ -120,7 +123,6 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['gpucb', 'doo', 'voo', 'uniform']
-    algo_names = ['doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -134,7 +136,8 @@ def plot_across_algorithms():
 
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        search_rwd_times, time_takens = get_results(algo, n_dim, args.obj_fcn)
+        #search_rwd_times, time_takens = get_results(algo, n_dim, args.obj_fcn)
+        search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
         mask = np.ones(len(search_rwd_times), dtype=bool)
         too_large = \
         np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
@@ -151,7 +154,7 @@ def plot_across_algorithms():
         mask[too_large] = False
 
         search_rwd_times = search_rwd_times[mask]
-        time_takens = time_takens[mask]
+        #time_takens = time_takens[mask]
         # sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
 
         search_rwd_times = search_rwd_times[:, 0:1000]

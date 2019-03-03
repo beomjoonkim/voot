@@ -92,7 +92,7 @@ def create_obstacles(env, loading_regions):
 
 
 def create_objects(env, conveyor_belt):
-    num_objects = 15
+    num_objects = 5
     objects = []
     obj_shapes = {}
     obj_poses = {}
@@ -145,7 +145,6 @@ def load_objects(env, obj_shapes, obj_poses, color):
 
 
 def create_conveyor_belt_problem(env, obj_setup=None):
-
     if obj_setup is not None:
         obj_shapes = obj_setup['object_shapes']
         obj_poses = obj_setup['object_poses']
@@ -192,17 +191,12 @@ def create_conveyor_belt_problem(env, obj_setup=None):
 
     all_region = AARegion('all_region', ((-3.51, 20 * max_width + conv_x), (-2.51, 2.51)), z=0.01, color=np.array((1, 1, 0, 0.25)))
 
-    """
     if obj_setup is None:
         objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
-    else:
-        objects = load_objects(env, obj_shapes, obj_poses, color=(0, 1, 0))
-
-    if obj_setup is None:
         obstacles, obst_shapes, obst_poses = create_obstacles(env, loading_region)
     else:
+        objects = load_objects(env, obj_shapes, obj_poses, color=(0, 1, 0))
         obstacles = load_objects(env, obst_shapes, obst_poses, color=(0, 0, 1))
-    """
 
     initial_saver = DynamicEnvironmentStateSaver(env)
     initial_state = (initial_saver, [])
@@ -213,6 +207,7 @@ def create_conveyor_belt_problem(env, obj_setup=None):
     #obst_poses = [randomly_place_in_region(env, obj, loading_region) for obj in obstacles]
     #obst_poses = [get_body_xytheta(obj) for obj in obstacles]
 
+    """
     tobj = env.GetKinBody('tobj3')
     tobj_xytheta = get_body_xytheta(tobj.GetLinks()[1])
     tobj_xytheta[0, -1] = (160 / 180.0) * np.pi
@@ -222,18 +217,18 @@ def create_conveyor_belt_problem(env, obj_setup=None):
         if tobj.GetName().find('tobj') == -1: continue
         randomly_place_in_region(env, tobj, conveyor_belt)
         objects.append(tobj)
-
+    """
 
     problem = {'initial_state': initial_state,
-               #'obstacles': obstacles,
+               'obstacles': obstacles,
                'objects': objects,
                'conveyor_belt_region':conveyor_belt,
                'loading_region': loading_region,
                'env': env,
-               #'obst_shapes': obst_shapes,
-               #'obst_poses': obst_poses,
-               #'obj_shapes': obj_shapes,
-               #'obj_poses': obj_poses,
+               'obst_shapes': obst_shapes,
+               'obst_poses': obst_poses,
+               'obj_shapes': obj_shapes,
+               'obj_poses': obj_poses,
                'entire_region': all_region,
                'init_base_conf': init_base_conf}
     return problem  # the second is for indicating 0 placed objs

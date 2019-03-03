@@ -30,7 +30,7 @@ def gen_grasp(pick_unif):
 
         while True:
             print "Calling gengrasp"
-            action = pick_unif.predict(obj, pick_unif.problem_env.regions['entire_region'])
+            action = pick_unif.predict(obj, pick_unif.problem_env.regions['entire_region'], n_iter=1000)
             pick_base_pose = action['base_pose']
             grasp = action['grasp_params']
             g_config = action['g_config']
@@ -77,7 +77,7 @@ def gen_placement(problem, place_unif):
         while True:
             obj = problem.env.GetKinBody(obj_name)
             problem.apply_two_arm_pick_action_stripstream((pick_base_pose, grasp), obj) # how do I ensure that we are in the same state in both openrave and stripstream?
-            place_action = place_unif.predict(obj, problem.regions['object_region'])
+            place_action = place_unif.predict(obj, problem.regions['object_region'], n_iter=1000)
             place_base_pose = place_action['base_pose']
             object_pose = place_action['object_pose'].squeeze()
 
@@ -106,7 +106,7 @@ def read_pddl(filename):
 
 
 def get_problem():
-    convbelt = ConveyorBelt()
+    convbelt = ConveyorBelt(problem_idx=0)
     problem_config = convbelt.problem_config
     directory = os.path.dirname(os.path.abspath(__file__))
     domain_pddl = read(os.path.join(directory, 'domain.pddl'))
@@ -120,6 +120,8 @@ def get_problem():
                   #'TrajPoseCollision': fn_from_constant(False)
                   'TrajPoseCollision': check_traj_collision(convbelt),
                   }
+
+
     obj_names = problem_config['obj_poses'].keys()
     obj_poses = problem_config['obj_poses'].values()
     obj_names = ['obj0', 'obj1', 'obj2', 'obj3', 'obj4']
