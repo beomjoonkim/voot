@@ -281,7 +281,7 @@ def main():
     time_takens = []
     for epsilon in epsilons:
         if stochastic_objective:
-            evaled_x, evaled_y, max_y, time_taken, best_arm_value = algorithm(epsilon, save_dir)
+            evaled_x, evaled_y, max_y, time_taken, best_arm_value = algorithm(epsilon)
         else:
             if algo_name == 'gpucb':
                 evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
