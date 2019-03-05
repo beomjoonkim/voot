@@ -157,7 +157,7 @@ def stovoo(explr_p):
     best_arm_true_y = get_objective_function(best_arm_x_value)
 
     print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, best_arm_true_y
+    return evaled_x, evaled_y, max_y, times, best_arm_true_y
 
 
 def random_search(epsilon):
