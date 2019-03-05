@@ -38,21 +38,26 @@ def worker_wrapper_multi_input(multi_args):
 
 def main():
     algo_name = sys.argv[1]
-    dims = [int(sys.argv[2])]
+    dim = int(sys.argv[2])
     n_iter = sys.argv[3]
     pidxs = sys.argv[4].split(',')
     pidxs = range(int(pidxs[0]), int(pidxs[1]))
     obj_fcn = sys.argv[5]
     stochastic_objective = sys.argv[6]
     ucb = sys.argv[7]
-    widening_parameter = sys.argv[8]
-    function_noise = sys.argv[9]
+
+    widening_parameter = sys.argv[8].split(',')
+    widening_parameters = [int(w) for w in widening_parameter]
+
+    function_noise = sys.argv[9].split(',')
+    function_noises = [int(f) for f in function_noise]
 
     configs= []
-    for dim in dims:
-        for t in pidxs:
-            configs.append([n_iter, t, algo_name, dim, obj_fcn, stochastic_objective, ucb, widening_parameter,
-                            function_noise])
+    for function_noise in function_noises:
+        for widening_parameter in widening_parameters:
+            for t in pidxs:
+                configs.append([n_iter, t, algo_name, dim, obj_fcn, stochastic_objective, ucb, widening_parameter,
+                                function_noise])
     if algo_name == 'gpucb':
         n_workers = int(3)
     else:

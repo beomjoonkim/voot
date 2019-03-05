@@ -116,53 +116,43 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 
 
 def plot_across_algorithms():
-    parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-dim', type=int, default=3)
-    parser.add_argument('-obj_fcn', type=str, default='schwefel')
+    parser = argparse.ArgumentParser(description='parameters')
+    parser.add_argument('-ucb', type=float, default=1.0)
+    parser.add_argument('-widening_parameter', type=float, default=0.8)
+    parser.add_argument('-problem_idx', type=int, default=0)
+    parser.add_argument('-algo_name', type=str, default='voo')
+    parser.add_argument('-obj_fcn', type=str, default='ackley')
+    parser.add_argument('-dim_x', type=int, default=20)
+    parser.add_argument('-n_fcn_evals', type=int, default=500)
+    parser.add_argument('-stochastic_objective', action='store_true', default=False)
+    parser.add_argument('-function_noise', type=float, default=10)
     args = parser.parse_args()
-    n_dim = args.dim
 
-    algo_names = ['gpucb', 'doo', 'voo', 'uniform']
+    n_dim = args.dim_x
+    algo_names = ['stovoo']
 
-    color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_names = color_dict.keys()
-    color_dict[color_names[0]] = [0., 0.5570478679, 0.]
-    color_dict[color_names[1]] = [0, 0, 0]
-    color_dict[color_names[2]] = [1, 0, 0]
-    color_dict[color_names[3]] = [0, 0, 1]
+    # x-axis: different noise level
+    # y-axis: mean values of different widening values
 
-    if args.obj_fcn != 'shekel':
-        sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
+    widening_values = [10.0, 100.0]
+    noise_levels = [100.0, 1000.0, 5000.0, 10000.0]
 
-    for algo_idx, algo in enumerate(algo_names):
-        print algo
-        #search_rwd_times, time_takens = get_results(algo, n_dim, args.obj_fcn)
-        search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
-        mask = np.ones(len(search_rwd_times), dtype=bool)
-        too_large = \
-        np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
-        """
-        if n_dim == 2:
-            import pdb;pdb.set_trace()
-        if n_dim == 20:
-            mask[125] = False
-        if algo == 'voo':
-            mask[too_large] = False
-        if algo == 'doo' and args.obj_fcn == 'shekel' and args.dim == 2:
-            mask[too_large] = False
-        """
-        mask[too_large] = False
+    for noise_level in noise_levels:
+        for widening_value in widening_values:
+            fdir = './test_results/stochastic_function_optimization/ackley/noise_'+str(noise_level)\
+                   +'/ucb_1000.0/widening_'+str(widening_value) + '/dim_10/stovoo/'
 
-        search_rwd_times = search_rwd_times[mask]
-        #time_takens = time_takens[mask]
-        # sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
+            noise_level_max_values = []
+            for fin in os.listdir(fdir):
+                result = pickle.load(open(fdir+fin,'r'))
+                max_value = result['max_ys'][0][-1]
+                noise_level_max_values.append(max_value)
 
-        search_rwd_times = search_rwd_times[:, 0:1000]
-        n_samples = search_rwd_times.shape[-1]
-        sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
-        print  "===================="
-    savefig('Number of function evaluations', 'Best function values',
-            fname='./plotters/' + args.obj_fcn + '_fcn_optimization_' + str(args.dim))
+            print "Noise level %d, Widening value %d, performance (mean,var): %.2f %.2f" % (noise_level,widening_value,
+                                                                                        np.mean(noise_level_max_values),
+                                                                                        np.std(noise_level_max_values))
+
+
 
 
 if __name__ == '__main__':
