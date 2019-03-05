@@ -151,8 +151,13 @@ def stovoo(explr_p):
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
+
+    arm_with_highest_expected_value = stovoo.arms[np.argmax([a.expected_value for a in stovoo.arms])]
+    best_arm_x_value = arm_with_highest_expected_value.x_value
+    best_arm_true_y = get_objective_function(best_arm_x_value)
+
     print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times
+    return evaled_x, evaled_y, max_y, best_arm_true_y
 
 
 def random_search(epsilon):
@@ -275,16 +280,24 @@ def main():
     max_ys = []
     time_takens = []
     for epsilon in epsilons:
-        if algo_name == 'gpucb':
-            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
+        if stochastic_objective:
+            evaled_x, evaled_y, max_y, time_taken, best_arm_value = algorithm(epsilon, save_dir)
         else:
-            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
+            if algo_name == 'gpucb':
+                evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
+            else:
+                evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
 
         max_ys.append(max_y)
         time_takens.append(time_taken)
 
-    pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
+    if stochastic_objective:
+        pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens,
+                     'best_arm_value': best_arm_value},
                     open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+    else:
+        pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
+                        open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
     return epsilons, max_ys, time_takens
 
 
