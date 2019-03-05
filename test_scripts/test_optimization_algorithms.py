@@ -10,6 +10,7 @@ from generators.gpucb_utils.gp import StandardContinuousGP
 from generators.gpucb_utils.functions import UCB, Domain
 from generators.gpucb_utils.bo import BO
 from generators.voo_utils.voo import VOO
+from generators.voo_utils.stovoo import StoVOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
 
 import seaborn as sns
@@ -18,12 +19,31 @@ import time
 import sys
 import os
 import socket
+import argparse
 
-problem_idx = int(sys.argv[1])
-algo_name = sys.argv[2]
-dim_x = int(sys.argv[3])
-n_fcn_evals = int(sys.argv[4])
-obj_fcn = sys.argv[5]
+parser = argparse.ArgumentParser(description='parameters')
+parser.add_argument('-ucb', type=float, default=1.0)
+parser.add_argument('-widening_parameter', type=float, default=0.8)
+parser.add_argument('-problem_idx', type=int, default=0)
+parser.add_argument('-algo_name', type=str, default='voo')
+parser.add_argument('-obj_fcn', type=str, default='ackley')
+parser.add_argument('-dim_x', type=int, default=20)
+parser.add_argument('-n_fcn_evals', type=int, default=500)
+parser.add_argument('-stochastic_objective', action='store_true', default=False)
+parser.add_argument('-function_noise', type=float, default=10)
+args = parser.parse_args()
+
+problem_idx = args.problem_idx
+algo_name = args.algo_name
+dim_x = args.dim_x
+n_fcn_evals = args.n_fcn_evals
+obj_fcn = args.obj_fcn
+stochastic_objective = args.stochastic_objective
+noise = args.noise
+
+ucb_parameter = args.ucb
+widening_parameter = args.widening_parameter
+
 NUMMAX = 10
 
 if obj_fcn == 'shekel':
@@ -109,6 +129,32 @@ def voo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
+def stovoo(explr_p):
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    stovoo = StoVOO(domain, ucb_parameter, widening_parameter, explr_p)
+    times = []
+
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        print "%d / %d" % (i, n_fcn_evals)
+        if i > 0:
+            print 'max value is ', np.max(evaled_y)
+        evaled_arm = stovoo.choose_next_point(evaled_x, evaled_y)
+        y = get_objective_function(evaled_arm.x_value)
+        noise_y = y + np.random.normal(0, noise)
+        stovoo.update_evaluated_arms(evaled_arm, noise_y)
+
+        # todo what should I record? The expected values?
+        evaled_x.append(evaled_arm.x_value)
+        evaled_y.append(y)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time()-stime)
+    print "Max value found", np.max(evaled_y)
+    return evaled_x, evaled_y, max_y, times
+
+
 def random_search(epsilon):
     evaled_x = []
     evaled_y = []
@@ -182,10 +228,20 @@ def get_exploration_parameters(algorithm):
 def main():
     hostname = socket.gethostname()
     if hostname == 'dell-XPS-15-9560' or hostname == 'phaedra':
-        save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+        if stochastic_objective:
+            save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + '/noise_' + str(noise) +\
+                       '/ucb_' + str(ucb_parameter) + \
+                       '/widening_'+str(widening_parameter) + \
+                       '/dim_' + str(dim_x) + '/'+algo_name+'/'
+        else:
+            save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
     else:
-        save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + \
-                   obj_fcn + '/dim_' + str(dim_x) + '/' + algo_name+'/'
+        if stochastic_objective:
+            save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + '/ucb_' + str(ucb_parameter) + \
+                       '/widening_' + str(widening_parameter) + '/dim_' + str(dim_x) + '/' + algo_name + '/'
+        else:
+            save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + \
+                       obj_fcn + '/dim_' + str(dim_x) + '/' + algo_name+'/'
 
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
@@ -194,17 +250,25 @@ def main():
         print "Already done"
         return
 
-    if algo_name == 'uniform':
-        algorithm = random_search
-    elif algo_name == 'voo':
-        algorithm = voo
-    elif algo_name == 'doo':
-        algorithm = doo
-    elif algo_name == 'gpucb':
-        algorithm = gpucb
+    if stochastic_objective:
+        if algo_name == 'uniform':
+            algorithm = random_search
+        elif algo_name == 'stovoo':
+            algorithm = stovoo
+        else:
+            raise NotImplementedError
     else:
-        print "Wrong algo name"
-        return
+        if algo_name == 'uniform':
+            algorithm = random_search
+        elif algo_name == 'voo':
+            algorithm = voo
+        elif algo_name == 'doo':
+            algorithm = doo
+        elif algo_name == 'gpucb':
+            algorithm = gpucb
+        else:
+            print "Wrong algo name"
+            return
 
     epsilons = get_exploration_parameters(algorithm)
 

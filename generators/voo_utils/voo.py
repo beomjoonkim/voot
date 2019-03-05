@@ -9,16 +9,17 @@ class VOO:
         if distance_fn is None:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
 
-    def choose_next_point(self, evaled_x, evaled_y):
-        #if len(evaled_x) == 0:
-        #    return (self.domain[1] + self.domain[0]) / 2.0
+    def sample_next_point(self, evaled_x, evaled_y):
         rnd = np.random.random()  # this should lie outside
         is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(evaled_x) > 1
         if is_sample_from_best_v_region:
-            x = self.sample_from_best_voronoi_region(evaled_x,evaled_y)
+            x = self.sample_from_best_voronoi_region(evaled_x, evaled_y)
         else:
             x = self.sample_from_uniform()
         return x
+
+    def choose_next_point(self, evaled_x, evaled_y):
+        return self.sample_next_point(evaled_x, evaled_y)
 
     def sample_from_best_voronoi_region(self, evaled_x, evaled_y):
         best_dist = np.inf
