@@ -46,11 +46,13 @@ def main():
     stochastic_objective = sys.argv[6]
     ucb = sys.argv[7]
     widening_parameter = sys.argv[8]
+    function_noise = sys.argv[9]
 
     configs= []
     for dim in dims:
         for t in pidxs:
-            configs.append([n_iter, t, algo_name, dim, obj_fcn, stochastic_objective, ucb, widening_parameter])
+            configs.append([n_iter, t, algo_name, dim, obj_fcn, stochastic_objective, ucb, widening_parameter,
+                            function_noise])
     if algo_name == 'gpucb':
         n_workers = int(3)
     else:
