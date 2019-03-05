@@ -39,7 +39,7 @@ dim_x = args.dim_x
 n_fcn_evals = args.n_fcn_evals
 obj_fcn = args.obj_fcn
 stochastic_objective = args.stochastic_objective
-noise = args.noise
+noise = args.function_noise
 
 ucb_parameter = args.ucb
 widening_parameter = args.widening_parameter
