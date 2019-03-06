@@ -1,10 +1,6 @@
 from deap.benchmarks import shekel
 from deap import benchmarks
-import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.colors import LogNorm
-from matplotlib import cm
 
 from generators.gpucb_utils.gp import StandardContinuousGP
 from generators.gpucb_utils.functions import UCB, Domain
@@ -12,8 +8,8 @@ from generators.gpucb_utils.bo import BO
 from generators.voo_utils.voo import VOO
 from generators.voo_utils.stovoo import StoVOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
+from generators.soo_utils.soo_tree import BinarySOOTree
 
-import seaborn as sns
 import pickle
 import time
 import sys
@@ -207,6 +203,31 @@ def doo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
+def soo(dummy):
+    soo_tree = BinarySOOTree(domain)
+
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    times = []
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        next_node = soo_tree.get_next_point_and_node_to_evaluate()
+        x_to_evaluate = next_node.cell_mid_point
+        next_node.evaluated_x = x_to_evaluate
+        fval = get_objective_function(x_to_evaluate)
+        soo_tree.expand_node(fval, next_node)
+        # todo run this and see where the bug is. It's not tested fully.
+
+        evaled_x.append(x_to_evaluate)
+        evaled_y.append(fval)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time()-stime)
+        print np.max(evaled_y)
+
+    return evaled_x, evaled_y, max_y, times
+
+
 def get_exploration_parameters(algorithm):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
@@ -271,6 +292,8 @@ def main():
             algorithm = doo
         elif algo_name == 'gpucb':
             algorithm = gpucb
+        elif algo_name == 'soo':
+            algorithm = soo
         else:
             print "Wrong algo name"
             return
