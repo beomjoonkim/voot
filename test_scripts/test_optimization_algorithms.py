@@ -1,6 +1,5 @@
 from deap.benchmarks import shekel
 from deap import benchmarks
-import numpy as np
 
 from generators.gpucb_utils.gp import StandardContinuousGP
 from generators.gpucb_utils.functions import UCB, Domain
@@ -16,12 +15,13 @@ import sys
 import os
 import socket
 import argparse
+import numpy as np
 
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-ucb', type=float, default=1.0)
 parser.add_argument('-widening_parameter', type=float, default=0.8)
 parser.add_argument('-problem_idx', type=int, default=0)
-parser.add_argument('-algo_name', type=str, default='voo')
+parser.add_argument('-algo_name', type=str, default='soo')
 parser.add_argument('-obj_fcn', type=str, default='ackley')
 parser.add_argument('-dim_x', type=int, default=20)
 parser.add_argument('-n_fcn_evals', type=int, default=500)
@@ -36,6 +36,8 @@ n_fcn_evals = args.n_fcn_evals
 obj_fcn = args.obj_fcn
 stochastic_objective = args.stochastic_objective
 noise = args.function_noise
+
+np.random.seed(problem_idx)
 
 ucb_parameter = args.ucb
 widening_parameter = args.widening_parameter
@@ -210,20 +212,25 @@ def soo(dummy):
     evaled_y = []
     max_y = []
     times = []
+
+    #fvals = [0,1,2, 1, 1, 3, 4, 5,6]
     stime = time.time()
     for i in range(n_fcn_evals):
+    #for i in range(len(fvals)):
         next_node = soo_tree.get_next_point_and_node_to_evaluate()
         x_to_evaluate = next_node.cell_mid_point
         next_node.evaluated_x = x_to_evaluate
-        fval = get_objective_function(x_to_evaluate)
-        soo_tree.expand_node(fval, next_node)
-        # todo run this and see where the bug is. It's not tested fully.
 
+
+        fval = get_objective_function(x_to_evaluate)
+        #fval = fvals[i]
+
+        soo_tree.expand_node(fval, next_node)
         evaled_x.append(x_to_evaluate)
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
-        print np.max(evaled_y)
+        #print 'fval vmax, h = (%.2f, %.2f, %.2f)' %(fval, soo_tree.vmax, soo_tree.tree_traversal_height)
 
     return evaled_x, evaled_y, max_y, times
 

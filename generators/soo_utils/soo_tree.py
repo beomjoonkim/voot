@@ -28,9 +28,11 @@ class BinarySOOTree:
         self.nodes = []
         self.x_to_node = {}
         self.vmax = -np.inf
-        self.current_tree_height = 0
+        self.tree_traversal_height = 0
+        self.tree_height = 0
 
-    def create_node(self, cell_mid_point, cell_min, cell_max, parent_node):
+    @staticmethod
+    def create_node(cell_mid_point, cell_min, cell_max, parent_node):
         if parent_node is None:
             height = 0
         else:
@@ -60,7 +62,8 @@ class BinarySOOTree:
         leaf_values = [l.f_value for l in leaves]
         best_leaf = leaves[np.argmax(leaf_values)]
 
-        if best_leaf.f_value > self.vmax:
+        if best_leaf.f_value >= self.vmax:
+            self.vmax = best_leaf.f_value  # update the vmax to the best leaf value
             is_node_children_added = not(best_leaf.l_child is None)
             if is_node_children_added:
                 is_left_child_evaluated = best_leaf.l_child.f_value is not None
@@ -94,31 +97,29 @@ class BinarySOOTree:
         return node
 
     def find_leaf_node_whose_value_is_greater_than_vmax(self):
-        height = 0
-        node = self.find_leaf_with_max_value_at_given_height(height)
+        node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
         no_node_exceeds_vmax = node is None
-        while no_node_exceeds_vmax and height <= self.current_tree_height:
-            node = self.find_leaf_with_max_value_at_given_height(height)
+        while no_node_exceeds_vmax and self.tree_traversal_height <= self.tree_height:
+            self.tree_traversal_height += 1
+            node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
             no_node_exceeds_vmax = node is None
-            height += 1
 
         if no_node_exceeds_vmax:
             # it might come here without finding the leaf node. Reset self.vmax in this case
             self.vmax = -np.inf
-            height = 0
-            node = self.find_leaf_with_max_value_at_given_height(height)
+            self.tree_traversal_height = 0
+            node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
             no_node_exceeds_vmax = node is None
-            while no_node_exceeds_vmax and height <= self.current_tree_height:
-                node = self.find_leaf_with_max_value_at_given_height(height)
+            while no_node_exceeds_vmax and self.tree_traversal_height <= self.tree_height:
+                self.tree_traversal_height += 1
+                node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
                 no_node_exceeds_vmax = node is None
-                height += 1
 
         return node
 
     def expand_node(self, fval, node):
         node.update_node_f_value(fval)
         self.nodes.append(node)
-        self.vmax = fval
 
         self.add_left_child(parent_node=node)
         self.add_right_child(parent_node=node)
@@ -131,10 +132,11 @@ class BinarySOOTree:
         is_parent_node_children_all_evaluated = node.parent.l_child.f_value is not None \
                                                 and node.parent.r_child.f_value is not None
         if is_parent_node_children_all_evaluated:
+            # note that parent is not a leaf until its children have been evaluated
             self.add_to_leaf(node.parent.l_child)
             self.add_to_leaf(node.parent.r_child)
-
-        self.current_tree_height += 1
+            self.tree_traversal_height += 1  # increment the current height only when we evaluated the current node fully
+            self.tree_height += 1
 
     def add_to_leaf(self, node):
         parent_node = node.parent
