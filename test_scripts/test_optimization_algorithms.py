@@ -213,24 +213,18 @@ def soo(dummy):
     max_y = []
     times = []
 
-    #fvals = [0,1,2, 1, 1, 3, 4, 5,6]
     stime = time.time()
     for i in range(n_fcn_evals):
-    #for i in range(len(fvals)):
         next_node = soo_tree.get_next_point_and_node_to_evaluate()
         x_to_evaluate = next_node.cell_mid_point
         next_node.evaluated_x = x_to_evaluate
-
-
         fval = get_objective_function(x_to_evaluate)
-        #fval = fvals[i]
-
         soo_tree.expand_node(fval, next_node)
+
         evaled_x.append(x_to_evaluate)
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
-        #print 'fval vmax, h = (%.2f, %.2f, %.2f)' %(fval, soo_tree.vmax, soo_tree.tree_traversal_height)
 
     return evaled_x, evaled_y, max_y, times
 

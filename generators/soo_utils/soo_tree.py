@@ -118,6 +118,9 @@ class BinarySOOTree:
         return node
 
     def expand_node(self, fval, node):
+        # this function evaluates the node if it has not been evaluated, but evalutes its children if they have not
+        # been evaluated. This is what it means to "expand" the node from Munos et al. - evaluate the node,
+        # and its K children
         node.update_node_f_value(fval)
         self.nodes.append(node)
 
