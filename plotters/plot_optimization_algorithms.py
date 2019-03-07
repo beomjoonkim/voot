@@ -122,7 +122,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['gpucb', 'doo', 'voo', 'uniform']
+    algo_names = ['soo', 'doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
