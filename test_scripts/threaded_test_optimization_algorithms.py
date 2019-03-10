@@ -44,7 +44,8 @@ def main():
     pidxs = range(int(pidxs[0]), int(pidxs[1]))
     obj_fcn = sys.argv[5]
     stochastic_objective = int(sys.argv[6])
-    ucb = sys.argv[7]
+    ucbs = sys.argv[7].split(',')
+    ucbs = [float(ucb) for ucb in ucbs] 
 
     configs= []
     if stochastic_objective:
@@ -54,6 +55,7 @@ def main():
         function_noise = sys.argv[9].split(',')
         function_noises = [int(f) for f in function_noise]
         for function_noise in function_noises:
+          for ucb in ucbs:
             for widening_parameter in widening_parameters:
                 for t in pidxs:
                     configs.append([n_iter, t, algo_name, dim, obj_fcn, stochastic_objective, ucb, widening_parameter,

@@ -1,6 +1,5 @@
 import numpy as np
 import GPy
-from se2_kernel import RBF_SE2
 
 
 class StandardContinuousGP:

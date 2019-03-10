@@ -10,8 +10,8 @@ from GPy.kern.src.grid_kerns import GridRBF
 import numpy as np
 import sys
 
-sys.path.append('./mover_library/')
-from utils import convert_base_pose_to_se2
+#sys.path.append('./mover_library/')
+#from utils import convert_base_pose_to_se2
 
 
 class StationaryForSE2Distance(Stationary):
