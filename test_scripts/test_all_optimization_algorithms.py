@@ -1,9 +1,6 @@
 from deap.benchmarks import shekel
 import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.colors import LogNorm
-from matplotlib import cm
 
 from generators.gpucb_utils.gp import StandardContinuousGP
 from generators.gpucb_utils.functions import UCB, Domain
@@ -14,7 +11,7 @@ from generators.doo_utils.doo_tree import BinaryDOOTree
 import seaborn as sns
 import pickle
 import time
-import sys
+
 
 NUMMAX = 10
 dim_x = 20
@@ -48,7 +45,7 @@ def gpucb(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
-def voo(explr_p,obj_fcn):
+def voo(explr_p, obj_fcn):
     evaled_x = []
     evaled_y = []
     max_y = []
@@ -118,11 +115,12 @@ def select_epsilon(algorithm, obj_fcn):
 
     max_ys = []
     time_takens = []
-    import pdb;pdb.set_trace()
+
     for epsilon in epsilons:
         evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, obj_fcn)
         max_ys.append(max_y)
         time_takens.append(time_taken)
+
     return epsilons, max_ys, time_takens
 
 
@@ -156,11 +154,12 @@ def main():
                 voo_max_ys.append(max_y)
             else:
                 unif_max_ys.append(max_y)
+
     sns.tsplot(doo_max_ys, range(n_iter), ci=95, condition='doo', color=color_dict[color_names[0]])
     sns.tsplot(voo_max_ys, range(n_iter), ci=95, condition='voo', color=color_dict[color_names[1]])
     sns.tsplot(unif_max_ys, range(n_iter), ci=95, condition='unif', color=color_dict[color_names[2]])
     plt.show()
-    import pdb;pdb.set_trace()
+
 
 if __name__ == '__main__':
     main()

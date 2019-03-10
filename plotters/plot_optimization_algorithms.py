@@ -122,7 +122,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['soo', 'doo', 'voo', 'uniform']
+    algo_names = ['soo', 'gpucb', 'doo', 'voo', 'uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -130,6 +130,8 @@ def plot_across_algorithms():
     color_dict[color_names[1]] = [0, 0, 0]
     color_dict[color_names[2]] = [1, 0, 0]
     color_dict[color_names[3]] = [0, 0, 1]
+    color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
+
 
     if args.obj_fcn != 'shekel':
         sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')

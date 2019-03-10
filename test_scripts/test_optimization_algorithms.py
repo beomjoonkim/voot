@@ -8,6 +8,8 @@ from generators.voo_utils.voo import VOO
 from generators.voo_utils.stovoo import StoVOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.soo_utils.soo_tree import BinarySOOTree
+from generators.soo_utils.stosoo import BinaryStoSOOTree
+
 
 import pickle
 import time
@@ -19,14 +21,14 @@ import numpy as np
 
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-ucb', type=float, default=1.0)
-parser.add_argument('-widening_parameter', type=float, default=0.8)
+parser.add_argument('-widening_parameter', type=float, default=10)
 parser.add_argument('-problem_idx', type=int, default=0)
-parser.add_argument('-algo_name', type=str, default='soo')
+parser.add_argument('-algo_name', type=str, default='stosoo')
 parser.add_argument('-obj_fcn', type=str, default='ackley')
 parser.add_argument('-dim_x', type=int, default=20)
 parser.add_argument('-n_fcn_evals', type=int, default=500)
 parser.add_argument('-stochastic_objective', action='store_true', default=False)
-parser.add_argument('-function_noise', type=float, default=10)
+parser.add_argument('-function_noise', type=float, default=200)
 args = parser.parse_args()
 
 problem_idx = args.problem_idx
@@ -229,6 +231,39 @@ def soo(dummy):
     return evaled_x, evaled_y, max_y, times
 
 
+def stosoo(dummy):
+    n_total_evals = args.n_fcn_evals
+    delta = 1/np.sqrt(n_total_evals)
+    k = int(n_total_evals / np.power(np.log(n_total_evals), 3))
+    stosoo_tree = BinaryStoSOOTree(delta, k, n_total_evals, domain)
+
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    times = []
+
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        next_node = stosoo_tree.get_next_point_and_node_to_evaluate()
+        x_to_evaluate = next_node.cell_mid_point
+        next_node.evaluated_x = x_to_evaluate
+        fval = get_objective_function(x_to_evaluate)
+        stosoo_tree.expand_node(fval, next_node)
+
+        evaled_x.append(x_to_evaluate)
+        evaled_y.append(fval)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time()-stime)
+        print x_to_evaluate, fval
+
+    arm_with_highest_expected_value = stosoo_tree.get_best_node()
+    best_arm_x_value = arm_with_highest_expected_value.cell_mid_point
+    best_arm_true_y = get_objective_function(best_arm_x_value)
+
+    print "Max value found", np.max(evaled_y)
+    return evaled_x, evaled_y, max_y, times, best_arm_true_y
+
+
 def get_exploration_parameters(algorithm):
     if algorithm.__name__ == 'voo':
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
@@ -280,6 +315,8 @@ def main():
     if stochastic_objective:
         if algo_name == 'uniform':
             algorithm = random_search
+        elif algo_name == 'stosoo':
+            algorithm = stosoo
         elif algo_name == 'stovoo':
             algorithm = stovoo
         else:
