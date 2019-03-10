@@ -43,7 +43,6 @@ class BinaryStoSOOTree(BinarySOOTree):
                 best_node = node
         return best_node
 
-
     @staticmethod
     def create_node(cell_mid_point, cell_min, cell_max, parent_node):
         if parent_node is None:

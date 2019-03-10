@@ -17,27 +17,37 @@ def savefig(xlabel, ylabel, fname=''):
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
-def get_result_dir(algo_name, dimension, obj_fcn, function_noise, algo_parameters):
-    result_dir = './test_results/stochastic_function_optimization/' + str(obj_fcn) + '/dim_' + \
-                 str(dimension) + '/noise_'+str(function_noise) + '/' + algo_name + '/ucb_'+str(algo_parameters['ucb']) +\
-                 '/widening_' + str(algo_parameters['widening']) + '/'
+def get_result_dir(algo_name, dimension, obj_fcn):
+    if obj_fcn != 'shekel':
+        result_dir = './test_results/function_optimization/' + str(obj_fcn) + '/dim_' + str(
+            dimension) + '/' + algo_name + '/'
+    else:
+        result_dir = './test_results/function_optimization/' + 'dim_' + str(dimension) + '/' + algo_name + '/'
+        if algo_name == 'gpucb' and dimension == 10:
+            result_dir = './test_results/function_optimization/' + 'dim_' + str(
+                dimension) + '/' + algo_name + '/' + 'n_eval_200/'
+    result_dir = './test_results/function_optimization/' + str(obj_fcn) + '/dim_' + str(
+        dimension) + '/' + algo_name + '/'
     return result_dir
 
 
-def get_results(algo_name, args, algo_parameters):
-    obj_fcn = args.obj_fcn
-    dimension = args.n_dim
-    result_dir = get_result_dir(algo_name, dimension, obj_fcn, args.function_noise, algo_parameters)
-
+def get_results(algo_name, dimension, obj_fcn):
+    result_dir = get_result_dir(algo_name, dimension, obj_fcn)
+    search_times = []
     max_y_values = []
     time_takens = []
     for fin in os.listdir(result_dir):
+        #for fin in os.listdir('./test_results//function_optimization/shekel/'+'dim_'+str(dimension)+'/gpucb/'):
         if fin.find('.pkl') == -1:
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         if algo_name == 'doo':
-            optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+            if obj_fcn != 'griewank':
+                idxs = [0, 4, 10, 11, 12]
+                optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
+            else:
+                optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         else:
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
@@ -107,35 +117,41 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='parameters')
+    parser.add_argument('-ucb', type=float, default=1.0)
+    parser.add_argument('-widening_parameter', type=float, default=0.8)
+    parser.add_argument('-problem_idx', type=int, default=0)
     parser.add_argument('-algo_name', type=str, default='voo')
     parser.add_argument('-obj_fcn', type=str, default='ackley')
-    parser.add_argument('-n_dim', type=int, default=10)
-    parser.add_argument('-function_noise', type=float, default=200.0)
+    parser.add_argument('-dim_x', type=int, default=20)
+    parser.add_argument('-n_fcn_evals', type=int, default=500)
+    parser.add_argument('-stochastic_objective', action='store_true', default=False)
+    parser.add_argument('-function_noise', type=float, default=10)
     args = parser.parse_args()
 
+    n_dim = args.dim_x
     algo_names = ['stovoo', 'stosoo']
-    algo_parameters = {'stovoo': {'ucb': 5000.0, 'widening': 2},
-                       'stosoo': {'ucb': 1.0, 'widening': 1}}
 
-    color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_names = color_dict.keys()
-    color_dict[color_names[0]] = [0., 0.5570478679, 0.]
-    color_dict[color_names[1]] = [0, 0, 0]
-    color_dict[color_names[2]] = [1, 0, 0]
-    color_dict[color_names[3]] = [0, 0, 1]
-    color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
+    # x-axis: different noise level
+    # y-axis: mean values of different widening values
 
-    for algo_idx, algo_name in enumerate(algo_names):
-        search_rwd_times = get_results(algo_name, args, algo_parameters[algo_name])
-        n_samples = search_rwd_times.shape[-1]
+    widening_values = [1.0, 10.0, 100.0, 200.0, 500.0]
+    noise_levels = [100.0, 200.0, 300.0, 400.0,500.0,600.0,700.0,800.0,900.0,1000.0]
 
-        sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo_name.upper(),
-                   color=color_dict[color_names[algo_idx]])
+    for noise_level in noise_levels:
+        for widening_value in widening_values:
+            fdir = './test_results/stochastic_function_optimization/ackley/noise_'+str(noise_level) \
+                   +'/ucb_5000.0/widening_'+str(widening_value) + '/dim_10/stovoo/'
 
-        print np.mean(search_rwd_times,axis=0)[-1]
-    plt.show()
-    import pdb;pdb.set_trace()
+            noise_level_max_values = []
+            for fin in os.listdir(fdir):
+                result = pickle.load(open(fdir+fin,'r'))
+                #max_value = result['max_ys'][0][-1]
+                max_value = result['best_arm_value']
+                noise_level_max_values.append(max_value)
 
+            print "Noise level %d, Widening value %d, performance (mean,var): %.2f %.2f" % (noise_level,widening_value,
+                                                                                            np.mean(noise_level_max_values),
+                                                                                            np.std(noise_level_max_values))
 
 
 

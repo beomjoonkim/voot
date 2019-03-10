@@ -21,14 +21,14 @@ import numpy as np
 
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-ucb', type=float, default=1.0)
-parser.add_argument('-widening_parameter', type=float, default=10)
+parser.add_argument('-widening_parameter', type=int, default=10)
 parser.add_argument('-problem_idx', type=int, default=0)
 parser.add_argument('-algo_name', type=str, default='stosoo')
 parser.add_argument('-obj_fcn', type=str, default='ackley')
 parser.add_argument('-dim_x', type=int, default=20)
 parser.add_argument('-n_fcn_evals', type=int, default=500)
 parser.add_argument('-stochastic_objective', action='store_true', default=False)
-parser.add_argument('-function_noise', type=float, default=200)
+parser.add_argument('-function_noise', type=float, default=200.0)
 args = parser.parse_args()
 
 problem_idx = args.problem_idx
@@ -291,10 +291,12 @@ def main():
     hostname = socket.gethostname()
     if hostname == 'dell-XPS-15-9560' or hostname == 'phaedra':
         if stochastic_objective:
-            save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + '/noise_' + str(noise) +\
+            save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + \
+                       '/dim_' + str(dim_x) + '/' +  \
+                       '/noise_' + str(noise) + '/' + \
+                       algo_name + '/' +\
                        '/ucb_' + str(ucb_parameter) + \
-                       '/widening_'+str(widening_parameter) + \
-                       '/dim_' + str(dim_x) + '/'+algo_name+'/'
+                       '/widening_'+str(widening_parameter)
         else:
             save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
     else:
@@ -310,7 +312,7 @@ def main():
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
-        return
+        #return
 
     if stochastic_objective:
         if algo_name == 'uniform':

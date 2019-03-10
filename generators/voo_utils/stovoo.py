@@ -29,22 +29,15 @@ class StoVOO(VOO):
         # todo I think this parameter should increase with the number of arms;
         # todo I also think you should begin with a set of values
 
-        """
-        progressive_widening_value = self.widening_parameter * self.n_evaluations
-        print n_arms, progressive_widening_value
-        if n_arms > progressive_widening_value:
-            return True
-        else:
-            return False
-        """
-
         if n_arms < 10:
             return False
         else:
-            if self.n_ucb_iterations < self.widening_parameter / float(self.n_evaluations):
+            if self.n_ucb_iterations < self.widening_parameter: #/ float(self.n_evaluations):
+                print "UCB iteration"
                 self.n_ucb_iterations += 1
                 return True
             else:
+                print "VOO iteration"
                 self.n_ucb_iterations = 0
                 return False
 

@@ -53,8 +53,6 @@ def main():
 
         function_noise = sys.argv[9].split(',')
         function_noises = [int(f) for f in function_noise]
-
-
         for function_noise in function_noises:
             for widening_parameter in widening_parameters:
                 for t in pidxs:
