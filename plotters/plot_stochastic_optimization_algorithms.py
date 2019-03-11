@@ -114,9 +114,19 @@ def plot_across_algorithms():
 
     algo_names = ['stovoo', 'stosoo', 'stounif']
     if args.obj_fcn == 'ackley':
-        algo_parameters = {'stovoo': {'ucb': 200.0, 'widening': 2},
-                           'stosoo': {'ucb': 1.0, 'widening': 1},
-                           'stounif': {'ucb': 1.0, 'widening': 1}}
+        if args.function_noise == 30:
+            algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 4},
+                               'stosoo': {'ucb': 1.0, 'widening': 1},
+                               'stounif': {'ucb': 1.0, 'widening': 1}}
+        elif args.function_noise == 100:
+            algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 3},
+                               'stosoo': {'ucb': 1.0, 'widening': 1},
+                               'stounif': {'ucb': 1.0, 'widening': 1}}
+        elif args.function_noise == 1000:
+            algo_parameters = {'stovoo': {'ucb': 400.0, 'widening': 3},
+                               'stosoo': {'ucb': 1.0, 'widening': 1},
+                               'stounif': {'ucb': 1.0, 'widening': 1}}
+
     elif args.obj_fcn == 'griewank':
         algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 30},
                            'stosoo': {'ucb': 1.0, 'widening': 1},
