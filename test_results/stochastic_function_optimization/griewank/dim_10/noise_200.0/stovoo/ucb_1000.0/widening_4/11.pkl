@@ -1,0 +1,7039 @@
+(dp0
+S'epsilons'
+p1
+(lp2
+I0
+asS'max_ys'
+p3
+(lp4
+(lp5
+cnumpy.core.multiarray
+scalar
+p6
+(cnumpy
+dtype
+p7
+(S'f8'
+p8
+I0
+I1
+tp9
+Rp10
+(I3
+S'<'
+p11
+NNNI-1
+I-1
+I0
+tp12
+bS'/f\x8dh\x19Et\xc0'
+p13
+tp14
+Rp15
+ag6
+(g10
+S'/f\x8dh\x19Et\xc0'
+p16
+tp17
+Rp18
+ag6
+(g10
+S'/f\x8dh\x19Et\xc0'
+p19
+tp20
+Rp21
+ag6
+(g10
+S'/f\x8dh\x19Et\xc0'
+p22
+tp23
+Rp24
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p25
+tp26
+Rp27
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p28
+tp29
+Rp30
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p31
+tp32
+Rp33
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p34
+tp35
+Rp36
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p37
+tp38
+Rp39
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p40
+tp41
+Rp42
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p43
+tp44
+Rp45
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p46
+tp47
+Rp48
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p49
+tp50
+Rp51
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p52
+tp53
+Rp54
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p55
+tp56
+Rp57
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p58
+tp59
+Rp60
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p61
+tp62
+Rp63
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p64
+tp65
+Rp66
+ag6
+(g10
+S'J\x0b\xb6\x96\x8fIr\xc0'
+p67
+tp68
+Rp69
+ag6
+(g10
+S'\xb7\xdeR\xbf\x92\x98o\xc0'
+p70
+tp71
+Rp72
+ag6
+(g10
+S'\xb7\xdeR\xbf\x92\x98o\xc0'
+p73
+tp74
+Rp75
+ag6
+(g10
+S'\xb7\xdeR\xbf\x92\x98o\xc0'
+p76
+tp77
+Rp78
+ag6
+(g10
+S'\xb7\xdeR\xbf\x92\x98o\xc0'
+p79
+tp80
+Rp81
+ag6
+(g10
+S'\xb7\xdeR\xbf\x92\x98o\xc0'
+p82
+tp83
+Rp84
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p85
+tp86
+Rp87
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p88
+tp89
+Rp90
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p91
+tp92
+Rp93
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p94
+tp95
+Rp96
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p97
+tp98
+Rp99
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p100
+tp101
+Rp102
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p103
+tp104
+Rp105
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p106
+tp107
+Rp108
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p109
+tp110
+Rp111
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p112
+tp113
+Rp114
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p115
+tp116
+Rp117
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p118
+tp119
+Rp120
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p121
+tp122
+Rp123
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p124
+tp125
+Rp126
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p127
+tp128
+Rp129
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p130
+tp131
+Rp132
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p133
+tp134
+Rp135
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p136
+tp137
+Rp138
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p139
+tp140
+Rp141
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p142
+tp143
+Rp144
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p145
+tp146
+Rp147
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p148
+tp149
+Rp150
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p151
+tp152
+Rp153
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p154
+tp155
+Rp156
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p157
+tp158
+Rp159
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p160
+tp161
+Rp162
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p163
+tp164
+Rp165
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p166
+tp167
+Rp168
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p169
+tp170
+Rp171
+ag6
+(g10
+S'\xcb\x81t\x14-jn\xc0'
+p172
+tp173
+Rp174
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p175
+tp176
+Rp177
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p178
+tp179
+Rp180
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p181
+tp182
+Rp183
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p184
+tp185
+Rp186
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p187
+tp188
+Rp189
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p190
+tp191
+Rp192
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p193
+tp194
+Rp195
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p196
+tp197
+Rp198
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p199
+tp200
+Rp201
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p202
+tp203
+Rp204
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p205
+tp206
+Rp207
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p208
+tp209
+Rp210
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p211
+tp212
+Rp213
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p214
+tp215
+Rp216
+ag6
+(g10
+S'\xce\x1a\xb9\xef:\x1bm\xc0'
+p217
+tp218
+Rp219
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p220
+tp221
+Rp222
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p223
+tp224
+Rp225
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p226
+tp227
+Rp228
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p229
+tp230
+Rp231
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p232
+tp233
+Rp234
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p235
+tp236
+Rp237
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p238
+tp239
+Rp240
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p241
+tp242
+Rp243
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p244
+tp245
+Rp246
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p247
+tp248
+Rp249
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p250
+tp251
+Rp252
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p253
+tp254
+Rp255
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p256
+tp257
+Rp258
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p259
+tp260
+Rp261
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p262
+tp263
+Rp264
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p265
+tp266
+Rp267
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p268
+tp269
+Rp270
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p271
+tp272
+Rp273
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p274
+tp275
+Rp276
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p277
+tp278
+Rp279
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p280
+tp281
+Rp282
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p283
+tp284
+Rp285
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p286
+tp287
+Rp288
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p289
+tp290
+Rp291
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p292
+tp293
+Rp294
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p295
+tp296
+Rp297
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p298
+tp299
+Rp300
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p301
+tp302
+Rp303
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p304
+tp305
+Rp306
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p307
+tp308
+Rp309
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p310
+tp311
+Rp312
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p313
+tp314
+Rp315
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p316
+tp317
+Rp318
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p319
+tp320
+Rp321
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p322
+tp323
+Rp324
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p325
+tp326
+Rp327
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p328
+tp329
+Rp330
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p331
+tp332
+Rp333
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p334
+tp335
+Rp336
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p337
+tp338
+Rp339
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p340
+tp341
+Rp342
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p343
+tp344
+Rp345
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p346
+tp347
+Rp348
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p349
+tp350
+Rp351
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p352
+tp353
+Rp354
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p355
+tp356
+Rp357
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p358
+tp359
+Rp360
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p361
+tp362
+Rp363
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p364
+tp365
+Rp366
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p367
+tp368
+Rp369
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p370
+tp371
+Rp372
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p373
+tp374
+Rp375
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p376
+tp377
+Rp378
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p379
+tp380
+Rp381
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p382
+tp383
+Rp384
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p385
+tp386
+Rp387
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p388
+tp389
+Rp390
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p391
+tp392
+Rp393
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p394
+tp395
+Rp396
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p397
+tp398
+Rp399
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p400
+tp401
+Rp402
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p403
+tp404
+Rp405
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p406
+tp407
+Rp408
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p409
+tp410
+Rp411
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p412
+tp413
+Rp414
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p415
+tp416
+Rp417
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p418
+tp419
+Rp420
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p421
+tp422
+Rp423
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p424
+tp425
+Rp426
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p427
+tp428
+Rp429
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p430
+tp431
+Rp432
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p433
+tp434
+Rp435
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p436
+tp437
+Rp438
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p439
+tp440
+Rp441
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p442
+tp443
+Rp444
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p445
+tp446
+Rp447
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p448
+tp449
+Rp450
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p451
+tp452
+Rp453
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p454
+tp455
+Rp456
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p457
+tp458
+Rp459
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p460
+tp461
+Rp462
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p463
+tp464
+Rp465
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p466
+tp467
+Rp468
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p469
+tp470
+Rp471
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p472
+tp473
+Rp474
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p475
+tp476
+Rp477
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p478
+tp479
+Rp480
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p481
+tp482
+Rp483
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p484
+tp485
+Rp486
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p487
+tp488
+Rp489
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p490
+tp491
+Rp492
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p493
+tp494
+Rp495
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p496
+tp497
+Rp498
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p499
+tp500
+Rp501
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p502
+tp503
+Rp504
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p505
+tp506
+Rp507
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p508
+tp509
+Rp510
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p511
+tp512
+Rp513
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p514
+tp515
+Rp516
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p517
+tp518
+Rp519
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p520
+tp521
+Rp522
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p523
+tp524
+Rp525
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p526
+tp527
+Rp528
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p529
+tp530
+Rp531
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p532
+tp533
+Rp534
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p535
+tp536
+Rp537
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p538
+tp539
+Rp540
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p541
+tp542
+Rp543
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p544
+tp545
+Rp546
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p547
+tp548
+Rp549
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p550
+tp551
+Rp552
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p553
+tp554
+Rp555
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p556
+tp557
+Rp558
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p559
+tp560
+Rp561
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p562
+tp563
+Rp564
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p565
+tp566
+Rp567
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p568
+tp569
+Rp570
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p571
+tp572
+Rp573
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p574
+tp575
+Rp576
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p577
+tp578
+Rp579
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p580
+tp581
+Rp582
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p583
+tp584
+Rp585
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p586
+tp587
+Rp588
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p589
+tp590
+Rp591
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p592
+tp593
+Rp594
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p595
+tp596
+Rp597
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p598
+tp599
+Rp600
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p601
+tp602
+Rp603
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p604
+tp605
+Rp606
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p607
+tp608
+Rp609
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p610
+tp611
+Rp612
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p613
+tp614
+Rp615
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p616
+tp617
+Rp618
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p619
+tp620
+Rp621
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p622
+tp623
+Rp624
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p625
+tp626
+Rp627
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p628
+tp629
+Rp630
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p631
+tp632
+Rp633
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p634
+tp635
+Rp636
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p637
+tp638
+Rp639
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p640
+tp641
+Rp642
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p643
+tp644
+Rp645
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p646
+tp647
+Rp648
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p649
+tp650
+Rp651
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p652
+tp653
+Rp654
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p655
+tp656
+Rp657
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p658
+tp659
+Rp660
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p661
+tp662
+Rp663
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p664
+tp665
+Rp666
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p667
+tp668
+Rp669
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p670
+tp671
+Rp672
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p673
+tp674
+Rp675
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p676
+tp677
+Rp678
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p679
+tp680
+Rp681
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p682
+tp683
+Rp684
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p685
+tp686
+Rp687
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p688
+tp689
+Rp690
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p691
+tp692
+Rp693
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p694
+tp695
+Rp696
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p697
+tp698
+Rp699
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p700
+tp701
+Rp702
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p703
+tp704
+Rp705
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p706
+tp707
+Rp708
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p709
+tp710
+Rp711
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p712
+tp713
+Rp714
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p715
+tp716
+Rp717
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p718
+tp719
+Rp720
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p721
+tp722
+Rp723
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p724
+tp725
+Rp726
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p727
+tp728
+Rp729
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p730
+tp731
+Rp732
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p733
+tp734
+Rp735
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p736
+tp737
+Rp738
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p739
+tp740
+Rp741
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p742
+tp743
+Rp744
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p745
+tp746
+Rp747
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p748
+tp749
+Rp750
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p751
+tp752
+Rp753
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p754
+tp755
+Rp756
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p757
+tp758
+Rp759
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p760
+tp761
+Rp762
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p763
+tp764
+Rp765
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p766
+tp767
+Rp768
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p769
+tp770
+Rp771
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p772
+tp773
+Rp774
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p775
+tp776
+Rp777
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p778
+tp779
+Rp780
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p781
+tp782
+Rp783
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p784
+tp785
+Rp786
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p787
+tp788
+Rp789
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p790
+tp791
+Rp792
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p793
+tp794
+Rp795
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p796
+tp797
+Rp798
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p799
+tp800
+Rp801
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p802
+tp803
+Rp804
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p805
+tp806
+Rp807
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p808
+tp809
+Rp810
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p811
+tp812
+Rp813
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p814
+tp815
+Rp816
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p817
+tp818
+Rp819
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p820
+tp821
+Rp822
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p823
+tp824
+Rp825
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p826
+tp827
+Rp828
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p829
+tp830
+Rp831
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p832
+tp833
+Rp834
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p835
+tp836
+Rp837
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p838
+tp839
+Rp840
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p841
+tp842
+Rp843
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p844
+tp845
+Rp846
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p847
+tp848
+Rp849
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p850
+tp851
+Rp852
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p853
+tp854
+Rp855
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p856
+tp857
+Rp858
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p859
+tp860
+Rp861
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p862
+tp863
+Rp864
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p865
+tp866
+Rp867
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p868
+tp869
+Rp870
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p871
+tp872
+Rp873
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p874
+tp875
+Rp876
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p877
+tp878
+Rp879
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p880
+tp881
+Rp882
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p883
+tp884
+Rp885
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p886
+tp887
+Rp888
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p889
+tp890
+Rp891
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p892
+tp893
+Rp894
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p895
+tp896
+Rp897
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p898
+tp899
+Rp900
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p901
+tp902
+Rp903
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p904
+tp905
+Rp906
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p907
+tp908
+Rp909
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p910
+tp911
+Rp912
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p913
+tp914
+Rp915
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p916
+tp917
+Rp918
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p919
+tp920
+Rp921
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p922
+tp923
+Rp924
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p925
+tp926
+Rp927
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p928
+tp929
+Rp930
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p931
+tp932
+Rp933
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p934
+tp935
+Rp936
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p937
+tp938
+Rp939
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p940
+tp941
+Rp942
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p943
+tp944
+Rp945
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p946
+tp947
+Rp948
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p949
+tp950
+Rp951
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p952
+tp953
+Rp954
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p955
+tp956
+Rp957
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p958
+tp959
+Rp960
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p961
+tp962
+Rp963
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p964
+tp965
+Rp966
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p967
+tp968
+Rp969
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p970
+tp971
+Rp972
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p973
+tp974
+Rp975
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p976
+tp977
+Rp978
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p979
+tp980
+Rp981
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p982
+tp983
+Rp984
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p985
+tp986
+Rp987
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p988
+tp989
+Rp990
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p991
+tp992
+Rp993
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p994
+tp995
+Rp996
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p997
+tp998
+Rp999
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1000
+tp1001
+Rp1002
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1003
+tp1004
+Rp1005
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1006
+tp1007
+Rp1008
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1009
+tp1010
+Rp1011
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1012
+tp1013
+Rp1014
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1015
+tp1016
+Rp1017
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1018
+tp1019
+Rp1020
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1021
+tp1022
+Rp1023
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1024
+tp1025
+Rp1026
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1027
+tp1028
+Rp1029
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1030
+tp1031
+Rp1032
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1033
+tp1034
+Rp1035
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1036
+tp1037
+Rp1038
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1039
+tp1040
+Rp1041
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1042
+tp1043
+Rp1044
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1045
+tp1046
+Rp1047
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1048
+tp1049
+Rp1050
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1051
+tp1052
+Rp1053
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1054
+tp1055
+Rp1056
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1057
+tp1058
+Rp1059
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1060
+tp1061
+Rp1062
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1063
+tp1064
+Rp1065
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1066
+tp1067
+Rp1068
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1069
+tp1070
+Rp1071
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1072
+tp1073
+Rp1074
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1075
+tp1076
+Rp1077
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1078
+tp1079
+Rp1080
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1081
+tp1082
+Rp1083
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1084
+tp1085
+Rp1086
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1087
+tp1088
+Rp1089
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1090
+tp1091
+Rp1092
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1093
+tp1094
+Rp1095
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1096
+tp1097
+Rp1098
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1099
+tp1100
+Rp1101
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1102
+tp1103
+Rp1104
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1105
+tp1106
+Rp1107
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1108
+tp1109
+Rp1110
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1111
+tp1112
+Rp1113
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1114
+tp1115
+Rp1116
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1117
+tp1118
+Rp1119
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1120
+tp1121
+Rp1122
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1123
+tp1124
+Rp1125
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1126
+tp1127
+Rp1128
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1129
+tp1130
+Rp1131
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1132
+tp1133
+Rp1134
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1135
+tp1136
+Rp1137
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1138
+tp1139
+Rp1140
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1141
+tp1142
+Rp1143
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1144
+tp1145
+Rp1146
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1147
+tp1148
+Rp1149
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1150
+tp1151
+Rp1152
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1153
+tp1154
+Rp1155
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1156
+tp1157
+Rp1158
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1159
+tp1160
+Rp1161
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1162
+tp1163
+Rp1164
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1165
+tp1166
+Rp1167
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1168
+tp1169
+Rp1170
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1171
+tp1172
+Rp1173
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1174
+tp1175
+Rp1176
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1177
+tp1178
+Rp1179
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1180
+tp1181
+Rp1182
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1183
+tp1184
+Rp1185
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1186
+tp1187
+Rp1188
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1189
+tp1190
+Rp1191
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1192
+tp1193
+Rp1194
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1195
+tp1196
+Rp1197
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1198
+tp1199
+Rp1200
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1201
+tp1202
+Rp1203
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1204
+tp1205
+Rp1206
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1207
+tp1208
+Rp1209
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1210
+tp1211
+Rp1212
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1213
+tp1214
+Rp1215
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1216
+tp1217
+Rp1218
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1219
+tp1220
+Rp1221
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1222
+tp1223
+Rp1224
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1225
+tp1226
+Rp1227
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1228
+tp1229
+Rp1230
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1231
+tp1232
+Rp1233
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1234
+tp1235
+Rp1236
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1237
+tp1238
+Rp1239
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1240
+tp1241
+Rp1242
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1243
+tp1244
+Rp1245
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1246
+tp1247
+Rp1248
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1249
+tp1250
+Rp1251
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1252
+tp1253
+Rp1254
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1255
+tp1256
+Rp1257
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1258
+tp1259
+Rp1260
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1261
+tp1262
+Rp1263
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1264
+tp1265
+Rp1266
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1267
+tp1268
+Rp1269
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1270
+tp1271
+Rp1272
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1273
+tp1274
+Rp1275
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1276
+tp1277
+Rp1278
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1279
+tp1280
+Rp1281
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1282
+tp1283
+Rp1284
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1285
+tp1286
+Rp1287
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1288
+tp1289
+Rp1290
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1291
+tp1292
+Rp1293
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1294
+tp1295
+Rp1296
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1297
+tp1298
+Rp1299
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1300
+tp1301
+Rp1302
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1303
+tp1304
+Rp1305
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1306
+tp1307
+Rp1308
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1309
+tp1310
+Rp1311
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1312
+tp1313
+Rp1314
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1315
+tp1316
+Rp1317
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1318
+tp1319
+Rp1320
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1321
+tp1322
+Rp1323
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1324
+tp1325
+Rp1326
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1327
+tp1328
+Rp1329
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1330
+tp1331
+Rp1332
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1333
+tp1334
+Rp1335
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1336
+tp1337
+Rp1338
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1339
+tp1340
+Rp1341
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1342
+tp1343
+Rp1344
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1345
+tp1346
+Rp1347
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1348
+tp1349
+Rp1350
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1351
+tp1352
+Rp1353
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1354
+tp1355
+Rp1356
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1357
+tp1358
+Rp1359
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1360
+tp1361
+Rp1362
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1363
+tp1364
+Rp1365
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1366
+tp1367
+Rp1368
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1369
+tp1370
+Rp1371
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1372
+tp1373
+Rp1374
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1375
+tp1376
+Rp1377
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1378
+tp1379
+Rp1380
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1381
+tp1382
+Rp1383
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1384
+tp1385
+Rp1386
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1387
+tp1388
+Rp1389
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1390
+tp1391
+Rp1392
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1393
+tp1394
+Rp1395
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1396
+tp1397
+Rp1398
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1399
+tp1400
+Rp1401
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1402
+tp1403
+Rp1404
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1405
+tp1406
+Rp1407
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1408
+tp1409
+Rp1410
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1411
+tp1412
+Rp1413
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1414
+tp1415
+Rp1416
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1417
+tp1418
+Rp1419
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1420
+tp1421
+Rp1422
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1423
+tp1424
+Rp1425
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1426
+tp1427
+Rp1428
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1429
+tp1430
+Rp1431
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1432
+tp1433
+Rp1434
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1435
+tp1436
+Rp1437
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1438
+tp1439
+Rp1440
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1441
+tp1442
+Rp1443
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1444
+tp1445
+Rp1446
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1447
+tp1448
+Rp1449
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1450
+tp1451
+Rp1452
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1453
+tp1454
+Rp1455
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1456
+tp1457
+Rp1458
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1459
+tp1460
+Rp1461
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1462
+tp1463
+Rp1464
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1465
+tp1466
+Rp1467
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1468
+tp1469
+Rp1470
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1471
+tp1472
+Rp1473
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1474
+tp1475
+Rp1476
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1477
+tp1478
+Rp1479
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1480
+tp1481
+Rp1482
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1483
+tp1484
+Rp1485
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1486
+tp1487
+Rp1488
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1489
+tp1490
+Rp1491
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1492
+tp1493
+Rp1494
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1495
+tp1496
+Rp1497
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1498
+tp1499
+Rp1500
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1501
+tp1502
+Rp1503
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1504
+tp1505
+Rp1506
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1507
+tp1508
+Rp1509
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1510
+tp1511
+Rp1512
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1513
+tp1514
+Rp1515
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1516
+tp1517
+Rp1518
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1519
+tp1520
+Rp1521
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1522
+tp1523
+Rp1524
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1525
+tp1526
+Rp1527
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1528
+tp1529
+Rp1530
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1531
+tp1532
+Rp1533
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1534
+tp1535
+Rp1536
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1537
+tp1538
+Rp1539
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1540
+tp1541
+Rp1542
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1543
+tp1544
+Rp1545
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1546
+tp1547
+Rp1548
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1549
+tp1550
+Rp1551
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1552
+tp1553
+Rp1554
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1555
+tp1556
+Rp1557
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1558
+tp1559
+Rp1560
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1561
+tp1562
+Rp1563
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1564
+tp1565
+Rp1566
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1567
+tp1568
+Rp1569
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1570
+tp1571
+Rp1572
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1573
+tp1574
+Rp1575
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1576
+tp1577
+Rp1578
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1579
+tp1580
+Rp1581
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1582
+tp1583
+Rp1584
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1585
+tp1586
+Rp1587
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1588
+tp1589
+Rp1590
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1591
+tp1592
+Rp1593
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1594
+tp1595
+Rp1596
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1597
+tp1598
+Rp1599
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1600
+tp1601
+Rp1602
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1603
+tp1604
+Rp1605
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1606
+tp1607
+Rp1608
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1609
+tp1610
+Rp1611
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1612
+tp1613
+Rp1614
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1615
+tp1616
+Rp1617
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1618
+tp1619
+Rp1620
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1621
+tp1622
+Rp1623
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1624
+tp1625
+Rp1626
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1627
+tp1628
+Rp1629
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1630
+tp1631
+Rp1632
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1633
+tp1634
+Rp1635
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1636
+tp1637
+Rp1638
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1639
+tp1640
+Rp1641
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1642
+tp1643
+Rp1644
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1645
+tp1646
+Rp1647
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1648
+tp1649
+Rp1650
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1651
+tp1652
+Rp1653
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1654
+tp1655
+Rp1656
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1657
+tp1658
+Rp1659
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1660
+tp1661
+Rp1662
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1663
+tp1664
+Rp1665
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1666
+tp1667
+Rp1668
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1669
+tp1670
+Rp1671
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1672
+tp1673
+Rp1674
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1675
+tp1676
+Rp1677
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1678
+tp1679
+Rp1680
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1681
+tp1682
+Rp1683
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1684
+tp1685
+Rp1686
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1687
+tp1688
+Rp1689
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1690
+tp1691
+Rp1692
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1693
+tp1694
+Rp1695
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1696
+tp1697
+Rp1698
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1699
+tp1700
+Rp1701
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1702
+tp1703
+Rp1704
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1705
+tp1706
+Rp1707
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1708
+tp1709
+Rp1710
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1711
+tp1712
+Rp1713
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1714
+tp1715
+Rp1716
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1717
+tp1718
+Rp1719
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1720
+tp1721
+Rp1722
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1723
+tp1724
+Rp1725
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1726
+tp1727
+Rp1728
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1729
+tp1730
+Rp1731
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1732
+tp1733
+Rp1734
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1735
+tp1736
+Rp1737
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1738
+tp1739
+Rp1740
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1741
+tp1742
+Rp1743
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1744
+tp1745
+Rp1746
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1747
+tp1748
+Rp1749
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1750
+tp1751
+Rp1752
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1753
+tp1754
+Rp1755
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1756
+tp1757
+Rp1758
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1759
+tp1760
+Rp1761
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1762
+tp1763
+Rp1764
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1765
+tp1766
+Rp1767
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1768
+tp1769
+Rp1770
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1771
+tp1772
+Rp1773
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1774
+tp1775
+Rp1776
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1777
+tp1778
+Rp1779
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1780
+tp1781
+Rp1782
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1783
+tp1784
+Rp1785
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1786
+tp1787
+Rp1788
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1789
+tp1790
+Rp1791
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1792
+tp1793
+Rp1794
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1795
+tp1796
+Rp1797
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1798
+tp1799
+Rp1800
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1801
+tp1802
+Rp1803
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1804
+tp1805
+Rp1806
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1807
+tp1808
+Rp1809
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1810
+tp1811
+Rp1812
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1813
+tp1814
+Rp1815
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1816
+tp1817
+Rp1818
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1819
+tp1820
+Rp1821
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1822
+tp1823
+Rp1824
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1825
+tp1826
+Rp1827
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1828
+tp1829
+Rp1830
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1831
+tp1832
+Rp1833
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1834
+tp1835
+Rp1836
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1837
+tp1838
+Rp1839
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1840
+tp1841
+Rp1842
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1843
+tp1844
+Rp1845
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1846
+tp1847
+Rp1848
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1849
+tp1850
+Rp1851
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1852
+tp1853
+Rp1854
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1855
+tp1856
+Rp1857
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1858
+tp1859
+Rp1860
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1861
+tp1862
+Rp1863
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1864
+tp1865
+Rp1866
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1867
+tp1868
+Rp1869
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1870
+tp1871
+Rp1872
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1873
+tp1874
+Rp1875
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1876
+tp1877
+Rp1878
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1879
+tp1880
+Rp1881
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1882
+tp1883
+Rp1884
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1885
+tp1886
+Rp1887
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1888
+tp1889
+Rp1890
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1891
+tp1892
+Rp1893
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1894
+tp1895
+Rp1896
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1897
+tp1898
+Rp1899
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1900
+tp1901
+Rp1902
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1903
+tp1904
+Rp1905
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1906
+tp1907
+Rp1908
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1909
+tp1910
+Rp1911
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1912
+tp1913
+Rp1914
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1915
+tp1916
+Rp1917
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1918
+tp1919
+Rp1920
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1921
+tp1922
+Rp1923
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1924
+tp1925
+Rp1926
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1927
+tp1928
+Rp1929
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1930
+tp1931
+Rp1932
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1933
+tp1934
+Rp1935
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1936
+tp1937
+Rp1938
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1939
+tp1940
+Rp1941
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1942
+tp1943
+Rp1944
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1945
+tp1946
+Rp1947
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1948
+tp1949
+Rp1950
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1951
+tp1952
+Rp1953
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1954
+tp1955
+Rp1956
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1957
+tp1958
+Rp1959
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1960
+tp1961
+Rp1962
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1963
+tp1964
+Rp1965
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1966
+tp1967
+Rp1968
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1969
+tp1970
+Rp1971
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1972
+tp1973
+Rp1974
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1975
+tp1976
+Rp1977
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1978
+tp1979
+Rp1980
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1981
+tp1982
+Rp1983
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1984
+tp1985
+Rp1986
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1987
+tp1988
+Rp1989
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1990
+tp1991
+Rp1992
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1993
+tp1994
+Rp1995
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1996
+tp1997
+Rp1998
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p1999
+tp2000
+Rp2001
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2002
+tp2003
+Rp2004
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2005
+tp2006
+Rp2007
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2008
+tp2009
+Rp2010
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2011
+tp2012
+Rp2013
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2014
+tp2015
+Rp2016
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2017
+tp2018
+Rp2019
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2020
+tp2021
+Rp2022
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2023
+tp2024
+Rp2025
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2026
+tp2027
+Rp2028
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2029
+tp2030
+Rp2031
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2032
+tp2033
+Rp2034
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2035
+tp2036
+Rp2037
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2038
+tp2039
+Rp2040
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2041
+tp2042
+Rp2043
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2044
+tp2045
+Rp2046
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2047
+tp2048
+Rp2049
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2050
+tp2051
+Rp2052
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2053
+tp2054
+Rp2055
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2056
+tp2057
+Rp2058
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2059
+tp2060
+Rp2061
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2062
+tp2063
+Rp2064
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2065
+tp2066
+Rp2067
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2068
+tp2069
+Rp2070
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2071
+tp2072
+Rp2073
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2074
+tp2075
+Rp2076
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2077
+tp2078
+Rp2079
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2080
+tp2081
+Rp2082
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2083
+tp2084
+Rp2085
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2086
+tp2087
+Rp2088
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2089
+tp2090
+Rp2091
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2092
+tp2093
+Rp2094
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2095
+tp2096
+Rp2097
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2098
+tp2099
+Rp2100
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2101
+tp2102
+Rp2103
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2104
+tp2105
+Rp2106
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2107
+tp2108
+Rp2109
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2110
+tp2111
+Rp2112
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2113
+tp2114
+Rp2115
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2116
+tp2117
+Rp2118
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2119
+tp2120
+Rp2121
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2122
+tp2123
+Rp2124
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2125
+tp2126
+Rp2127
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2128
+tp2129
+Rp2130
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2131
+tp2132
+Rp2133
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2134
+tp2135
+Rp2136
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2137
+tp2138
+Rp2139
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2140
+tp2141
+Rp2142
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2143
+tp2144
+Rp2145
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2146
+tp2147
+Rp2148
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2149
+tp2150
+Rp2151
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2152
+tp2153
+Rp2154
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2155
+tp2156
+Rp2157
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2158
+tp2159
+Rp2160
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2161
+tp2162
+Rp2163
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2164
+tp2165
+Rp2166
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2167
+tp2168
+Rp2169
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2170
+tp2171
+Rp2172
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2173
+tp2174
+Rp2175
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2176
+tp2177
+Rp2178
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2179
+tp2180
+Rp2181
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2182
+tp2183
+Rp2184
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2185
+tp2186
+Rp2187
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2188
+tp2189
+Rp2190
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2191
+tp2192
+Rp2193
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2194
+tp2195
+Rp2196
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2197
+tp2198
+Rp2199
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2200
+tp2201
+Rp2202
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2203
+tp2204
+Rp2205
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2206
+tp2207
+Rp2208
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2209
+tp2210
+Rp2211
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2212
+tp2213
+Rp2214
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2215
+tp2216
+Rp2217
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2218
+tp2219
+Rp2220
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2221
+tp2222
+Rp2223
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2224
+tp2225
+Rp2226
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2227
+tp2228
+Rp2229
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2230
+tp2231
+Rp2232
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2233
+tp2234
+Rp2235
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2236
+tp2237
+Rp2238
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2239
+tp2240
+Rp2241
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2242
+tp2243
+Rp2244
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2245
+tp2246
+Rp2247
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2248
+tp2249
+Rp2250
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2251
+tp2252
+Rp2253
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2254
+tp2255
+Rp2256
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2257
+tp2258
+Rp2259
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2260
+tp2261
+Rp2262
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2263
+tp2264
+Rp2265
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2266
+tp2267
+Rp2268
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2269
+tp2270
+Rp2271
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2272
+tp2273
+Rp2274
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2275
+tp2276
+Rp2277
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2278
+tp2279
+Rp2280
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2281
+tp2282
+Rp2283
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2284
+tp2285
+Rp2286
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2287
+tp2288
+Rp2289
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2290
+tp2291
+Rp2292
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2293
+tp2294
+Rp2295
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2296
+tp2297
+Rp2298
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2299
+tp2300
+Rp2301
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2302
+tp2303
+Rp2304
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2305
+tp2306
+Rp2307
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2308
+tp2309
+Rp2310
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2311
+tp2312
+Rp2313
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2314
+tp2315
+Rp2316
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2317
+tp2318
+Rp2319
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2320
+tp2321
+Rp2322
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2323
+tp2324
+Rp2325
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2326
+tp2327
+Rp2328
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2329
+tp2330
+Rp2331
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2332
+tp2333
+Rp2334
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2335
+tp2336
+Rp2337
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2338
+tp2339
+Rp2340
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2341
+tp2342
+Rp2343
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2344
+tp2345
+Rp2346
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2347
+tp2348
+Rp2349
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2350
+tp2351
+Rp2352
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2353
+tp2354
+Rp2355
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2356
+tp2357
+Rp2358
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2359
+tp2360
+Rp2361
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2362
+tp2363
+Rp2364
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2365
+tp2366
+Rp2367
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2368
+tp2369
+Rp2370
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2371
+tp2372
+Rp2373
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2374
+tp2375
+Rp2376
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2377
+tp2378
+Rp2379
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2380
+tp2381
+Rp2382
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2383
+tp2384
+Rp2385
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2386
+tp2387
+Rp2388
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2389
+tp2390
+Rp2391
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2392
+tp2393
+Rp2394
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2395
+tp2396
+Rp2397
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2398
+tp2399
+Rp2400
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2401
+tp2402
+Rp2403
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2404
+tp2405
+Rp2406
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2407
+tp2408
+Rp2409
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2410
+tp2411
+Rp2412
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2413
+tp2414
+Rp2415
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2416
+tp2417
+Rp2418
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2419
+tp2420
+Rp2421
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2422
+tp2423
+Rp2424
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2425
+tp2426
+Rp2427
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2428
+tp2429
+Rp2430
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2431
+tp2432
+Rp2433
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2434
+tp2435
+Rp2436
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2437
+tp2438
+Rp2439
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2440
+tp2441
+Rp2442
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2443
+tp2444
+Rp2445
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2446
+tp2447
+Rp2448
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2449
+tp2450
+Rp2451
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2452
+tp2453
+Rp2454
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2455
+tp2456
+Rp2457
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2458
+tp2459
+Rp2460
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2461
+tp2462
+Rp2463
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2464
+tp2465
+Rp2466
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2467
+tp2468
+Rp2469
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2470
+tp2471
+Rp2472
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2473
+tp2474
+Rp2475
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2476
+tp2477
+Rp2478
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2479
+tp2480
+Rp2481
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2482
+tp2483
+Rp2484
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2485
+tp2486
+Rp2487
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2488
+tp2489
+Rp2490
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2491
+tp2492
+Rp2493
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2494
+tp2495
+Rp2496
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2497
+tp2498
+Rp2499
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2500
+tp2501
+Rp2502
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2503
+tp2504
+Rp2505
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2506
+tp2507
+Rp2508
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2509
+tp2510
+Rp2511
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2512
+tp2513
+Rp2514
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2515
+tp2516
+Rp2517
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2518
+tp2519
+Rp2520
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2521
+tp2522
+Rp2523
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2524
+tp2525
+Rp2526
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2527
+tp2528
+Rp2529
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2530
+tp2531
+Rp2532
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2533
+tp2534
+Rp2535
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2536
+tp2537
+Rp2538
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2539
+tp2540
+Rp2541
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2542
+tp2543
+Rp2544
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2545
+tp2546
+Rp2547
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2548
+tp2549
+Rp2550
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2551
+tp2552
+Rp2553
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2554
+tp2555
+Rp2556
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2557
+tp2558
+Rp2559
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2560
+tp2561
+Rp2562
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2563
+tp2564
+Rp2565
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2566
+tp2567
+Rp2568
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2569
+tp2570
+Rp2571
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2572
+tp2573
+Rp2574
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2575
+tp2576
+Rp2577
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2578
+tp2579
+Rp2580
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2581
+tp2582
+Rp2583
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2584
+tp2585
+Rp2586
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2587
+tp2588
+Rp2589
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2590
+tp2591
+Rp2592
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2593
+tp2594
+Rp2595
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2596
+tp2597
+Rp2598
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2599
+tp2600
+Rp2601
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2602
+tp2603
+Rp2604
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2605
+tp2606
+Rp2607
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2608
+tp2609
+Rp2610
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2611
+tp2612
+Rp2613
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2614
+tp2615
+Rp2616
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2617
+tp2618
+Rp2619
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2620
+tp2621
+Rp2622
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2623
+tp2624
+Rp2625
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2626
+tp2627
+Rp2628
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2629
+tp2630
+Rp2631
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2632
+tp2633
+Rp2634
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2635
+tp2636
+Rp2637
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2638
+tp2639
+Rp2640
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2641
+tp2642
+Rp2643
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2644
+tp2645
+Rp2646
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2647
+tp2648
+Rp2649
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2650
+tp2651
+Rp2652
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2653
+tp2654
+Rp2655
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2656
+tp2657
+Rp2658
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2659
+tp2660
+Rp2661
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2662
+tp2663
+Rp2664
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2665
+tp2666
+Rp2667
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2668
+tp2669
+Rp2670
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2671
+tp2672
+Rp2673
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2674
+tp2675
+Rp2676
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2677
+tp2678
+Rp2679
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2680
+tp2681
+Rp2682
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2683
+tp2684
+Rp2685
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2686
+tp2687
+Rp2688
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2689
+tp2690
+Rp2691
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2692
+tp2693
+Rp2694
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2695
+tp2696
+Rp2697
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2698
+tp2699
+Rp2700
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2701
+tp2702
+Rp2703
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2704
+tp2705
+Rp2706
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2707
+tp2708
+Rp2709
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2710
+tp2711
+Rp2712
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2713
+tp2714
+Rp2715
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2716
+tp2717
+Rp2718
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2719
+tp2720
+Rp2721
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2722
+tp2723
+Rp2724
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2725
+tp2726
+Rp2727
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2728
+tp2729
+Rp2730
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2731
+tp2732
+Rp2733
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2734
+tp2735
+Rp2736
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2737
+tp2738
+Rp2739
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2740
+tp2741
+Rp2742
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2743
+tp2744
+Rp2745
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2746
+tp2747
+Rp2748
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2749
+tp2750
+Rp2751
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2752
+tp2753
+Rp2754
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2755
+tp2756
+Rp2757
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2758
+tp2759
+Rp2760
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2761
+tp2762
+Rp2763
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2764
+tp2765
+Rp2766
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2767
+tp2768
+Rp2769
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2770
+tp2771
+Rp2772
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2773
+tp2774
+Rp2775
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2776
+tp2777
+Rp2778
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2779
+tp2780
+Rp2781
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2782
+tp2783
+Rp2784
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2785
+tp2786
+Rp2787
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2788
+tp2789
+Rp2790
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2791
+tp2792
+Rp2793
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2794
+tp2795
+Rp2796
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2797
+tp2798
+Rp2799
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2800
+tp2801
+Rp2802
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2803
+tp2804
+Rp2805
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2806
+tp2807
+Rp2808
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2809
+tp2810
+Rp2811
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2812
+tp2813
+Rp2814
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2815
+tp2816
+Rp2817
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2818
+tp2819
+Rp2820
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2821
+tp2822
+Rp2823
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2824
+tp2825
+Rp2826
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2827
+tp2828
+Rp2829
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2830
+tp2831
+Rp2832
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2833
+tp2834
+Rp2835
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2836
+tp2837
+Rp2838
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2839
+tp2840
+Rp2841
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2842
+tp2843
+Rp2844
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2845
+tp2846
+Rp2847
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2848
+tp2849
+Rp2850
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2851
+tp2852
+Rp2853
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2854
+tp2855
+Rp2856
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2857
+tp2858
+Rp2859
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2860
+tp2861
+Rp2862
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2863
+tp2864
+Rp2865
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2866
+tp2867
+Rp2868
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2869
+tp2870
+Rp2871
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2872
+tp2873
+Rp2874
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2875
+tp2876
+Rp2877
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2878
+tp2879
+Rp2880
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2881
+tp2882
+Rp2883
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2884
+tp2885
+Rp2886
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2887
+tp2888
+Rp2889
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2890
+tp2891
+Rp2892
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2893
+tp2894
+Rp2895
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2896
+tp2897
+Rp2898
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2899
+tp2900
+Rp2901
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2902
+tp2903
+Rp2904
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2905
+tp2906
+Rp2907
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2908
+tp2909
+Rp2910
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2911
+tp2912
+Rp2913
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2914
+tp2915
+Rp2916
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2917
+tp2918
+Rp2919
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2920
+tp2921
+Rp2922
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2923
+tp2924
+Rp2925
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2926
+tp2927
+Rp2928
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2929
+tp2930
+Rp2931
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2932
+tp2933
+Rp2934
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2935
+tp2936
+Rp2937
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2938
+tp2939
+Rp2940
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2941
+tp2942
+Rp2943
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2944
+tp2945
+Rp2946
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2947
+tp2948
+Rp2949
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2950
+tp2951
+Rp2952
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2953
+tp2954
+Rp2955
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2956
+tp2957
+Rp2958
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2959
+tp2960
+Rp2961
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2962
+tp2963
+Rp2964
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2965
+tp2966
+Rp2967
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2968
+tp2969
+Rp2970
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2971
+tp2972
+Rp2973
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2974
+tp2975
+Rp2976
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2977
+tp2978
+Rp2979
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2980
+tp2981
+Rp2982
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2983
+tp2984
+Rp2985
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2986
+tp2987
+Rp2988
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2989
+tp2990
+Rp2991
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2992
+tp2993
+Rp2994
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2995
+tp2996
+Rp2997
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p2998
+tp2999
+Rp3000
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p3001
+tp3002
+Rp3003
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p3004
+tp3005
+Rp3006
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p3007
+tp3008
+Rp3009
+ag6
+(g10
+S"\xed\xca.4' j\xc0"
+p3010
+tp3011
+Rp3012
+aasS'time_takens'
+p3013
+(lp3014
+(lp3015
+F0.00020885467529296875
+aF0.00035381317138671875
+aF0.0006787776947021484
+aF0.028577804565429688
+aF0.02888178825378418
+aF0.02918076515197754
+aF0.02949380874633789
+aF0.029809951782226562
+aF0.030133962631225586
+aF0.03046894073486328
+aF0.030647993087768555
+aF0.03080892562866211
+aF0.030971765518188477
+aF0.031145811080932617
+aF0.03149986267089844
+aF0.03169393539428711
+aF0.031880855560302734
+aF0.03205585479736328
+aF0.03224897384643555
+aF0.032617807388305664
+aF0.03281998634338379
+aF0.033017873764038086
+aF0.03320193290710449
+aF0.03338479995727539
+aF0.03390383720397949
+aF0.03411579132080078
+aF0.03432583808898926
+aF0.03450798988342285
+aF0.0346829891204834
+aF0.03521895408630371
+aF0.03544282913208008
+aF0.03566288948059082
+aF0.03585195541381836
+aF0.03605079650878906
+aF0.03662681579589844
+aF0.036850929260253906
+aF0.03707695007324219
+aF0.03726983070373535
+aF0.03748583793640137
+aF0.03807187080383301
+aF0.03830385208129883
+aF0.03853487968444824
+aF0.038748979568481445
+aF0.03897500038146973
+aF0.039569854736328125
+aF0.0398099422454834
+aF0.04005289077758789
+aF0.04029393196105957
+aF0.040495872497558594
+aF0.04110980033874512
+aF0.04135894775390625
+aF0.04160881042480469
+aF0.04185080528259277
+aF0.04206395149230957
+aF0.04287385940551758
+aF0.04311180114746094
+aF0.043338775634765625
+aF0.04358386993408203
+aF0.04383397102355957
+aF0.04468488693237305
+aF0.04493284225463867
+aF0.04517197608947754
+aF0.04543185234069824
+aF0.0456697940826416
+aF0.04632687568664551
+aF0.04657697677612305
+aF0.04682588577270508
+aF0.04707479476928711
+aF0.04732179641723633
+aF0.04799985885620117
+aF0.048265933990478516
+aF0.04852890968322754
+aF0.048793792724609375
+aF0.049069881439208984
+aF0.04978799819946289
+aF0.05007481575012207
+aF0.05037093162536621
+aF0.05065488815307617
+aF0.05094194412231445
+aF0.05167794227600098
+aF0.05198383331298828
+aF0.08866596221923828
+aF0.10759282112121582
+aF0.10875296592712402
+aF0.10953593254089355
+aF0.11060500144958496
+aF0.11120986938476562
+aF0.11225080490112305
+aF0.11287498474121094
+aF0.11701488494873047
+aF0.11737585067749023
+aF0.11774277687072754
+aF0.11808991432189941
+aF0.11842083930969238
+aF0.11952090263366699
+aF0.12009191513061523
+aF0.12156486511230469
+aF0.12191891670227051
+aF0.12229084968566895
+aF0.1231679916381836
+aF0.12355589866638184
+aF0.12395882606506348
+aF0.1243588924407959
+aF0.12468385696411133
+aF0.1257638931274414
+aF0.12617778778076172
+aF0.1265559196472168
+aF0.12694096565246582
+aF0.127288818359375
+aF0.128525972366333
+aF0.12887883186340332
+aF0.12931585311889648
+aF0.12968778610229492
+aF0.1300058364868164
+aF0.1312098503112793
+aF0.1316518783569336
+aF0.13202977180480957
+aF0.13257098197937012
+aF0.13300085067749023
+aF0.13487792015075684
+aF0.13536381721496582
+aF0.1358168125152588
+aF0.13625288009643555
+aF0.13666176795959473
+aF0.13798093795776367
+aF0.13843798637390137
+aF0.13886690139770508
+aF0.13928580284118652
+aF0.1396927833557129
+aF0.1610548496246338
+aF0.20064496994018555
+aF0.2010178565979004
+aF0.20137977600097656
+aF0.20173978805541992
+aF0.20319581031799316
+aF0.20357298851013184
+aF0.20394492149353027
+aF0.2043168544769287
+aF0.204636812210083
+aF0.20614981651306152
+aF0.20652985572814941
+aF0.20690178871154785
+aF0.20727992057800293
+aF0.2076427936553955
+aF0.2092127799987793
+aF0.2096118927001953
+aF0.20999383926391602
+aF0.21038198471069336
+aF0.21077299118041992
+aF0.2564809322357178
+aF0.25690484046936035
+aF0.2573058605194092
+aF0.2577168941497803
+aF0.2580409049987793
+aF0.25965285301208496
+aF0.2600719928741455
+aF0.26049280166625977
+aF0.26090097427368164
+aF0.2612338066101074
+aF0.26317787170410156
+aF0.2636079788208008
+aF0.26402997970581055
+aF0.28380298614501953
+aF0.29306793212890625
+aF0.29473400115966797
+aF0.29517292976379395
+aF0.29560089111328125
+aF0.2960329055786133
+aF0.30451178550720215
+aF0.3065488338470459
+aF0.3069949150085449
+aF0.30742597579956055
+aF0.3078649044036865
+aF0.30828189849853516
+aF0.3100099563598633
+aF0.31046080589294434
+aF0.31090593338012695
+aF0.3366079330444336
+aF0.33705782890319824
+aF0.33919477462768555
+aF0.33965396881103516
+aF0.3401048183441162
+aF0.34054994583129883
+aF0.3409888744354248
+aF0.3430469036102295
+aF0.3434908390045166
+aF0.34395694732666016
+aF0.3684859275817871
+aF0.3688688278198242
+aF0.37145090103149414
+aF0.37192392349243164
+aF0.3723948001861572
+aF0.3728618621826172
+aF0.3732597827911377
+aF0.3754868507385254
+aF0.375964879989624
+aF0.4125487804412842
+aF0.41304993629455566
+aF0.41351795196533203
+aF0.422393798828125
+aF0.42534494400024414
+aF0.43379783630371094
+aF0.4350888729095459
+aF0.4362049102783203
+aF0.43904995918273926
+aF0.4427669048309326
+aF0.44359493255615234
+aF0.44744277000427246
+aF0.449800968170166
+aF0.45596981048583984
+aF0.4731769561767578
+aF0.47403597831726074
+aF0.47487688064575195
+aF0.4757089614868164
+aF0.4843897819519043
+aF0.4887988567352295
+aF0.4912269115447998
+aF0.49256181716918945
+aF0.49408578872680664
+aF0.5154128074645996
+aF0.516758918762207
+aF0.5188088417053223
+aF0.5244529247283936
+aF0.5271539688110352
+aF0.5419588088989258
+aF0.5539848804473877
+aF0.5546939373016357
+aF0.5552968978881836
+aF0.5562179088592529
+aF0.5647428035736084
+aF0.5656249523162842
+aF0.5681569576263428
+aF0.5727028846740723
+aF0.573199987411499
+aF0.5773367881774902
+aF0.584723949432373
+aF0.5852718353271484
+aF0.5858099460601807
+aF0.5863277912139893
+aF0.6000268459320068
+aF0.6005997657775879
+aF0.6011509895324707
+aF0.6016919612884521
+aF0.6022357940673828
+aF0.6303038597106934
+aF0.6308498382568359
+aF0.6313939094543457
+aF0.6319308280944824
+aF0.6324758529663086
+aF0.635441780090332
+aF0.6360089778900146
+aF0.6365878582000732
+aF0.6371538639068604
+aF0.6377089023590088
+aF0.6583127975463867
+aF0.658897876739502
+aF0.6594688892364502
+aF0.6600408554077148
+aF0.6699228286743164
+aF0.6998717784881592
+aF0.7004818916320801
+aF0.7010629177093506
+aF0.7016439437866211
+aF0.7022209167480469
+aF0.7063839435577393
+aF0.7069787979125977
+aF0.7075629234313965
+aF0.7081468105316162
+aF0.7167859077453613
+aF0.7211568355560303
+aF0.7368087768554688
+aF0.7373828887939453
+aF0.7379629611968994
+aF0.7454757690429688
+aF0.749769926071167
+aF0.7503819465637207
+aF0.7509877681732178
+aF0.7515947818756104
+aF0.7592918872833252
+aF0.820584774017334
+aF0.8489267826080322
+aF0.8495039939880371
+aF0.8500099182128906
+aF0.8505768775939941
+aF0.855198860168457
+aF0.8558309078216553
+aF0.856456995010376
+aF0.8570749759674072
+aF0.8576998710632324
+aF0.862177848815918
+aF0.8809318542480469
+aF0.8815767765045166
+aF0.8822219371795654
+aF0.8828439712524414
+aF0.8876888751983643
+aF0.9003877639770508
+aF0.9010729789733887
+aF0.9017238616943359
+aF0.9023668766021729
+aF0.9077627658843994
+aF0.908423900604248
+aF0.9090349674224854
+aF0.9096448421478271
+aF0.9102718830108643
+aF0.9365708827972412
+aF0.9371929168701172
+aF0.9378068447113037
+aF0.9384329319000244
+aF0.9390599727630615
+aF0.9438948631286621
+aF0.964648962020874
+aF0.9653418064117432
+aF0.9729318618774414
+aF0.9889669418334961
+aF0.9946818351745605
+aF0.9953439235687256
+aF0.9960098266601562
+aF1.004814863204956
+aF1.0053489208221436
+aF1.0225839614868164
+aF1.0231997966766357
+aF1.0238139629364014
+aF1.0244979858398438
+aF1.0448899269104004
+aF1.0503909587860107
+aF1.0510787963867188
+aF1.0517637729644775
+aF1.0604958534240723
+aF1.0808038711547852
+aF1.0866749286651611
+aF1.0874137878417969
+aF1.088134765625
+aF1.088843822479248
+aF1.089540958404541
+aF1.116560935974121
+aF1.1250739097595215
+aF1.1257479190826416
+aF1.126429796218872
+aF1.1271429061889648
+aF1.1328179836273193
+aF1.133518934249878
+aF1.145190954208374
+aF1.1459059715270996
+aF1.1465590000152588
+aF1.1527838706970215
+aF1.15348482131958
+aF1.1541788578033447
+aF1.1548728942871094
+aF1.1554739475250244
+aF1.1865689754486084
+aF1.2089498043060303
+aF1.2096989154815674
+aF1.2104098796844482
+aF1.2257158756256104
+aF1.2325339317321777
+aF1.2332589626312256
+aF1.2340149879455566
+aF1.2347278594970703
+aF1.2354388236999512
+aF1.2547898292541504
+aF1.2555408477783203
+aF1.2562768459320068
+aF1.2569928169250488
+aF1.257694959640503
+aF1.3105978965759277
+aF1.3113079071044922
+aF1.3120248317718506
+aF1.3127598762512207
+aF1.3135027885437012
+aF1.3347959518432617
+aF1.3490278720855713
+aF1.349782943725586
+aF1.3529129028320312
+aF1.3537399768829346
+aF1.3886590003967285
+aF1.4031338691711426
+aF1.4039239883422852
+aF1.4047048091888428
+aF1.409193992614746
+aF1.4161019325256348
+aF1.4169337749481201
+aF1.4177827835083008
+aF1.4201419353485107
+aF1.4209527969360352
+aF1.455918788909912
+aF1.457446813583374
+aF1.4582509994506836
+aF1.459049940109253
+aF1.4600419998168945
+aF1.491048812866211
+aF1.5060718059539795
+aF1.5078017711639404
+aF1.5087299346923828
+aF1.5114867687225342
+aF1.5243988037109375
+aF1.5316989421844482
+aF1.5324819087982178
+aF1.5332529544830322
+aF1.5420598983764648
+aF1.5510897636413574
+aF1.5706298351287842
+aF1.5718138217926025
+aF1.576117992401123
+aF1.5769259929656982
+aF1.583939790725708
+aF1.6170198917388916
+aF1.617884874343872
+aF1.6186349391937256
+aF1.6194548606872559
+aF1.6277658939361572
+aF1.6406748294830322
+aF1.649101972579956
+aF1.6499078273773193
+aF1.6507349014282227
+aF1.6839327812194824
+aF1.7001259326934814
+aF1.7570388317108154
+aF1.7579259872436523
+aF1.7588179111480713
+aF1.7681148052215576
+aF1.7704119682312012
+aF1.7810158729553223
+aF1.7818539142608643
+aF1.7826838493347168
+aF1.806736946105957
+aF1.807572841644287
+aF1.8084027767181396
+aF1.8092279434204102
+aF1.8100559711456299
+aF1.8424439430236816
+aF1.8690989017486572
+aF1.8699309825897217
+aF1.8707709312438965
+aF1.8716118335723877
+aF1.889211893081665
+aF1.8901119232177734
+aF1.890990972518921
+aF1.8917667865753174
+aF1.892657995223999
+aF1.9189097881317139
+aF1.9198169708251953
+aF1.920719861984253
+aF1.9216058254241943
+aF1.9223108291625977
+aF1.9474518299102783
+aF1.9731237888336182
+aF1.974017858505249
+aF1.9749219417572021
+aF1.9849519729614258
+aF1.999762773513794
+aF2.000687837600708
+aF2.0015909671783447
+aF2.0024948120117188
+aF2.0034048557281494
+aF2.0266709327697754
+aF2.0571579933166504
+aF2.058015823364258
+aF2.058907985687256
+aF2.0597078800201416
+aF2.0712339878082275
+aF2.0954928398132324
+aF2.0964889526367188
+aF2.0974018573760986
+aF2.0981807708740234
+aF2.140798807144165
+aF2.141741991043091
+aF2.1426708698272705
+aF2.1435928344726562
+aF2.1445298194885254
+aF2.178910970687866
+aF2.1798298358917236
+aF2.1807329654693604
+aF2.181612968444824
+aF2.182497978210449
+aF2.202514886856079
+aF2.2291388511657715
+aF2.2300329208374023
+aF2.230966806411743
+aF2.2318708896636963
+aF2.287447929382324
+aF2.341132879257202
+aF2.349094867706299
+aF2.350022792816162
+aF2.350949764251709
+aF2.378243923187256
+aF2.3791728019714355
+aF2.4050698280334473
+aF2.405986785888672
+aF2.406888961791992
+aF2.4470129013061523
+aF2.4852099418640137
+aF2.4861347675323486
+aF2.4870998859405518
+aF2.488036870956421
+aF2.5202579498291016
+aF2.539996862411499
+aF2.5409839153289795
+aF2.541958808898926
+aF2.5428268909454346
+aF2.5558807849884033
+aF2.5771799087524414
+aF2.5932068824768066
+aF2.5941669940948486
+aF2.5951359272003174
+aF2.619358777999878
+aF2.6338179111480713
+aF2.634774923324585
+aF2.6357758045196533
+aF2.636960983276367
+aF2.674360990524292
+aF2.693154811859131
+aF2.6941399574279785
+aF2.6951208114624023
+aF2.6961047649383545
+aF2.725371837615967
+aF2.753236770629883
+aF2.754173994064331
+aF2.7551639080047607
+aF2.756103992462158
+aF2.7773168087005615
+aF2.7783138751983643
+aF2.779313802719116
+aF2.8043577671051025
+aF2.813194990158081
+aF2.8263869285583496
+aF2.8620269298553467
+aF2.8639349937438965
+aF2.865196943283081
+aF2.8669209480285645
+aF2.8927719593048096
+aF2.9172868728637695
+aF2.918329954147339
+aF2.953237771987915
+aF2.9543888568878174
+aF3.020620822906494
+aF3.021669864654541
+aF3.022706985473633
+aF3.0237479209899902
+aF3.0246307849884033
+aF3.070420980453491
+aF3.0714969635009766
+aF3.1008718013763428
+aF3.101803779602051
+aF3.102719783782959
+aF3.155695915222168
+aF3.1637017726898193
+aF3.176353931427002
+aF3.177449941635132
+aF3.1785178184509277
+aF3.2407469749450684
+aF3.2417798042297363
+aF3.2427849769592285
+aF3.243710994720459
+aF3.2445127964019775
+aF3.2984368801116943
+aF3.299536943435669
+aF3.300569772720337
+aF3.3015809059143066
+aF3.3026068210601807
+aF3.3411598205566406
+aF3.3693459033966064
+aF3.3704278469085693
+aF3.3714098930358887
+aF3.3724029064178467
+aF3.407531976699829
+aF3.413569927215576
+aF3.414658784866333
+aF3.4413177967071533
+aF3.442340850830078
+aF3.4781839847564697
+aF3.4792017936706543
+aF3.4802207946777344
+aF3.4812538623809814
+aF3.482217788696289
+aF3.5361099243164062
+aF3.5573267936706543
+aF3.5584359169006348
+aF3.5595510005950928
+aF3.5606777667999268
+aF3.600665807723999
+aF3.6294009685516357
+aF3.630527973175049
+aF3.6316468715667725
+aF3.6327857971191406
+aF3.6639649868011475
+aF3.6650378704071045
+aF3.6660749912261963
+aF3.6671128273010254
+aF3.6681389808654785
+aF3.7327029705047607
+aF3.7337839603424072
+aF3.734855890274048
+aF3.73591685295105
+aF3.7369918823242188
+aF3.7720229625701904
+aF3.8212039470672607
+aF3.8453288078308105
+aF3.846385955810547
+aF3.8474228382110596
+aF3.8673369884490967
+aF3.868445873260498
+aF3.8695499897003174
+aF3.8706297874450684
+aF3.871687889099121
+aF3.923898935317993
+aF3.9411277770996094
+aF3.942161798477173
+aF3.943288803100586
+aF3.9444258213043213
+aF4.004187822341919
+aF4.012059926986694
+aF4.013161897659302
+aF4.014258861541748
+aF4.021297931671143
+aF4.055005788803101
+aF4.056107997894287
+aF4.0572509765625
+aF4.05837082862854
+aF4.059484958648682
+aF4.092789888381958
+aF4.093906879425049
+aF4.095010995864868
+aF4.096114873886108
+aF4.09720778465271
+aF4.158559799194336
+aF4.1597559452056885
+aF4.160883903503418
+aF4.161981821060181
+aF4.163080930709839
+aF4.204470872879028
+aF4.20560884475708
+aF4.206728935241699
+aF4.207867860794067
+aF4.20914888381958
+aF4.241987943649292
+aF4.2689528465271
+aF4.270143985748291
+aF4.271356821060181
+aF4.290940999984741
+aF4.346143960952759
+aF4.3538429737091064
+aF4.3550708293914795
+aF4.356299877166748
+aF4.357520818710327
+aF4.417609930038452
+aF4.418808937072754
+aF4.420007944107056
+aF4.421149969100952
+aF4.4223058223724365
+aF4.519945859909058
+aF4.549677848815918
+aF4.551246881484985
+aF4.617360830307007
+aF4.618553876876831
+aF4.685428857803345
+aF4.6866278648376465
+aF4.687839984893799
+aF4.727487802505493
+aF4.762561798095703
+aF4.80358099937439
+aF4.809528827667236
+aF4.810779809951782
+aF4.817184925079346
+aF4.818458795547485
+aF4.857703924179077
+aF4.8589088916778564
+aF4.860093832015991
+aF4.861294984817505
+aF4.878321886062622
+aF4.938974857330322
+aF4.949755907058716
+aF4.953442811965942
+aF4.954733848571777
+aF4.965649843215942
+aF5.028930902481079
+aF5.0315728187561035
+aF5.03469181060791
+aF5.038789987564087
+aF5.042285919189453
+aF5.080182790756226
+aF5.08161187171936
+aF5.083053827285767
+aF5.0976479053497314
+aF5.117588996887207
+aF5.169320821762085
+aF5.185719966888428
+aF5.187173843383789
+aF5.188641786575317
+aF5.190256834030151
+aF5.2269909381866455
+aF5.233634948730469
+aF5.235084772109985
+aF5.236504793167114
+aF5.261629819869995
+aF5.290539979934692
+aF5.298541784286499
+aF5.303863763809204
+aF5.353505849838257
+aF5.354758977890015
+aF5.41608190536499
+aF5.4173619747161865
+aF5.4185779094696045
+aF5.4198198318481445
+aF5.421060800552368
+aF5.486445903778076
+aF5.4877259731292725
+aF5.488993883132935
+aF5.4902589321136475
+aF5.491519927978516
+aF5.554433822631836
+aF5.555685997009277
+aF5.556955814361572
+aF5.558218955993652
+aF5.559468984603882
+aF5.63399076461792
+aF5.665522813796997
+aF5.666776895523071
+aF5.681444883346558
+aF5.682708978652954
+aF5.705599784851074
+aF5.706853866577148
+aF5.708188772201538
+aF5.709437847137451
+aF5.710768938064575
+aF5.778233766555786
+aF5.779550790786743
+aF5.780880928039551
+aF5.782196998596191
+aF5.783505916595459
+aF5.878026962280273
+aF5.888092994689941
+aF5.899715900421143
+aF5.900973796844482
+aF5.902296781539917
+aF5.958119869232178
+aF5.981558799743652
+aF5.982845783233643
+aF5.984153985977173
+aF5.985471963882446
+aF6.05948281288147
+aF6.0808868408203125
+aF6.082196950912476
+aF6.083516836166382
+aF6.08951997756958
+aF6.1927268505096436
+aF6.194041967391968
+aF6.195349931716919
+aF6.212815999984741
+aF6.214212894439697
+aF6.2687828540802
+aF6.270150899887085
+aF6.27151894569397
+aF6.272917985916138
+aF6.309475898742676
+aF6.404677867889404
+aF6.406043767929077
+aF6.407437801361084
+aF6.421115875244141
+aF6.465482950210571
+aF6.551554918289185
+aF6.5530149936676025
+aF6.5544328689575195
+aF6.555871963500977
+aF6.573126792907715
+aF6.644374847412109
+aF6.645773887634277
+aF6.6684019565582275
+aF6.669778823852539
+aF6.67087197303772
+aF6.748645782470703
+aF6.795553922653198
+aF6.79724383354187
+aF6.798619985580444
+aF6.8092029094696045
+aF6.900869846343994
+aF6.902180910110474
+aF6.903401851654053
+aF6.925478935241699
+aF6.926694869995117
+aF7.017248868942261
+aF7.018704891204834
+aF7.040165901184082
+aF7.041709899902344
+aF7.043152809143066
+aF7.106940984725952
+aF7.161669969558716
+aF7.163176774978638
+aF7.16510796546936
+aF7.189586877822876
+aF7.241601943969727
+aF7.271455764770508
+aF7.274490833282471
+aF7.276571989059448
+aF7.2783589363098145
+aF7.323845863342285
+aF7.32581090927124
+aF7.327358961105347
+aF7.329031944274902
+aF7.3544838428497314
+aF7.425350904464722
+aF7.431497812271118
+aF7.432898998260498
+aF7.484280824661255
+aF7.485710859298706
+aF7.546190977096558
+aF7.547644853591919
+aF7.549070835113525
+aF7.577648878097534
+aF7.579077959060669
+aF7.671955823898315
+aF7.685734987258911
+aF7.687183856964111
+aF7.688607931137085
+aF7.721649885177612
+aF7.804239988327026
+aF7.829713821411133
+aF7.8311779499053955
+aF7.832647800445557
+aF7.834117889404297
+aF7.923994779586792
+aF7.949620962142944
+aF7.9510719776153564
+aF7.9525229930877686
+aF7.953985929489136
+aF8.076623916625977
+aF8.07787799835205
+aF8.079112768173218
+aF8.11775279045105
+aF8.11920690536499
+aF8.20665693283081
+aF8.223155975341797
+aF8.224767923355103
+aF8.226271867752075
+aF8.227816820144653
+aF8.283650875091553
+aF8.305317878723145
+aF8.320586919784546
+aF8.32564091682434
+aF8.33088493347168
+aF8.431856870651245
+aF8.46984577178955
+aF8.471393823623657
+aF8.472959995269775
+aF8.474474906921387
+aF8.571510791778564
+aF8.597689867019653
+aF8.599145889282227
+aF8.606193780899048
+aF8.607724905014038
+aF8.67069697380066
+aF8.67219090461731
+aF8.673672914505005
+aF8.67525577545166
+aF8.676742792129517
+aF8.73944091796875
+aF8.765069961547852
+aF8.766611814498901
+aF8.76811695098877
+aF8.769643783569336
+aF8.873853921890259
+aF8.889732837677002
+aF8.90927791595459
+aF8.917751789093018
+aF8.919302940368652
+aF9.00181794166565
+aF9.01828384399414
+aF9.019818782806396
+aF9.021393775939941
+aF9.022956848144531
+aF9.09401798248291
+aF9.143558979034424
+aF9.14511489868164
+aF9.146653890609741
+aF9.205777883529663
+aF9.30806279182434
+aF9.333770990371704
+aF9.33538293838501
+aF9.336994886398315
+aF9.338604927062988
+aF9.48842191696167
+aF9.489859819412231
+aF9.491257905960083
+aF9.506886959075928
+aF9.50846791267395
+aF9.640695810317993
+aF9.642337799072266
+aF9.643962860107422
+aF9.664857864379883
+aF9.674691915512085
+aF9.765721797943115
+aF9.767305850982666
+aF9.789029836654663
+aF9.790597915649414
+aF9.79218578338623
+aF9.917924880981445
+aF9.929799795150757
+aF9.93136477470398
+aF9.932963848114014
+aF9.949824810028076
+aF10.003809928894043
+aF10.005443811416626
+aF10.007079839706421
+aF10.008688926696777
+aF10.010289907455444
+aF10.0466787815094
+aF10.048281908035278
+aF10.049933910369873
+aF10.05159592628479
+aF10.05324387550354
+aF10.172631978988647
+aF10.174299955368042
+aF10.175967931747437
+aF10.177625894546509
+aF10.179272890090942
+aF10.275215864181519
+aF10.276813983917236
+aF10.278440952301025
+aF10.280114889144897
+aF10.317991971969604
+aF10.430574893951416
+aF10.432268857955933
+aF10.433838844299316
+aF10.435430765151978
+aF10.437081813812256
+aF10.578573942184448
+aF10.580233812332153
+aF10.581877946853638
+aF10.583526849746704
+aF10.609264850616455
+aF10.752266883850098
+aF10.789917945861816
+aF10.791539907455444
+aF10.793198823928833
+aF10.825859785079956
+aF10.88937783241272
+aF10.933867931365967
+aF10.935495853424072
+aF10.937112808227539
+aF10.938708782196045
+aF11.065298795700073
+aF11.067042827606201
+aF11.068758964538574
+aF11.070368766784668
+aF11.071975946426392
+aF11.211493968963623
+aF11.237937927246094
+aF11.239593982696533
+aF11.249360799789429
+aF11.250993967056274
+aF11.348022937774658
+aF11.3541898727417
+aF11.355910778045654
+aF11.35764193534851
+aF11.359359979629517
+aF11.45181679725647
+aF11.481941938400269
+aF11.483633995056152
+aF11.485410928726196
+aF11.48715591430664
+aF11.59197998046875
+aF11.617932796478271
+aF11.619603872299194
+aF11.6212739944458
+aF11.6229088306427
+aF11.707005977630615
+aF11.764755964279175
+aF11.783676862716675
+aF11.785364866256714
+aF11.787107944488525
+aF11.88923192024231
+aF11.91389799118042
+aF11.915546894073486
+aF11.917194843292236
+aF11.918844938278198
+aF12.028393983840942
+aF12.033113956451416
+aF12.039332866668701
+aF12.043588876724243
+aF12.048367977142334
+aF12.136062860488892
+aF12.14664077758789
+aF12.150574922561646
+aF12.156046867370605
+aF12.166366815567017
+aF12.264120817184448
+aF12.273829936981201
+aF12.275588989257812
+aF12.277342796325684
+aF12.278769969940186
+aF12.386794805526733
+aF12.412942886352539
+aF12.414698839187622
+aF12.416380882263184
+aF12.417947769165039
+aF12.486355781555176
+aF12.506091833114624
+aF12.50787878036499
+aF12.509663820266724
+aF12.511436939239502
+aF12.659952878952026
+aasS'best_arm_value'
+p3016
+g6
+(g10
+S'b\xc6\xae\x8bV/r\xc0'
+p3017
+tp3018
+Rp3019
+s.
