@@ -110,12 +110,12 @@ def stosoo(dummy):
         best_arm_true_y = get_objective_function(best_arm_x_value)
         evaled_x.append(best_arm_x_value)
         evaled_y.append(best_arm_true_y)
-
         max_y.append(np.max(evaled_y))
+
         times.append(time.time()-stime)
 
     print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, best_arm_true_y
+    return evaled_x, evaled_y, max_y, times, max_y[-1]
 
 
 def stounif(explr_p):
@@ -142,7 +142,7 @@ def stounif(explr_p):
         times.append(time.time()-stime)
 
     print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, best_arm_true_y
+    return evaled_x, evaled_y, max_y, times, max_y[-1]
 
 
 def stovoo(explr_p):
@@ -172,7 +172,7 @@ def stovoo(explr_p):
         times.append(time.time()-stime)
 
     print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, best_arm_true_y
+    return evaled_x, evaled_y, max_y, times, max_y[-1]
 
 
 def random_search(epsilon):
