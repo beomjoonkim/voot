@@ -50,7 +50,6 @@ class StoVOO(VOO):
         best_arm = self.arms[0]
         for arm in self.arms:
             ucb_value = self.ucb_upperbound(arm)
-            import pdb;pdb.set_trace()
             if ucb_value > best_value:
                 best_arm = arm
                 best_value = ucb_value
