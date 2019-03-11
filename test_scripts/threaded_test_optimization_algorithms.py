@@ -37,6 +37,7 @@ def worker_wrapper_multi_input(multi_args):
 
 
 def main():
+    # python test_scripts/threaded_test_optimization_algorithms.py stovoo 10 1000 0,20 griewank 1 100,200,300,400,500,1000,5000 2,3,4,10,20,30,100 10,20,30,100
     algo_name = sys.argv[1]
     dim = int(sys.argv[2])
     n_iter = sys.argv[3]

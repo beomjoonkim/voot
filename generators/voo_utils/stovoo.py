@@ -66,12 +66,11 @@ class StoVOO(VOO):
             evaled_y = [a.expected_value for a in self.arms]
             x = self.sample_next_point(evaled_x, evaled_y)
             x = BanditArm(x)
-
-        self.n_evaluations += 1
         return x
 
     def update_evaluated_arms(self, evaluated_arm, new_reward):
         evaluated_arm.update_value(new_reward)
+        self.n_evaluations += 1
         if not(evaluated_arm in self.arms):
             self.arms.append(evaluated_arm)
 

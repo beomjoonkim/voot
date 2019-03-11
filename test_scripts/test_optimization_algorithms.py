@@ -9,6 +9,7 @@ from generators.voo_utils.stovoo import StoVOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.soo_utils.soo_tree import BinarySOOTree
 from generators.soo_utils.stosoo import BinaryStoSOOTree
+from generators.stounif_utils.stounif import StoUniform
 
 
 import pickle
@@ -28,7 +29,7 @@ parser.add_argument('-obj_fcn', type=str, default='ackley')
 parser.add_argument('-dim_x', type=int, default=20)
 parser.add_argument('-n_fcn_evals', type=int, default=500)
 parser.add_argument('-stochastic_objective', action='store_true', default=False)
-parser.add_argument('-function_noise', type=float, default=200.0)
+parser.add_argument('-function_noise', type=float, default=10.0)
 args = parser.parse_args()
 
 problem_idx = args.problem_idx
@@ -129,6 +130,40 @@ def voo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
+def evaluate_stochastic_objective_function(x_value):
+    y = get_objective_function(x_value)
+    noisy_y = y + np.random.normal(0, noise)
+
+    return y, noisy_y
+
+
+def stounif(explr_p):
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    stounif = StoUniform(domain, ucb_parameter, widening_parameter)
+    times = []
+
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        evaled_arm = stounif.choose_next_point(evaled_x, evaled_y)
+        y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
+        stounif.update_evaluated_arms(evaled_arm, noisy_y)
+
+        evaled_x.append(evaled_arm.x_value)
+        evaled_y.append(y)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time()-stime)
+
+    arm_with_highest_expected_value = stounif.arms[np.argmax([a.expected_value for a in stounif.arms])]
+    best_arm_x_value = arm_with_highest_expected_value.x_value
+    best_arm_true_y = get_objective_function(best_arm_x_value)
+
+    print "Max value found", np.max(evaled_y)
+    return evaled_x, evaled_y, max_y, times, best_arm_true_y
+
+
+
 def stovoo(explr_p):
     evaled_x = []
     evaled_y = []
@@ -142,11 +177,9 @@ def stovoo(explr_p):
         if i > 0:
             print 'max value is ', np.max(evaled_y)
         evaled_arm = stovoo.choose_next_point(evaled_x, evaled_y)
-        y = get_objective_function(evaled_arm.x_value)
-        noise_y = y + np.random.normal(0, noise)
-        stovoo.update_evaluated_arms(evaled_arm, noise_y)
+        y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
+        stovoo.update_evaluated_arms(evaled_arm, noisy_y)
 
-        # todo what should I record? The expected values?
         evaled_x.append(evaled_arm.x_value)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
@@ -247,14 +280,13 @@ def stosoo(dummy):
         next_node = stosoo_tree.get_next_point_and_node_to_evaluate()
         x_to_evaluate = next_node.cell_mid_point
         next_node.evaluated_x = x_to_evaluate
-        fval = get_objective_function(x_to_evaluate)
-        stosoo_tree.expand_node(fval, next_node)
+        y, noisy_y = evaluate_stochastic_objective_function(x_to_evaluate)
+        stosoo_tree.expand_node(noisy_y, next_node)
 
         evaled_x.append(x_to_evaluate)
-        evaled_y.append(fval)
+        evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
-        print x_to_evaluate, fval
 
     arm_with_highest_expected_value = stosoo_tree.get_best_node()
     best_arm_x_value = arm_with_highest_expected_value.cell_mid_point
@@ -288,7 +320,6 @@ def get_exploration_parameters(algorithm):
 
 
 def main():
-    hostname = socket.gethostname()
     if stochastic_objective:
         save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + \
                    '/dim_' + str(dim_x) + '/' +  \
@@ -304,7 +335,7 @@ def main():
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
-        #return
+        return
 
     if stochastic_objective:
         if algo_name == 'uniform':

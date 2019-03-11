@@ -108,14 +108,19 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='parameters')
     parser.add_argument('-algo_name', type=str, default='voo')
-    parser.add_argument('-obj_fcn', type=str, default='ackley')
+    parser.add_argument('-obj_fcn', type=str, default='griewank')
     parser.add_argument('-n_dim', type=int, default=10)
     parser.add_argument('-function_noise', type=float, default=200.0)
     args = parser.parse_args()
 
     algo_names = ['stovoo', 'stosoo']
-    algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 2},
-                       'stosoo': {'ucb': 1.0, 'widening': 1}}
+    if args.obj_fcn == 'ackley':
+        algo_parameters = {'stovoo': {'ucb': 200.0, 'widening': 10},
+                           'stosoo': {'ucb': 1.0, 'widening': 1}}
+    elif args.obj_fcn == 'griewank':
+        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 30},
+                           'stosoo': {'ucb': 1.0, 'widening': 1}}
+
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -132,7 +137,7 @@ def plot_across_algorithms():
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo_name.upper(),
                    color=color_dict[color_names[algo_idx]])
 
-        print np.mean(search_rwd_times,axis=0)[-1]
+        print algo_name, np.mean(search_rwd_times,axis=0)[-1]
     plt.show()
     import pdb;pdb.set_trace()
 
