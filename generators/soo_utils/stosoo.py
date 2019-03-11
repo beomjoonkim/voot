@@ -132,9 +132,8 @@ class BinaryStoSOOTree(BinarySOOTree):
         if node not in self.nodes:
             self.nodes.append(node)
 
-        print 'n_evaluations %d, and widening parameter %d' % (node.n_evaluations, self.widening_parameter)
         if node.n_evaluations >= self.widening_parameter:
-            print 'n_evals reached limit, adding children and initializing their values'
+
             self.add_left_child(parent_node=node)
             self.add_right_child(parent_node=node)
             not_root_node = node.parent is not None

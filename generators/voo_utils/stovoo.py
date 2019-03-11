@@ -50,13 +50,14 @@ class StoVOO(VOO):
         best_arm = self.arms[0]
         for arm in self.arms:
             ucb_value = self.ucb_upperbound(arm)
+            import pdb;pdb.set_trace()
             if ucb_value > best_value:
                 best_arm = arm
                 best_value = ucb_value
 
         return best_arm
 
-    def choose_next_point(self, dummy, dummy2):
+    def choose_next_point(self):
         if self.is_ucb_step():
             print "Evaluating existing point using UCB"
             x = self.perform_ucb()

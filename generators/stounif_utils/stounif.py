@@ -35,7 +35,7 @@ class StoUniform:
         x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
         return x
 
-    def choose_next_point(self, dummy, dummy2):
+    def choose_next_point(self):
         print "Evaluating a new point"
         x = self.sample_next_point()
         x = BanditArm(x)

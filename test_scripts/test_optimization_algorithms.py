@@ -16,7 +16,6 @@ import pickle
 import time
 import sys
 import os
-import socket
 import argparse
 import numpy as np
 
@@ -80,61 +79,43 @@ def get_objective_function(sol):
         sys.exit(-1)
 
 
-def gpucb(explr_p, save_dir):
-    gp = StandardContinuousGP(dim_x)
-    acq_fcn = UCB(zeta=explr_p, gp=gp)
-    gp_format_domain = Domain(0, domain)
-    gp_optimizer = BO(gp, acq_fcn, gp_format_domain)  # note: this minimizes the negative acq_fcn
-
-    evaled_x = []
-    evaled_y = []
-    max_y = []
-    times = []
-    stime = time.time()
-    for i in range(n_fcn_evals):
-        print 'gp iteration ', i
-        x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
-        y = get_objective_function(x)
-        evaled_x.append(x)
-        evaled_y.append(y)
-        max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
-
-        pickle.dump({'epsilon':[explr_p], 'max_ys': [max_y]},
-                    open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
-
-    return evaled_x, evaled_y, max_y, times
-
-
-def voo(explr_p):
-    evaled_x = []
-    evaled_y = []
-    max_y = []
-    voo = VOO(domain, explr_p)
-    times = []
-    stime = time.time()
-
-    for i in range(n_fcn_evals):
-        print "%d / %d" % (i, n_fcn_evals)
-        if i > 0:
-            print 'max value is ', np.max(evaled_y)
-        x = voo.choose_next_point(evaled_x, evaled_y)
-        if len(x.shape) == 0:
-            x = np.array([x])
-        y = get_objective_function(x)
-        evaled_x.append(x)
-        evaled_y.append(y)
-        max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
-    print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times
-
-
 def evaluate_stochastic_objective_function(x_value):
     y = get_objective_function(x_value)
     noisy_y = y + np.random.normal(0, noise)
 
     return y, noisy_y
+
+
+def stosoo(dummy):
+    n_total_evals = args.n_fcn_evals
+    delta = 1/np.sqrt(n_total_evals)
+    k = int(n_total_evals / np.power(np.log(n_total_evals), 3))
+    stosoo_tree = BinaryStoSOOTree(delta, k, n_total_evals, domain)
+
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    times = []
+
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        next_node = stosoo_tree.get_next_point_and_node_to_evaluate()
+        x_to_evaluate = next_node.cell_mid_point
+        next_node.evaluated_x = x_to_evaluate
+        y, noisy_y = evaluate_stochastic_objective_function(x_to_evaluate)
+        stosoo_tree.expand_node(noisy_y, next_node)
+
+        arm_with_highest_expected_value = stosoo_tree.get_best_node()
+        best_arm_x_value = arm_with_highest_expected_value.cell_mid_point
+        best_arm_true_y = get_objective_function(best_arm_x_value)
+        evaled_x.append(best_arm_x_value)
+        evaled_y.append(best_arm_true_y)
+
+        max_y.append(np.max(evaled_y))
+        times.append(time.time()-stime)
+
+    print "Max value found", np.max(evaled_y)
+    return evaled_x, evaled_y, max_y, times, best_arm_true_y
 
 
 def stounif(explr_p):
@@ -146,22 +127,22 @@ def stounif(explr_p):
 
     stime = time.time()
     for i in range(n_fcn_evals):
-        evaled_arm = stounif.choose_next_point(evaled_x, evaled_y)
+        evaled_arm = stounif.choose_next_point()
         y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
         stounif.update_evaluated_arms(evaled_arm, noisy_y)
 
-        evaled_x.append(evaled_arm.x_value)
-        evaled_y.append(y)
+        # act as if we terminated now with i number of iterations
+        arm_with_highest_expected_value = stounif.arms[np.argmax([a.expected_value for a in stounif.arms])]
+        best_arm_x_value = arm_with_highest_expected_value.x_value
+        best_arm_true_y = get_objective_function(best_arm_x_value)
+        evaled_x.append(best_arm_x_value)
+        evaled_y.append(best_arm_true_y)
         max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
 
-    arm_with_highest_expected_value = stounif.arms[np.argmax([a.expected_value for a in stounif.arms])]
-    best_arm_x_value = arm_with_highest_expected_value.x_value
-    best_arm_true_y = get_objective_function(best_arm_x_value)
+        times.append(time.time()-stime)
 
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times, best_arm_true_y
-
 
 
 def stovoo(explr_p):
@@ -176,18 +157,19 @@ def stovoo(explr_p):
         print "%d / %d" % (i, n_fcn_evals)
         if i > 0:
             print 'max value is ', np.max(evaled_y)
-        evaled_arm = stovoo.choose_next_point(evaled_x, evaled_y)
+        evaled_arm = stovoo.choose_next_point()
         y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
         stovoo.update_evaluated_arms(evaled_arm, noisy_y)
 
-        evaled_x.append(evaled_arm.x_value)
-        evaled_y.append(y)
+        # act as if we terminated now with i number of iterations
+        arm_with_highest_expected_value = stovoo.arms[np.argmax([a.expected_value for a in stovoo.arms])]
+        best_arm_x_value = arm_with_highest_expected_value.x_value
+        best_arm_true_y = get_objective_function(best_arm_x_value)
+        evaled_x.append(best_arm_x_value)
+        evaled_y.append(best_arm_true_y)
         max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
 
-    arm_with_highest_expected_value = stovoo.arms[np.argmax([a.expected_value for a in stovoo.arms])]
-    best_arm_x_value = arm_with_highest_expected_value.x_value
-    best_arm_true_y = get_objective_function(best_arm_x_value)
+        times.append(time.time()-stime)
 
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times, best_arm_true_y
@@ -264,36 +246,54 @@ def soo(dummy):
     return evaled_x, evaled_y, max_y, times
 
 
-def stosoo(dummy):
-    n_total_evals = args.n_fcn_evals
-    delta = 1/np.sqrt(n_total_evals)
-    k = int(n_total_evals / np.power(np.log(n_total_evals), 3))
-    stosoo_tree = BinaryStoSOOTree(delta, k, n_total_evals, domain)
+
+def gpucb(explr_p, save_dir):
+    gp = StandardContinuousGP(dim_x)
+    acq_fcn = UCB(zeta=explr_p, gp=gp)
+    gp_format_domain = Domain(0, domain)
+    gp_optimizer = BO(gp, acq_fcn, gp_format_domain)  # note: this minimizes the negative acq_fcn
 
     evaled_x = []
     evaled_y = []
     max_y = []
     times = []
-
     stime = time.time()
     for i in range(n_fcn_evals):
-        next_node = stosoo_tree.get_next_point_and_node_to_evaluate()
-        x_to_evaluate = next_node.cell_mid_point
-        next_node.evaluated_x = x_to_evaluate
-        y, noisy_y = evaluate_stochastic_objective_function(x_to_evaluate)
-        stosoo_tree.expand_node(noisy_y, next_node)
-
-        evaled_x.append(x_to_evaluate)
+        print 'gp iteration ', i
+        x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
+        y = get_objective_function(x)
+        evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
 
-    arm_with_highest_expected_value = stosoo_tree.get_best_node()
-    best_arm_x_value = arm_with_highest_expected_value.cell_mid_point
-    best_arm_true_y = get_objective_function(best_arm_x_value)
+        pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
+                    open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
 
+    return evaled_x, evaled_y, max_y, times
+
+def voo(explr_p):
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    voo = VOO(domain, explr_p)
+    times = []
+    stime = time.time()
+
+    for i in range(n_fcn_evals):
+        print "%d / %d" % (i, n_fcn_evals)
+        if i > 0:
+            print 'max value is ', np.max(evaled_y)
+        x = voo.choose_next_point(evaled_x, evaled_y)
+        if len(x.shape) == 0:
+            x = np.array([x])
+        y = get_objective_function(x)
+        evaled_x.append(x)
+        evaled_y.append(y)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time()-stime)
     print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, best_arm_true_y
+    return evaled_x, evaled_y, max_y, times
 
 
 def get_exploration_parameters(algorithm):
@@ -344,6 +344,8 @@ def main():
             algorithm = stosoo
         elif algo_name == 'stovoo':
             algorithm = stovoo
+        elif algo_name == 'stounif':
+            algorithm = stounif
         else:
             raise NotImplementedError
     else:
