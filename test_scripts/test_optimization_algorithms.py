@@ -318,6 +318,8 @@ def get_exploration_parameters(algorithm):
                 epsilons = [1]
         else:
             epsilons = [1, 0.1, 5, 10, 30]
+    elif algorithm.__name__.find('soo') != -1:
+        epsilons = [0]
     else:
         raise NotImplementedError
 
