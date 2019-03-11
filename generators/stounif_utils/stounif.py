@@ -15,9 +15,12 @@ class BanditArm:
         self.expected_value = self.sum_rewards / float(self.n_visited)
 
 
-class StoVOO(VOO):
-    def __init__(self, domain, ucb_parameter, widening_parameter, explr_p, distance_fn = None):
-        VOO.__init__(self, domain, explr_p, distance_fn)
+class StoUniform:
+    def __init__(self, domain, ucb_parameter, widening_parameter):
+        self.domain = domain
+        self.ucb_parameter = ucb_parameter
+        self.widening_parameter = widening_parameter
+
         self.n_ucb_iterations = 0
         self.arms = []
         self.n_evaluations = 0
@@ -26,18 +29,14 @@ class StoVOO(VOO):
 
     def is_ucb_step(self):
         n_arms = len(self.arms)
-        # todo I think this parameter should increase with the number of arms;
-        # todo I also think you should begin with a set of values
-
         if n_arms < 10:
             return False
         else:
-            if self.n_ucb_iterations < self.widening_parameter: #/ float(self.n_evaluations):
+            if self.n_ucb_iterations < self.widening_parameter:
                 print "UCB iteration"
                 self.n_ucb_iterations += 1
                 return True
             else:
-                print "VOO iteration"
                 self.n_ucb_iterations = 0
                 return False
 
@@ -54,7 +53,17 @@ class StoVOO(VOO):
                 best_arm = arm
                 best_value = ucb_value
 
+        import pdb;pdb.set_trace()
+
         return best_arm
+
+    def sample_next_point(self):
+        dim_parameters = self.domain.shape[-1]
+        domain_min = self.domain[0]
+        domain_max = self.domain[1]
+
+        x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
+        return x
 
     def choose_next_point(self, dummy, dummy2):
         if self.is_ucb_step():
@@ -62,15 +71,15 @@ class StoVOO(VOO):
             x = self.perform_ucb()
         else:
             print "Evaluating a new point"
-            evaled_x = [a.x_value for a in self.arms]
-            evaled_y = [a.expected_value for a in self.arms]
-            x = self.sample_next_point(evaled_x, evaled_y)
+            x = self.sample_next_point()
             x = BanditArm(x)
+
         return x
 
     def update_evaluated_arms(self, evaluated_arm, new_reward):
-        evaluated_arm.update_value(new_reward)
         self.n_evaluations += 1
+        evaluated_arm.update_value(new_reward)
+        import pdb;pdb.set_trace()
         if not(evaluated_arm in self.arms):
             self.arms.append(evaluated_arm)
 
