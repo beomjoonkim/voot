@@ -289,23 +289,15 @@ def get_exploration_parameters(algorithm):
 
 def main():
     hostname = socket.gethostname()
-    if hostname == 'dell-XPS-15-9560' or hostname == 'phaedra':
-        if stochastic_objective:
-            save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + \
-                       '/dim_' + str(dim_x) + '/' +  \
-                       '/noise_' + str(noise) + '/' + \
-                       algo_name + '/' +\
-                       '/ucb_' + str(ucb_parameter) + \
-                       '/widening_'+str(widening_parameter)
-        else:
-            save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+    if stochastic_objective:
+        save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + \
+                   '/dim_' + str(dim_x) + '/' +  \
+                   '/noise_' + str(noise) + '/' + \
+                   algo_name + '/' +\
+                   '/ucb_' + str(ucb_parameter) + \
+                   '/widening_'+str(widening_parameter)
     else:
-        if stochastic_objective:
-            save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + '/ucb_' + str(ucb_parameter) + \
-                       '/widening_' + str(widening_parameter) + '/dim_' + str(dim_x) + '/' + algo_name + '/'
-        else:
-            save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + \
-                       obj_fcn + '/dim_' + str(dim_x) + '/' + algo_name+'/'
+        save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
 
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)

@@ -114,7 +114,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['stovoo', 'stosoo']
-    algo_parameters = {'stovoo': {'ucb': 5000.0, 'widening': 2},
+    algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 2},
                        'stosoo': {'ucb': 1.0, 'widening': 1}}
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
