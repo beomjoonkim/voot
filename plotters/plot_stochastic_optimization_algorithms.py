@@ -112,14 +112,22 @@ def plot_across_algorithms():
     parser.add_argument('-function_noise', type=float, default=200.0)
     args = parser.parse_args()
 
-    algo_names = ['stovoo', 'stosoo', 'stounif']
+    algo_names = ['stovoo',  'stounif']
     if args.obj_fcn == 'ackley':
         if args.function_noise == 30:
-            algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 4},
+            algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 2},
+                               'stosoo': {'ucb': 1.0, 'widening': 1},
+                               'stounif': {'ucb': 1.0, 'widening': 1}}
+        elif args.function_noise == 0:
+            algo_parameters = {'stovoo': {'ucb': 1.0, 'widening': 1},
                                'stosoo': {'ucb': 1.0, 'widening': 1},
                                'stounif': {'ucb': 1.0, 'widening': 1}}
         elif args.function_noise == 100:
             algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 3},
+                               'stosoo': {'ucb': 1.0, 'widening': 1},
+                               'stounif': {'ucb': 1.0, 'widening': 1}}
+        elif args.function_noise == 500:
+            algo_parameters = {'stovoo': {'ucb': 500.0, 'widening': 10},
                                'stosoo': {'ucb': 1.0, 'widening': 1},
                                'stounif': {'ucb': 1.0, 'widening': 1}}
         elif args.function_noise == 1000:
@@ -141,6 +149,7 @@ def plot_across_algorithms():
     color_dict[color_names[3]] = [0, 0, 1]
     color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
 
+    sns.tsplot([0] * 2000, range(2000), ci=95, condition='Optimum', color='magenta')
     for algo_idx, algo_name in enumerate(algo_names):
         search_rwd_times = get_results(algo_name, args, algo_parameters[algo_name])
         n_samples = search_rwd_times.shape[-1]

@@ -18,6 +18,7 @@ import sys
 import os
 import argparse
 import numpy as np
+import random
 
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-ucb', type=float, default=1.0)
@@ -40,6 +41,7 @@ stochastic_objective = args.stochastic_objective
 noise = args.function_noise
 
 np.random.seed(problem_idx)
+random.seed(problem_idx)
 
 ucb_parameter = args.ucb
 widening_parameter = args.widening_parameter
@@ -153,6 +155,7 @@ def stovoo(explr_p):
     times = []
 
     stime = time.time()
+    print 'explr_p',explr_p
     for i in range(n_fcn_evals):
         print "%d / %d" % (i, n_fcn_evals)
         if i > 0:
@@ -162,6 +165,7 @@ def stovoo(explr_p):
         stovoo.update_evaluated_arms(evaled_arm, noisy_y)
 
         # act as if we terminated now with i number of iterations
+        # there is sth wrong here..
         arm_with_highest_expected_value = stovoo.arms[np.argmax([a.expected_value for a in stovoo.arms])]
         best_arm_x_value = arm_with_highest_expected_value.x_value
         best_arm_true_y = get_objective_function(best_arm_x_value)
@@ -246,7 +250,6 @@ def soo(dummy):
     return evaled_x, evaled_y, max_y, times
 
 
-
 def gpucb(explr_p, save_dir):
     gp = StandardContinuousGP(dim_x)
     acq_fcn = UCB(zeta=explr_p, gp=gp)
@@ -272,6 +275,7 @@ def gpucb(explr_p, save_dir):
 
     return evaled_x, evaled_y, max_y, times
 
+
 def voo(explr_p):
     evaled_x = []
     evaled_y = []
@@ -279,6 +283,7 @@ def voo(explr_p):
     voo = VOO(domain, explr_p)
     times = []
     stime = time.time()
+    print 'explr_p',explr_p
 
     for i in range(n_fcn_evals):
         print "%d / %d" % (i, n_fcn_evals)
@@ -297,7 +302,7 @@ def voo(explr_p):
 
 
 def get_exploration_parameters(algorithm):
-    if algorithm.__name__ == 'voo':
+    if algorithm.__name__.find('voo') != -1:
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
         epsilons = [1, 0.1, 5, 10, 30]
@@ -314,7 +319,7 @@ def get_exploration_parameters(algorithm):
         else:
             epsilons = [1, 0.1, 5, 10, 30]
     else:
-        epsilons = [0]
+        raise NotImplementedError
 
     return epsilons
 
