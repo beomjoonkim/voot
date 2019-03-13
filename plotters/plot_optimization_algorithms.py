@@ -43,11 +43,11 @@ def get_results(algo_name, dimension, obj_fcn):
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         if algo_name == 'doo':
-            if obj_fcn != 'griewank':
-                idxs = [0, 4, 10, 11, 12]
-                optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
-            else:
-                optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+            #if obj_fcn != 'griewank':
+            #    idxs = [0, 4, 10, 11, 12]
+            #    optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
+            #else:
+            optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         else:
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
@@ -58,6 +58,7 @@ def get_results(algo_name, dimension, obj_fcn):
             time_takens.append(result['time_takens'][optimal_epsilon_idx][:100])
         else:
             max_y_values.append(max_y)
+        print fin, len(max_y_values[0])
 
             #time_takens.append(result['time_takens'][optimal_epsilon_idx])
     print 'number of functions tested ', len(max_y_values)
@@ -122,9 +123,8 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['soo', 'gpucb', 'doo', 'voo', 'uniform']
-    algo_names = ['uniform']
-
+    algo_names = ['soo', 'doo', 'voo', 'uniform']
+    #algo_names = ['doo']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -141,8 +141,8 @@ def plot_across_algorithms():
         #search_rwd_times, time_takens = get_results(algo, n_dim, args.obj_fcn)
         search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
         mask = np.ones(len(search_rwd_times), dtype=bool)
-        too_large = \
-        np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
+        #too_large = \
+        #np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
         """
         if n_dim == 2:
             import pdb;pdb.set_trace()
@@ -153,13 +153,16 @@ def plot_across_algorithms():
         if algo == 'doo' and args.obj_fcn == 'shekel' and args.dim == 2:
             mask[too_large] = False
         """
-        mask[too_large] = False
-
+        #mask[too_large] = False
         #search_rwd_times = search_rwd_times[mask]
         #time_takens = time_takens[mask]
         # sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
-        #search_rwd_times = search_rwd_times[:, 0:10000]
+        search_rwd_times = search_rwd_times[:, 0:1000]
         n_samples = search_rwd_times.shape[-1]
+        try:
+            print algo, n_samples, np.mean(search_rwd_times[:,-1])
+        except:
+            import pdb;pdb.set_trace()
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
         print  "===================="
     savefig('Number of function evaluations', 'Best function values',
