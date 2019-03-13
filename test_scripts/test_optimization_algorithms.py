@@ -22,7 +22,7 @@ import random
 
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-ucb', type=float, default=1.0)
-parser.add_argument('-widening_parameter', type=int, default=10)
+parser.add_argument('-widening_parameter', type=float, default=10)
 parser.add_argument('-problem_idx', type=int, default=0)
 parser.add_argument('-algo_name', type=str, default='stosoo')
 parser.add_argument('-obj_fcn', type=str, default='ackley')
