@@ -123,6 +123,7 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['soo', 'gpucb', 'doo', 'voo', 'uniform']
+    algo_names = ['uniform']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -154,11 +155,10 @@ def plot_across_algorithms():
         """
         mask[too_large] = False
 
-        search_rwd_times = search_rwd_times[mask]
+        #search_rwd_times = search_rwd_times[mask]
         #time_takens = time_takens[mask]
         # sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
-
-        search_rwd_times = search_rwd_times[:, 0:1000]
+        #search_rwd_times = search_rwd_times[:, 0:10000]
         n_samples = search_rwd_times.shape[-1]
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
         print  "===================="

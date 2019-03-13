@@ -33,14 +33,13 @@ class VOO:
         other_best_evaled_xs = evaled_x
 
         while np.any(best_dist > other_dists):
-            #if self.dim_x == 2:
-            #    variance = (self.domain[1] - self.domain[0]) / np.power(counter+len(other_dists), 1)
-            #else:
             variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
+            #new_x = np.random.uniform(self.domain[0], self.domain[1])
             new_x = np.random.normal(best_evaled_x, variance)
+            while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
+                new_x = np.random.normal(best_evaled_x, variance)
 
-            #new_x = self.sample_from_uniform()
-            new_x = np.clip(new_x, self.domain[0], self.domain[1])
+
 
             best_dist = self.distance_fn(new_x, best_evaled_x)
             other_dists = np.array([self.distance_fn(other, new_x) for other in other_best_evaled_xs])

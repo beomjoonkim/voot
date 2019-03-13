@@ -139,7 +139,7 @@ def plot_across_algorithms():
                                'stosoo': {'ucb': 1.0, 'widening': 1},
                                'stounif': {'ucb': 1.0, 'widening': 1}}
     elif args.obj_fcn == 'griewank':
-        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 30},
+        algo_parameters = {'stovoo': {'ucb': 200.0, 'widening': 10},
                            'stosoo': {'ucb': 1.0, 'widening': 1},
                            'stounif': {'ucb': 1.0, 'widening': 1},
                            }
