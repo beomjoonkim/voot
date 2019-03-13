@@ -157,12 +157,17 @@ def plot_across_algorithms():
         #search_rwd_times = search_rwd_times[mask]
         #time_takens = time_takens[mask]
         # sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
+        n_samples = search_rwd_times.shape[-1]
+        best_mean_with_many_evaluations = np.mean(search_rwd_times[:, -1])
+        print algo, n_samples,  np.mean(search_rwd_times[:,-1])
         search_rwd_times = search_rwd_times[:, 0:1000]
         n_samples = search_rwd_times.shape[-1]
-        try:
-            print algo, n_samples, np.mean(search_rwd_times[:,-1])
-        except:
-            import pdb;pdb.set_trace()
+
+        if args.obj_fcn == 'shekel' and args.dim == 10 and algo == 'soo':
+            sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='5xSOO', color='magenta')
+        elif args.obj_fcn == 'shekel' and args.dim == 20 and algo == 'soo':
+            sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='10xSOO', color='magenta')
+
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
         print  "===================="
     savefig('Number of function evaluations', 'Best function values',
