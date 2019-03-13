@@ -299,6 +299,8 @@ def voo(explr_p):
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
+        #if max_y[-1] > 0.5:
+        #    import pdb;pdb.set_trace()
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
