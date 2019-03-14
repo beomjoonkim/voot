@@ -51,7 +51,7 @@ def main():
     configs= []
     if stochastic_objective:
         widening_parameter = sys.argv[8].split(',')
-        widening_parameters = [int(w) for w in widening_parameter]
+        widening_parameters = [float(w) for w in widening_parameter]
 
         function_noise = sys.argv[9].split(',')
         function_noises = [int(f) for f in function_noise]
