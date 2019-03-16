@@ -33,6 +33,7 @@ class VOO:
         other_best_evaled_xs = evaled_x
 
         GAUSSIAN = False
+        # todo perhaps this is reason why it performs so poorly
         while np.any(best_dist > other_dists):
             if GAUSSIAN:
                 variance = (self.domain[1] - self.domain[0]) / np.exp(counter)

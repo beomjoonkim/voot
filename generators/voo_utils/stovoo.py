@@ -28,10 +28,6 @@ class StoVOO(VOO):
 
     def is_ucb_step(self):
         n_arms = len(self.arms)
-        # todo I think this parameter should increase with the number of arms;
-        # todo I also think you should begin with a set of values
-
-        # progressive-widening:
         if self.is_progressive_widening:
             if n_arms <= self.widening_parameter * self.n_evaluations:
                 return False
@@ -40,15 +36,14 @@ class StoVOO(VOO):
         else:
             if n_arms < 10:
                 return False
+            if self.n_ucb_iterations < self.widening_parameter: #/ float(self.n_evaluations):
+                print "UCB iteration"
+                self.n_ucb_iterations += 1
+                return True
             else:
-                if self.n_ucb_iterations < self.widening_parameter: #/ float(self.n_evaluations):
-                    print "UCB iteration"
-                    self.n_ucb_iterations += 1
-                    return True
-                else:
-                    print "VOO iteration"
-                    self.n_ucb_iterations = 0
-                    return False
+                print "VOO iteration"
+                self.n_ucb_iterations = 0
+                return False
 
     def ucb_upperbound(self, arm):
         ucb_value = arm.expected_value + self.ucb_parameter * np.sqrt(np.log(self.n_evaluations) / float(arm.n_visited))

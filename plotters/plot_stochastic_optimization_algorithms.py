@@ -19,8 +19,8 @@ def savefig(xlabel, ylabel, fname=''):
 
 def get_result_dir(algo_name, dimension, obj_fcn, function_noise, algo_parameters):
     result_dir = './test_results/stochastic_function_optimization/' + str(obj_fcn) + '/dim_' + \
-                 str(dimension) + '/noise_'+str(function_noise) + '/' + algo_name + '/ucb_'+str(algo_parameters['ucb']) +\
-                 '/widening_' + str(algo_parameters['widening']) + '/'
+                 str(dimension) + '/noise_'+str(function_noise) + '/' + algo_name + '/ucb_' + \
+                 str(algo_parameters['ucb']) + '/widening_' + str(algo_parameters['widening']) + '/'
     return result_dir
 
 
@@ -30,7 +30,6 @@ def get_results(algo_name, args, algo_parameters):
     result_dir = get_result_dir(algo_name, dimension, obj_fcn, args.function_noise, algo_parameters)
 
     max_y_values = []
-    time_takens = []
     for fin in os.listdir(result_dir):
         if fin.find('.pkl') == -1:
             continue
@@ -38,15 +37,10 @@ def get_results(algo_name, args, algo_parameters):
         max_ys = np.array(result['max_ys'])
         optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
-        if dimension == 2 and obj_fcn == 'shekel':
-            max_y_values.append(max_y[:100])
-            time_takens.append(result['time_takens'][optimal_epsilon_idx][:100])
-        else:
-            max_y_values.append(max_y)
+        max_y_values.append(max_y)
 
-            #time_takens.append(result['time_takens'][optimal_epsilon_idx])
     print 'number of functions tested ', len(max_y_values)
-    return np.array(max_y_values)#, np.array(time_takens)
+    return np.array(max_y_values)
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
@@ -107,7 +101,7 @@ def plot_across_algorithms():
     parser.add_argument('-function_noise', type=float, default=200.0)
     args = parser.parse_args()
 
-    algo_names = ['stovoo', 'stovoo_with_N_eta', 'stosoo']
+    algo_names = ['stovoo', 'stosoo'] #'stovoo_with_N_eta', 'stosoo']
     if args.obj_fcn == 'ackley':
         if args.function_noise == 30:
             algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 2},
@@ -134,7 +128,7 @@ def plot_across_algorithms():
                                'stosoo': {'ucb': 1.0, 'widening': 1},
                                'stounif': {'ucb': 1.0, 'widening': 1}}
     elif args.obj_fcn == 'griewank':
-        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 0.3},
+        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 0.5},
                            'stovoo_with_N_eta': {'ucb': 100.0, 'widening': 10.0},
                            'stosoo': {'ucb': 1.0, 'widening': 1.0},
                            'stounif': {'ucb': 1.0, 'widening': 1},
@@ -151,7 +145,7 @@ def plot_across_algorithms():
     color_dict[color_names[3]] = [0, 0, 1]
     color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
 
-    sns.tsplot([0] * 2000, range(2000), ci=95, condition='Optimum', color='magenta')
+    sns.tsplot([0] * 5000, range(5000), ci=95, condition='Optimum', color='magenta')
     for algo_idx, algo_name in enumerate(algo_names):
         search_rwd_times = get_results(algo_name, args, algo_parameters[algo_name])
         n_samples = search_rwd_times.shape[-1]
@@ -159,9 +153,8 @@ def plot_across_algorithms():
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo_name.upper(),
                    color=color_dict[color_names[algo_idx]])
 
-        print algo_name, np.mean(search_rwd_times,axis=0)[-1]
+        print algo_name, np.mean(search_rwd_times, axis=0)[-1]
     plt.show()
-    import pdb;pdb.set_trace()
 
 
 

@@ -94,6 +94,11 @@ def instantiate_mcts(args, problem_env, domain_name, high_level_planner):
     return mcts
 
 
+def set_random_seed(random_seed):
+    np.random.seed(random_seed)
+    random.seed(random_seed)
+
+
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-uct', type=float, default=0.0)
@@ -118,8 +123,8 @@ def main():
 
     print "Problem number ", args.problem_idx
     print "Random seed set: ", args.random_seed
-    np.random.seed(args.random_seed)
-    random.seed(args.random_seed)
+    set_random_seed(args.random_seed)
+
     save_dir = make_save_dir(args)
     stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
     if os.path.isfile(stat_file_name):
@@ -127,8 +132,15 @@ def main():
         return -1
 
     problem_env = make_problem_env(args.domain, args.problem_idx)
+
     if args.v:
         problem_env.env.SetViewer('qtcoin')
+    ## Upto here is good
+
+    # todo lets try this again.
+    # I need ...
+
+
     task_plan = get_task_plan(args.domain, problem_env)
     hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
     hierarchical_planner.set_mcts_parameters(args)

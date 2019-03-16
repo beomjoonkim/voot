@@ -38,6 +38,7 @@ class HighLevelPlanner:
         self.is_debugging = is_debugging
 
         if self.problem_env.name == 'minimum_displacement_removal':
+            #todo why is this needed?
             self.namo_planner = NamoDomainNamoPlanner(problem_env, self)
         else:
             self.namo_planner = NAMOPlanner(problem_env, self)
@@ -145,16 +146,18 @@ class HighLevelPlanner:
                                                                                         next_init_node)
         return search_time_to_reward, fetch_plan, goal_node, reward_list
 
-    def solve_minimum_displacement_removal(self, object, target_packing_region):
+    def solve_minimum_displacement_removal(self):
 
         """
         self.problem_env.disable_objects()
         fetching_path,status = self.problem_env.get_base_motion_plan(self.problem_env.problem_config['goal_base_config'], region_name='entire_region')
         self.problem_env.enable_objects()
         """
-        fetching_path = pickle.load(open('./problem_environments/mover_domain_problems/fetching_path_'+ str(self.problem_env.problem_idx) +'.pkl','r'))
-        ## fetching path = swept volume to remove obstacles from
-        initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
+        swept_volume_file_name = './problem_environments/mover_domain_problems/fetching_path_' + \
+                                      str(self.problem_env.problem_idx) +'.pkl'
+        swept_volume_to_clear_obstacles_from = pickle.load(open(swept_volume_file_name, 'r'))
+        initial_collisions = self.problem_env.get_objs_in_collision(swept_volume_to_clear_obstacles_from,
+                                                                    'entire_region')
         initial_collision_names = [o.GetName() for o in initial_collisions]
         print len(initial_collision_names)
         print "Solved fetching"
@@ -171,6 +174,10 @@ class HighLevelPlanner:
         return search_time_to_reward, plan, goal_node, reward_list
 
     def search(self):
+        import pdb;pdb.set_trace()
+        # do I even need this abstract task plan stuff for minumum constraint removal problem?
+
+
         for plan_step in self.abstract_task_plan:
             # get the first region
             target_packing_region = plan_step['region']
@@ -184,7 +191,7 @@ class HighLevelPlanner:
                 search_time_to_reward, fetch_plan, _, reward_list = self.solve_convbelt(objects, target_packing_region)
             elif self.problem_env.name == 'minimum_displacement_removal':
                 search_time_to_reward, fetch_plan,\
-                    _, reward_list = self.solve_minimum_displacement_removal(objects, target_packing_region)
+                    _, reward_list = self.solve_minimum_displacement_removal()
             else:
                 raise NotImplementedError
         return search_time_to_reward, fetch_plan, True, reward_list

@@ -21,8 +21,6 @@ from generators.soo_utils.soo_tree import BinarySOOTree
 from generators.soo_utils.stosoo import BinaryStoSOOTree
 from generators.stounif_utils.stounif import StoUniform
 
-
-
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-ucb', type=float, default=1.0)
 parser.add_argument('-widening_parameter', type=float, default=10)
