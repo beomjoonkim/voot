@@ -1,9 +1,19 @@
+import pickle
+import time
+import sys
+import os
+import argparse
+import numpy as np
+import random
+
 from deap.benchmarks import shekel
 from deap import benchmarks
 
-from generators.gpucb_utils.gp import StandardContinuousGP
-from generators.gpucb_utils.functions import UCB, Domain
-from generators.gpucb_utils.bo import BO
+import socket
+if socket.gethostname() != 'shakey':
+  from generators.gpucb_utils.gp import StandardContinuousGP
+  from generators.gpucb_utils.functions import UCB, Domain
+  from generators.gpucb_utils.bo import BO
 from generators.voo_utils.voo import VOO
 from generators.voo_utils.stovoo import StoVOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
@@ -12,13 +22,6 @@ from generators.soo_utils.stosoo import BinaryStoSOOTree
 from generators.stounif_utils.stounif import StoUniform
 
 
-import pickle
-import time
-import sys
-import os
-import argparse
-import numpy as np
-import random
 
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-ucb', type=float, default=1.0)
@@ -67,6 +70,7 @@ elif obj_fcn == 'griewank':
     domain = np.array([[-600.]*dim_x, [600.]*dim_x])
 else:
     raise NotImplementedError
+
 
 def get_objective_function(sol):
     if obj_fcn == 'shekel':
@@ -121,6 +125,10 @@ def stosoo(dummy):
 
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times, max_y[-1]
+
+
+
+
 
 
 def stounif(explr_p):
@@ -180,6 +188,37 @@ def stovoo(explr_p):
 
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times, max_y[-1]
+
+
+def stovoo_with_N_eta(explr_p):
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    stovoo = StoVOO(domain, ucb_parameter, widening_parameter, explr_p, distance_fn=None, is_progressive_widening=False)
+    times = []
+
+    stime = time.time()
+    print 'explr_p', explr_p
+    for i in range(n_fcn_evals):
+        print "%d / %d" % (i, n_fcn_evals)
+        if i > 0:
+            print 'max value is ', np.max(evaled_y)
+        evaled_arm = stovoo.choose_next_point()
+        y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
+        stovoo.update_evaluated_arms(evaled_arm, noisy_y)
+
+        arm_with_highest_expected_value = stovoo.arms[np.argmax([a.expected_value for a in stovoo.arms])]
+        best_arm_x_value = arm_with_highest_expected_value.x_value
+        best_arm_true_y = get_objective_function(best_arm_x_value)
+        evaled_x.append(best_arm_x_value)
+        evaled_y.append(best_arm_true_y)
+
+        max_y.append(np.max(evaled_y))
+        times.append(time.time()-stime)
+
+    print "Max value found", np.max(evaled_y)
+    return evaled_x, evaled_y, max_y, times, max_y[-1]
+
 
 
 def random_search(epsilon):
@@ -305,7 +344,6 @@ def voo(explr_p):
         #print evaled_x[-1]
     best_idx = np.where(evaled_y == max_y[-1])[0][0]
     print evaled_x[best_idx], evaled_y[best_idx]
-    import pdb;pdb.set_trace()
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
@@ -348,7 +386,6 @@ def main():
                    '/widening_'+str(widening_parameter)
     else:
         save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
-
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 
@@ -361,6 +398,8 @@ def main():
             algorithm = random_search
         elif algo_name == 'stosoo':
             algorithm = stosoo
+        elif algo_name == 'stovoo_with_N_eta':
+            algorithm = stovoo_with_N_eta
         elif algo_name == 'stovoo':
             algorithm = stovoo
         elif algo_name == 'stounif':

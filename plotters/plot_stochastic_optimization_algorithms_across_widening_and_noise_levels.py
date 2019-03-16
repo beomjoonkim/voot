@@ -42,7 +42,7 @@ def plot_across_algorithms():
                 result = pickle.load(open(fdir + fin, 'r'))
                 max_ys = np.array(result['max_ys'])
                 try:
-                    assert len(max_ys[:,-1]) == 5, 'You should try at least five different epsilon values'
+                    assert len(max_ys[:, -1]) == 5, 'You should try at least five different epsilon values'
                 except:
                     print widening_value, ucb
                     continue
