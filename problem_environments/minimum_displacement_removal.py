@@ -25,8 +25,7 @@ OBJECT_ORIGINAL_COLOR = (0, 0, 0)
 COLLIDING_OBJ_COLOR = (0, 1, 1)
 TARGET_OBJ_COLOR = (1, 0, 0)
 
-
-class NAMO(ProblemEnvironment):
+class MinimumDisplacementRemoval(ProblemEnvironment):
     def __init__(self, problem_idx):
         ProblemEnvironment.__init__(self)
         problem = MoverProblem(self.env, problem_idx)
@@ -44,7 +43,7 @@ class NAMO(ProblemEnvironment):
         self.regions = {'entire_region': self.problem_config['entire_region']}
         self.infeasible_reward = -2
         self.is_init_pick_node = True
-        self.name = 'namo'
+        self.name = 'minimum_displacement_removal'
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.problem_config['env'] = self.env
 

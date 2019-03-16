@@ -61,7 +61,6 @@ def get_results(algo_name, dimension, obj_fcn):
         print fin, len(max_y_values[0])
 
             #time_takens.append(result['time_takens'][optimal_epsilon_idx])
-    import pdb;pdb.set_trace()
     print 'number of functions tested ', len(max_y_values)
     return np.array(max_y_values)#, np.array(time_takens)
 
@@ -125,7 +124,7 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['soo', 'gpucb', 'doo', 'voo', 'uniform']
-    algo_names = ['gpucb']
+    #algo_names = ['gpucb']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]

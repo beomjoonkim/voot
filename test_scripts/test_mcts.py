@@ -1,11 +1,9 @@
 from problem_environments.conveyor_belt_env import ConveyorBelt
-from problem_environments.namo_env import NAMO
+from problem_environments.minimum_displacement_removal import MinimumDisplacementRemoval
 from problem_environments.mover_env import Mover
 
 from planners.high_level_planner import HighLevelPlanner
-from planners.mcr_high_level_planner import MCRHighLevelPlanner
 from planners.mcts import MCTS
-
 
 import argparse
 import cPickle as pickle
@@ -32,7 +30,7 @@ def make_save_dir(args):
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
 
-    if domain == 'namo':
+    if domain == 'minimum_displacement_removal':
         save_dir = ROOTDIR + '/test_results//root_switching/no_infeasible_place/no_going_back_to_s0_no_switch_counter/' + domain + '_results/' + 'mcts_iter_'\
                    + str(mcts_iter) + '/uct_' \
                    + str(uct_parameter) + '_widening_' \
@@ -48,6 +46,8 @@ def make_save_dir(args):
                    + str(uct_parameter) + '_widening_' \
                    + str(widening_parameter) + '_' + sampling_strategy + \
                    '_n_feasible_checks_' + str(n_feasibility_checks) + '/'
+    else:
+        raise NotImplementedError
 
     if sampling_strategy != 'unif':
         save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
@@ -59,8 +59,8 @@ def make_save_dir(args):
 
 
 def make_problem_env(domain_name, problem_idx):
-    if domain_name == 'namo':
-        problem_env = NAMO(problem_idx)
+    if domain_name == 'minimum_displacement_removal':
+        problem_env = MinimumDisplacementRemoval(problem_idx)
     elif domain_name == 'convbelt':
         problem_env = ConveyorBelt(problem_idx)
     else:
@@ -69,7 +69,7 @@ def make_problem_env(domain_name, problem_idx):
 
 
 def get_task_plan(domain_name, problem_env):
-    if domain_name == 'namo':
+    if domain_name == 'minimum_displacement_removal':
         task_plan = [{'region': problem_env.regions['entire_region'], 'objects': [problem_env.objects[0]]}] # dummy
     elif domain_name == 'convbelt':
         task_plan = [{'region': problem_env.regions['object_region'], 'objects': problem_env.objects}]
@@ -101,7 +101,7 @@ def main():
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)
-    parser.add_argument('-domain', type=str, default='namo')
+    parser.add_argument('-domain', type=str, default='minimum_displacement_removal')
     parser.add_argument('-planner', type=str, default='mcts')
     parser.add_argument('-v', action='store_true', default=False)
     parser.add_argument('-debug', action='store_true', default=False)
@@ -114,7 +114,7 @@ def main():
 
     args = parser.parse_args()
     if args.random_seed == -1:
-        args.random_seed = args.problem_idx     # for conveyor belt domain
+        args.random_seed = args.problem_idx
 
     print "Problem number ", args.problem_idx
     print "Random seed set: ", args.random_seed

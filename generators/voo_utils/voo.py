@@ -32,20 +32,31 @@ class VOO:
         best_evaled_x = evaled_x[best_evaled_x_idx]
         other_best_evaled_xs = evaled_x
 
+        GAUSSIAN = False
         while np.any(best_dist > other_dists):
-            variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
-            #new_x = np.random.uniform(self.domain[0], self.domain[1])
-            new_x = np.random.normal(best_evaled_x, variance)
-            while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
+            if GAUSSIAN:
+                variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
                 new_x = np.random.normal(best_evaled_x, variance)
-
-
-
+                while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
+                    #print "Edge detecting, sampling other points"
+                    new_x = np.random.normal(best_evaled_x, variance)
+            else:
+                #new_x = np.random.uniform(self.domain[0], self.domain[1])
+                #possible_values = self.domain[0] + (self.domain[1]-self.domain[0]) * np.random.uniform(0, 1)
+                dim_x = self.domain[1].shape[-1]
+                possible_range = (self.domain[1] - self.domain[0]) / np.exp(counter)
+                possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
+                new_x = best_evaled_x + possible_values
+                while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
+                    possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
+                    new_x = best_evaled_x + possible_values
 
             best_dist = self.distance_fn(new_x, best_evaled_x)
             other_dists = np.array([self.distance_fn(other, new_x) for other in other_best_evaled_xs])
             counter += 1
-
+        print best_dist
+        #assert np.sum(best_dist > other_dists) == 0
+        #print best_dist > other_dists
         return new_x
 
     def sample_from_uniform(self):

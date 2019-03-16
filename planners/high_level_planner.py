@@ -1,21 +1,14 @@
 from planners.mcts import MCTS
-from planners.constrained_mcts import ConstrainedMCTS
 from planners.fetch_planner import FetchPlanner
 from planners.namo_planner import NAMOPlanner
 from planners.namo_domain_namo_planner import NamoDomainNamoPlanner
-from generators.PickUniform import PickWithBaseUnif
-from generators.feasibility_checkers.pick_feasibility_checker import PickFeasibilityChecker
-from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 
-from utils import get_pick_domain, get_place_domain
 
 import sys
-sys.path.append('../mover_library/')
-from utils import *
+from mover_library.utils import *
 
 import pickle
 import numpy as np
-import time
 
 
 def pklsave(obj, name=''):
@@ -44,7 +37,7 @@ class HighLevelPlanner:
 
         self.is_debugging = is_debugging
 
-        if self.problem_env.name == 'namo':
+        if self.problem_env.name == 'minimum_displacement_removal':
             self.namo_planner = NamoDomainNamoPlanner(problem_env, self)
         else:
             self.namo_planner = NAMOPlanner(problem_env, self)
@@ -152,7 +145,7 @@ class HighLevelPlanner:
                                                                                         next_init_node)
         return search_time_to_reward, fetch_plan, goal_node, reward_list
 
-    def solve_namo(self, object, target_packing_region):
+    def solve_minimum_displacement_removal(self, object, target_packing_region):
 
         """
         self.problem_env.disable_objects()
@@ -160,10 +153,12 @@ class HighLevelPlanner:
         self.problem_env.enable_objects()
         """
         fetching_path = pickle.load(open('./problem_environments/mover_domain_problems/fetching_path_'+ str(self.problem_env.problem_idx) +'.pkl','r'))
+        ## fetching path = swept volume to remove obstacles from
         initial_collisions = self.problem_env.get_objs_in_collision(fetching_path, 'entire_region')
         initial_collision_names = [o.GetName() for o in initial_collisions]
         print len(initial_collision_names)
         print "Solved fetching"
+        import pdb;pdb.set_trace()
         self.namo_planner.fetch_pick_path = fetching_path
         namo_search_time_to_reward, namo_plan, goal_node, reward_list = self.namo_planner.namo_domain_solve_single_object(
                                                                                  initial_collision_names,
@@ -186,9 +181,12 @@ class HighLevelPlanner:
             # get the object ordering
             obj_plan = self.compute_object_ordering(objects)
             if self.problem_env.name == 'convbelt':
-                search_time_to_reward, fetch_plan, _, reward_list= self.solve_convbelt(objects, target_packing_region)
-            elif self.problem_env.name == 'namo':
-                search_time_to_reward, fetch_plan, _, reward_list = self.solve_namo(objects, target_packing_region)
+                search_time_to_reward, fetch_plan, _, reward_list = self.solve_convbelt(objects, target_packing_region)
+            elif self.problem_env.name == 'minimum_displacement_removal':
+                search_time_to_reward, fetch_plan,\
+                    _, reward_list = self.solve_minimum_displacement_removal(objects, target_packing_region)
+            else:
+                raise NotImplementedError
         return search_time_to_reward, fetch_plan, True, reward_list
 
     @staticmethod

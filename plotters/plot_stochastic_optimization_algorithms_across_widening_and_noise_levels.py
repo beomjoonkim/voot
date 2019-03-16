@@ -9,24 +9,25 @@ import seaborn as sns
 
 def get_result_dir(algo_name, dimension, obj_fcn, function_noise, algo_parameters):
     result_dir = './test_results/stochastic_function_optimization/' + str(obj_fcn) + '/dim_' + \
-                 str(dimension) + '/noise_' + str(function_noise) + '/' + algo_name + '/ucb_' + str(
-        algo_parameters['ucb']) + \
-                 '/widening_' + str(algo_parameters['widening']) + '/'
+                 str(dimension) + '/noise_' + str(function_noise) + '/' + algo_name + '/ucb_' + \
+                 str(algo_parameters['ucb']) + '/widening_' + str(algo_parameters['widening']) + '/'
     return result_dir
 
 
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='parameters')
-    parser.add_argument('-obj_fcn', type=str, default='ackley')
+    parser.add_argument('-obj_fcn', type=str, default='griewank')
     parser.add_argument('-n_dim', type=int, default=10)
     parser.add_argument('-function_noise', type=float, default=200.0)
     args = parser.parse_args()
 
     algo_name = 'stovoo'
 
-    widening_values = [2, 3, 4, 10, 20, 30, 100]
+    widening_values = [0.1, 0.3, 0.5, 0.7, 0.8, 0.9]
     ucb_values = [100.0, 200.0, 300.0, 400.0, 500.0, 1000.0, 5000.0]
 
+    mean_values = []
+    configurations = []
     best_mean_value = -np.inf
     for widening_value in widening_values:
         for ucb in ucb_values:
@@ -37,16 +38,28 @@ def plot_across_algorithms():
             noise_level_max_values = []
             for fin in os.listdir(fdir):
                 result = pickle.load(open(fdir + fin, 'r'))
-                max_value = result['max_ys'][0][-1]
+                max_ys = np.array(result['max_ys'])
+                optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+                max_value = max_ys[optimal_epsilon_idx][-1]
                 noise_level_max_values.append(max_value)
 
             print "UCB %d, Widening value %.2f, performance (mean,var): %.2f %.2f" % \
                   (ucb, widening_value, np.mean(noise_level_max_values), np.std(noise_level_max_values))
 
-            if np.mean(noise_level_max_values) >  best_mean_value:
+            if np.mean(noise_level_max_values) > best_mean_value:
                 best_mean_value = np.mean(noise_level_max_values)
                 best_configuration = (widening_value, ucb)
+
+            mean_values.append(np.mean(noise_level_max_values))
+            configurations.append((widening_value, ucb))
+
     print best_mean_value, best_configuration
+
+    # todo: there is also the rate at which this was achieved
+    sorted_idxs = np.argsort(mean_values)
+    print np.array(mean_values)[sorted_idxs]
+    print np.array(configurations)[sorted_idxs]
+
 
 if __name__ == '__main__':
     plot_across_algorithms()

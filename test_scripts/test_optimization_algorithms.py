@@ -49,8 +49,8 @@ widening_parameter = args.widening_parameter
 NUMMAX = 10
 if obj_fcn == 'shekel':
     np.random.seed(problem_idx)
-    A = np.random.rand(NUMMAX, dim_x)*10
-    C = np.random.rand(NUMMAX)
+    #A = np.random.rand(NUMMAX, dim_x)*10
+    #C = np.random.rand(NUMMAX)
     config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(args.dim_x)+'.pkl', 'r'))
     A = config['A']
     C = config['C']
@@ -63,9 +63,10 @@ elif obj_fcn == 'rastrigin':
     domain = np.array([[-5.12]*dim_x, [5.12]*dim_x])
 elif obj_fcn == 'ackley':
     domain = np.array([[-15.]*dim_x, [30.]*dim_x])
-else:
+elif obj_fcn == 'griewank':
     domain = np.array([[-600.]*dim_x, [600.]*dim_x])
-
+else:
+    raise NotImplementedError
 
 def get_objective_function(sol):
     if obj_fcn == 'shekel':
@@ -288,9 +289,9 @@ def voo(explr_p):
     print 'explr_p',explr_p
 
     for i in range(n_fcn_evals):
-        print "%d / %d" % (i, n_fcn_evals)
-        if i > 0:
-            print 'max value is ', np.max(evaled_y)
+        #print "%d / %d" % (i, n_fcn_evals)
+        #if i > 0:
+        #    print 'max value is ', np.max(evaled_y)
         x = voo.choose_next_point(evaled_x, evaled_y)
         if len(x.shape) == 0:
             x = np.array([x])
@@ -301,6 +302,10 @@ def voo(explr_p):
         times.append(time.time()-stime)
         #if max_y[-1] > 0.5:
         #    import pdb;pdb.set_trace()
+        #print evaled_x[-1]
+    best_idx = np.where(evaled_y == max_y[-1])[0][0]
+    print evaled_x[best_idx], evaled_y[best_idx]
+    import pdb;pdb.set_trace()
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
@@ -308,6 +313,7 @@ def voo(explr_p):
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
+        epsilons = [0.3]
     elif algorithm.__name__ == 'doo':
         epsilons = [1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
@@ -324,7 +330,7 @@ def get_exploration_parameters(algorithm):
             epsilons = [1, 0.1, 5, 10, 30]
     elif algorithm.__name__.find('soo') != -1:
         epsilons = [0]
-    elif algorithm.__name__.find('random_search') !=-1:
+    elif algorithm.__name__.find('random_search') !=-1 or algorithm.__name__.find('stounif') !=-1:
         epsilons = [0]  
     else:
         print algorithm.__name__

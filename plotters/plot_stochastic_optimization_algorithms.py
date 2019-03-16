@@ -36,10 +36,7 @@ def get_results(algo_name, args, algo_parameters):
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
-        if algo_name == 'doo':
-            optimal_epsilon_idx = np.argmax(max_ys[:, -1])
-        else:
-            optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+        optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
         if len(max_y) < 500:
             continue
@@ -112,7 +109,7 @@ def plot_across_algorithms():
     parser.add_argument('-function_noise', type=float, default=200.0)
     args = parser.parse_args()
 
-    algo_names = ['stovoo', 'stosoo', 'stounif']
+    algo_names = ['stovoo', 'stovoo_with_N_eta', 'stosoo']
     if args.obj_fcn == 'ackley':
         if args.function_noise == 30:
             algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 2},
@@ -139,10 +136,14 @@ def plot_across_algorithms():
                                'stosoo': {'ucb': 1.0, 'widening': 1},
                                'stounif': {'ucb': 1.0, 'widening': 1}}
     elif args.obj_fcn == 'griewank':
-        algo_parameters = {'stovoo': {'ucb': 200.0, 'widening': 10},
-                           'stosoo': {'ucb': 1.0, 'widening': 1},
+        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 0.5},
+                           'stovoo_with_N_eta': {'ucb': 200.0, 'widening': 10},
+                           'stosoo': {'ucb': 1.0, 'widening': 1.0},
                            'stounif': {'ucb': 1.0, 'widening': 1},
                            }
+
+    # todo
+    #   find the fastest-growing parameters
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
