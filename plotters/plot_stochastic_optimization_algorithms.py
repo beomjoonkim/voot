@@ -38,9 +38,6 @@ def get_results(algo_name, args, algo_parameters):
         max_ys = np.array(result['max_ys'])
         optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
-        import pdb;pdb.set_trace()
-        if len(max_y) < 500:
-            continue
         if dimension == 2 and obj_fcn == 'shekel':
             max_y_values.append(max_y[:100])
             time_takens.append(result['time_takens'][optimal_epsilon_idx][:100])
@@ -137,8 +134,8 @@ def plot_across_algorithms():
                                'stosoo': {'ucb': 1.0, 'widening': 1},
                                'stounif': {'ucb': 1.0, 'widening': 1}}
     elif args.obj_fcn == 'griewank':
-        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 0.5},
-                           'stovoo_with_N_eta': {'ucb': 200.0, 'widening': 10},
+        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 0.3},
+                           'stovoo_with_N_eta': {'ucb': 100.0, 'widening': 10},
                            'stosoo': {'ucb': 1.0, 'widening': 1.0},
                            'stounif': {'ucb': 1.0, 'widening': 1},
                            }

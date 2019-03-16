@@ -16,13 +16,15 @@ class BanditArm:
 
 
 class StoVOO(VOO):
-    def __init__(self, domain, ucb_parameter, widening_parameter, explr_p, distance_fn = None):
+    def __init__(self, domain, ucb_parameter, widening_parameter, explr_p, distance_fn = None,
+                 is_progressive_widening=True):
         VOO.__init__(self, domain, explr_p, distance_fn)
         self.n_ucb_iterations = 0
         self.arms = []
         self.n_evaluations = 0
         self.widening_parameter = widening_parameter
         self.ucb_parameter = ucb_parameter
+        self.is_progressive_widening = is_progressive_widening
 
     def is_ucb_step(self):
         n_arms = len(self.arms)
@@ -30,24 +32,23 @@ class StoVOO(VOO):
         # todo I also think you should begin with a set of values
 
         # progressive-widening:
-        if n_arms <= self.widening_parameter * self.n_evaluations:
-            return False
-        else:
-            return True
-
-        """
-        if n_arms < 10:
-            return False
-        else:
-            if self.n_ucb_iterations < self.widening_parameter: #/ float(self.n_evaluations):
-                print "UCB iteration"
-                self.n_ucb_iterations += 1
-                return True
-            else:
-                print "VOO iteration"
-                self.n_ucb_iterations = 0
+        if self.is_progressive_widening:
+            if n_arms <= self.widening_parameter * self.n_evaluations:
                 return False
-        """
+            else:
+                return True
+        else:
+            if n_arms < 10:
+                return False
+            else:
+                if self.n_ucb_iterations < self.widening_parameter: #/ float(self.n_evaluations):
+                    print "UCB iteration"
+                    self.n_ucb_iterations += 1
+                    return True
+                else:
+                    print "VOO iteration"
+                    self.n_ucb_iterations = 0
+                    return False
 
     def ucb_upperbound(self, arm):
         ucb_value = arm.expected_value + self.ucb_parameter * np.sqrt(np.log(self.n_evaluations) / float(arm.n_visited))
