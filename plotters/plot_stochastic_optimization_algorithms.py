@@ -38,6 +38,7 @@ def get_results(algo_name, args, algo_parameters):
         max_ys = np.array(result['max_ys'])
         optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
+        import pdb;pdb.set_trace()
         if len(max_y) < 500:
             continue
         if dimension == 2 and obj_fcn == 'shekel':

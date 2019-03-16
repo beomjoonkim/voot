@@ -21,9 +21,11 @@ def plot_across_algorithms():
     parser.add_argument('-function_noise', type=float, default=200.0)
     args = parser.parse_args()
 
+    algo_name = 'stovoo_with_N_eta'
     algo_name = 'stovoo'
 
-    widening_values = [0.1, 0.3, 0.5, 0.7, 0.8, 0.9]
+    widening_values = [0.3, 0.5, 0.7, 0.8, 0.9]
+    #widening_values = [0,2,3,4,10,20,30,100,500]
     ucb_values = [100.0, 200.0, 300.0, 400.0, 500.0, 1000.0, 5000.0]
 
     mean_values = []
@@ -39,6 +41,11 @@ def plot_across_algorithms():
             for fin in os.listdir(fdir):
                 result = pickle.load(open(fdir + fin, 'r'))
                 max_ys = np.array(result['max_ys'])
+                try:
+                    assert len(max_ys[:,-1]) == 5, 'You should try at least five different epsilon values'
+                except:
+                    print widening_value, ucb
+                    continue
                 optimal_epsilon_idx = np.argmax(max_ys[:, -1])
                 max_value = max_ys[optimal_epsilon_idx][-1]
                 noise_level_max_values.append(max_value)
