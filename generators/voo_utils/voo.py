@@ -55,7 +55,6 @@ class VOO:
             best_dist = self.distance_fn(new_x, best_evaled_x)
             other_dists = np.array([self.distance_fn(other, new_x) for other in other_best_evaled_xs])
             counter += 1
-        print best_dist
         #assert np.sum(best_dist > other_dists) == 0
         #print best_dist > other_dists
         return new_x
