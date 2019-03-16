@@ -313,7 +313,6 @@ def voo(explr_p):
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
-        epsilons = [0.3]
     elif algorithm.__name__ == 'doo':
         epsilons = [1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
