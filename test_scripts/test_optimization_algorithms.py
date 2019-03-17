@@ -10,7 +10,8 @@ from deap.benchmarks import shekel
 from deap import benchmarks
 
 import socket
-if socket.gethostname() != 'shakey':
+#if socket.gethostname() != 'shakey':
+if True:
   from generators.gpucb_utils.gp import StandardContinuousGP
   from generators.gpucb_utils.functions import UCB, Domain
   from generators.gpucb_utils.bo import BO
