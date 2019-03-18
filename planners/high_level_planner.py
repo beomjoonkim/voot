@@ -20,16 +20,19 @@ def pklload(name=''):
 
 
 class HighLevelPlanner:
-    def __init__(self, task_plan, problem_env, domain_name, is_debugging):
+    def __init__(self, task_plan, problem_env, domain_name, is_debugging=False):
         self.abstract_task_plan = task_plan
         self.problem_env = problem_env
         self.domain_name = domain_name
         self.widening_parameter = None
         self.uct_parameter = None
         self.sampling_stategy = None
+
         self.task_plan_idx = 0
         self.obj_plan_idx = 0
         self.task_plan = task_plan
+
+        """
         if self.problem_env.name == 'convbelt':
             self.fetch_planner = FetchPlanner(problem_env, self)
         else:
@@ -42,6 +45,7 @@ class HighLevelPlanner:
             self.namo_planner = NamoDomainNamoPlanner(problem_env, self)
         else:
             self.namo_planner = NAMOPlanner(problem_env, self)
+        """
 
         ## for debugging purpose, remove later
         self.env = self.problem_env.env

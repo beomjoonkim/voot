@@ -2,13 +2,12 @@ from problem_environments.conveyor_belt_env import ConveyorBelt
 from problem_environments.minimum_displacement_removal import MinimumDisplacementRemoval
 from problem_environments.mover_env import Mover
 
-from planners.high_level_planner import HighLevelPlanner
+from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
 from planners.mcts import MCTS
 
 import argparse
 import cPickle as pickle
 import os
-import openravepy
 import numpy as np
 import random
 import socket
@@ -80,17 +79,18 @@ def get_task_plan(domain_name, problem_env):
     return task_plan
 
 
-def instantiate_mcts(args, problem_env, domain_name, high_level_planner):
+def instantiate_mcts(args, problem_env):
     uct_parameter = args.uct
     widening_parameter = args.widening_parameter
     sampling_strategy = args.sampling_strategy
     sampling_strategy_exploration_parameter = args.epsilon
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
+    domain_name = args.domain
 
     mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, domain_name, high_level_planner)
+                problem_env, domain_name)
     return mcts
 
 
@@ -131,30 +131,43 @@ def main():
         print "already done"
         return -1
 
-    problem_env = make_problem_env(args.domain, args.problem_idx)
-
+    if args.domain == 'minimum_displacement_removal':
+        problem_instantiator = MinimumConstraintRemovalInstantiator(args.domain)
+    else:
+        raise NotImplementedError
     if args.v:
-        problem_env.env.SetViewer('qtcoin')
-    ## Upto here is good
+        problem_instantiator.environment.env.SetViewer('qtcoin')
+
+    mcts = instantiate_mcts(args, problem_instantiator.environment)
+    mcts.search(args.mcts_iter, 0)
 
     # todo lets try this again.
     # I need ...
+    # no task plan is needed
+    # no high level planner is needed;  or do I?
+    # I do need something that will determine the fetching path, and then initiate a search on the corresponding
+    # namo problem
+    # but solving the corresponding namo problem is equivalent to begin from an initial state, and then
+    # solve for the solution for the given reward function. Since the initial state is given for a problem,
+    # the reward should be determined by the environment
 
 
-    task_plan = get_task_plan(args.domain, problem_env)
-    hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
-    hierarchical_planner.set_mcts_parameters(args)
-    hierarchical_planner.stat_file_name = stat_file_name
 
-    search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
+
+    #task_plan = get_task_plan(args.domain, problem_env)
+    #hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
+    #hierarchical_planner.set_mcts_parameters(args)
+    #hierarchical_planner.stat_file_name = stat_file_name
+
+    #search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
     # todo check if search_time_to_reward returns a solution
 
-    pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
-                 'reward_list': reward_list,
-                 'is_optimal_score': optimal_score_achieved}, open(stat_file_name, 'wb'))
+    #pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
+    #             'reward_list': reward_list,
+    #             'is_optimal_score': optimal_score_achieved}, open(stat_file_name, 'wb'))
 
-    problem_env.problem_config['env'].Destroy()
-    openravepy.RaveDestroy()
+    #problem_env.problem_config['env'].Destroy()
+    #openravepy.RaveDestroy()
 
 
 if __name__ == '__main__':

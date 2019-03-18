@@ -2,13 +2,12 @@ import numpy as np
 from mcts_utils import is_action_hashable, make_action_hashable, make_action_executable
 from trajectory_representation.operator import Operator
 
-
-def upper_confidence_bound(n, n_sa):
-    return 2 * np.sqrt(np.log(n) / float(n_sa))
+def UCT_upperbound(n, n_sa):
+    return 2 * np.log(n) / float(n_sa)
 
 
 class TreeNode:
-    def __init__(self, operator_skeleton, ucb_parameter, depth, state_saver, sampling_strategy,
+    def __init__(self, operator_skeleton, exploration_parameter, depth, state_saver, sampling_strategy,
                  is_init_node):
         self.Nvisited = 0
         self.N = {}  # N(n,a)
@@ -20,7 +19,7 @@ class TreeNode:
         self.sum_ancestor_action_rewards = 0  # for logging purpose
         self.sum_rewards_history = {}  # for debugging purpose
         self.reward_history = {}  # for debugging purpose
-        self.ucb_parameter = ucb_parameter
+        self.exploration_parameter = exploration_parameter
         self.parent_motion = None
         self.is_init_node = False
         self.is_goal_node = False
@@ -37,27 +36,33 @@ class TreeNode:
 
         self.sampling_strategy = sampling_strategy
 
-    def get_never_evaluated_action(self):
-        # get list of actions that do not have an associated Q values
-        no_evaled = [a for a in self.A if a not in self.Q.keys()]
-        return np.random.choice(no_evaled)
-
-    def perform_ucb_over_actions(self):
+    def get_best_action(self):
         best_value = -np.inf
-        never_executed_actions_exist = len(self.Q) != len(self.A)
-        if never_executed_actions_exist:
-            best_action = self.get_never_evaluated_action()
-        else:
-            for action, value in zip(self.Q.keys(), self.Q.values()):
-                ucb_value = value + self.ucb_parameter * upper_confidence_bound(self.Nvisited, self.N[action])
+        for action, value in zip(self.Q.keys(), self.Q.values()):
+            uct_value = value + self.exploration_parameter * UCT_upperbound(self.Nvisited, self.N[action])
+            #print 'uct value:', value, self.exploration_parameter * UCT_upperbound(self.Nvisited, self.N[action])
 
-                if ucb_value > best_value:
-                    best_action = action
-                    best_value = ucb_value
-        return best_action
+            if uct_value > best_value:
+                best_action = action
+                best_value = uct_value
+
+        executable_action = make_action_executable(best_action)
+        """
+        is_pick_action = len(best_action) == 2
+        if is_pick_action:
+            best_action = tuple((np.array(best_action[0]), np.array(best_action[1])))
+        else:
+            best_action = np.array(list(best_action)).squeeze()
+        """
+        return executable_action
 
     def is_action_tried(self, action):
-        return action in self.Q.keys()
+        if action is None:
+            return False
+        if is_action_hashable(action):
+            return action in self.A
+        else:
+            return make_action_hashable(action) in self.A
 
     def get_child_node(self, action):
         if is_action_hashable(action):

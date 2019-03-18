@@ -1,29 +1,21 @@
 import numpy as np
-import sys
-import socket
-import os
-import random
-import copy
 
 from openravepy import DOFAffine
-from planners.mcts_utils import make_action_hashable, is_action_hashable
+from planners.mcts_utils import make_action_hashable
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
-## NAMO problem environment
+from trajectory_representation.operator import Operator
+
 from problem_environment import ProblemEnvironment
-from NAMO_problem import NAMO_problem
 from mover_problem import MoverProblem
 
-## openrave_wrapper imports
-from manipulation.bodies.bodies import set_color
-
 ## mover library utility functions
-from mover_library.utils import set_robot_config, get_body_xytheta, check_collision_except,  grab_obj, \
-    two_arm_pick_object, two_arm_place_object, get_trajectory_length
-from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
+from mover_library.utils import set_robot_config, grab_obj, two_arm_pick_object, two_arm_place_object, \
+    get_trajectory_length
 
 OBJECT_ORIGINAL_COLOR = (0, 0, 0)
 COLLIDING_OBJ_COLOR = (0, 1, 1)
 TARGET_OBJ_COLOR = (1, 0, 0)
+
 
 class MinimumDisplacementRemoval(ProblemEnvironment):
     def __init__(self, problem_idx):
@@ -43,9 +35,13 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         self.regions = {'entire_region': self.problem_config['entire_region']}
         self.infeasible_reward = -2
         self.is_init_pick_node = True
-        self.name = 'minimum_displacement_removal'
+
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.problem_config['env'] = self.env
+        self.objects_not_in_goal = []
+
+    def set_objects_not_in_goal(self, objects_not_in_goal):
+        self.objects_not_in_goal = objects_not_in_goal
 
     def get_objs_in_region(self, region_name):
         movable_objs = self.objects
@@ -89,6 +85,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         saver = node.state_saver
         saver.Restore()  # this call re-enables objects that are disabled
         self.curr_state = self.get_state()
+        self.objects_not_in_goal = node.objects_not_in_goal
 
         if not self.init_which_opreator != 'two_arm_pick':
             grab_obj(self.robot, self.curr_obj)
@@ -100,32 +97,12 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
 
         if self.is_solving_namo:
             self.namo_planner.reset()
-        self.high_level_planner.reset_task_plan_indices()
+        #self.high_level_planner.reset_task_plan_indices()
 
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
 
     def set_init_namo_object_names(self, object_names):
         self.namo_planner.init_namo_object_names = object_names
-
-    def disable_objects_in_region(self, region_name):
-        for object in self.objects:
-            object.Enable(False)
-
-    def enable_objects_in_region(self, region_name):
-        for object in self.objects:
-            object.Enable(True)
-
-    def disable_objects(self):
-        for object in self.objects:
-            if object is None:
-                continue
-            object.Enable(False)
-
-    def enable_objects(self):
-        for object in self.objects:
-            if object is None:
-                continue
-            object.Enable(True)
 
     def check_base_pose_feasible(self, base_pose, obj, region):
         if base_pose is None:
@@ -194,7 +171,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
                 #self.namo_planner.fetch_place_path = node.children[make_action_hashable(action)].parent_motion['fetch_place_path']
 
                 # todo update the task-plan?
-                self.high_level_planner.set_task_plan([{'region': self.regions['entire_region'], 'objects': new_namo_objs}])
+                #self.high_level_planner.set_task_plan([{'region': self.regions['entire_region'], 'objects': new_namo_objs}])
         reward, objs_in_collision = self.determine_reward('two_arm_place', target_obj, plan, status, new_namo_obj_names)
         #if reward > 1:
         #    import pdb;pdb.set_trace()
@@ -210,41 +187,38 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         return curr_state, reward, plan, objs_in_collision
 
     def is_goal_reached(self):
-        return len(self.objs_to_move) == 0
+        return len(self.objects_not_in_goal) == 0
 
-    def which_operator(self, obj=None):
+    def which_operator(self):
         if self.is_pick_time():
             return 'two_arm_pick'
         else:
             return 'two_arm_place'
 
-    def apply_two_arm_pick_action_stripstream(self, action, obj=None, do_check_reachability=False):
-        if obj is None:
-            obj_to_pick = self.curr_obj
+    def apply_action(self, action):
+
+        import pdb;pdb.set_trace()
+        reward = 1
+        objects_not_in_goal = 0
+        return reward, objects_not_in_goal
+
+    def get_place_region_for_object(self, object):
+        return 0
+
+    def get_applicable_op(self):
+        op_name = self.which_operator()
+        if op_name == 'two_arm_place':
+            op = Operator(operator_type=op_name,
+                          discrete_parameters={'region': self.regions['entire_region']},
+                          continuous_parameters=None,
+                          low_level_motion=None)
         else:
-            obj_to_pick = obj
+            op = Operator(operator_type=op_name,
+                          discrete_parameters={'object': self.objects_not_in_goal[0]},
+                          continuous_parameters=None,
+                          low_level_motion=None)
+        return op
 
-        pick_base_pose, grasp_params, g_config = action
-        set_robot_config(pick_base_pose, self.robot)
-        """
-        grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
-                                       height_portion=grasp_params[1],
-                                       theta=grasp_params[0],
-                                       obj=obj_to_pick,
-                                       robot=self.robot)
-        g_config = solveTwoArmIKs(self.env, self.robot, obj_to_pick, grasps)
-        try:
-            assert g_config is not None
-        except:
-            import pdb;pdb.set_trace()
-        """
-
-        action = {'base_pose': pick_base_pose, 'g_config': g_config}
-        two_arm_pick_object(obj_to_pick, self.robot, action)
-        curr_state = self.get_state()
-        reward = 0
-        pick_path = None
-        return curr_state, reward, g_config, pick_path
 
 
 

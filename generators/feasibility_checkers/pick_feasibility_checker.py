@@ -17,15 +17,10 @@ class PickFeasibilityChecker(object):
         self.robot = self.env.GetRobots()[0]
 
     def check_feasibility(self, node, pick_parameters):
-        obj = node.obj
+        # This function checks if the base pose is not in collision and if there is a feasible pick
+        obj = node.operator_skeleton.discrete_parameters['object']
         grasp_params, pick_base_pose = get_pick_base_pose_and_grasp_from_pick_parameters(obj, pick_parameters)
-        # todo disable objects for fetch
-        if self.problem_env.name == 'convbelt' or self.problem_env.is_solving_fetching:
-            self.problem_env.disable_objects()
-            obj.Enable(True)
         g_config = self.compute_g_config(obj, pick_base_pose, grasp_params)
-        if self.problem_env.name == 'convbelt' or self.problem_env.is_solving_fetching:
-            self.problem_env.enable_objects()
 
         if g_config is not None:
             pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
@@ -38,6 +33,7 @@ class PickFeasibilityChecker(object):
 
     def compute_grasp_config(self, obj, pick_base_pose, grasp_params):
         set_robot_config(pick_base_pose, self.robot)
+        # todo this part, I need to ignore
         if self.env.CheckCollision(self.robot):
             return None
         grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
@@ -55,24 +51,15 @@ class PickFeasibilityChecker(object):
             if g_config is not None:
                 pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
                                'grasp_params': grasp_params, 'g_config': g_config}
-                if self.problem_env.name == 'convbelt':
-                    two_arm_pick_object(obj, self.robot, pick_action)
-                    set_robot_config(self.problem_env.init_base_conf, self.robot)
-                    if not self.env.CheckCollision(self.robot):
-                        two_arm_place_object(obj, self.robot, pick_action)
-                        set_robot_config(self.problem_env.init_base_conf, self.robot)
-                        #print "Sampling pick succeeded"
-                        return g_config
-                    else:
-                        two_arm_place_object(obj, self.robot, pick_action)
-                        set_robot_config(self.problem_env.init_base_conf, self.robot)
+                two_arm_pick_object(obj, self.robot, pick_action)
+
+                inside_region = self.problem_env.regions['entire_region'].contains(self.robot.ComputeAABB())
+
+                if not self.env.CheckCollision(self.robot) and inside_region:
+                    two_arm_place_object(obj, self.robot, pick_action)
+                    return g_config
                 else:
-                    two_arm_pick_object(obj, self.robot, pick_action)
-                    if not self.env.CheckCollision(self.robot):
-                        two_arm_place_object(obj, self.robot, pick_action)
-                        #print "Sampling pick succeeded"
-                        return g_config
-                    else:
-                        two_arm_place_object(obj, self.robot, pick_action)
+                    two_arm_place_object(obj, self.robot, pick_action)
             else:
                 return None
+

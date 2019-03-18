@@ -332,15 +332,8 @@ class ProblemEnvironment:
         self.robot.SetDOFValues(pick_config)
         grab_obj(self.robot, obj)
 
-    def disable_objects_in_region(self, region_name):
-        raise NotImplementedError
-
-    def enable_objects_in_region(self, region_name):
-        raise NotImplementedError
-
     def is_region_contains_all_objects(self, region, objects):
         return np.all([region.contains(obj.ComputeAABB()) for obj in objects])
-
 
     def get_objs_in_collision(self, path, region_name):
         assert len(path[0]) == self.robot.GetActiveDOF(), 'Robot active dof should match the path'
@@ -367,6 +360,26 @@ class ProblemEnvironment:
                                        robot=self.robot)
         g_config = solveTwoArmIKs(self.env, self.robot, obj_to_pick, grasps)
     """
+
+    def disable_objects_in_region(self):
+        for object in self.objects:
+            object.Enable(False)
+
+    def enable_objects_in_region(self):
+        for object in self.objects:
+            object.Enable(True)
+
+    def disable_objects(self):
+        for object in self.objects:
+            if object is None:
+                continue
+            object.Enable(False)
+
+    def enable_objects(self):
+        for object in self.objects:
+            if object is None:
+                continue
+            object.Enable(True)
 
     def apply_pick_action(self, action, obj=None):
         raise NotImplementedError

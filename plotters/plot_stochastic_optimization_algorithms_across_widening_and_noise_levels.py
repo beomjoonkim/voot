@@ -22,11 +22,11 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_name = 'stovoo_with_N_eta'
-    algo_name = 'stovoo'
+    #algo_name = 'stovoo'
 
-    widening_values = [0.3, 0.5, 0.7, 0.8, 0.9]
-    #widening_values = [0,2,3,4,10,20,30,100,500]
-    ucb_values = [100.0, 200.0, 300.0, 400.0, 500.0, 1000.0, 5000.0]
+    widening_values = [0.1, 0.3, 0.5, 0.7, 0.9]
+    widening_values = [0.0, 2.0, 3.0, 4.0, 10.0, 20.0, 30.0]
+    ucb_values = [100.0]
 
     mean_values = []
     configurations = []
@@ -38,7 +38,11 @@ def plot_across_algorithms():
                                   function_noise=args.function_noise, algo_parameters=algo_parameters)
 
             noise_level_max_values = []
-            for fin in os.listdir(fdir):
+            try:
+                file_list = os.listdir(fdir)
+            except:
+                continue
+            for fin in file_list:
                 result = pickle.load(open(fdir + fin, 'r'))
                 max_ys = np.array(result['max_ys'])
                 try:

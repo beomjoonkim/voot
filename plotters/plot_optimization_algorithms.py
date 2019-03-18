@@ -170,6 +170,7 @@ def plot_across_algorithms():
 
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
         print  "===================="
+
     savefig('Number of function evaluations', 'Best function values',
             fname='./plotters/' + args.obj_fcn + '_fcn_optimization_' + str(args.dim))
 

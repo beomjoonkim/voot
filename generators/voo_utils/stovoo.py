@@ -30,6 +30,15 @@ class StoVOO(VOO):
         n_arms = len(self.arms)
         if self.is_progressive_widening:
             if n_arms <= self.widening_parameter * self.n_evaluations:
+                # self.widening_parameter = 0.1
+                # n_evaluations = 0,1,2,3,4,5,6,7,8,9,10,11,...,20
+                # w*n = 0, 0.1, 0.2, 0.3,..., 0.9, 1, 2
+                # n_arms = 0, w*n=0 -> new arm
+                # n_arms = 1, w*n=0.1 -> ucb
+                # n_arms = 1, w*n=0.2 -> ucb
+                # n_arms = 1, w*n=0.3 -> ucb
+                #   ...
+                # n_arms = 1, w*n=0.9 -> ucb
                 return False
             else:
                 return True

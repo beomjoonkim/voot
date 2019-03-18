@@ -59,7 +59,8 @@ class MCTS:
 
         self.env = self.environment.env
         self.robot = self.environment.robot
-        self.s0_node = self.create_node(None, depth=0, reward=0, is_init_node=True)
+        self.s0_node = self.create_node(None, depth=0, reward=0,
+                                        objects_not_in_goal=self.environment.objects_not_in_goal, is_init_node=True)
 
         self.original_s0_node = self.s0_node
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
@@ -94,20 +95,19 @@ class MCTS:
             print "Wrong sampling strategy"
             return -1
 
-    def create_node(self, parent_action, depth, reward, is_init_node):
+    def create_node(self, parent_action, depth, reward, objects_not_in_goal, is_init_node):
         if self.environment.is_goal_reached():
-            operator_skeleton = None
+            operator = None
         else:
-            operator_skeleton = self.environment.get_applicable_op()
+            operator = self.environment.get_applicable_ops()
 
         state_saver = DynamicEnvironmentStateSaver(self.environment.env)
-        node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver,
-                        self.sampling_strategy, is_init_node)
+        node = TreeNode(operator, self.exploration_parameters, depth, state_saver, self.sampling_strategy, is_init_node)
 
         if not self.environment.is_goal_reached():
-            node.sampling_agent = self.create_sampling_agent(node, operator_skeleton.type)
+            node.sampling_agent = self.create_sampling_agent(node, operator)
 
-        node.objects_not_in_goal = self.environment.objects_not_in_goal
+        node.objects_not_in_goal = objects_not_in_goal
         node.parent_action_reward = reward
         node.parent_action = parent_action
         return node
@@ -157,6 +157,41 @@ class MCTS:
         self.s0_node = node
         self.s0_node.is_init_node = True
         self.found_solution = False
+        """
+        if self.environment.is_solving_namo:
+            self.environment.set_init_namo_object_names([o.GetName() for o in node.objs_in_collision])
+
+            # We need to keep track of what the objs in collision are for each action, so that
+            # when we switch the root node, we can set that
+            # More generally, we need to keep track of what objects are left to be manipulated
+            # How can we do so?
+            # Ideas:
+            #   1) each node keeps it
+            #   2) statesaver keeps it, and so the wrapper around it, when the restore is called, updates the objects
+            # I guess it does not matter. What matters  is its name.
+            # It should be called the objects_not_in_goal?
+            self.high_level_planner.task_plan[0]['objects'] = node.objs_in_collision
+            self.environment.reset_to_init_state(node)
+
+        elif self.environment.is_solving_packing:
+            curr_obj_plan = self.high_level_planner.task_plan[0]['objects']
+            for obj_idx, curr_obj in enumerate(curr_obj_plan):
+                if not self.environment.regions['object_region'].contains(curr_obj.ComputeAABB()):
+                    break
+            self.high_level_planner.set_object_index(obj_idx)
+            self.environment.reset_to_init_state(node)
+        """
+
+    def choose_next_node_to_descend_to(self):
+        n_visits_to_each_action = self.s0_node.N.values()
+        if len(np.unique(n_visits_to_each_action)) == 1:
+            # todo descend to the one that has the highest FEASIBLE Q
+            best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+        else:
+            best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
+        best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+        best_node = self.s0_node.children[best_action]
+        return best_node, best_action
 
     def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
@@ -170,17 +205,90 @@ class MCTS:
         reward_lists = []
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
+            """
+            if self.environment.is_solving_namo or self.environment.is_solving_packing:
+                is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
+                we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
+                    else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
+                # it will actually never switch.
+                if is_pick_node:
+                    if self.environment.is_solving_packing:
+                        we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+                    else:
+                        we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
+
+                    #if switch_counter > 10 and not we_have_feasible_action:
+                    #    print 'Going back to s0 node'
+                    #    self.switch_init_node(self.original_s0_node)
+                else:
+                    we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+                    #if switch_counter > 30 and not we_have_feasible_action:
+                    #    print 'Going back to s0 node'
+                    #    self.switch_init_node(self.original_s0_node)
+
+                if is_pick_node and we_evaluated_the_node_enough:
+                    print "Node switching from pick node"
+                    best_node, best_action = self.choose_next_node_to_descend_to()
+                    self.switch_init_node(best_node)
+                    switch_counter = 0
+                elif (not is_pick_node) and we_evaluated_the_node_enough:
+                    print "Node switching from place node"
+                    best_node, best_action = self.choose_next_node_to_descend_to()
+                    self.switch_init_node(best_node)
+                    print 'best child reward', best_node.parent_action_reward
+                    print 'best child Q', self.s0_node.parent.Q[best_action]
+                    print 'best child N', self.s0_node.parent.N[best_action]
+                    print 'Other Q values', self.s0_node.Q.values()
+                    switch_counter = 0
+            switch_counter += 1
+            """
+
             self.environment.reset_to_init_state(self.s0_node)
 
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
+            """
+            ### logging results
+            if socket.gethostname() == 'dell-XPS-15-9560':
+                if self.environment.is_solving_namo:
+                    pass
+                    #write_dot_file(self.tree, iteration, 'solving_namo')
+                elif self.environment.is_solving_packing:
+                    write_dot_file(self.tree, iteration, 'solving_packing')
+                elif self.environment.is_solving_fetching:
+                    write_dot_file(self.tree, iteration, 'solving_fetching')
+            """
+
             best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
             reward_lists.append(reward_list)
             plan = [self.retrace_best_plan(best_node), best_traj_rwd, self.found_solution]
 
+            """
+            if (iteration % 100 == 0 and iteration != 0) or (iteration == n_iter):
+                self.high_level_planner.save_results(search_time_to_reward, plan, reward_lists, iteration)
+
+            print np.array(search_time_to_reward)[:, -2], np.max(np.array(search_time_to_reward)[:, -2]), reward_list, found_solution_permanent
+
+            if self.found_solution:
+                found_solution_permanent = True
+                optimal_iter += 1
+                goal_node = best_node
+                if self.optimal_score_achieved(best_traj_rwd):
+                    print "Optimal score found"
+                    break
+                if self.environment.is_solving_namo and len(self.s0_node.objs_in_collision) == 0:
+                    self.switch_init_node(self.original_s0_node)
+                else:
+                    self.switch_init_node(self.s0_node)
+
+                self.found_solution = False
+            else:
+                plan = None
+                goal_node = None
+            """
             goal_node = None
 
             if time_to_search > max_time:
@@ -188,6 +296,14 @@ class MCTS:
 
         self.environment.reset_to_init_state(self.s0_node)
         return search_time_to_reward, plan, goal_node, reward_lists
+
+    """
+    def optimal_score_achieved(self, best_traj_rwd):
+        # return best_traj_rwd == self.environment.optimal_score
+        # in the case of namo, this is the length of the object
+        # in the case of original problem, this is the number of objects to be packed
+        return self.high_level_planner.is_optimal_score_achieved(best_traj_rwd)
+    """
 
     def choose_action(self, curr_node):
         n_actions = len(curr_node.A)
@@ -198,7 +314,7 @@ class MCTS:
             is_time_to_sample = is_time_to_sample or (best_Q == self.environment.infeasible_reward) or is_next_node_goal
 
         if is_time_to_sample:
-            new_continuous_parameters = self.sample_continuous_parameters(curr_node)
+            new_continuous_parameters = self.sample_action(curr_node)
             curr_node.add_actions(new_continuous_parameters)
 
         action = curr_node.perform_ucb_over_actions()
@@ -242,20 +358,49 @@ class MCTS:
             print "Is it time to pick?", self.environment.is_pick_time()
 
         action = self.choose_action(curr_node)
-        reward = self.environment.apply_action(curr_node, action)
+
+        parent_motion = None
+        if curr_node.is_action_tried(action):
+            if DEBUG:
+                print "Executing tree policy, taking action ", action
+            next_node = curr_node.get_child_node(action)
+            if next_node.parent_motion is None:
+                check_feasibility = True
+            else:
+                parent_motion = next_node.parent_motion
+                check_feasibility = False
+        else:
+            check_feasibility = True  # todo: store path?
+
+        if DEBUG:
+            print 'Is pick time? ', self.environment.is_pick_time()
+            print "Executing action ", action
+
+        next_state, reward, parent_motion, objs_in_collision = self.environment.apply_action(curr_node, action,
+                                                                                             check_feasibility,
+                                                                                             parent_motion)
+        import pdb;pdb.set_trace()
+        if DEBUG:
+            print 'Reward ', reward
+        #self.high_level_planner.update_task_plan_indices(reward, action['operator_name']) # create the next node based on the updated task plan progress
 
         if not curr_node.is_action_tried(action):
-            next_node = self.create_node(action, depth+1, reward, is_init_node=False)
+            next_node = self.create_node(action, depth+1, reward, objs_in_collision, is_init_node=False)
             self.tree.add_node(next_node, action, curr_node)
             next_node.sum_ancestor_action_rewards = next_node.parent.sum_ancestor_action_rewards + reward
 
+        if next_node.parent_motion is None and reward != self.environment.infeasible_reward:
+            next_node.parent_motion = parent_motion
+
         is_infeasible_action = reward == self.environment.infeasible_reward
         if is_infeasible_action:
+            # this (s,a) is a dead-end
             sum_rewards = reward
         else:
             sum_rewards = reward + self.discount_rate * self.simulate(next_node, depth + 1)
 
         self.update_node_statistics(curr_node, action, sum_rewards, reward)
+
         if curr_node.is_init_node and curr_node.parent is not None:
             self.update_ancestor_node_statistics(curr_node.parent, curr_node.parent_action, sum_rewards)
 
@@ -296,7 +441,8 @@ class MCTS:
         return next_state, reward, path, objs_in_collision
     """
 
-    def sample_continuous_parameters(self, node):
-        return node.sampling_agent.sample_next_point(node, self.n_feasibility_checks)
+    def sample_action(self, node):
+        action = node.sampling_agent.sample_next_point(node, self.n_feasibility_checks)
+        return action
 
 

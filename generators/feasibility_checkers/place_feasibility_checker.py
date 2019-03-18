@@ -1,12 +1,5 @@
-import sys
-import numpy as np
-import pickle
-
-sys.path.append('../mover_library/')
-from samplers import *
-from utils import set_robot_config, grab_obj, release_obj
-from planners.mcts_utils import make_action_executable
-import time
+from mover_library.samplers import *
+from mover_library.utils import set_robot_config, grab_obj, release_obj
 
 
 class PlaceFeasibilityChecker:
@@ -17,8 +10,13 @@ class PlaceFeasibilityChecker:
         self.robot_region = self.problem_env.regions['entire_region']
 
     def check_feasibility(self, node, place_parameters):
-        obj = node.obj
-        obj_region = node.region
+        # Note:
+        #    this function checks if the target region contains the robot when we place object at place_parameters
+        #    and whether the robot will be in collision
+        # todo: change its name
+
+        obj = self.robot.GetGrabbed()[0]
+        obj_region = node.operator_skeleton.discrete_parameters['region']
         obj_pose = place_parameters
 
         T_r_wrt_o = np.dot(np.linalg.inv(obj.GetTransform()), self.robot.GetTransform())
@@ -62,7 +60,6 @@ class PlaceFeasibilityChecker:
         grab_obj(robot, obj)
         robot.SetTransform(original_robot_T)
         return robot_xytheta
-
 
     def predict(self, obj, obj_region, n_iter):
         original_trans = self.robot.GetTransform()

@@ -26,7 +26,7 @@ def get_result_dir(algo_name, dimension, obj_fcn, function_noise, algo_parameter
 
 def get_results(algo_name, args, algo_parameters):
     obj_fcn = args.obj_fcn
-    dimension = args.n_dim
+    dimension = args.dim
     result_dir = get_result_dir(algo_name, dimension, obj_fcn, args.function_noise, algo_parameters)
 
     max_y_values = []
@@ -97,11 +97,11 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='parameters')
     parser.add_argument('-obj_fcn', type=str, default='griewank')
-    parser.add_argument('-n_dim', type=int, default=10)
+    parser.add_argument('-dim', type=int, default=10)
     parser.add_argument('-function_noise', type=float, default=200.0)
     args = parser.parse_args()
 
-    algo_names = ['stovoo', 'stosoo'] #'stovoo_with_N_eta', 'stosoo']
+    algo_names = ['stosoo', 'stovoo_with_N_eta', 'stovoo']
     if args.obj_fcn == 'ackley':
         if args.function_noise == 30:
             algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 2},
@@ -128,8 +128,8 @@ def plot_across_algorithms():
                                'stosoo': {'ucb': 1.0, 'widening': 1},
                                'stounif': {'ucb': 1.0, 'widening': 1}}
     elif args.obj_fcn == 'griewank':
-        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 0.5},
-                           'stovoo_with_N_eta': {'ucb': 100.0, 'widening': 10.0},
+        algo_parameters = {'stovoo': {'ucb': 100.0, 'widening': 0.1},
+                           'stovoo_with_N_eta': {'ucb': 200.0, 'widening': 4.0},
                            'stosoo': {'ucb': 1.0, 'widening': 1.0},
                            'stounif': {'ucb': 1.0, 'widening': 1},
                            }
@@ -148,16 +148,27 @@ def plot_across_algorithms():
     sns.tsplot([0] * 5000, range(5000), ci=95, condition='Optimum', color='magenta')
     for algo_idx, algo_name in enumerate(algo_names):
         search_rwd_times = get_results(algo_name, args, algo_parameters[algo_name])
+
         n_samples = search_rwd_times.shape[-1]
 
-        sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo_name.upper(),
+        algo = algo_name.upper()
+        parameters = algo_parameters[algo_name]
+        algo_and_parameter = algo + '_UCB_' + str(parameters['ucb']) + '_W_' + str(parameters['widening'])
+
+        sns.tsplot(search_rwd_times, range(n_samples), ci=95,
+                   condition=algo_and_parameter,
                    color=color_dict[color_names[algo_idx]])
 
         print algo_name, np.mean(search_rwd_times, axis=0)[-1]
-    plt.show()
 
+    counter = 0
+    plot_dir = './plotters/'
+    plot_name = 'stochastic_' + args.obj_fcn + '_' + str(args.dim) + '_' + str(counter)
+    while os.path.isfile(plot_dir+plot_name+'.png'):
+        counter += 1
+        plot_name = 'stochastic_' + args.obj_fcn + '_' + str(args.dim) + '_' + str(counter)
 
-
+    savefig('Number of function evaluations', 'Best function values', fname=plot_dir+plot_name)
 
 
 if __name__ == '__main__':
