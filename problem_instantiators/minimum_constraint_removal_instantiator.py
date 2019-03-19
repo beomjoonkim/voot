@@ -13,6 +13,7 @@ class MinimumConstraintRemovalInstantiator(PlanningProblemInstantiator):
         initial_collisions = self.environment.get_objs_in_collision(swept_volume_to_clear_obstacles_from,
                                                                     'entire_region')
         self.environment.set_objects_not_in_goal(initial_collisions)
+        self.environment.set_swept_volume(swept_volume_to_clear_obstacles_from)
 
     def load_swept_volume(self):
         swept_volume_file_name = './problem_environments/mover_domain_problems/fetching_path_' + \

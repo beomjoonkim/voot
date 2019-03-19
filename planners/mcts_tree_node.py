@@ -22,12 +22,10 @@ class TreeNode:
         self.reward_history = {}  # for debugging purpose
         self.ucb_parameter = ucb_parameter
         self.parent_motion = None
-        self.is_init_node = False
         self.is_goal_node = False
         self.is_goal_and_already_visited = False
         self.depth = depth
         self.sum_rewards = 0
-        self.operator = None
         self.sampling_agent = None
 
         self.state_saver = state_saver

@@ -4,7 +4,6 @@ import numpy as np
 
 from mcts_tree_node import TreeNode
 from mcts_tree import MCTSTree
-from mcts_utils import make_action_hashable, is_action_hashable
 
 from generators.uniform import UniformGenerator
 from generators.voo import VOOGenerator
@@ -70,15 +69,6 @@ class MCTS:
             self.goal_reward = 0
         self.n_feasibility_checks = n_feasibility_checks
 
-        """
-        if domain_name == 'convbelt':
-            self.depth_limit = 10
-            self.is_satisficing_problem = True
-        elif domain_name == 'namo':
-            self.depth_limit = np.inf
-            self.is_satisficing_problem = False
-        """
-
     def create_sampling_agent(self, node, operator_name):
         if self.sampling_strategy == 'unif':
             return UniformGenerator(operator_name, self.environment)
@@ -98,16 +88,16 @@ class MCTS:
         if self.environment.is_goal_reached():
             operator_skeleton = None
         else:
-            operator_skeleton = self.environment.get_applicable_op()
+            operator_skeleton = self.environment.get_applicable_op_skeleton()
 
         state_saver = DynamicEnvironmentStateSaver(self.environment.env)
-        node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver,
-                        self.sampling_strategy, is_init_node)
+        node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
+                        is_init_node)
 
         if not self.environment.is_goal_reached():
             node.sampling_agent = self.create_sampling_agent(node, operator_skeleton.type)
 
-        node.objects_not_in_goal = self.environment.objects_not_in_goal
+        node.objects_not_in_goal = self.environment.objects_currently_not_in_goal
         node.parent_action_reward = reward
         node.parent_action = parent_action
         return node
@@ -123,21 +113,16 @@ class MCTS:
             best_child_action = node.N.keys()[best_child_action_idx]
             return node.children[best_child_action]
 
-    def retrace_best_plan(self, best_node):
+    def retrace_best_plan(self):
         plan = []
-        #curr_node = self.get_best_goal_node()
-        curr_node = best_node
-        #while not curr_node.is_init_node:
+        _, _, best_leaf_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
+        curr_node = best_leaf_node
+
         while not curr_node.parent is None:
-            action = curr_node.parent_action
-            path = curr_node.parent_motion
-            obj = curr_node.parent.obj
-            obj_name = obj.GetName()
-            operator = curr_node.parent.operator
-            objs_in_collision = curr_node.objs_in_collision
-            plan.insert(0, {'action': action, 'path': path, 'obj_name': obj_name, 'operator': operator,
-                            'obj_names_in_collision': [obj.GetName() for obj in objs_in_collision]})
+            plan.append(curr_node.parent_action)
             curr_node = curr_node.parent
+
+        plan = plan[::-1]
         return plan
 
     def get_best_goal_node(self):
@@ -158,6 +143,10 @@ class MCTS:
         self.s0_node.is_init_node = True
         self.found_solution = False
 
+    def log_current_tree_to_dot_file(self, iteration):
+        if socket.gethostname() == 'dell-XPS-15-9560':
+            write_dot_file(self.tree, iteration, '')
+
     def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
         depth = 0
@@ -168,6 +157,7 @@ class MCTS:
         switch_counter = 0
         found_solution_permanent = False
         reward_lists = []
+        plan = None
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
@@ -176,18 +166,17 @@ class MCTS:
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
-            best_traj_rwd, best_node, reward_list = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
-            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd,  self.found_solution])
-            reward_lists.append(reward_list)
-            plan = [self.retrace_best_plan(best_node), best_traj_rwd, self.found_solution]
+            self.log_current_tree_to_dot_file(iteration)
 
-            goal_node = None
+            best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
+            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, progress])
+            plan = [self.retrace_best_plan(), best_traj_rwd, progress]
 
             if time_to_search > max_time:
                 break
 
         self.environment.reset_to_init_state(self.s0_node)
-        return search_time_to_reward, plan, goal_node, reward_lists
+        return search_time_to_reward, plan
 
     def choose_action(self, curr_node):
         n_actions = len(curr_node.A)
@@ -207,22 +196,18 @@ class MCTS:
 
     @staticmethod
     def update_node_statistics(curr_node, action, sum_rewards, reward):
+        # todo rewrite this function
         curr_node.Nvisited += 1
-        if is_action_hashable(action):
-            hashable_action = action
+
+        is_action_never_tried = curr_node.N[action] == 0
+        if is_action_never_tried:
+            curr_node.reward_history[action] = [reward]
+            curr_node.Q[action] = sum_rewards
+            curr_node.N[action] += 1
         else:
-            hashable_action = make_action_hashable(action)
-        is_action_new = not (hashable_action in curr_node.A)
-        if is_action_new:
-            curr_node.A.append(hashable_action)
-            curr_node.N[hashable_action] = 1
-            curr_node.Q[hashable_action] = sum_rewards
-            curr_node.reward_history[hashable_action] = [reward]
-        else:
-            curr_node.N[hashable_action] += 1
-            curr_node.reward_history[hashable_action].append(reward)
-            curr_node.Q[hashable_action] += (sum_rewards - curr_node.Q[hashable_action]) / \
-                                            float(curr_node.N[hashable_action])
+            curr_node.reward_history[action].append(reward)
+            curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
+            curr_node.N[action] += 1
 
     def simulate(self, curr_node, depth):
         if self.environment.is_goal_reached():
@@ -242,12 +227,14 @@ class MCTS:
             print "Is it time to pick?", self.environment.is_pick_time()
 
         action = self.choose_action(curr_node)
-        reward = self.environment.apply_action(curr_node, action)
+        reward = self.environment.apply_operator_instance(action)
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, is_init_node=False)
             self.tree.add_node(next_node, action, curr_node)
             next_node.sum_ancestor_action_rewards = next_node.parent.sum_ancestor_action_rewards + reward
+        else:
+            next_node = curr_node.children[action]
 
         is_infeasible_action = reward == self.environment.infeasible_reward
         if is_infeasible_action:
@@ -265,7 +252,7 @@ class MCTS:
         if node is None:
             return
 
-        parent_reward_to_node = node.reward_history[make_action_hashable(action)][0]
+        parent_reward_to_node = node.reward_history[action][0]
         parent_sum_rewards = parent_reward_to_node + self.discount_rate * child_sum_rewards
         self.update_node_statistics(node, action, parent_sum_rewards, parent_reward_to_node)
 
