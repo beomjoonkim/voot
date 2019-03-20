@@ -136,16 +136,48 @@ class MCTS:
         return curr_node
 
     def switch_init_node(self, node):
-        self.environment.reset_to_init_state(node)
         self.s0_node.is_init_node = False
-
         self.s0_node = node
         self.s0_node.is_init_node = True
+        self.environment.reset_to_init_state(node)
         self.found_solution = False
 
     def log_current_tree_to_dot_file(self, iteration):
         if socket.gethostname() == 'dell-XPS-15-9560':
             write_dot_file(self.tree, iteration, '')
+
+    def is_time_to_switch_initial_node(self):
+        # todo implement this function and test it
+        is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
+        we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
+            else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
+        # it will actually never switch.
+        if is_pick_node:
+            if self.environment.is_solving_packing:
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+            else:
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
+
+            # if switch_counter > 10 and not we_have_feasible_action:
+            #    print 'Going back to s0 node'
+            #    self.switch_init_node(self.original_s0_node)
+        else:
+            we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+            # if switch_counter > 30 and not we_have_feasible_action:
+            #    print 'Going back to s0 node'
+            #    self.switch_init_node(self.original_s0_node)
+
+    def choose_child_node_to_descend_to(self):
+        """
+        n_visits_to_each_action = self.s0_node.N.values()
+        if len(np.unique(n_visits_to_each_action)) == 1:
+            best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
+        else:
+            best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
+        """
+        best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())] # choose the best Q value
+        best_node = self.s0_node.children[best_action]
+        return best_node
 
     def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
@@ -161,6 +193,10 @@ class MCTS:
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
+
+            if self.is_time_to_switch_initial_node():
+                best_child_node = self.choose_child_node_to_descend_to()
+                self.switch_init_node(best_child_node)
 
             stime = time.time()
             self.simulate(self.s0_node, depth)
@@ -257,31 +293,6 @@ class MCTS:
         self.update_node_statistics(node, action, parent_sum_rewards, parent_reward_to_node)
 
         self.update_ancestor_node_statistics(node.parent, node.parent_action, parent_sum_rewards)
-
-    """
-    def apply_action(self, node, action, check_feasibility, parent_motion):
-        if action is None:
-            return None, self.environment.infeasible_reward, None
-        which_operator = self.environment.which_operator(node.obj)
-        if which_operator == 'two_arm_pick':
-            if self.environment.name == 'convbelt':
-                self.environment.disable_objects()
-                node.obj.Enable(True)
-            next_state, reward, path, objs_in_collision = self.environment.apply_two_arm_pick_action(action, node, check_feasibility, parent_motion)
-            if self.environment.name == 'convbelt':
-                self.environment.enable_objects()
-                node.obj.Enable(True)
-        elif which_operator == 'two_arm_place':
-            next_state, reward, path, objs_in_collision = self.environment.apply_two_arm_place_action(action, node, check_feasibility, parent_motion)
-        elif which_operator == 'one_arm_pick':
-            next_state, reward, path, objs_in_collision = self.environment.apply_one_arm_pick_action(action, node.obj, node.region, check_feasibility, parent_motion)
-        elif which_operator == 'one_arm_place':
-            next_state, reward, path, objs_in_collision = self.environment.apply_one_arm_place_action(action, node.obj, node.region, check_feasibility, parent_motion)
-        elif which_operator == 'next_base_pose':
-            next_state, reward, path, objs_in_collision = self.environment.apply_next_base_pose(action, node, check_feasibility, parent_motion)
-
-        return next_state, reward, path, objs_in_collision
-    """
 
     def sample_continuous_parameters(self, node):
         return node.sampling_agent.sample_next_point(node, self.n_feasibility_checks)
