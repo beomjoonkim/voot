@@ -11,6 +11,7 @@ import os
 import numpy as np
 import random
 import socket
+import openravepy
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560' or hostname=='phaedra':
@@ -101,8 +102,8 @@ def set_random_seed(random_seed):
 
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-widening_parameter', type=float, default=0.8)
+    parser.add_argument('-uct', type=float, default=1.0)
+    parser.add_argument('-widening_parameter', type=float, default=2.0)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)
@@ -139,35 +140,13 @@ def main():
         problem_instantiator.environment.env.SetViewer('qtcoin')
 
     mcts = instantiate_mcts(args, problem_instantiator.environment)
-    mcts.search(args.mcts_iter, 0)
+    search_time_to_reward, plan = mcts.search(args.mcts_iter, 0)
 
-    # todo lets try this again.
-    # I need ...
-    # no task plan is needed
-    # no high level planner is needed;  or do I?
-    # I do need something that will determine the fetching path, and then initiate a search on the corresponding
-    # namo problem
-    # but solving the corresponding namo problem is equivalent to begin from an initial state, and then
-    # solve for the solution for the given reward function. Since the initial state is given for a problem,
-    # the reward should be determined by the environment
+    pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
+                open(stat_file_name, 'wb'))
 
-
-
-
-    #task_plan = get_task_plan(args.domain, problem_env)
-    #hierarchical_planner = HighLevelPlanner(task_plan, problem_env, args.domain, args.debug)
-    #hierarchical_planner.set_mcts_parameters(args)
-    #hierarchical_planner.stat_file_name = stat_file_name
-
-    #search_time_to_reward, plan, optimal_score_achieved, reward_list = hierarchical_planner.search()
-    # todo check if search_time_to_reward returns a solution
-
-    #pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx,
-    #             'reward_list': reward_list,
-    #             'is_optimal_score': optimal_score_achieved}, open(stat_file_name, 'wb'))
-
-    #problem_env.problem_config['env'].Destroy()
-    #openravepy.RaveDestroy()
+    problem_instantiator.environment.env.Destroy()
+    openravepy.RaveDestroy()
 
 
 if __name__ == '__main__':

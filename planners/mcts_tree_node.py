@@ -32,6 +32,7 @@ class TreeNode:
         self.operator_skeleton = operator_skeleton
         self.is_init_node = is_init_node
         self.objs_in_collision = None
+        self.n_ucb_iterations = 0
 
         self.sampling_strategy = sampling_strategy
 
@@ -40,18 +41,39 @@ class TreeNode:
         no_evaled = [a for a in self.A if a not in self.Q.keys()]
         return np.random.choice(no_evaled)
 
+    def is_ucb_step(self, widening_parameter, infeasible_rwd):
+        n_arms = len(self.A)
+        if n_arms < 5:
+            return False
+        else:
+            all_explored_actions_are_infeasible = np.max(self.reward_history.values()) == infeasible_rwd
+            # should there be more than one action? I do not think so
+            if all_explored_actions_are_infeasible:
+                return False
+
+            if self.n_ucb_iterations < widening_parameter:
+                self.n_ucb_iterations += 1
+                return True
+            else:
+                self.n_ucb_iterations = 0
+                return False
+
     def perform_ucb_over_actions(self):
         best_value = -np.inf
         never_executed_actions_exist = len(self.Q) != len(self.A)
+
         if never_executed_actions_exist:
             best_action = self.get_never_evaluated_action()
         else:
+            best_action = self.Q.keys()[0]
             for action, value in zip(self.Q.keys(), self.Q.values()):
                 ucb_value = value + self.ucb_parameter * upper_confidence_bound(self.Nvisited, self.N[action])
 
+                # todo randomized tie-break
                 if ucb_value > best_value:
                     best_action = action
                     best_value = ucb_value
+
         return best_action
 
     def is_action_tried(self, action):

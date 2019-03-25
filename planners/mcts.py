@@ -44,13 +44,10 @@ class MCTS:
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
                  environment, domain_name):
         self.c1 = c1
-        self.progressive_widening_parameter = widening_parameter
+        self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
         self.time_limit = np.inf
-        if domain_name == 'namo':
-            self.discount_rate = 0.9
-        else:
-            self.discount_rate = 1
+        self.discount_rate = 0.9
         self.environment = environment
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
@@ -102,17 +99,6 @@ class MCTS:
         node.parent_action = parent_action
         return node
 
-    @staticmethod
-    def get_best_child_node(node):
-        if len(node.children) == 0:
-            return None
-        else:
-            # returns the most visited chlid
-            # another option is to return the child with best value
-            best_child_action_idx = np.argmax(node.N.values())
-            best_child_action = node.N.keys()[best_child_action_idx]
-            return node.children[best_child_action]
-
     def retrace_best_plan(self):
         plan = []
         _, _, best_leaf_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
@@ -129,8 +115,7 @@ class MCTS:
         leaves = self.tree.get_leaf_nodes()
         goal_nodes = [leaf for leaf in leaves if leaf.is_goal_node]
         if len(goal_nodes) > 1:
-            best_traj_reward, curr_node,_  = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
-            #curr_node = [leaf for leaf in goal_nodes if leaf.sum_ancestor_action_rewards == best_traj_reward][0]
+            best_traj_reward, curr_node, _ = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
         else:
             curr_node = goal_nodes[0]
         return curr_node
@@ -147,37 +132,39 @@ class MCTS:
             write_dot_file(self.tree, iteration, '')
 
     def is_time_to_switch_initial_node(self):
-        # todo implement this function and test it
-        is_pick_node = self.s0_node.operator.find('two_arm_pick') != -1
+        is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
+
         we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
             else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
+
         # it will actually never switch.
         if is_pick_node:
-            if self.environment.is_solving_packing:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
-            else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
-
-            # if switch_counter > 10 and not we_have_feasible_action:
-            #    print 'Going back to s0 node'
-            #    self.switch_init_node(self.original_s0_node)
+            we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 10
         else:
             we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
-            # if switch_counter > 30 and not we_have_feasible_action:
-            #    print 'Going back to s0 node'
-            #    self.switch_init_node(self.original_s0_node)
+
+
+        """
+        if we_evaluated_the_node_enough:
+            best_node, best_action = self.choose_child_node_to_descend_to()
+            self.switch_init_node(best_node)
+
+            # what happens to the objects that need to be moved? - it is kept in the node
+            if is_pick_node and we_have_feasible_action:
+                print "Node switching from pick node"
+            elif (not is_pick_node) and we_evaluated_the_node_enough:
+                print "Node switching from place node"
+                print 'best child reward', best_node.parent_action_reward
+                print 'best child Q', self.s0_node.parent.Q[best_action]
+                print 'best child N', self.s0_node.parent.N[best_action]
+                print 'Other Q values', self.s0_node.Q.values()
+        """
+        return we_evaluated_the_node_enough
 
     def choose_child_node_to_descend_to(self):
-        """
-        n_visits_to_each_action = self.s0_node.N.values()
-        if len(np.unique(n_visits_to_each_action)) == 1:
-            best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())]
-        else:
-            best_action = self.s0_node.N.keys()[np.argmax(n_visits_to_each_action)]
-        """
         best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())] # choose the best Q value
         best_node = self.s0_node.children[best_action]
-        return best_node
+        return best_node, best_action
 
     def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
@@ -195,7 +182,7 @@ class MCTS:
             self.environment.reset_to_init_state(self.s0_node)
 
             if self.is_time_to_switch_initial_node():
-                best_child_node = self.choose_child_node_to_descend_to()
+                best_child_node, best_action = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
             stime = time.time()
@@ -205,8 +192,8 @@ class MCTS:
             self.log_current_tree_to_dot_file(iteration)
 
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
-            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, progress])
-            plan = [self.retrace_best_plan(), best_traj_rwd, progress]
+            search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
+            plan = self.retrace_best_plan()
 
             if time_to_search > max_time:
                 break
@@ -215,17 +202,13 @@ class MCTS:
         return search_time_to_reward, plan
 
     def choose_action(self, curr_node):
-        n_actions = len(curr_node.A)
-        is_time_to_sample = n_actions <= self.progressive_widening_parameter * curr_node.Nvisited
-        if len(curr_node.Q.values()) > 0:
-            best_Q = np.max(curr_node.Q.values())
-            is_next_node_goal = np.all([child.is_goal_node for child in curr_node.children.values()])
-            is_time_to_sample = is_time_to_sample or (best_Q == self.environment.infeasible_reward) or is_next_node_goal
-
-        if is_time_to_sample:
+        if not curr_node.is_ucb_step(self.widening_parameter, self.environment.infeasible_reward):
+            print "Sampling new action"
+            # todo
+            #  I need to be able to sample values so that I touch the least number of obstacles
+            #  Right now, I am sampling values assuming I cannot stand at where they are
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
             curr_node.add_actions(new_continuous_parameters)
-
         action = curr_node.perform_ucb_over_actions()
 
         return action

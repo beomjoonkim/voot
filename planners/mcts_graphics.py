@@ -131,9 +131,6 @@ def recursive_write_tree_on_graph(curr_node, curr_node_string_form, graph):
     """
     string_form = get_node_info_in_string(curr_node, 0)  # I don't need to call this again if we have a parent
     graph.add_node(string_form)
-    if curr_node.is_init_node:
-        node = graph.get_node(string_form)
-        node.attr['color'] = "red"
 
     if curr_node.is_goal_node:
         node = graph.get_node(string_form)
@@ -142,6 +139,9 @@ def recursive_write_tree_on_graph(curr_node, curr_node_string_form, graph):
 
     graph.add_node(curr_node_string_form)
     node = graph.get_node(curr_node_string_form)
+    if curr_node.is_init_node:
+        node = graph.get_node(curr_node_string_form)
+        node.attr['color'] = "red"
 
     for child_idx, child in enumerate(curr_node.children.values()):
         child_string_form = get_node_info_in_string(child, child_idx)
@@ -149,9 +149,6 @@ def recursive_write_tree_on_graph(curr_node, curr_node_string_form, graph):
         graph.add_edge(curr_node_string_form, child_string_form)
         edge = graph.get_edge(curr_node_string_form, child_string_form)
         edge.attr['label'] = child.parent_action.type
-
-
-
         recursive_write_tree_on_graph(child, child_string_form, graph)
     return
 
