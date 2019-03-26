@@ -8,7 +8,7 @@ import time
 def worker_p(config):
     s = config['sampling_strategy']
     d = config['domain']
-    pidx = config['trial']
+    pidx = config['pidx']
     w = config['widening_parameter']
     e = config['epsilon']
     mcts_iter = config['mcts_iter']
@@ -22,7 +22,7 @@ def worker_p(config):
         ' -random_seed ' + str(seed)
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -48,34 +48,31 @@ def main():
     sampling_strategy = args.sampling
     epsilons = args.epsilon if args.epsilon is not None else [-1.0]
     domain = args.domain
-    widening_parameters = args.w if args.w is not None else [0.8]
+    widening_parameters = args.w if args.w is not None else [1]
     mcts_iter = args.mcts_iter
     c1s = args.c1 if args.c1 is not None else [1.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
+    import pdb;pdb.set_trace()
 
-    if not args.pidxs_specified:
-        trials = range(args.pidxs[0], args.pidxs[1])
-    else:
-        trials = args.pidxs
 
-    seeds = range(args.random_seeds[0], args.random_seeds[1])
+    pidx = 0
+    seeds = range(0,10)
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for c1 in c1s:
             for e in epsilons:
-                for t in trials:
-                    for seed in seeds:
-                        for widening_parameter in widening_parameters:
-                            config = {"widening_parameter": widening_parameter,
-                                      "epsilon": e,
-                                      'trial': t,
-                                      'domain': domain,
-                                      'sampling_strategy': sampling_strategy,
-                                      'mcts_iter': mcts_iter,
-                                      'c1': c1,
-                                      'n_feasibility_checks': n_feasibility_check,
-                                      'seed': seed}
-                            configs.append(config)
+                for seed in seeds:
+                    for widening_parameter in widening_parameters:
+                        config = {"widening_parameter": widening_parameter,
+                                  "epsilon": e,
+                                  'pidx': pidx,
+                                  'domain': domain,
+                                  'sampling_strategy': sampling_strategy,
+                                  'mcts_iter': mcts_iter,
+                                  'c1': c1,
+                                  'n_feasibility_checks': n_feasibility_check,
+                                  'seed': seed}
+                        configs.append(config)
 
     n_workers = int(20)
     print configs
