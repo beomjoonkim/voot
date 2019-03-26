@@ -82,7 +82,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
                 reward = 0
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
-                self.objects_currently_not_in_goal = new_objects_not_in_goal # todo I can potentially save time by keeping the reward in the node
+                self.set_objects_not_in_goal(new_objects_not_in_goal) # todo I can potentially save time by keeping the reward in the node
             else:
                 raise NotImplementedError
 
@@ -122,7 +122,8 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         return motion, status
 
     def is_goal_reached(self):
-        return len(self.objects_currently_not_in_goal) == 0
+        goal_achieved = len(self.objects_currently_not_in_goal) == 0
+        return goal_achieved
 
     def which_operator(self):
         if self.is_pick_time():

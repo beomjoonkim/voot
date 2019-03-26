@@ -98,20 +98,18 @@ def write_parent_action(node, child_idx):
 
 
 def get_node_info_in_string(node, child_idx):
-    Q = ''
-    N = ''
-    reward_history = ''
+    if node.is_goal_node and node.Nvisited==1:
+        Q = str(node.reward)
+        reward_history = str(node.reward)
+    else:
+        Q = ''
+        reward_history = ''
 
-    for key, value in zip(node.Q.keys(), node.Q.values()):
-        Q = add_line(Q, key, value)
+        for key, value in zip(node.Q.keys(), node.Q.values()):
+            Q = add_line(Q, key, value)
 
-    for key, value in zip(node.reward_history.keys(), node.reward_history.values()):
-        reward_history = add_line(reward_history, key, np.max(value))
-
-    """
-    for key, value in zip(node.N.keys(), node.N.values()):
-        N = add_line(N, key, value)
-    """
+        for key, value in zip(node.reward_history.keys(), node.reward_history.values()):
+            reward_history = add_line(reward_history, key, np.max(value))
 
     # write parent action
     if node.parent_action is not None:
@@ -120,7 +118,6 @@ def get_node_info_in_string(node, child_idx):
         parent_action = 'None'
 
     info = 'parent_action: '+parent_action + '\n' + \
-           'N: ' + N + '\n' + \
            'Nvisited: ' + str(node.Nvisited) + '\n' + \
            'Q: ' + Q + '\n'+ \
            'R history: ' + reward_history
@@ -136,9 +133,12 @@ def recursive_write_tree_on_graph(curr_node, curr_node_string_form, graph):
         node = graph.get_node(string_form)
         node.attr['color'] = "blue"
     """
+    if curr_node.is_goal_node:
+        node = graph.get_node(curr_node_string_form)
+        node.attr['color'] = "blue"
 
     graph.add_node(curr_node_string_form)
-    node = graph.get_node(curr_node_string_form)
+
     if curr_node.is_init_node:
         node = graph.get_node(curr_node_string_form)
         node.attr['color'] = "red"
@@ -165,6 +165,3 @@ def write_dot_file(tree, file_idx, suffix):
     #todo test this graphics file
     print ("Done!")
 
-
-if __name__ == '__main__':
-    main()

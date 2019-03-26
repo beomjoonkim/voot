@@ -39,10 +39,7 @@ class MCTSTree:
         for n in leaf_nodes:
             curr_node = n
 
-            if n.is_goal_node:
-                reward_list = [n.reward_history.values()[0][0]]
-            else:
-                reward_list = []
+            reward_list = []
             while curr_node.parent is not None:
                 reward_list.append(curr_node.parent.reward_history[curr_node.parent_action][0])
                 curr_node = curr_node.parent

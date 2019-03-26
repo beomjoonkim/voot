@@ -114,7 +114,7 @@ def main():
     parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-seed', type=int, default=50)
     parser.add_argument('-max_time', type=float, default=np.inf)
-    parser.add_argument('-c1', type=float, default=1)
+    parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-random_seed', type=int, default=-1)
 
@@ -140,7 +140,7 @@ def main():
         problem_instantiator.environment.env.SetViewer('qtcoin')
 
     mcts = instantiate_mcts(args, problem_instantiator.environment)
-    search_time_to_reward, plan = mcts.search(args.mcts_iter, 0)
+    search_time_to_reward, plan = mcts.search(args.mcts_iter)
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
                 open(stat_file_name, 'wb'))

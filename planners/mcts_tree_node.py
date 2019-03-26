@@ -35,6 +35,7 @@ class TreeNode:
         self.n_ucb_iterations = 0
 
         self.sampling_strategy = sampling_strategy
+        self.is_goal_node = False
 
     def get_never_evaluated_action(self):
         # get list of actions that do not have an associated Q values
@@ -47,8 +48,9 @@ class TreeNode:
             return False
         else:
             all_explored_actions_are_infeasible = np.max(self.reward_history.values()) == infeasible_rwd
-            # should there be more than one action? I do not think so
-            if all_explored_actions_are_infeasible:
+            next_state_terminal = np.any([c.is_goal_node for c in self.children.values()]) # always sample a new action if next state is terminal state
+
+            if all_explored_actions_are_infeasible or next_state_terminal:
                 return False
 
             if self.n_ucb_iterations < widening_parameter:

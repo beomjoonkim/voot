@@ -10,8 +10,14 @@ class MinimumConstraintRemovalInstantiator(PlanningProblemInstantiator):
 
         self.environment = MinimumDisplacementRemoval(problem_idx=1)
         swept_volume_to_clear_obstacles_from = self.load_swept_volume()
-        initial_collisions = self.environment.get_objs_in_collision(swept_volume_to_clear_obstacles_from,
-                                                                    'entire_region')
+        initial_collisions = self.environment.get_objs_in_collision(swept_volume_to_clear_obstacles_from, 'entire_region')
+        """
+        for o in initial_collisions[1:]:
+            self.environment.env.Remove(o)
+            self.environment.objects.remove(o)
+            initial_collisions.remove(o)
+        """
+
         self.environment.set_objects_not_in_goal(initial_collisions)
         self.environment.set_swept_volume(swept_volume_to_clear_obstacles_from)
 

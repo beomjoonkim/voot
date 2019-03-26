@@ -61,10 +61,7 @@ class MCTS:
         self.original_s0_node = self.s0_node
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
-        if self.environment.name == 'namo':
-            self.goal_reward = 2
-        else:
-            self.goal_reward = 0
+        self.goal_reward = 2
         self.n_feasibility_checks = n_feasibility_checks
 
     def create_sampling_agent(self, node, operator_name):
@@ -143,6 +140,9 @@ class MCTS:
             write_dot_file(self.tree, iteration, '')
 
     def is_time_to_switch_initial_node(self):
+        if self.s0_node.is_goal_node:
+            return True
+
         is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
 
         if len(self.s0_node.Q) == 0:
@@ -150,38 +150,35 @@ class MCTS:
         else:
             root_node_reward_history = self.s0_node.reward_history.values()
             root_node_reward_history = [r for R in root_node_reward_history for r in R]
-            we_have_feasible_action = np.max(root_node_reward_history) > 0
+            we_have_feasible_action = np.max(root_node_reward_history) >= 0
 
-        # it will actually never switch.
         if is_pick_node:
             we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 10
         else:
-            we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+            we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
 
         return we_evaluated_the_node_enough
 
     def choose_child_node_to_descend_to(self):
-        best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())] # choose the best Q value
-        best_node = self.s0_node.children[best_action]
-        return best_node, best_action
+        if self.s0_node.is_goal_node:
+            best_node = self.tree.root
+        else:
+            best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())] # choose the best Q value
+            best_node = self.s0_node.children[best_action]
+        return best_node
 
-    def search(self, n_iter=100, n_optimal_iter=0, max_time=np.inf):
+    def search(self, n_iter=100, max_time=np.inf):
         # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
         depth = 0
         time_to_search = 0
         search_time_to_reward = []
-        optimal_iter = 0
-        n_node_switch = 0
-        switch_counter = 0
-        found_solution_permanent = False
-        reward_lists = []
         plan = None
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
 
             if self.is_time_to_switch_initial_node():
-                best_child_node, best_action = self.choose_child_node_to_descend_to()
+                best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
             stime = time.time()
@@ -204,9 +201,6 @@ class MCTS:
     def choose_action(self, curr_node):
         if not curr_node.is_ucb_step(self.widening_parameter, self.environment.infeasible_reward):
             print "Sampling new action"
-            # todo
-            #  I need to be able to sample values so that I touch the least number of obstacles
-            #  Right now, I am sampling values assuming I cannot stand at where they are
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
             curr_node.add_actions(new_continuous_parameters)
         action = curr_node.perform_ucb_over_actions()
@@ -221,12 +215,18 @@ class MCTS:
         is_action_never_tried = curr_node.N[action] == 0
         if is_action_never_tried:
             curr_node.reward_history[action] = [reward]
-            curr_node.Q[action] = sum_rewards
             curr_node.N[action] += 1
+            curr_node.Q[action] = sum_rewards
         else:
             curr_node.reward_history[action].append(reward)
-            curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
             curr_node.N[action] += 1
+            curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
+
+    @staticmethod
+    def update_goal_node_statistics(curr_node, reward):
+        # todo rewrite this function
+        curr_node.Nvisited += 1
+        curr_node.reward = reward
 
     def simulate(self, curr_node, depth):
         if self.environment.is_goal_reached():
@@ -235,7 +235,7 @@ class MCTS:
                 self.found_solution = True
                 curr_node.is_goal_node = True
                 print "Solution found, returning the goal reward", self.goal_reward
-                self.update_node_statistics(curr_node, curr_node.parent_action, self.goal_reward, self.goal_reward)
+                self.update_goal_node_statistics(curr_node, self.goal_reward)
             return self.goal_reward
 
         if depth == self.depth_limit:
