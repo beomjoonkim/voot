@@ -14,8 +14,8 @@ class PlaceFeasibilityChecker:
         #    this function checks if the target region contains the robot when we place object at place_parameters
         #    and whether the robot will be in collision
         # todo: change its name
-
         obj = self.robot.GetGrabbed()[0]
+
         obj_region = node.operator_skeleton.discrete_parameters['region']
         obj_pose = place_parameters
 

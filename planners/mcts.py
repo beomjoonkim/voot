@@ -21,6 +21,7 @@ from generators.doo_utils.doo_tree import BinaryDOOTree, DOOTreeNode
 sys.path.append('../mover_library/')
 from utils import get_pick_domain, get_place_domain
 from generators.gpucb import GPUCBGenerator
+from trajectory_representation.operator import Operator
 
 sys.setrecursionlimit(15000)
 
@@ -85,7 +86,17 @@ class MCTS:
         if self.environment.is_goal_reached():
             operator_skeleton = None
         else:
-            operator_skeleton = self.environment.get_applicable_op_skeleton()
+            if parent_action is None or parent_action.type == 'two_arm_place':
+                operator_skeleton = Operator(operator_type='two_arm_pick',
+                                             discrete_parameters={'object':
+                                                                  self.environment.objects_currently_not_in_goal[0]},
+                                             continuous_parameters=None,
+                                             low_level_motion=None)
+            else:
+                operator_skeleton = Operator(operator_type='two_arm_place',
+                                             discrete_parameters={'region': self.environment.regions['entire_region']},
+                                             continuous_parameters=None,
+                                             low_level_motion=None)
 
         state_saver = DynamicEnvironmentStateSaver(self.environment.env)
         node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
@@ -134,8 +145,12 @@ class MCTS:
     def is_time_to_switch_initial_node(self):
         is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
 
-        we_have_feasible_action = False if len(self.s0_node.Q) == 0 \
-            else np.max(self.s0_node.reward_history.values()) != self.environment.infeasible_reward
+        if len(self.s0_node.Q) == 0:
+            we_have_feasible_action = False
+        else:
+            root_node_reward_history = self.s0_node.reward_history.values()
+            root_node_reward_history = [r for R in root_node_reward_history for r in R]
+            we_have_feasible_action = np.max(root_node_reward_history) > 0
 
         # it will actually never switch.
         if is_pick_node:
@@ -143,22 +158,6 @@ class MCTS:
         else:
             we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
 
-
-        """
-        if we_evaluated_the_node_enough:
-            best_node, best_action = self.choose_child_node_to_descend_to()
-            self.switch_init_node(best_node)
-
-            # what happens to the objects that need to be moved? - it is kept in the node
-            if is_pick_node and we_have_feasible_action:
-                print "Node switching from pick node"
-            elif (not is_pick_node) and we_evaluated_the_node_enough:
-                print "Node switching from place node"
-                print 'best child reward', best_node.parent_action_reward
-                print 'best child Q', self.s0_node.parent.Q[best_action]
-                print 'best child N', self.s0_node.parent.N[best_action]
-                print 'Other Q values', self.s0_node.Q.values()
-        """
         return we_evaluated_the_node_enough
 
     def choose_child_node_to_descend_to(self):
@@ -194,6 +193,7 @@ class MCTS:
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
             plan = self.retrace_best_plan()
+            print search_time_to_reward
 
             if time_to_search > max_time:
                 break
@@ -274,7 +274,6 @@ class MCTS:
         parent_reward_to_node = node.reward_history[action][0]
         parent_sum_rewards = parent_reward_to_node + self.discount_rate * child_sum_rewards
         self.update_node_statistics(node, action, parent_sum_rewards, parent_reward_to_node)
-
         self.update_ancestor_node_statistics(node.parent, node.parent_action, parent_sum_rewards)
 
     def sample_continuous_parameters(self, node):

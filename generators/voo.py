@@ -61,13 +61,16 @@ class VOOGenerator(Generator):
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
 
-        rnd = np.random.random() # this should lie outside
-        is_sample_from_best_v_region = rnd < 1 - self.explr_p and len(self.evaled_actions) > 1 and \
-                                       np.max(node.reward_history.values()) >= 0 #self.problem_env.infeasible_reward
+        is_more_than_one_action_in_node = len(self.evaled_actions) > 1
+        is_reward_history_positive = is_more_than_one_action_in_node and np.max(node.reward_history.values()) >= 0
+
+        rnd = np.random.random()
+        is_sample_from_best_v_region = rnd < 1 - self.explr_p and is_reward_history_positive
+
         if is_sample_from_best_v_region:
             print 'Sample ' + node.operator_skeleton.type + ' from best region'
         else:
-            maxrwd = None if len(self.evaled_actions)==0 else np.max(node.reward_history.values())
+            maxrwd = None if len(self.evaled_actions) == 0 else np.max(node.reward_history.values())
             print 'Sample ' + node.operator_skeleton.type + ' from uniform, max rwd: ', maxrwd
 
         action = None
@@ -77,7 +80,10 @@ class VOOGenerator(Generator):
                 action_parameters = self.sample_from_best_voronoi_region(node)
             else:
                 action_parameters = self.sample_from_uniform()
-            action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
+            try:
+                action, status = self.feasibility_checker.check_feasibility(node,  action_parameters)
+            except:
+                import pdb;pdb.set_trace()
 
             if status == 'HasSolution':
                 self.evaled_actions.append(action_parameters)
@@ -111,9 +117,25 @@ class VOOGenerator(Generator):
         return self.evaled_actions[best_action_idx]
 
     def sample_near_best_action(self, best_evaled_action, counter):
-        variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
-        new_parameters = np.random.normal(best_evaled_action, variance)
-        new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
+        use_uniform_sampling = True
+        if use_uniform_sampling:
+            dim_x = self.domain[1].shape[-1]
+            possible_range = (self.domain[1] - self.domain[0]) / np.exp(counter)
+            possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
+            new_parameters = best_evaled_action + possible_values
+
+            is_new_parameter_bigger_than_max = np.any(new_parameters > self.domain[1])
+            is_new_parameter_smaller_than_min = np.any(new_parameters < self.domain[0])
+
+            while is_new_parameter_bigger_than_max or is_new_parameter_smaller_than_min:
+                possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
+                new_parameters = best_evaled_action + possible_values
+                is_new_parameter_bigger_than_max = np.any(new_parameters > self.domain[1])
+                is_new_parameter_smaller_than_min = np.any(new_parameters < self.domain[0])
+        else:
+            variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
+            new_parameters = np.random.normal(best_evaled_action, variance)
+            new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
         return new_parameters
 
     def sample_place_from_best_voroi_region(self):
