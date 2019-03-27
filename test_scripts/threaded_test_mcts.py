@@ -52,8 +52,6 @@ def main():
     mcts_iter = args.mcts_iter
     c1s = args.c1 if args.c1 is not None else [1.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
-    import pdb;pdb.set_trace()
-
 
     pidx = 0
     seeds = range(0,10)
