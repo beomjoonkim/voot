@@ -2,6 +2,7 @@ import sys,os
 sys.path.append(os.getcwd())
 sys.path.append("/root/TAMP/openrave_wrapper")
 sys.path.append("/root/TAMP/openrave_wrapper/manipulation")
+sys.path.append('/usr/local/lib/python2.7/site-packages')
 
 from problem_environments.conveyor_belt_env import ConveyorBelt
 from problem_environments.minimum_displacement_removal import MinimumDisplacementRemoval
