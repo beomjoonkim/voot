@@ -93,6 +93,15 @@ def set_random_seed(random_seed):
     random.seed(random_seed)
 
 
+def make_plan_pklable(plan):
+    for p in plan:
+        if p.type == 'two_arm_pick':
+            p.discrete_parameters['object'] = p.discrete_parameters['object'].GetName()
+        elif p.type == 'two_arm_place':
+            p.discrete_parameters['region'] = p.discrete_parameters['region'].name
+    return plan
+
+
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-uct', type=float, default=1.0)
@@ -114,7 +123,6 @@ def main():
     args = parser.parse_args()
     if args.random_seed == -1:
         args.random_seed = args.problem_idx
-
     print "Problem number ", args.problem_idx
     print "Random seed set: ", args.random_seed
     set_random_seed(args.random_seed)
@@ -134,6 +142,7 @@ def main():
 
     mcts = instantiate_mcts(args, problem_instantiator.environment)
     search_time_to_reward, plan = mcts.search(args.mcts_iter)
+    plan = make_plan_pklable(plan)
 
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
                 open(stat_file_name, 'wb'))
