@@ -1,3 +1,8 @@
+import sys,os
+sys.path.append(os.getcwd())
+sys.path.append("/root/TAMP/openrave_wrapper")
+sys.path.append("/root/TAMP/openrave_wrapper/manipulation")
+
 from problem_environments.conveyor_belt_env import ConveyorBelt
 from problem_environments.minimum_displacement_removal import MinimumDisplacementRemoval
 from problem_environments.mover_env import Mover
