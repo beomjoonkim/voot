@@ -20,24 +20,19 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-        # rootdir = './test_results/'
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
     elif algo_name.find('unif') != -1:
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
+        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
     elif algo_name.find('randomized_doo') !=-1:
         epsilon = algo_name.split('randomized_doo')[1][1:]
         algo_name = 'randomized_doo'
-        #rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
     if domain_name == 'convbelt':
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//'
         result_dir = rootdir + '/convbelt_results/mcts_iter_' +str(mcts_iter)+'/uct_0.0_widening_' + str(widening_parameter) + '_'
-    elif domain_name == 'namo':
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/no_going_back_to_s0_no_switch_counter/'
-        #rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/'
-
-        result_dir = rootdir + '/namo_results/mcts_iter_500/uct_0.0_widening_' + str(widening_parameter) + '_'
-        result_dir = rootdir + '/namo_results/mcts_iter_'+str(mcts_iter)+'/uct_0.0_widening_' + str(widening_parameter) + '_'
+    elif domain_name == 'mdr':
+        #rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/no_going_back_to_s0_no_switch_counter/'
+        result_dir = rootdir + '/minimum_displacement_removal_results/mcts_iter_'+str(mcts_iter)+'/uct_1.0_widening_' + str(widening_parameter) + '_'
     else:
         return -1
     if algo_name.find('plaindoo') == -1:
@@ -85,11 +80,12 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
             try:
                 search_time = np.array(result['search_time']['namo'])
             except:
-                search_time = np.array(result['search_time'])[0:2000,:]
-            if len(search_time) < 2000:
-                continue
+                search_time = np.array(result['search_time'])[0:1000,:]
+            #if len(search_time) < 2000:
+            #    continue
+
             print len(search_time)
-            search_rwd_times.append(search_time[0:2000,:])
+            search_rwd_times.append(search_time[0:1000,:])
             is_success = np.any(search_time[:, -1])
             max_rwds.append(np.max(search_time[:, 2]))
             success.append(is_success)
@@ -141,7 +137,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 2100, 10)
+    organized_times = range(10, 1100, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -185,11 +181,9 @@ def plot_across_algorithms():
     args = parser.parse_args()
     widening_parameter = args.w
 
-    if args.domain == 'namo':
-        algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif' ]
-    else:
-        algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
+    algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
         #algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
+    algo_names = ['voo_0.4', 'unif' ]
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
@@ -199,7 +193,6 @@ def plot_across_algorithms():
     color_dict['VOOT'] = [1, 0, 0]
     color_dict['UniformT'] = [0, 0, 1]
 
-
     # DOO - black
     # VOO - red
     # Uniform - blue
@@ -208,14 +201,14 @@ def plot_across_algorithms():
     max_rwds = []
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        pkl_fname = './plotters/search_rwd_times_pkl_files/'+args.domain+'_pidx_'+str(args.pidx)+'_'+algo+'.pkl'
+        #pkl_fname = './plotters/planning_results/search_rwd_times_pkl_files/'+args.domain+'_pidx_'+str(args.pidx)+'_'+algo+'.pkl'
         #if os.path.isfile(pkl_fname):
         #    search_rwd_times, organized_times, max_rwd = pickle.load(open(pkl_fname,'r'))
         #else:
         search_rwd_times, max_rwd = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
                                                      args.n_feasibility_checks, args.mcts_iter, args.pidx)
         search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
-        pickle.dump((search_rwd_times, organized_times, max_rwd), open(pkl_fname, 'wb'))
+        #pickle.dump((search_rwd_times, organized_times, max_rwd), open(pkl_fname, 'wb'))
 
         max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
@@ -226,7 +219,8 @@ def plot_across_algorithms():
     if args.domain == 'convbelt':
         sns.tsplot([4.51]*args.mcts_iter, organized_times[:args.mcts_iter], ci=95, condition='2x Unif', color='magenta')
     else:
-        sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter], ci=95, condition='Avg feasible reward', color='magenta')
+        sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
+                   ci=95, condition='Avg feasible reward', color='magenta')
     #if args.domain=='namo':
     #    plt.ylim([2, 4.5])
 

@@ -12,17 +12,17 @@ def worker_p(config):
     w = config['widening_parameter']
     e = config['epsilon']
     mcts_iter = config['mcts_iter']
-    c1 = config['c1']
+    uct = config['uct']
     n_feasibility_checks = config['n_feasibility_checks']
     seed = config['seed']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
-        ' -mcts_iter ' + str(mcts_iter) + ' -c1 '+str(c1) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
+        ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed)
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -36,7 +36,7 @@ def main():
     parser.add_argument('-domain', type=str, default='minimum_displacement_removal')
     parser.add_argument('-mcts_iter', type=int, default=1000)
     parser.add_argument('-w', nargs='+', type=float)
-    parser.add_argument('-c1', nargs='+', type=float)
+    parser.add_argument('-uct', nargs='+', type=float)
     parser.add_argument('-n_feasibility_checks', nargs='+', type=int)
     parser.add_argument('-epsilon', nargs='+', type=float)
     parser.add_argument('-pidxs', nargs='+', type=int)
@@ -50,14 +50,14 @@ def main():
     domain = args.domain
     widening_parameters = args.w if args.w is not None else [1]
     mcts_iter = args.mcts_iter
-    c1s = args.c1 if args.c1 is not None else [1.0]
+    ucts = args.uct if args.uct is not None else [1.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
 
     pidx = 0
     seeds = range(0,10)
     configs = []
     for n_feasibility_check in n_feasibility_checks:
-        for c1 in c1s:
+        for uct in ucts:
             for e in epsilons:
                 for seed in seeds:
                     for widening_parameter in widening_parameters:
@@ -67,7 +67,7 @@ def main():
                                   'domain': domain,
                                   'sampling_strategy': sampling_strategy,
                                   'mcts_iter': mcts_iter,
-                                  'c1': c1,
+                                  'uct': uct,
                                   'n_feasibility_checks': n_feasibility_check,
                                   'seed': seed}
                         configs.append(config)
