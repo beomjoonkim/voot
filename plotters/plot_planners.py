@@ -221,13 +221,12 @@ def plot_across_algorithms():
     else:
         sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
-    #if args.domain=='namo':
-    #    plt.ylim([2, 4.5])
 
+    plot_name = args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter)
     if args.t:
         savefig('Times (s)', 'Average rewards', fname='./plotters/t_' + args.domain + '_w_' + str(args.w))
     else:
-        savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.domain + '_pidx_' + str(args.pidx))
+        savefig('Number of simulations', 'Average rewards', fname='./plotters/'+plot_name)
 
 
 if __name__ == '__main__':

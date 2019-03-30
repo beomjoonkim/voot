@@ -87,10 +87,11 @@ def instantiate_mcts(args, problem_env):
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
     domain_name = args.domain
+    use_progressive_widening = args.use_progressive_widening
 
     mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, domain_name)
+                problem_env, use_progressive_widening, domain_name)
     return mcts
 
 
@@ -119,6 +120,7 @@ def main():
     parser.add_argument('-planner', type=str, default='mcts')
     parser.add_argument('-v', action='store_true', default=False)
     parser.add_argument('-debug', action='store_true', default=False)
+    parser.add_argument('-progressive_widening', action='store_true', default=False)
     parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-seed', type=int, default=50)
     parser.add_argument('-max_time', type=float, default=np.inf)

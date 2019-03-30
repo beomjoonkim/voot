@@ -43,7 +43,7 @@ def create_doo_agent(operator):
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                 environment, domain_name):
+                 environment, use_progressive_widening, domain_name):
         self.c1 = c1
         self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
@@ -53,6 +53,7 @@ class MCTS:
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
         self.depth_limit = 300
+        self.use_progressive_widening = use_progressive_widening
 
         self.env = self.environment.env
         self.robot = self.environment.robot
@@ -199,7 +200,8 @@ class MCTS:
         return search_time_to_reward, plan
 
     def choose_action(self, curr_node):
-        if not curr_node.is_ucb_step(self.widening_parameter, self.environment.infeasible_reward):
+        if not curr_node.is_ucb_step(self.widening_parameter, self.environment.infeasible_reward,
+                                     self.use_progressive_widening):
             print "Sampling new action"
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
             curr_node.add_actions(new_continuous_parameters)
