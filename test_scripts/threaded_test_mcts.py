@@ -15,14 +15,17 @@ def worker_p(config):
     uct = config['uct']
     n_feasibility_checks = config['n_feasibility_checks']
     seed = config['seed']
+    pw = config['pw']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed)
+    if pw:
+        command += ' -pw '
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -41,7 +44,7 @@ def main():
     parser.add_argument('-epsilon', nargs='+', type=float)
     parser.add_argument('-pidxs', nargs='+', type=int)
     parser.add_argument('-random_seeds', nargs='+', type=int)
-    parser.add_argument('--pidxs_specified', action='store_true')
+    parser.add_argument('-pw', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -53,8 +56,12 @@ def main():
     ucts = args.uct if args.uct is not None else [1.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
 
-    pidx = 0
-    seeds = range(0,10)
+    if args.domain == 'minimum_displacement_removal':
+        pidx = 0
+    else:
+        pass
+
+    seeds = range(0, 10)
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for uct in ucts:
@@ -69,7 +76,8 @@ def main():
                                   'mcts_iter': mcts_iter,
                                   'uct': uct,
                                   'n_feasibility_checks': n_feasibility_check,
-                                  'seed': seed}
+                                  'seed': seed,
+                                  'pw': args.pw}
                         configs.append(config)
 
     n_workers = int(20)

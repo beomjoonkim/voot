@@ -132,6 +132,12 @@ def main():
 
     if args.pw:
         assert args.widening_parameter > 0 and args.widening_parameter <= 1
+    else:
+        assert args.widening_parameter >=1
+
+    if args.sampling_strategy != 'unif':
+        assert args.epsilon >= 0.0
+
 
     if args.random_seed == -1:
         args.random_seed = args.problem_idx
