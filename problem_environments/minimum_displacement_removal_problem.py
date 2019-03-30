@@ -439,7 +439,7 @@ def place_object_with_gaussian_noise(obj, reference_xytheta, env, scale=0.3):
         set_xy(obj, obj_xytheta[0], obj_xytheta[1])
 
 
-class MoverProblem:
+class MinimumDisplacementRemovalProblem:
     def __init__(self, env, problem_idx, problem_config=None):
         self.env = env
         fdir = os.path.dirname(os.path.abspath(__file__))

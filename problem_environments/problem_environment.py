@@ -20,6 +20,7 @@ class ProblemEnvironment:
         self.env = Environment()
         self.initial_placements = []
         self.placements = []
+        self.objects_currently_not_in_goal = []
         self.robot = None
         self.objects = None
         self.curr_state = None
@@ -42,7 +43,68 @@ class ProblemEnvironment:
         self.high_level_planner = None
         self.namo_planner = None
         self.fetch_planner = None
+        self.infeasible_reward = -2
+        self.regions = {}
         self.env.StopSimulation()
+
+    def apply_action_and_get_reward(self, operator_instance, is_op_feasible):
+        if is_op_feasible != 'HasSolution':
+            reward = self.infeasible_reward
+        else:
+            if operator_instance.type == 'two_arm_pick':
+                two_arm_pick_object(operator_instance.discrete_parameters['object'],
+                                    self.robot, operator_instance.continuous_parameters)
+                reward = 0
+            elif operator_instance.type == 'two_arm_place':
+                reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
+                self.set_objects_not_in_goal(new_objects_not_in_goal)
+            else:
+                raise NotImplementedError
+
+        return reward
+
+    def compute_place_reward(self, operator_instance):
+        raise NotImplementedError
+
+    @staticmethod
+    def check_parameter_feasibility_precondition(operator_instance):
+        if operator_instance.continuous_parameters['base_pose'] is None:
+            return False
+        else:
+            return True
+
+    def check_reachability_precondition(self, operator_instance):
+        motion_planning_region_name = 'entire_region'
+        goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
+
+        if operator_instance.low_level_motion is not None:
+            motion = operator_instance.low_level_motion
+            status = 'HasSolution'
+            return motion, status
+
+        motion, status = self.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
+        return motion, status
+
+    def apply_operator_instance(self, operator_instance):
+        if not self.check_parameter_feasibility_precondition(operator_instance):
+            operator_instance.update_low_level_motion(None)
+            return self.infeasible_reward
+
+        motion_plan, status = self.check_reachability_precondition(operator_instance)
+        operator_instance.update_low_level_motion(motion_plan)
+        reward = self.apply_action_and_get_reward(operator_instance, status)
+        return reward
+
+    def set_objects_not_in_goal(self, objects_not_in_goal):
+        self.objects_currently_not_in_goal = objects_not_in_goal
+
+    def get_objs_in_region(self, region_name):
+        movable_objs = self.objects
+        objs_in_region = []
+        for obj in movable_objs:
+            if self.regions[region_name].contains(obj.ComputeAABB()):
+                objs_in_region.append(obj)
+        return objs_in_region
 
     def make_config_from_op_instance(self, op_instance):
         if op_instance['operator'].find('one_arm')!=-1:
@@ -54,8 +116,25 @@ class ProblemEnvironment:
 
         return config.squeeze()
 
-    def reset_to_init_state_stripstream(self):
-        self.init_saver.Restore()
+    def reset_to_init_state(self, node):
+        assert node.is_init_node, "None initial node passed to reset_to_init_state"
+        saver = node.state_saver
+        saver.Restore()
+        self.curr_state = self.get_state()
+        self.objects_currently_not_in_goal = node.objects_not_in_goal
+
+        if not self.init_which_opreator != 'two_arm_pick':
+            grab_obj(self.robot, self.curr_obj)
+
+        if node.parent_action is not None:
+            is_parent_action_pick = node.parent_action.type == 'two_arm_pick'
+        else:
+            is_parent_action_pick = False
+
+        if is_parent_action_pick:
+            two_arm_pick_object(node.parent_action.discrete_parameters['object'], self.robot,
+                                node.parent_action.continuous_parameters)
+
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
 
     def enable_movable_objects(self):
@@ -123,9 +202,6 @@ class ProblemEnvironment:
         return in_region
 
     def get_motion_plan(self, q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations):
-        #if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
-        #    draw_robot_at_conf(goal, 0.5, 'goal', self.robot, self.env)
-
         stime = time.time()
         for n_iter in n_iterations:
             path = rrt_connect(q_init, goal, d_fn, s_fn, e_fn, c_fn, iterations=n_iter)
@@ -219,118 +295,8 @@ class ProblemEnvironment:
         path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
         return path, status
 
-    def apply_constraint_removal_plan(self, plan):
-        print "Applying constraint removal plan"
-        for plan_step in plan:
-            obj = self.env.GetKinBody(plan_step['obj_name'])
-            action = plan_step['action']
-            operator = plan_step['operator']
-            if operator == 'two_arm_pick':
-                full_body_pick_config = plan_step['path'][0]
-                pick_base_pose = action[0]
-                set_robot_config(pick_base_pose, self.robot)
-                self.robot.SetDOFValues(full_body_pick_config)
-                grab_obj(self.robot, obj)
-            elif operator == 'two_arm_place':
-                place_base_pose = action
-                self.place_object(place_base_pose, obj)
-
-    def visualize_crp(self, crp):
-        for plan_step in crp:
-            obj = self.env.GetKinBody(plan_step['obj_name'])
-            action = plan_step['action']
-            operator = plan_step['operator']
-            if operator == 'two_arm_pick':
-                full_body_pick_config = plan_step['path'][0]
-                pick_base_pose = action[0]
-                pick_path = plan_step['path'][1]
-                self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
-                visualize_path(self.robot, pick_path)
-                set_robot_config(pick_base_pose, self.robot)
-                self.robot.SetDOFValues(full_body_pick_config)
-                grab_obj(self.robot, obj)
-            elif operator == 'two_arm_place':
-                place_base_pose = action
-                place_path = plan_step['path']
-                visualize_path(self.robot, place_path)
-                self.place_object(place_base_pose, obj)
-
-    def apply_plan(self, plan):
-        for plan_step in plan:
-            obj = self.env.GetKinBody(plan_step['obj_name'])
-            action = plan_step['action']
-            operator = plan_step['operator']
-            if operator == 'two_arm_pick':
-                two_arm_pick_object(obj, self.robot, action)
-            elif operator == 'two_arm_place':
-                two_arm_place_object(obj, self.robot, action)
-            elif operator == 'one_arm_pick':
-                one_arm_pick_object(obj, self.robot, action)
-            elif operator == 'one_arm_place':
-                one_arm_place_object(obj, self.robot, action)
-
-
-    def visualize_plan(self, plan):
-        print "Visualizing plan"
-        for plan_step in plan:
-            obj = self.env.GetKinBody(plan_step['obj_name'])
-            action = plan_step['action']
-            operator = plan_step['operator']
-            subpath = plan_step['path']
-
-            is_packing_action = isinstance(subpath, dict) and 'path_back_to_fetched_base_pose' in subpath.keys()
-            is_subpath_crp = isinstance(subpath, dict) and not is_packing_action
-
-            if is_subpath_crp:
-                self.visualize_crp(subpath)
-            elif is_packing_action:
-                place_base_pose = action
-                visualize_path(self.robot, subpath['place_path'])
-                self.place_object(place_base_pose, obj)
-                visualize_path(self.robot, subpath['path_back_to_fetched_base_pose'])
-                set_robot_config(subpath['path_back_to_fetched_base_pose'][-1], self.robot)
-            else:
-                if operator == 'two_arm_pick':
-                    full_body_pick_config = subpath[0]
-                    pick_path = subpath[1]
-                    self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
-                    visualize_path(self.robot, pick_path)
-                    pick_base_pose = action[0]
-                    set_robot_config(pick_base_pose, self.robot)
-                    self.robot.SetDOFValues(full_body_pick_config)
-                    grab_obj(self.robot, obj)
-                elif operator == 'two_arm_place':
-                    place_base_pose = action
-                    place_path = subpath
-                    visualize_path(self.robot, place_path)
-                    self.place_object(place_base_pose, obj)
-
     def get_region_containing(self, obj):
-        containing_regions = []
-        for r in self.regions.values():
-            if r.name == 'entire_region':
-                continue
-            if r.contains(obj.ComputeAABB()):
-                containing_regions.append(r)
-
-        if len(containing_regions) == 0:
-            return None
-        elif len(containing_regions) == 1:
-            return containing_regions[0]
-        else:
-            region_with_smallest_area = containing_regions[0]
-            for r in containing_regions:
-                if r.area() < region_with_smallest_area.area():
-                    region_with_smallest_area = r
-            return region_with_smallest_area
-
-    def apply_pick_constraint(self, obj_name, pick_config, pick_base_pose=None):
-        # todo I think this function can be removed?
-        obj = self.env.GetKinBody(obj_name)
-        if pick_base_pose is not None:
-            set_robot_config(pick_base_pose, self.robot)
-        self.robot.SetDOFValues(pick_config)
-        grab_obj(self.robot, obj)
+        return self.regions['entire_region']
 
     def is_region_contains_all_objects(self, region, objects):
         return np.all([region.contains(obj.ComputeAABB()) for obj in objects])
@@ -348,18 +314,6 @@ class ProblemEnvironment:
                         if self.env.CheckCollision(self.robot, obj) and obj not in in_collision:
                             in_collision.append(obj)
         return in_collision
-
-
-    """
-    def compute_g_config(self, pick_base_pose, grasp_params, obj_to_pick):
-        set_robot_config(pick_base_pose, self.robot)
-        grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
-                                       height_portion=grasp_params[1],
-                                       theta=grasp_params[0],
-                                       obj=obj_to_pick,
-                                       robot=self.robot)
-        g_config = solveTwoArmIKs(self.env, self.robot, obj_to_pick, grasps)
-    """
 
     def disable_objects_in_region(self):
         for object in self.objects:
@@ -381,15 +335,6 @@ class ProblemEnvironment:
                 continue
             object.Enable(True)
 
-    def apply_pick_action(self, action, obj=None):
-        raise NotImplementedError
-
-    def update_next_obj_to_pick(self, place_action):
-        raise NotImplementedError
-
-    def apply_place_action(self, action, do_check_reachability=True):
-        raise NotImplementedError
-
     def remove_all_obstacles(self):
         raise NotImplementedError
 
@@ -399,34 +344,14 @@ class ProblemEnvironment:
     def set_init_state(self, saver):
         raise NotImplementedError
 
-    def replay_plan(self, plan):
-        raise NotImplementedError
-
-    def which_operator(self, obj):
-        raise NotImplementedError
-
-    def restore(self, state_saver):
-        raise NotImplementedError
-
-
-class TwoArmProblemEnvironment(ProblemEnvironment):
-    def __init__(self):
-        ProblemEnvironment.__init__(self)
-
-    def restore(self, state_saver):
-        curr_obj = state_saver.curr_obj
-        which_operator = state_saver.which_operator
-        if not which_operator == 'two_arm_pick':
-            grab_obj(self.robot, curr_obj)
-        else:
-            if len(self.robot.GetGrabbed()) > 0:
-                release_obj(self.robot, self.robot.GetGrabbed()[0])
-        state_saver.Restore()
-        self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
-
     def which_operator(self, obj=None):
         if self.is_pick_time():
             return 'two_arm_pick'
         else:
             return 'two_arm_place'
+
+    def restore(self, state_saver):
+        raise NotImplementedError
+
+
 

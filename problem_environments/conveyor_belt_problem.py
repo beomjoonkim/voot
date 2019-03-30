@@ -152,7 +152,8 @@ def create_conveyor_belt_problem(env, obj_setup=None):
         obst_poses = obj_setup['obst_poses']
 
     fdir=os.path.dirname(os.path.abspath(__file__))
-    env.Load(fdir + '/convbelt_env.xml')
+    env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
+    env.SetViewer('qtcoin')
     robot = env.GetRobots()[0]
     set_default_robot_config(robot)
 
@@ -162,7 +163,6 @@ def create_conveyor_belt_problem(env, obj_setup=None):
 
     # left arm IK
     robot.SetActiveManipulator('leftarm')
-    manip = robot.GetActiveManipulator()
     ikmodel1 = databases.inversekinematics.InverseKinematicsModel(robot=robot,
                                                                   iktype=IkParameterization.Type.Transform6D,
                                                                   forceikfast=True, freeindices=None,
@@ -172,25 +172,26 @@ def create_conveyor_belt_problem(env, obj_setup=None):
 
     # right arm torso IK
     robot.SetActiveManipulator('rightarm_torso')
-    manip = robot.GetActiveManipulator()
-    ikmodel2 = databases.inversekinematics.InverseKinematicsModel(robot=robot, \
-                                                                  iktype=IkParameterization.Type.Transform6D, \
-                                                                  forceikfast=True, freeindices=None, \
+    ikmodel2 = databases.inversekinematics.InverseKinematicsModel(robot=robot,
+                                                                  iktype=IkParameterization.Type.Transform6D,
+                                                                  forceikfast=True, freeindices=None,
                                                                   freejoints=None, manip=None)
     if not ikmodel2.load():
         ikmodel2.autogenerate()
 
     # loading areas
-
     loading_region = AARegion('loading_area', ((-3.51, -0.81), (-2.51, 2.51)), z=0.01, color=np.array((1, 1, 0, 0.25)))
 
     # converyor belt region
     conv_x = 3
     conv_y = 1
-    conveyor_belt = AARegion('conveyor_belt', ((-1 + conv_x, 20 * max_width + conv_x), (-0.4 + conv_y, 0.5 + conv_y)), z=0.01, color=np.array((1, 0, 0, 0.25)))
+    conveyor_belt = AARegion('conveyor_belt', ((-1 + conv_x, 20 * max_width + conv_x),
+                                               (-0.4 + conv_y, 0.5 + conv_y)), z=0.01, color=np.array((1, 0, 0, 0.25)))
 
-    all_region = AARegion('all_region', ((-3.51, 20 * max_width + conv_x), (-2.51, 2.51)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    all_region = AARegion('all_region', ((-3.51, 20 * max_width + conv_x),
+                                         (-2.51, 2.51)), z=0.01, color=np.array((1, 1, 0, 0.25)))
 
+    """
     if obj_setup is None:
         objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
         obstacles, obst_shapes, obst_poses = create_obstacles(env, loading_region)
@@ -198,37 +199,40 @@ def create_conveyor_belt_problem(env, obj_setup=None):
         objects = load_objects(env, obj_shapes, obj_poses, color=(0, 1, 0))
         obstacles = load_objects(env, obst_shapes, obst_poses, color=(0, 0, 1))
 
-    initial_saver = DynamicEnvironmentStateSaver(env)
-    initial_state = (initial_saver, [])
     #set_obj_xytheta([-1, -1, 1], obstacles[0])
     #set_obj_xytheta([-2, 2.3, 0], obstacles[1])
-    init_base_conf = np.array([0, 1.05, 0])
-    set_robot_config(np.array([0, 1.05, 0]), robot)
     #obst_poses = [randomly_place_in_region(env, obj, loading_region) for obj in obstacles]
     #obst_poses = [get_body_xytheta(obj) for obj in obstacles]
 
+    """
     """
     tobj = env.GetKinBody('tobj3')
     tobj_xytheta = get_body_xytheta(tobj.GetLinks()[1])
     tobj_xytheta[0, -1] = (160 / 180.0) * np.pi
     set_obj_xytheta(tobj_xytheta, tobj.GetLinks()[1])
+    """
+    init_base_conf = np.array([0, 1.05, 0])
+    set_robot_config(np.array([0, 1.05, 0]), robot)
     objects = []
     for tobj in env.GetBodies():
         if tobj.GetName().find('tobj') == -1: continue
         randomly_place_in_region(env, tobj, conveyor_belt)
         objects.append(tobj)
-    """
 
+    # todo make infinite sequence of objects
+
+    initial_saver = DynamicEnvironmentStateSaver(env)
+    initial_state = (initial_saver, [])
     problem = {'initial_state': initial_state,
-               'obstacles': obstacles,
+               #'obstacles': obstacles,
                'objects': objects,
                'conveyor_belt_region':conveyor_belt,
                'loading_region': loading_region,
                'env': env,
-               'obst_shapes': obst_shapes,
-               'obst_poses': obst_poses,
-               'obj_shapes': obj_shapes,
-               'obj_poses': obj_poses,
+               #'obst_shapes': obst_shapes,
+               #'obst_poses': obst_poses,
+               #'obj_shapes': obj_shapes,
+               #'obj_poses': obj_poses,
                'entire_region': all_region,
                'init_base_conf': init_base_conf}
     return problem  # the second is for indicating 0 placed objs

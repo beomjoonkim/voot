@@ -4,11 +4,9 @@ sys.path.append("/root/TAMP/openrave_wrapper")
 sys.path.append("/root/TAMP/openrave_wrapper/manipulation")
 sys.path.append('/usr/local/lib/python2.7/site-packages')
 
-from problem_environments.conveyor_belt_env import ConveyorBelt
-from problem_environments.minimum_displacement_removal import MinimumDisplacementRemoval
-from problem_environments.mover_env import Mover
-
 from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
+from problem_instantiators.conveyor_belt_instantiator import ConveyorBeltInstantiator
+
 from planners.mcts import MCTS
 
 import argparse
@@ -55,28 +53,6 @@ def make_save_dir(args):
         os.makedirs(save_dir)
 
     return save_dir
-
-
-def make_problem_env(domain_name, problem_idx):
-    if domain_name == 'minimum_displacement_removal':
-        problem_env = MinimumDisplacementRemoval(problem_idx)
-    elif domain_name == 'convbelt':
-        problem_env = ConveyorBelt(problem_idx)
-    else:
-        problem_env = Mover()
-    return problem_env
-
-
-def get_task_plan(domain_name, problem_env):
-    if domain_name == 'minimum_displacement_removal':
-        task_plan = [{'region': problem_env.regions['entire_region'], 'objects': [problem_env.objects[0]]}] # dummy
-    elif domain_name == 'convbelt':
-        task_plan = [{'region': problem_env.regions['object_region'], 'objects': problem_env.objects}]
-    else:
-        packing_boxes = problem_env.packing_boxes
-        task_plan = [{'region': problem_env.box_regions[packing_boxes[0].GetName()],
-                      'objects': problem_env.shelf_objs[0:5]}]
-    return task_plan
 
 
 def instantiate_mcts(args, problem_env):
@@ -154,7 +130,8 @@ def main():
     if args.domain == 'minimum_displacement_removal':
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.domain)
     else:
-        raise NotImplementedError
+        problem_instantiator = ConveyorBeltInstantiator(args.domain)
+
     if args.v:
         problem_instantiator.environment.env.SetViewer('qtcoin')
 
