@@ -39,6 +39,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.problem_config['env'] = self.env
         self.swept_volume = None
+        self.name = 'minimum_displacement_removal'
 
     def set_swept_volume(self, swept_volume):
         self.swept_volume = swept_volume

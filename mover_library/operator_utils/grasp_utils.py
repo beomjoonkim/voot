@@ -283,8 +283,9 @@ def solveTwoArmIKs(env, robot, obj, grasps):
 
         # turning checkenvcollision option for FindIKSolution seems take excessive amt of time
         with robot:
+            obj.Enable(True)
             set_config(robot, right_g_config, rightarm_torso_manip.GetArmIndices())
-            if env.CheckCollision(robot):
+            if env.CheckCollision(robot, obj):
                 right_g_config = None
 
         # checking left arm ik solution feasibility
@@ -292,8 +293,9 @@ def solveTwoArmIKs(env, robot, obj, grasps):
         obj.Enable(False)
         left_g_config = leftarm_manip.FindIKSolution(g_left, 0)
         with robot:
+            obj.Enable(True)
             set_config(robot, left_g_config, leftarm_manip.GetArmIndices())
-            if env.CheckCollision(robot):
+            if env.CheckCollision(robot, obj):
                 left_g_config = None
 
         if left_g_config is None:

@@ -252,9 +252,6 @@ class ProblemEnvironment:
             d_fn = base_distance_fn(self.robot, x_extents=3.51, y_extents=2.51)
             s_fn = base_sample_fn(self.robot, x_extents=3.51, y_extents=2.51) # set the x and y
         else:
-            # todo: combined regions
-            if region_name == 'bridge_region':
-                region_name = 'entire_region'
             region_x = self.problem_config[region_name+'_xy'][0]
             region_y = self.problem_config[region_name+'_xy'][1]
             region_x_extents = self.problem_config[region_name+'_extents'][0]

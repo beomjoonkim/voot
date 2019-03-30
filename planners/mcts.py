@@ -84,17 +84,7 @@ class MCTS:
         if self.environment.is_goal_reached():
             operator_skeleton = None
         else:
-            if parent_action is None or parent_action.type == 'two_arm_place':
-                operator_skeleton = Operator(operator_type='two_arm_pick',
-                                             discrete_parameters={'object':
-                                                                  self.environment.objects_currently_not_in_goal[0]},
-                                             continuous_parameters=None,
-                                             low_level_motion=None)
-            else:
-                operator_skeleton = Operator(operator_type='two_arm_place',
-                                             discrete_parameters={'region': self.environment.regions['entire_region']},
-                                             continuous_parameters=None,
-                                             low_level_motion=None)
+            operator_skeleton = self.environment.get_applicable_op_skeleton()
 
         state_saver = DynamicEnvironmentStateSaver(self.environment.env)
         node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
@@ -153,10 +143,15 @@ class MCTS:
             root_node_reward_history = [r for R in root_node_reward_history for r in R]
             we_have_feasible_action = np.max(root_node_reward_history) >= 0
 
-        if is_pick_node:
-            we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 10
+        if self.environment.name == 'minimum_displacement_removal':
+            if is_pick_node:
+                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 10
+            else:
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
+        elif self.environment.name == 'convbelt':
+            we_evaluated_the_node_enough = False
         else:
-            we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
+            raise NotImplementedError
 
         return we_evaluated_the_node_enough
 
@@ -179,6 +174,7 @@ class MCTS:
             self.environment.reset_to_init_state(self.s0_node)
 
             if self.is_time_to_switch_initial_node():
+                print "Switching root node!"
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
@@ -249,6 +245,7 @@ class MCTS:
 
         action = self.choose_action(curr_node)
         reward = self.environment.apply_operator_instance(action)
+        import pdb;pdb.set_trace()
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, is_init_node=False)

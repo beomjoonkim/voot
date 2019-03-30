@@ -181,6 +181,13 @@ def create_conveyor_belt_problem(env, obj_setup=None):
 
     # loading areas
     loading_region = AARegion('loading_area', ((-3.51, -0.81), (-2.51, 2.51)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    """
+    self.home_region_xy = [x_extents / 2.0, 0]
+    self.home_region_xy_extents = [x_extents, y_extents]
+    self.home_region = AARegion('entire_region',
+                                ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]),
+                                 (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
+    """
 
     # converyor belt region
     conv_x = 3
@@ -188,9 +195,14 @@ def create_conveyor_belt_problem(env, obj_setup=None):
     conveyor_belt = AARegion('conveyor_belt', ((-1 + conv_x, 20 * max_width + conv_x),
                                                (-0.4 + conv_y, 0.5 + conv_y)), z=0.01, color=np.array((1, 0, 0, 0.25)))
 
-    all_region = AARegion('all_region', ((-3.51, 20 * max_width + conv_x),
-                                         (-2.51, 2.51)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    y_extents = 2.51
+    x_extents = 3.01
+    all_region_xy = [-0.5, 0]
+    all_region_xy_extents = [x_extents, y_extents]
+    all_region = AARegion('all_region', ((-x_extents+all_region_xy[0], x_extents+all_region_xy[0]),(-y_extents, y_extents)), z=0.01, color=np.array((1, 1, 0, 0.25)))
 
+    entire_region = AARegion('entire_region', ((-3.51, 20 * max_width + conv_x),(-y_extents, y_extents)),
+                             z=0.01, color=np.array((1, 1, 0, 0.25)))
     """
     if obj_setup is None:
         objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
@@ -224,16 +236,14 @@ def create_conveyor_belt_problem(env, obj_setup=None):
     initial_saver = DynamicEnvironmentStateSaver(env)
     initial_state = (initial_saver, [])
     problem = {'initial_state': initial_state,
-               #'obstacles': obstacles,
                'objects': objects,
                'conveyor_belt_region':conveyor_belt,
                'loading_region': loading_region,
                'env': env,
-               #'obst_shapes': obst_shapes,
-               #'obst_poses': obst_poses,
-               #'obj_shapes': obj_shapes,
-               #'obj_poses': obj_poses,
-               'entire_region': all_region,
+               'entire_region': entire_region,
+               'all_region': all_region,
+               'all_region_xy': all_region_xy,
+               'all_region_extents': all_region_xy_extents,
                'init_base_conf': init_base_conf}
     return problem  # the second is for indicating 0 placed objs
 

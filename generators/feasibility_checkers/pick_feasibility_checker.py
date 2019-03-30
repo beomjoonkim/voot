@@ -33,9 +33,6 @@ class PickFeasibilityChecker(object):
 
     def compute_grasp_config(self, obj, pick_base_pose, grasp_params):
         set_robot_config(pick_base_pose, self.robot)
-        # todo this part, I need to ignore
-        if self.env.CheckCollision(self.robot):
-            return None
         grasps = compute_two_arm_grasp(depth_portion=grasp_params[2],
                                        height_portion=grasp_params[1],
                                        theta=grasp_params[0],
@@ -52,10 +49,15 @@ class PickFeasibilityChecker(object):
                 pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
                                'grasp_params': grasp_params, 'g_config': g_config}
                 two_arm_pick_object(obj, self.robot, pick_action)
-
                 inside_region = self.problem_env.regions['entire_region'].contains(self.robot.ComputeAABB())
 
-                if not self.env.CheckCollision(self.robot) and inside_region:
+                if self.problem_env.name == 'convbelt':
+                    feasible = inside_region
+                else:
+                    not_in_collision = not self.env.CheckCollision(self.robot)
+                    feasible = inside_region and not_in_collision
+
+                if feasible:
                     two_arm_place_object(obj, self.robot, pick_action)
                     return g_config
                 else:

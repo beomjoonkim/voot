@@ -50,7 +50,10 @@ def make_save_dir(args):
         save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
 
     if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
+        try:
+            os.makedirs(save_dir)
+        except OSError:
+            pass
 
     return save_dir
 
@@ -117,6 +120,7 @@ def main():
 
     if args.random_seed == -1:
         args.random_seed = args.problem_idx
+
     print "Problem number ", args.problem_idx
     print "Random seed set: ", args.random_seed
     set_random_seed(args.random_seed)
@@ -127,6 +131,7 @@ def main():
         print "already done"
         return -1
 
+    # todo run experiments on conveyor belt domain
     if args.domain == 'minimum_displacement_removal':
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.domain)
     else:
