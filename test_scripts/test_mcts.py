@@ -131,10 +131,10 @@ def main():
         print "already done"
         return -1
 
-    # todo run experiments on conveyor belt domain
     if args.domain == 'minimum_displacement_removal':
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.domain)
     else:
+        # todo make root switching in conveyor belt domain
         problem_instantiator = ConveyorBeltInstantiator(args.domain)
 
     if args.v:

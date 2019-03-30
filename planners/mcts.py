@@ -245,7 +245,6 @@ class MCTS:
 
         action = self.choose_action(curr_node)
         reward = self.environment.apply_operator_instance(action)
-        import pdb;pdb.set_trace()
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, is_init_node=False)

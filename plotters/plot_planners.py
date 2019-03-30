@@ -16,7 +16,8 @@ def savefig(xlabel, ylabel, fname=''):
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
-def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks, mcts_iter):
+#def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks, mcts_iter):
+def get_result_dir(algo_name, mcts_parameters):
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
@@ -27,14 +28,22 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
         epsilon = algo_name.split('randomized_doo')[1][1:]
         algo_name = 'randomized_doo'
 
+    domain_name = mcts_parameters.domain
+    widening_parameter = mcts_parameters.w
+    mcts_iter = mcts_parameters.mcts_iter
+    uct = mcts_parameters.uct
     if domain_name == 'convbelt':
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//'
         result_dir = rootdir + '/convbelt_results/mcts_iter_' +str(mcts_iter)+'/uct_0.0_widening_' + str(widening_parameter) + '_'
     elif domain_name == 'mdr':
         #rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results//root_switching/no_infeasible_place/no_going_back_to_s0_no_switch_counter/'
-        result_dir = rootdir + '/minimum_displacement_removal_results/mcts_iter_'+str(mcts_iter)+'/uct_1.0_widening_' + str(widening_parameter) + '_'
+        result_dir = rootdir + '/minimum_displacement_removal_results/mcts_iter_'+str(mcts_iter)+ \
+                     '/uct_'+str(uct)+'_widening_' + str(widening_parameter) + '_'
     else:
         return -1
+
+    n_feasibility_checks = mcts_parameters.n_feasibility_checks
+    c1 = mcts_parameters.c1
     if algo_name.find('plaindoo') == -1:
         result_dir += algo_name
     result_dir += '_n_feasible_checks_' + str(n_feasibility_checks) + '/'
@@ -44,8 +53,12 @@ def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility
     return result_dir
 
 
-def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks,mcts_iter, pidx):
-    result_dir = get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks,mcts_iter)
+#def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks,mcts_iter, pidx):
+def get_mcts_results(algo_name, mcts_parameters):
+    result_dir = get_result_dir(algo_name, mcts_parameters)
+
+    domain_name = mcts_parameters.domain
+    pidx = mcts_parameters.pidx
     search_times = []
     success = []
     search_rwd_times = []
@@ -104,8 +117,6 @@ def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibili
     print 'max_rwd mean', np.mean(max_rwds)
     print 'ff min score', np.min(success_rewards)
     print 'ff mean score', np.mean(success_rewards)
-    #print 'max_rwd std', np.std(max_rwds)
-    #print 'max_rwd max', np.max(max_rwds)
     print 'n', len(search_rwd_times)
     return search_rwd_times, np.mean(max_rwds)
 
@@ -170,23 +181,21 @@ def get_algo_name(raw_name):
 
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-domain', type=str, default='convbelt')
+    parser.add_argument('-domain', type=str, default='mdr')
     parser.add_argument('-w', type=float, default=0.8)
-    parser.add_argument('-c1', type=float, default=1.0)
-    parser.add_argument('-mcts_iter', type=int, default=500)
+    parser.add_argument('-c1', type=int, default=1)
+    parser.add_argument('-uct', type=float, default=1.0)
+    parser.add_argument('-mcts_iter', type=int, default=1000)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('--t', action='store_true')
 
     args = parser.parse_args()
-    widening_parameter = args.w
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-        #algo_names = ['randomizeddoo_1.0', 'voo_0.3' ]
     algo_names = ['voo_0.4', 'unif' ]
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_names = color_dict.keys()[1:]
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
     color_dict['RandDOOT'] = [0, 0, 0]
@@ -205,8 +214,7 @@ def plot_across_algorithms():
         #if os.path.isfile(pkl_fname):
         #    search_rwd_times, organized_times, max_rwd = pickle.load(open(pkl_fname,'r'))
         #else:
-        search_rwd_times, max_rwd = get_mcts_results(args.domain, algo, widening_parameter, args.c1,
-                                                     args.n_feasibility_checks, args.mcts_iter, args.pidx)
+        search_rwd_times, max_rwd = get_mcts_results(algo, args)
         search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         #pickle.dump((search_rwd_times, organized_times, max_rwd), open(pkl_fname, 'wb'))
 
