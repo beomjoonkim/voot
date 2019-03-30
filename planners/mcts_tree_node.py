@@ -51,7 +51,8 @@ class TreeNode:
                 is_next_node_goal = np.all([child.is_goal_node for child in self.children.values()])
                 is_time_to_sample = is_time_to_sample or all_explored_actions_are_infeasible \
                                         or is_next_node_goal
-            return is_time_to_sample
+            is_ucb_time = not is_time_to_sample
+            return is_ucb_time
         else:
             n_arms = len(self.A)
             if n_arms < 5:

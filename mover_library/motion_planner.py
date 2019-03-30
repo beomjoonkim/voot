@@ -4,9 +4,10 @@ import numpy as np
 from random import randint
 
 
-def get_number_of_confs_in_between(q1, q2, body):
+def get_number_of_base_confs_in_between(q1, q2, body):
+    resolution = np.array([0.3, 0.3, 20 * np.pi / 180.0])
     n = int(
-        np.max(np.abs(np.divide(body.SubtractActiveDOFValues(q1, q2), np.array([0.2, 0.2, 10 * np.pi / 180.0]))))) + 1
+        np.max(np.abs(np.divide(body.SubtractActiveDOFValues(q1, q2), resolution)))) + 1
     return n
 
 
@@ -155,7 +156,7 @@ def base_linear_interpolation(body, q1, q2):
 """
 
 def base_linear_interpolation(body, q1, q2):
-    n = get_number_of_confs_in_between(q1, q2, body)
+    n = get_number_of_base_confs_in_between(q1, q2, body)
     q = q1
     interpolated_qs = []
     for i in range(n):

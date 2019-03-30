@@ -154,9 +154,9 @@ class MCTS:
             we_have_feasible_action = np.max(root_node_reward_history) >= 0
 
         if is_pick_node:
-            we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 10
+            we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
         else:
-            we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
+            we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
 
         return we_evaluated_the_node_enough
 

@@ -87,7 +87,7 @@ def instantiate_mcts(args, problem_env):
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
     domain_name = args.domain
-    use_progressive_widening = args.use_progressive_widening
+    use_progressive_widening = args.pw
 
     mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
@@ -112,7 +112,7 @@ def make_plan_pklable(plan):
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-uct', type=float, default=1.0)
-    parser.add_argument('-widening_parameter', type=float, default=2.0)
+    parser.add_argument('-widening_parameter', type=float, default=1.0)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)
@@ -120,7 +120,7 @@ def main():
     parser.add_argument('-planner', type=str, default='mcts')
     parser.add_argument('-v', action='store_true', default=False)
     parser.add_argument('-debug', action='store_true', default=False)
-    parser.add_argument('-progressive_widening', action='store_true', default=False)
+    parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-seed', type=int, default=50)
     parser.add_argument('-max_time', type=float, default=np.inf)
@@ -129,6 +129,10 @@ def main():
     parser.add_argument('-random_seed', type=int, default=-1)
 
     args = parser.parse_args()
+
+    if args.pw:
+        assert args.widening_parameter > 0 and args.widening_parameter <= 1
+
     if args.random_seed == -1:
         args.random_seed = args.problem_idx
     print "Problem number ", args.problem_idx
