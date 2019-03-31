@@ -16,17 +16,17 @@ def savefig(xlabel, ylabel, fname=''):
     print 'Saving figure ', fname + '.png'
     plt.savefig(fname + '.png', dpi=100, format='png')
 
-
+ROOTDIR = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
 def get_result_dir(algo_name, dimension, obj_fcn):
     if obj_fcn != 'shekel':
-        result_dir = './test_results/function_optimization/' + str(obj_fcn) + '/dim_' + str(
+        result_dir =  ROOTDIR+'/function_optimization/' + str(obj_fcn) + '/dim_' + str(
             dimension) + '/' + algo_name + '/'
     else:
-        result_dir = './test_results/function_optimization/' + 'dim_' + str(dimension) + '/' + algo_name + '/'
+        result_dir = ROOTDIR+'/function_optimization/' + 'dim_' + str(dimension) + '/' + algo_name + '/'
         if algo_name == 'gpucb' and dimension == 10:
             result_dir = './test_results/function_optimization/' + 'dim_' + str(
                 dimension) + '/' + algo_name + '/' + 'n_eval_200/'
-    result_dir = './test_results/function_optimization/' + str(obj_fcn) + '/dim_' + str(
+    result_dir = ROOTDIR+'/function_optimization/' + str(obj_fcn) + '/dim_' + str(
         dimension) + '/' + algo_name + '/'
     return result_dir
 

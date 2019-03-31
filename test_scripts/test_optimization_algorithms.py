@@ -58,13 +58,13 @@ if obj_fcn == 'shekel':
     C = config['C']
 
 if obj_fcn == 'shekel':
-    domain =np.array([[0.]*dim_x, [10.]*dim_x])
+    domain =np.array([[-500.]*dim_x, [500.]*dim_x])
 elif obj_fcn == 'schwefel':
     domain = np.array([[-500.]*dim_x, [500.]*dim_x])
 elif obj_fcn == 'rastrigin':
     domain = np.array([[-5.12]*dim_x, [5.12]*dim_x])
 elif obj_fcn == 'ackley':
-    domain = np.array([[-15.]*dim_x, [30.]*dim_x])
+    domain = np.array([[-30.]*dim_x, [30.]*dim_x])
 elif obj_fcn == 'griewank':
     domain = np.array([[-600.]*dim_x, [600.]*dim_x])
 else:
@@ -81,7 +81,7 @@ def get_objective_function(sol):
     elif obj_fcn == 'rastrigin':
         return -benchmarks.rastrigin(sol)[0]
     elif obj_fcn == 'ackley':
-        return -benchmarks.rastrigin(sol)[0]
+        return -benchmarks.ackley(sol)[0] # todo re-run experiment on this
     else:
         print "wrong function name"
         sys.exit(-1)
@@ -261,6 +261,7 @@ def doo(explr_p):
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
+    print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
 
@@ -285,6 +286,7 @@ def soo(dummy):
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
 
+    print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
 
@@ -322,6 +324,23 @@ def voo(explr_p):
     times = []
     stime = time.time()
     print 'explr_p',explr_p
+    """
+    from mpl_toolkits.mplot3d import Axes3D
+    import matplotlib.pyplot as plt
+    import pdb;pdb.set_trace()
+    x1=np.linspace(domain[0][0], domain[1][0], 1000)
+    x2=np.linspace(domain[0][1], domain[1][1], 1000)
+
+    x_to_eval=np.array([[x,y] for x in x1 for y in x2 ])
+    if args.obj_fcn == 'shekel':
+        evaluations = [benchmarks.shekel(x,A,C)[0] for x in x_to_eval]
+    else:
+        evaluations = [get_objective_function(x) for x in x_to_eval]
+
+    ax = plt.axes(projection='3d')
+    ax.plot3D(x_to_eval[:,0], x_to_eval[:,1], evaluations)
+    import pdb;pdb.set_trace()
+    """
 
     for i in range(n_fcn_evals):
         #print "%d / %d" % (i, n_fcn_evals)
@@ -341,12 +360,14 @@ def voo(explr_p):
     best_idx = np.where(evaled_y == max_y[-1])[0][0]
     print evaled_x[best_idx], evaled_y[best_idx]
     print "Max value found", np.max(evaled_y)
+    print "Magnitude", np.linalg.norm(evaled_x[best_idx])
     return evaled_x, evaled_y, max_y, times
 
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]# , 0.6, 0.7, 0.8, 0.9, 1.0]
+        epsilons = [0.1, 0.2, 0.3, 0.4, 0.5, 1]# , 0.6, 0.7, 0.8, 0.9, 1.0]
+        #epsilons = [0.4]
     elif algorithm.__name__ == 'doo':
         epsilons = [1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':

@@ -33,7 +33,7 @@ class VOO:
         other_best_evaled_xs = evaled_x
 
         GAUSSIAN = False
-        UNIFORM = False
+        UNIFORM_TOUCHING_BOUNDARY = False
         # todo perhaps this is reason why it performs so poorly
         while np.any(best_dist > other_dists):
             if GAUSSIAN:
@@ -42,7 +42,7 @@ class VOO:
                 while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
                     #print "Edge detecting, sampling other points"
                     new_x = np.random.normal(best_evaled_x, variance)
-            elif UNIFORM:
+            elif UNIFORM_TOUCHING_BOUNDARY:
                 dim_x = self.domain[1].shape[-1]
                 possible_range = (self.domain[1] - self.domain[0]) / np.exp(counter)
                 possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
@@ -58,7 +58,6 @@ class VOO:
                 possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
                 new_x = best_evaled_x + possible_values
                 while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
-                    import pdb;pdb.set_trace()
                     possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
                     new_x = best_evaled_x + possible_values
 
@@ -71,6 +70,7 @@ class VOO:
             best_dist = self.distance_fn(new_x, best_evaled_x)
             other_dists = np.array([self.distance_fn(other, new_x) for other in other_best_evaled_xs])
             counter += 1
+        #print np.linalg.norm(new_x)
         return new_x
 
     def sample_from_uniform(self):
