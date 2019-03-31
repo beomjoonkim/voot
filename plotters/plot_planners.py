@@ -48,7 +48,8 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += algo_name
     result_dir += '_n_feasible_checks_' + str(n_feasibility_checks) + '/'
     if algo_name.find('voo') != -1 or algo_name.find('doo') != -1 or algo_name.find('gpucb') != -1:
-        result_dir += 'eps_' + str(epsilon) + '/' + 'c1_' + str(c1) + '/'
+        result_dir += 'eps_' + str(epsilon) + '/'
+        result_dir += os.listdir(result_dir)[0] + '/' #  + 'c1_' + str(c1) + '/'
     print result_dir
     return result_dir
 
@@ -97,7 +98,7 @@ def get_mcts_results(algo_name, mcts_parameters):
             #if len(search_time) < 2000:
             #    continue
 
-            print len(search_time)
+            print len(search_time), fin
             search_rwd_times.append(search_time[0:1000,:])
             is_success = np.any(search_time[:, -1])
             max_rwds.append(np.max(search_time[:, 2]))
@@ -172,7 +173,7 @@ def get_algo_name(raw_name):
     if raw_name.find('randomized_doo') !=-1:
         return "RandDOOT"
     elif raw_name.find('voo') != -1:
-        return 'VOOT'
+        return 'VOOT_' + raw_name.split('_')[1]
     elif raw_name.find('unif') != -1:
         return "UniformT"
     else:
@@ -182,9 +183,9 @@ def get_algo_name(raw_name):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='mdr')
-    parser.add_argument('-w', type=float, default=0.8)
+    parser.add_argument('-w', type=float, default=1.0)
     parser.add_argument('-c1', type=int, default=1)
-    parser.add_argument('-uct', type=float, default=1.0)
+    parser.add_argument('-uct', type=float, default=0.001)
     parser.add_argument('-mcts_iter', type=int, default=1000)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
@@ -193,7 +194,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = ['voo_0.4', 'unif' ]
+    algo_names = ['voo_0.1','voo_0.2','voo_0.3','voo_0.4','voo_0.5', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -220,8 +221,13 @@ def plot_across_algorithms():
 
         max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
+
+        if algo_name in color_dict.keys():
+            color = color_dict[algo_name]
+        else:
+            color = np.random.random((1,3))
         sns.tsplot(search_rwd_times[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
-                   color=color_dict[algo_name])
+                   color=color)
         print "===================="
 
     if args.domain == 'convbelt':
@@ -230,7 +236,8 @@ def plot_across_algorithms():
         sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
 
-    plot_name = args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter)
+    plot_name = args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+                    + "_uct_" + str(args.uct)
     if args.t:
         savefig('Times (s)', 'Average rewards', fname='./plotters/t_' + args.domain + '_w_' + str(args.w))
     else:

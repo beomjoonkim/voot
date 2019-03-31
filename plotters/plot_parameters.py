@@ -21,25 +21,21 @@ def savefig(xlabel, ylabel, fname=''):
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
-def get_result_dir(domain_name, algo_name, widening_parameter, c1):
+def get_result_dir(algo_name, widening_parameter, uct):
+    mcts_iter = 1000
     if algo_name.find('voo') != -1:
         epsilon = algo_name.split('_')[1]
         algo_name = algo_name.split('_')[0]
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
-    else:
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
-    if domain_name == 'convbelt':
-        result_dir = rootdir + '/convbelt_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter) + '_'
-    elif domain_name == 'namo':
-        result_dir = rootdir + '/namo_results/mcts_iter_50/uct_0.0_widening_' + str(widening_parameter) + '_'
-    else:
-        return -1
+    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/test_results/'
 
+    result_dir = rootdir + '/minimum_displacement_removal_results/mcts_iter_' + str(mcts_iter) + \
+                 '/uct_' + str(uct) + '_widening_' + str(widening_parameter) + '_'
     print result_dir
     result_dir += algo_name + '/'
     if algo_name.find('voo') != -1:
-        result_dir += 'eps_' + str(epsilon) + '/' + 'c1_' + str(c1) + '/'
+        result_dir += 'eps_' + str(epsilon) + '/' + 'c1_1/'
     print result_dir
     return result_dir
 
@@ -155,12 +151,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     widening_parameter = args.w
 
-    if args.domain == 'namo':
-        algo_names = ['unif', 'voo_0.1', 'voo_0.2', 'voo_0.3']
-    else:
-        # algo_names = ['unif', 'voo_0.01', 'voo_0.1', 'voo_0.2', 'voo_0.3', 'voo_0.4', 'voo_0.5']
-        algo_names = ['unif', 'voo_0.3']
-
+    algo_names = ['voo_0.3']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()[1:]
 
@@ -168,7 +159,7 @@ def plot_across_algorithms():
     for algo_idx, algo in enumerate(algo_names):
         print algo
         try:
-            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, args.c1)
+            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, uct)
         except:
             continue
         if args.domain == 'namo':
@@ -190,9 +181,8 @@ def plot_across_widening_parameters():
     parser.add_argument('-algo_name', type=str, default='unif')
 
     args = parser.parse_args()
-    widening_parameters = np.arange(0.1, 3, 0.1)
-    widening_parameters = [np.round(w, 1) for w in widening_parameters]
-    widening_parameters = [1.9, 2.0, 2.4, 1.5, 0.1, 1.8, 1.4, 2.6, 1.2, 3.0]
+    widening_parameters = [0.6, 0.7, 0.8, 0.9, 1.0, 2.0, 3.0, 4.0, 5.0]
+    uct = [0.1]
 
     algo = args.algo_name
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -205,14 +195,14 @@ def plot_across_widening_parameters():
     for widening_idx, widening_parameter in enumerate(widening_parameters):
         print algo + '_' + str(widening_parameter)
         try:
-            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter=0.8, c1=widening_parameter)
+            search_rwd_times = get_mcts_results(args.domain, algo, widening_parameter, uct)
         except:
             continue
         search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
         search_rwd_times = np.array(search_rwd_times)
         rwds.append([widening_parameter, search_rwd_times.mean(axis=0)[25], search_rwd_times.var(axis=0)[25]])
         print color_names[widening_idx], color_dict[color_names[widening_idx]]
-        plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo+'_'+str(widening_parameter),
+        plot = sns.tsplot(search_rwd_times, organized_times, ci=95, condition=algo + '_' + str(widening_parameter),
                           color=color_dict[color_names[widening_idx]])
         """
         if args.domain == 'namo':
@@ -222,9 +212,9 @@ def plot_across_widening_parameters():
         """
         print  "===================="
     plt.show()
-    #print  np.vstack([rwds[np.argsort(np.array(rwds)[:, 1]), 0], rwds[np.argsort(np.array(rwds)[:, 1]), 1]]).transpose()[-10:]
-    #import pdb;
-    #pdb.set_trace()
+    # print  np.vstack([rwds[np.argsort(np.array(rwds)[:, 1]), 0], rwds[np.argsort(np.array(rwds)[:, 1]), 1]]).transpose()[-10:]
+    # import pdb;
+    # pdb.set_trace()
     # savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.domain + '_algo_' + args.algo_name)
 
 

@@ -126,10 +126,6 @@ def stosoo(dummy):
     return evaled_x, evaled_y, max_y, times, max_y[-1]
 
 
-
-
-
-
 def stounif(explr_p):
     evaled_x = []
     evaled_y = []
@@ -167,9 +163,10 @@ def stovoo(explr_p):
     stime = time.time()
     print 'explr_p',explr_p
     for i in range(n_fcn_evals):
-        print "%d / %d" % (i, n_fcn_evals)
-        if i > 0:
-            print 'max value is ', np.max(evaled_y)
+        #if i % 100 == 0:
+        #    print "%d / %d" % (i, n_fcn_evals)
+        #if i > 0:
+        #    print 'max value is ', np.max(evaled_y)
         evaled_arm = stovoo.choose_next_point()
         y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
         stovoo.update_evaluated_arms(evaled_arm, noisy_y)
@@ -349,7 +346,7 @@ def voo(explr_p):
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
+        epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]# , 0.6, 0.7, 0.8, 0.9, 1.0]
     elif algorithm.__name__ == 'doo':
         epsilons = [1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
@@ -390,7 +387,7 @@ def main():
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
-        return
+        #return
 
     if stochastic_objective:
         if algo_name == 'uniform':
