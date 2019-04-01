@@ -43,33 +43,28 @@ class TreeNode:
         return np.random.choice(no_evaled)
 
     def is_ucb_step(self, widening_parameter, infeasible_rwd, use_progressive_widening):
+        n_arms = len(self.A)
+        if n_arms <= 1:
+            return False
+
+        max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.reward_history.values()])
+        n_feasible_actions = np.sum(max_reward_of_each_action > infeasible_rwd)
+        next_state_terminal = np.any([c.is_goal_node for c in self.children.values()])
+
+        if n_feasible_actions <= 1 or next_state_terminal: # sample more actions
+            return False
+
         if use_progressive_widening:
             n_actions = len(self.A)
             is_time_to_sample = n_actions <= widening_parameter * self.Nvisited
-            if len(self.Q.values()) > 0:
-                all_explored_actions_are_infeasible = np.max(self.reward_history.values()) == infeasible_rwd
-                is_next_node_goal = np.all([child.is_goal_node for child in self.children.values()])
-                is_time_to_sample = is_time_to_sample or all_explored_actions_are_infeasible \
-                                        or is_next_node_goal
-            is_ucb_time = not is_time_to_sample
-            return is_ucb_time
+            return is_time_to_sample
         else:
-            n_arms = len(self.A)
-            if n_arms <= 1:
-                return False
+            if self.n_ucb_iterations < widening_parameter:
+                self.n_ucb_iterations += 1
+                return True
             else:
-                all_explored_actions_are_infeasible = np.max(self.reward_history.values()) == infeasible_rwd
-                next_state_terminal = np.any([c.is_goal_node for c in self.children.values()]) # always sample a new action if next state is terminal state
-
-                if all_explored_actions_are_infeasible or next_state_terminal:
-                    return False
-
-                if self.n_ucb_iterations < widening_parameter:
-                    self.n_ucb_iterations += 1
-                    return True
-                else:
-                    self.n_ucb_iterations = 0
-                    return False
+                self.n_ucb_iterations = 0
+                return False
 
     def perform_ucb_over_actions(self):
         best_value = -np.inf
@@ -79,7 +74,11 @@ class TreeNode:
             best_action = self.get_never_evaluated_action()
         else:
             best_action = self.Q.keys()[0]
-            for action, value in zip(self.Q.keys(), self.Q.values()):
+
+            feasible_actions = [a for a in self.A if np.max(self.reward_history[a]) > -2]
+            feasible_q_values = [self.Q[a] for a in feasible_actions]
+            assert(len(feasible_actions) > 1)
+            for action, value in zip(feasible_actions, feasible_q_values):
                 ucb_value = value + self.ucb_parameter * upper_confidence_bound(self.Nvisited, self.N[action])
 
                 # todo randomized tie-break

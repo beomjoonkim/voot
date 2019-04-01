@@ -61,11 +61,20 @@ class VOOGenerator(Generator):
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
 
-        is_more_than_one_action_in_node = len(self.evaled_actions) > 1
-        is_reward_history_positive = is_more_than_one_action_in_node and np.max(node.reward_history.values()) >= 0
+        is_more_than_one_action_in_node = len(self.evaled_actions) > 0
+        if is_more_than_one_action_in_node:
+            max_reward_of_each_action = np.array([np.max(rlist) for rlist in node.reward_history.values()])
+            n_feasible_actions = np.sum(max_reward_of_each_action > -2)
+            we_have_feasible_action = n_feasible_actions >= 1
+        else:
+            we_have_feasible_action = False
+
+        if we_have_feasible_action:
+            print self.evaled_q_values
+            import pdb;pdb.set_trace()
 
         rnd = np.random.random()
-        is_sample_from_best_v_region = rnd < 1 - self.explr_p and is_reward_history_positive
+        is_sample_from_best_v_region = rnd < 1 - self.explr_p and we_have_feasible_action
 
         if is_sample_from_best_v_region:
             print 'Sample ' + node.operator_skeleton.type + ' from best region'
@@ -113,14 +122,12 @@ class VOOGenerator(Generator):
         best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values))
         best_action_idxs = best_action_idxs.reshape((len(best_action_idxs, )))
         best_action_idx = np.random.choice(best_action_idxs)
-
         return self.evaled_actions[best_action_idx]
 
     def sample_near_best_action(self, best_evaled_action, counter):
         dim_x = self.domain[1].shape[-1]
-        possible_max = (self.domain[1] - best_evaled_action) / np.exp(counter)
-        possible_min = (self.domain[0] - best_evaled_action) / np.exp(counter)
-        import pdb;pdb.set_trace()
+        possible_max = (self.domain[1] - best_evaled_action) / np.exp(0.1*counter)
+        possible_min = (self.domain[0] - best_evaled_action) / np.exp(0.1*counter)
 
         possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
         new_parameters = best_evaled_action + possible_values
