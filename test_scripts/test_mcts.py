@@ -117,7 +117,6 @@ def main():
     if args.sampling_strategy != 'unif':
         assert args.epsilon >= 0.0
 
-
     if args.random_seed == -1:
         args.random_seed = args.problem_idx
 
