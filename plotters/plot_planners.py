@@ -149,7 +149,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 1100, 10)
+    organized_times = range(10, 2100, 10)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
@@ -195,6 +195,7 @@ def plot_across_algorithms():
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
     algo_names = ['voo_0.1','voo_0.2','voo_0.3','voo_0.4','voo_0.5', 'unif']
+    algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -225,7 +226,7 @@ def plot_across_algorithms():
         if algo_name in color_dict.keys():
             color = color_dict[algo_name]
         else:
-            color = np.random.random((1,3))
+            color = np.random.random((1, 3))
         sns.tsplot(search_rwd_times[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                    color=color)
         print "===================="

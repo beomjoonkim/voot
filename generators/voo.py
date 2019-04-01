@@ -117,25 +117,16 @@ class VOOGenerator(Generator):
         return self.evaled_actions[best_action_idx]
 
     def sample_near_best_action(self, best_evaled_action, counter):
-        use_uniform_sampling = True
-        if use_uniform_sampling:
-            dim_x = self.domain[1].shape[-1]
-            possible_range = (self.domain[1] - self.domain[0]) / np.exp(counter)
-            possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
+        dim_x = self.domain[1].shape[-1]
+        possible_max = (self.domain[1] - best_evaled_action) / np.exp(counter)
+        possible_min = (self.domain[0] - best_evaled_action) / np.exp(counter)
+
+        possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
+        new_parameters = best_evaled_action + possible_values
+        while np.any(new_parameters > self.domain[1]) or np.any(new_parameters < self.domain[0]):
+            possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
             new_parameters = best_evaled_action + possible_values
 
-            is_new_parameter_bigger_than_max = np.any(new_parameters > self.domain[1])
-            is_new_parameter_smaller_than_min = np.any(new_parameters < self.domain[0])
-
-            while is_new_parameter_bigger_than_max or is_new_parameter_smaller_than_min:
-                possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
-                new_parameters = best_evaled_action + possible_values
-                is_new_parameter_bigger_than_max = np.any(new_parameters > self.domain[1])
-                is_new_parameter_smaller_than_min = np.any(new_parameters < self.domain[0])
-        else:
-            variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
-            new_parameters = np.random.normal(best_evaled_action, variance)
-            new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
         return new_parameters
 
     def sample_place_from_best_voroi_region(self):
