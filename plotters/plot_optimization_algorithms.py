@@ -119,11 +119,11 @@ def get_max_rwds_wrt_samples(search_rwd_times):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-dim', type=int, default=3)
-    parser.add_argument('-obj_fcn', type=str, default='schwefel')
+    parser.add_argument('-obj_fcn', type=str, default='shekel')
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['soo', 'gpucb', 'doo', 'voo', 'uniform']
+    algo_names = ['soo', 'doo', 'voo', 'uniform']
     #algo_names = ['gpucb']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()

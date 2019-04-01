@@ -81,7 +81,7 @@ def get_objective_function(sol):
     elif obj_fcn == 'rastrigin':
         return -benchmarks.rastrigin(sol)[0]
     elif obj_fcn == 'ackley':
-        return -benchmarks.ackley(sol)[0] # todo re-run experiment on this
+        return -benchmarks.ackley(sol)[0]
     else:
         print "wrong function name"
         sys.exit(-1)
