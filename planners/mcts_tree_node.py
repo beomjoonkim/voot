@@ -55,7 +55,7 @@ class TreeNode:
             return is_ucb_time
         else:
             n_arms = len(self.A)
-            if n_arms < 5:
+            if n_arms <= 1:
                 return False
             else:
                 all_explored_actions_are_infeasible = np.max(self.reward_history.values()) == infeasible_rwd

@@ -120,6 +120,7 @@ class VOOGenerator(Generator):
         dim_x = self.domain[1].shape[-1]
         possible_max = (self.domain[1] - best_evaled_action) / np.exp(counter)
         possible_min = (self.domain[0] - best_evaled_action) / np.exp(counter)
+        import pdb;pdb.set_trace()
 
         possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
         new_parameters = best_evaled_action + possible_values
