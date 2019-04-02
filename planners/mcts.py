@@ -65,7 +65,8 @@ class MCTS:
         self.goal_reward = 2
         self.n_feasibility_checks = n_feasibility_checks
 
-    def create_sampling_agent(self, node, operator_name):
+    def create_sampling_agent(self, node, operator_skeleton):
+        operator_name = operator_skeleton.type
         if self.sampling_strategy == 'unif':
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
@@ -75,7 +76,7 @@ class MCTS:
         elif self.sampling_strategy == 'doo':
             return DOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'randomized_doo':
-            return RandomizedDOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
+            return RandomizedDOOGenerator(operator_skeleton, self.environment, self.sampling_strategy_exploration_parameter)
         else:
             print "Wrong sampling strategy"
             return -1
@@ -91,7 +92,7 @@ class MCTS:
                         is_init_node)
 
         if not self.environment.is_goal_reached():
-            node.sampling_agent = self.create_sampling_agent(node, operator_skeleton.type)
+            node.sampling_agent = self.create_sampling_agent(node, operator_skeleton)
 
         node.objects_not_in_goal = self.environment.objects_currently_not_in_goal
         node.parent_action_reward = reward

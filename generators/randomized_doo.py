@@ -15,8 +15,8 @@ import copy
 
 
 class RandomizedDOOGenerator(DOOGenerator):
-    def __init__(self, node, problem_env, explr_p):
-        DOOGenerator.__init__(self, node, problem_env, explr_p)
+    def __init__(self, operator_skeleton, problem_env, explr_p):
+        DOOGenerator.__init__(self, operator_skeleton, problem_env, explr_p)
         self.dim_x = self.domain[0].shape[-1]
 
     def choose_next_point(self):
