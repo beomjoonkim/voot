@@ -25,7 +25,7 @@ def worker_p(config):
         command += ' -pw '
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -60,8 +60,7 @@ def main():
         pidx = 0
     else:
         pass
-
-    seeds = range(0, 10)
+    seeds = args.random_seeds
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for uct in ucts:

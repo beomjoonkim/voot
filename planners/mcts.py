@@ -202,7 +202,9 @@ class MCTS:
             print "Sampling new action"
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
             curr_node.add_actions(new_continuous_parameters)
-        action = curr_node.perform_ucb_over_actions()
+            action = curr_node.A[-1]
+        else:
+            action = curr_node.perform_ucb_over_actions()
 
         return action
 
