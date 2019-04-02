@@ -55,12 +55,12 @@ def main():
     mcts_iter = args.mcts_iter
     ucts = args.uct if args.uct is not None else [1.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
+    seeds = args.random_seeds if args.random_seeds is not None else range(10)
 
     if args.domain == 'minimum_displacement_removal':
         pidx = 0
     else:
         pass
-    seeds = args.random_seeds
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for uct in ucts:
