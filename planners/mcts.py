@@ -151,7 +151,10 @@ class MCTS:
             else:
                 we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         elif self.environment.name == 'convbelt':
-            we_evaluated_the_node_enough = False
+            if is_pick_node:
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+            else:
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         else:
             raise NotImplementedError
 

@@ -25,7 +25,7 @@ def worker_p(config):
         command += ' -pw '
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -60,7 +60,7 @@ def main():
     if args.domain == 'minimum_displacement_removal':
         pidx = 0
     else:
-        pass
+        pidx = 0
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for uct in ucts:

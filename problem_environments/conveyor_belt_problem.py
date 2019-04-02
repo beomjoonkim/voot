@@ -153,7 +153,6 @@ def create_conveyor_belt_problem(env, obj_setup=None):
 
     fdir=os.path.dirname(os.path.abspath(__file__))
     env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
-    env.SetViewer('qtcoin')
     robot = env.GetRobots()[0]
     set_default_robot_config(robot)
 
