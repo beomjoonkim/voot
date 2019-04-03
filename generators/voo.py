@@ -188,7 +188,6 @@ class VOOGenerator(Generator):
             other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
             counter += 1
 
-        print "Counter ", counter
         return new_parameters
 
     def sample_pick_from_best_voroi_region(self, obj):
