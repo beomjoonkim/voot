@@ -34,20 +34,16 @@ def make_save_dir(args):
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
 
-    if domain == 'minimum_displacement_removal':
-        save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_'\
-                   + str(mcts_iter) + '/uct_' \
-                   + str(uct_parameter) + '_widening_' \
-                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
-    elif domain == 'convbelt':
-        save_dir = ROOTDIR + '/test_results//' + domain + '_results//' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
-                   + str(uct_parameter) + '_widening_' \
-                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
-    else:
-        raise NotImplementedError
+    save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/'
+    save_dir += '/uct_'+str(uct_parameter) + '_widening_' \
+                + str(widening_parameter) + '_' + sampling_strategy + \
+                '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
+
+    if sampling_strategy == 'voo':
+        save_dir += '/sampling_mode/' + args.voo_sampling_mode+'/'
 
     if sampling_strategy != 'unif':
-        save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
+        save_dir += '/eps_' + str(sampling_strategy_exploration_parameter) +'/'
 
     if not os.path.isdir(save_dir):
         try:
@@ -67,10 +63,11 @@ def instantiate_mcts(args, problem_env):
     c1 = args.c1
     domain_name = args.domain
     use_progressive_widening = args.pw
+    use_ucb=args.use_ucb
 
     mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, use_progressive_widening, domain_name)
+                problem_env, use_progressive_widening, use_ucb)
     return mcts
 
 
@@ -90,7 +87,7 @@ def make_plan_pklable(plan):
 
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-uct', type=float, default=1.0)
+    parser.add_argument('-uct', type=float, default=0.0)
     parser.add_argument('-widening_parameter', type=float, default=1.0)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
@@ -99,6 +96,7 @@ def main():
     parser.add_argument('-planner', type=str, default='mcts')
     parser.add_argument('-v', action='store_true', default=False)
     parser.add_argument('-debug', action='store_true', default=False)
+    parser.add_argument('-use_ucb', action='store_true', default=False)
     parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-seed', type=int, default=50)
@@ -106,6 +104,7 @@ def main():
     parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-random_seed', type=int, default=-1)
+    parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
 
     args = parser.parse_args()
 

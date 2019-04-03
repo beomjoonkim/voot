@@ -61,6 +61,7 @@ def main():
         pidx = 0
     else:
         pidx = 0
+
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for uct in ucts:

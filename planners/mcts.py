@@ -43,7 +43,7 @@ def create_doo_agent(operator):
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                 environment, use_progressive_widening, domain_name):
+                 environment, use_progressive_widening, use_ucb, voo_sampling_mode='gaussian'):
         self.c1 = c1
         self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
@@ -54,6 +54,8 @@ class MCTS:
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
         self.depth_limit = 300
         self.use_progressive_widening = use_progressive_widening
+        self.voo_sampling_mode = voo_sampling_mode
+        self.use_ucb = use_ucb
 
         self.env = self.environment.env
         self.robot = self.environment.robot
@@ -70,7 +72,8 @@ class MCTS:
         if self.sampling_strategy == 'unif':
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
-            return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter, self.c1)
+            return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter, self.c1,
+                                self.voo_sampling_mode)
         elif self.sampling_strategy == 'gpucb':
             return GPUCBGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'doo':
@@ -201,15 +204,17 @@ class MCTS:
         return search_time_to_reward, plan
 
     def choose_action(self, curr_node):
-        if not curr_node.is_ucb_step(self.widening_parameter, self.environment.infeasible_reward,
-                                     self.use_progressive_widening):
+        if not curr_node.is_reevaluation_step(self.widening_parameter, self.environment.infeasible_reward,
+                                              self.use_progressive_widening, self.use_ucb):
             print "Sampling new action"
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
             curr_node.add_actions(new_continuous_parameters)
             action = curr_node.A[-1]
         else:
-            action = curr_node.perform_ucb_over_actions()
-
+            if self.use_ucb:
+                action = curr_node.perform_ucb_over_actions()
+            else:
+                action = curr_node.choose_new_arm()
         return action
 
     @staticmethod
