@@ -69,7 +69,6 @@ def main():
     else:
         pidx = 0
 
-    import pdb;pdb.set_trace()
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for uct in ucts:
