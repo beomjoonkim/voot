@@ -167,7 +167,9 @@ class MCTS:
         if self.s0_node.is_goal_node:
             best_node = self.tree.root
         else:
-            best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())] # choose the best Q value
+            feasible_actions = [a for a in self.s0_node.A if np.max(self.s0_node.reward_history[a]) > -2]
+            feasible_q_values = [self.s0_node.Q[a] for a in feasible_actions]
+            best_action = feasible_actions[np.argmax(feasible_q_values)]
             best_node = self.s0_node.children[best_action]
         return best_node
 
