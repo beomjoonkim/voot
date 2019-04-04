@@ -10,7 +10,7 @@ from minimum_displacement_removal_problem import MinimumDisplacementRemovalProbl
 
 ## mover library utility functions
 from mover_library.utils import set_robot_config, grab_obj, two_arm_pick_object, two_arm_place_object, \
-    get_trajectory_length, visualize_path
+    get_trajectory_length, visualize_path, get_body_xytheta, se2_distance
 
 OBJECT_ORIGINAL_COLOR = (0, 0, 0)
 COLLIDING_OBJ_COLOR = (0, 1, 1)
@@ -24,7 +24,8 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         self.problem_config = problem.get_problem_config()
         self.robot = self.env.GetRobots()[0]
         self.objects = self.problem_config['objects']
-        self.regions = {'entire_region': self.problem_config['entire_region']}
+        self.regions = {'entire_region': self.problem_config['entire_region'],
+                        'forbidden_region': self.problem_config['forbidden_region']}
         self.init_base_conf = self.problem_config['init_base_config']
         self.goal_base_conf = self.problem_config['goal_base_config']
         self.problem_idx = self.problem_config['problem_idx']
@@ -32,7 +33,6 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.robot = self.env.GetRobots()[0]
         self.objects = self.problem_config['objects']
-        self.regions = {'entire_region': self.problem_config['entire_region']}
 
         self.is_init_pick_node = True
 
@@ -47,19 +47,33 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
     def get_region_containing(self, obj):
         return self.regions['entire_region']
 
+    def check_reachability_precondition(self, operator_instance):
+        if operator_instance.type == 'two_arm_place':
+            held = self.robot.GetGrabbed()[0]
+            with self.robot:
+                set_robot_config(operator_instance.continuous_parameters['base_pose'], self.robot)
+                if self.regions['forbidden_region'].contains(held.ComputeAABB()):
+                    return None, "NoSolution"
+
+        return [], 'HasSolution'
+
     def compute_place_reward(self, operator_instance):
         # todo I can potentially save time by keeping the reward in the node
         assert len(self.robot.GetGrabbed()) == 1
+        prev_robot_config = get_body_xytheta(self.robot)
+
         prev_objects_not_in_goal = self.objects_currently_not_in_goal
         object_held = self.robot.GetGrabbed()[0]
         two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
         new_objects_not_in_goal = self.get_objs_in_collision(self.swept_volume,
                                                              'entire_region')  # takes about 0.0284 seconds
+        new_config = get_body_xytheta(self.robot)
+        distance_travelled = se2_distance(prev_robot_config, new_config, 1, 1)
         if len(prev_objects_not_in_goal) - len(new_objects_not_in_goal) > 0:
-            distance_travelled = get_trajectory_length(operator_instance.low_level_motion)  # 0.3 ms
+            #distance_travelled = get_trajectory_length(operator_instance.low_level_motion)  # 0.3 ms
             reward = min(1.0 / distance_travelled, 2)
         else:
-            distance_travelled = get_trajectory_length(operator_instance.low_level_motion)
+            #distance_travelled = get_trajectory_length(operator_instance.low_level_motion)
             reward = max(-distance_travelled, self.infeasible_reward)
         return reward, new_objects_not_in_goal
 

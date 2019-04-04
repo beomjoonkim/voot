@@ -150,7 +150,7 @@ class MCTS:
         # todo run with this setting of switching
         if self.environment.name == 'minimum_displacement_removal':
             if is_pick_node:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
+                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
             else:
                 we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         elif self.environment.name == 'convbelt':
@@ -192,12 +192,12 @@ class MCTS:
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
-            self.log_current_tree_to_dot_file(iteration)
+            #self.log_current_tree_to_dot_file(iteration)
 
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
             plan = self.retrace_best_plan()
-            print search_time_to_reward
+            print np.array(search_time_to_reward)
 
             if time_to_search > max_time:
                 break
@@ -213,6 +213,7 @@ class MCTS:
             curr_node.add_actions(new_continuous_parameters)
             action = curr_node.A[-1]
         else:
+            print "Re-evaluation"
             if self.use_ucb:
                 action = curr_node.perform_ucb_over_actions()
             else:

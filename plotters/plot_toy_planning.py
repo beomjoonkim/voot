@@ -22,28 +22,18 @@ def get_result_dir(algo_name, mcts_parameters):
         sampling_mode = algo_name.split('_')[1]
         epsilon = algo_name.split('_')[2]
         algo_name = algo_name.split('_')[0]
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
     elif algo_name.find('unif') != -1:
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
+        algo_name = 'unif'
     elif algo_name.find('randomized_doo') !=-1:
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
         epsilon = algo_name.split('randomized_doo')[1][1:]
         algo_name = 'randomized_doo'
 
-    rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
-    domain_name = mcts_parameters.domain
+    uct = 0
     widening_parameter = mcts_parameters.w
     mcts_iter = mcts_parameters.mcts_iter
-    uct = mcts_parameters.uct
-    if domain_name == 'convbelt':
-        rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
-        result_dir = rootdir + '/convbelt_results/mcts_iter_' +str(mcts_iter)+ \
-                     '/uct_'+str(uct)+'_widening_' + str(widening_parameter) + '_'
-    elif domain_name == 'mdr':
-        result_dir = rootdir + '/minimum_displacement_removal_results/mcts_iter_'+str(mcts_iter)+ \
-                     '/uct_'+str(uct)+'_widening_' + str(widening_parameter) + '_'
-    else:
-        return -1
+    rootdir = './test_results/'
+    result_dir = rootdir + '/minimum_displacement_removal_results/mcts_iter_'+str(mcts_iter)+ \
+                 '/uct_0.0'+'_widening_' + str(widening_parameter) + '_'
 
     n_feasibility_checks = mcts_parameters.n_feasibility_checks
     c1 = mcts_parameters.c1
@@ -61,7 +51,6 @@ def get_result_dir(algo_name, mcts_parameters):
     return result_dir
 
 
-#def get_mcts_results(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks,mcts_iter, pidx):
 def get_mcts_results(algo_name, mcts_parameters):
     result_dir = get_result_dir(algo_name, mcts_parameters)
 
@@ -85,32 +74,12 @@ def get_mcts_results(algo_name, mcts_parameters):
             if fin.find('.pkl') == -1:
                 continue
         result = pickle.load(open(result_dir + fin, 'r'))
-        if domain_name == 'convbelt':
-            is_success = result['plan'] is not None
-            max_rwds.append( np.max(np.array(result['search_time'])[:,2]))
-            search_rwd_times.append(result['search_time'])
-            success.append(is_success)
-        else:
-            try:
-                search_time = np.array(result['search_time']['namo'])
-            except:
-                search_time = np.array(result['search_time'])[0:1000,:]
-            #if len(search_time) < 2000:
-            #    continue
+        search_time = np.array(result['search_time'])[0:1000,:]
 
-            print len(search_time), fin
-            search_rwd_times.append(search_time[0:1000,:])
-            is_success = np.any(search_time[:, -1])
-            max_rwds.append(np.max(search_time[:, 2]))
-            success.append(is_success)
-            if is_success:
-                success_idx = np.where(search_time[:, -1])[0][0]
-                success_idxs.append(success_idx+1)
-                search_times.append(search_time[-1][0])
-                success_rewards.append(search_time[success_idx][-2])
-            else:
-                #print result['search_time']['namo'][[-1]]
-                pass
+        print len(search_time), fin
+        search_rwd_times.append(search_time[0:1000,:])
+        max_rwds.append(np.max(search_time[:, 2]))
+
     """
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
@@ -151,19 +120,14 @@ def get_max_rwds_wrt_time(search_rwd_times):
 
 
 def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 2100, 10)
+    organized_times = range(30)
 
     all_episode_data = []
     for rwd_time in search_rwd_times:
         episode_max_rwds_wrt_organized_times = []
         for organized_time in organized_times:
-            if isinstance(rwd_time, dict):
-                rwd_time_temp = rwd_time['namo']
-                episode_times = np.array(rwd_time_temp)[:, 1]
-                episode_rwds = np.array(rwd_time_temp)[:, 2]
-            else:
-                episode_times = np.array(rwd_time)[:, 1]
-                episode_rwds = np.array(rwd_time)[:, 2]
+            episode_times = np.array(rwd_time)[:, 1]
+            episode_rwds = -np.array(rwd_time)[:, 3]
             idxs = episode_times <= organized_time
             max_rwd = np.max(episode_rwds[idxs])
             episode_max_rwds_wrt_organized_times.append(max_rwd)
@@ -189,7 +153,7 @@ def plot_across_algorithms():
     parser.add_argument('-w', type=float, default=1.0)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-mcts_iter', type=int, default=1000)
+    parser.add_argument('-mcts_iter', type=int, default=30)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('--t', action='store_true')
@@ -197,9 +161,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = ['voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
-    algo_names = ['voo_gaussian_0.1', 'voo_gaussian_0.2', 'voo_gaussian_0.3', 'voo_gaussian_0.4', 'voo_gaussian_0.5', 'unif']
-    algo_names = ['voo_uniform_0.5', 'unif']
+    algo_names = ['voo_uniform_0.3','unif']
     #algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -236,16 +198,12 @@ def plot_across_algorithms():
                    color=color)
         print "===================="
 
-    if args.domain != 'convbelt':
         sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
 
     plot_name = args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct)
-    if args.t:
-        savefig('Times (s)', 'Average rewards', fname='./plotters/t_' + args.domain + '_w_' + str(args.w))
-    else:
-        savefig('Number of simulations', 'Average rewards', fname='./plotters/'+plot_name)
+    savefig('Number of simulations', 'Average rewards', fname='./plotters/toy_'+plot_name)
 
 
 if __name__ == '__main__':
