@@ -119,20 +119,26 @@ def get_max_rwds_wrt_time(search_rwd_times):
     return np.array(all_episode_data), organized_times
 
 
-def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(30)
+def get_max_rwds_wrt_samples(search_rwd_times, n_evals):
+    organized_times = range(n_evals)
 
     all_episode_data = []
+    all_episode_progress_data = []
     for rwd_time in search_rwd_times:
         episode_max_rwds_wrt_organized_times = []
+        episode_max_progress_wrt_organized_times=[]
         for organized_time in organized_times:
             episode_times = np.array(rwd_time)[:, 1]
-            episode_rwds = -np.array(rwd_time)[:, 3]
+            episode_rwds = np.array(rwd_time)[:, 2]
+            episode_progress = -np.array(rwd_time)[:, 3]
             idxs = episode_times <= organized_time
             max_rwd = np.max(episode_rwds[idxs])
+            max_progress = np.max(episode_progress[idxs])
             episode_max_rwds_wrt_organized_times.append(max_rwd)
+            episode_max_progress_wrt_organized_times.append(max_progress)
         all_episode_data.append(episode_max_rwds_wrt_organized_times)
-    return np.array(all_episode_data), organized_times
+        all_episode_progress_data.append(episode_max_progress_wrt_organized_times)
+    return np.array(all_episode_data), np.array(all_episode_progress_data), organized_times
 
 
 def get_algo_name(raw_name):
@@ -156,7 +162,7 @@ def plot_across_algorithms():
     parser.add_argument('-mcts_iter', type=int, default=30)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
-    parser.add_argument('--t', action='store_true')
+    parser.add_argument('--r', action='store_true')
 
     args = parser.parse_args()
 
@@ -184,8 +190,7 @@ def plot_across_algorithms():
         #    search_rwd_times, organized_times, max_rwd = pickle.load(open(pkl_fname,'r'))
         #else:
         search_rwd_times, max_rwd = get_mcts_results(algo, args)
-        search_rwd_times, organized_times = get_max_rwds_wrt_samples(search_rwd_times)
-        #pickle.dump((search_rwd_times, organized_times, max_rwd), open(pkl_fname, 'wb'))
+        search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
 
         max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
@@ -194,15 +199,23 @@ def plot_across_algorithms():
             color = color_dict[algo_name]
         else:
             color = np.random.random((1, 3))
-        sns.tsplot(search_rwd_times[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
-                   color=color)
-        print "===================="
 
-    sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
-               ci=95, condition='Avg feasible reward', color='magenta')
+        if args.r:
+            sns.tsplot(search_rwd[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
+                       color=color)
+        else:
+            sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
+                       color=color)
 
-    plot_name = args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+    if args.r:
+        sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
+                   ci=95, condition='Avg feasible reward', color='magenta')
+        plot_name = 'reward_toy_'+args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+                        + "_uct_" + str(args.uct)
+    else:
+        plot_name = 'progress_toy_'+args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct)
+
     savefig('Number of simulations', 'Average rewards', fname='./plotters/toy_'+plot_name)
 
 

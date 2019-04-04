@@ -38,7 +38,6 @@ class PlaceFeasibilityChecker:
                                 (target_obj_region.contains(obj.ComputeAABB()))
         self.robot.SetTransform(original_trans)
         obj.SetTransform(original_obj_trans)
-
         if is_base_pose_feasible:
             action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose,
                       'action_parameters': place_parameters}

@@ -100,7 +100,6 @@ def main():
     parser.add_argument('-use_ucb', action='store_true', default=False)
     parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-mcts_iter', type=int, default=500)
-    parser.add_argument('-seed', type=int, default=50)
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
