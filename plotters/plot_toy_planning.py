@@ -211,10 +211,10 @@ def plot_across_algorithms():
         sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
         plot_name = 'reward_toy_'+args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
-                        + "_uct_" + str(args.uct)
+                        + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
     else:
         plot_name = 'progress_toy_'+args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
-                    + "_uct_" + str(args.uct)
+                    + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
 
     savefig('Number of simulations', 'Average rewards', fname='./plotters/toy_'+plot_name)
 
