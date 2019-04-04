@@ -19,7 +19,8 @@ def savefig(xlabel, ylabel, fname=''):
 #def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks, mcts_iter):
 def get_result_dir(algo_name, mcts_parameters):
     if algo_name.find('voo') != -1:
-        epsilon = algo_name.split('_')[1]
+        sampling_mode = algo_name.split('_')[1]
+        epsilon = algo_name.split('_')[2]
         algo_name = algo_name.split('_')[0]
         rootdir = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
     elif algo_name.find('unif') != -1:
@@ -49,7 +50,11 @@ def get_result_dir(algo_name, mcts_parameters):
     if algo_name.find('plaindoo') == -1:
         result_dir += algo_name
     result_dir += '_n_feasible_checks_' + str(n_feasibility_checks) + '/'
-    if algo_name.find('voo') != -1 or algo_name.find('doo') != -1 or algo_name.find('gpucb') != -1:
+
+    if algo_name.find('voo') != -1:
+        result_dir += '/sampling_mode/' + sampling_mode + '/'
+        result_dir += 'eps_' + str(epsilon) + '/'
+    if algo_name.find('doo') != -1 or algo_name.find('gpucb') != -1:
         result_dir += 'eps_' + str(epsilon) + '/'
         result_dir += os.listdir(result_dir)[0] + '/' #  + 'c1_' + str(c1) + '/'
     print result_dir
@@ -170,6 +175,7 @@ def get_algo_name(raw_name):
     if raw_name.find('randomized_doo') !=-1:
         return "RandDOOT"
     elif raw_name.find('voo') != -1:
+        return raw_name
         return 'VOOT'
     elif raw_name.find('unif') != -1:
         return "UniformT"
@@ -182,7 +188,7 @@ def plot_across_algorithms():
     parser.add_argument('-domain', type=str, default='mdr')
     parser.add_argument('-w', type=float, default=1.0)
     parser.add_argument('-c1', type=int, default=1)
-    parser.add_argument('-uct', type=float, default=0.001)
+    parser.add_argument('-uct', type=float, default=0.0)
     parser.add_argument('-mcts_iter', type=int, default=1000)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
@@ -191,7 +197,9 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = ['randomized_doo_0.5', 'voo_0.5','unif']
+    algo_names = ['voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
+    algo_names = ['voo_gaussian_0.1', 'voo_gaussian_0.2', 'voo_gaussian_0.3', 'voo_gaussian_0.4', 'voo_gaussian_0.5', 'unif']
+    algo_names = ['voo_gaussian_0.4', 'voo_uniform_0.4', 'unif']
     #algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))

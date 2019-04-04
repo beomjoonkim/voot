@@ -64,10 +64,11 @@ def instantiate_mcts(args, problem_env):
     domain_name = args.domain
     use_progressive_widening = args.pw
     use_ucb=args.use_ucb
+    sampling_mode = args.voo_sampling_mode
 
     mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, use_progressive_widening, use_ucb)
+                problem_env, use_progressive_widening, use_ucb, sampling_mode)
     return mcts
 
 

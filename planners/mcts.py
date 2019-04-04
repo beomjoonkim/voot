@@ -150,7 +150,7 @@ class MCTS:
         # todo run with this setting of switching
         if self.environment.name == 'minimum_displacement_removal':
             if is_pick_node:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 10
+                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 10
             else:
                 we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         elif self.environment.name == 'convbelt':
