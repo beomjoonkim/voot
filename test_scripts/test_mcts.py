@@ -18,7 +18,7 @@ import socket
 import openravepy
 
 hostname = socket.gethostname()
-if hostname == 'dell-XPS-15-9560' or hostname=='phaedra':
+if hostname == 'dell-XPS-15-9560' or hostname=='phaedra' or hostname=='shakey':
     ROOTDIR = './'
 else:
     ROOTDIR = '/data/public/rw/pass.port/gtamp_results/'
