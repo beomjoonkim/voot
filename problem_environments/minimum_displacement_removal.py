@@ -76,7 +76,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
             reward = 1+min(1.0 / distance_travelled, 2)
         else:
             #distance_travelled = get_trajectory_length(operator_instance.low_level_motion)
-            reward = max(distance_travelled, self.infeasible_reward)
+            reward = max(-distance_travelled, self.infeasible_reward)
         return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):
