@@ -19,7 +19,7 @@ class VOOGenerator(Generator):
         self.idx_to_update = None
         self.robot = self.problem_env.robot
         self.sampling_mode = sampling_mode
-        self.counter_ratio = 0.05
+        self.counter_ratio = 0.5
 
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()
