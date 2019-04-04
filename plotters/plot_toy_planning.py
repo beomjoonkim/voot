@@ -167,7 +167,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = ['voo_uniform_0.3','unif']
+    algo_names = ['voo_gaussian_0.3','unif']
     #algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
