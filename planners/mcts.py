@@ -185,11 +185,13 @@ class MCTS:
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
+                """
                 max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
                 n_feasible_actions = np.sum(max_reward_of_each_action > -2)
                 print n_feasible_actions
                 print np.max(self.s0_node.Q.values())
                 import pdb;pdb.set_trace()
+                """
                 #import pdb;pdb.set_trace()
                 #self.environment.env.SetViewer('qtcoin');
                 #visualize_path(self.robot, [a.continuous_parameters['base_pose'] for a in self.s0_node.A if a.continuous_parameters['base_pose'] is not None])
