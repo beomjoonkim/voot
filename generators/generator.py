@@ -39,12 +39,12 @@ class Generator:
         executed_action_values_in_node = node.Q.values()
 
         for action, q_value in zip(executed_actions_in_node, executed_action_values_in_node):
-            executable_action = make_action_executable(action)
-            is_in_array = [np.array_equal(executable_action['action_parameters'], a) for a in self.evaled_actions]
+            action_parameters = action.continuous_parameters['action_parameters']
+            is_in_array = [np.array_equal(action_parameters, a) for a in self.evaled_actions]
             is_action_included = np.any(is_in_array)
 
             if not is_action_included:
-                self.evaled_actions.append(executable_action['action_parameters'])
+                self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(q_value)
             else:
                 # update the value if the action is included

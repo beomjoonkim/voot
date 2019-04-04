@@ -16,13 +16,18 @@ def worker_p(config):
     n_feasibility_checks = config['n_feasibility_checks']
     seed = config['seed']
     pw = config['pw']
+    voo_sampling_mode = config['voo_sampling_mode']
+    use_uct = config['use_uct']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
-        ' -random_seed ' + str(seed)
+        ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode)
     if pw:
         command += ' -pw '
+
+    if use_uct:
+        command += ' -use_uct'
 
     print command
     os.system(command)
@@ -35,7 +40,7 @@ def worker_wrapper_multi_input(multi_args):
 
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-sampling', type=str, default='voo')
+    parser.add_argument('-sampling', type=str, default='unif')
     parser.add_argument('-domain', type=str, default='minimum_displacement_removal')
     parser.add_argument('-mcts_iter', type=int, default=1000)
     parser.add_argument('-w', nargs='+', type=float)
@@ -45,6 +50,8 @@ def main():
     parser.add_argument('-pidxs', nargs='+', type=int)
     parser.add_argument('-random_seeds', nargs='+', type=int)
     parser.add_argument('-pw', action='store_true', default=False)
+    parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
+    parser.add_argument('-use_uct', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -53,15 +60,15 @@ def main():
     domain = args.domain
     widening_parameters = args.w if args.w is not None else [1]
     mcts_iter = args.mcts_iter
-    ucts = args.uct if args.uct is not None else [1.0]
+    ucts = args.uct if args.uct is not None else [0.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
+    seeds = args.random_seeds if args.random_seeds is not None else range(10)
 
     if args.domain == 'minimum_displacement_removal':
         pidx = 0
     else:
-        pass
+        pidx = 0
 
-    seeds = range(0, 10)
     configs = []
     for n_feasibility_check in n_feasibility_checks:
         for uct in ucts:
@@ -77,7 +84,9 @@ def main():
                                   'uct': uct,
                                   'n_feasibility_checks': n_feasibility_check,
                                   'seed': seed,
-                                  'pw': args.pw}
+                                  'voo_sampling_mode': args.voo_sampling_mode,
+                                  'pw': args.pw,
+                                  'use_uct':args.use_uct}
                         configs.append(config)
 
     n_workers = int(20)

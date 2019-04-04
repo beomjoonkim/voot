@@ -43,7 +43,7 @@ def create_doo_agent(operator):
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                 environment, use_progressive_widening, domain_name):
+                 environment, use_progressive_widening, use_ucb, voo_sampling_mode='gaussian'):
         self.c1 = c1
         self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
@@ -54,6 +54,8 @@ class MCTS:
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
         self.depth_limit = 300
         self.use_progressive_widening = use_progressive_widening
+        self.voo_sampling_mode = voo_sampling_mode
+        self.use_ucb = use_ucb
 
         self.env = self.environment.env
         self.robot = self.environment.robot
@@ -65,17 +67,19 @@ class MCTS:
         self.goal_reward = 2
         self.n_feasibility_checks = n_feasibility_checks
 
-    def create_sampling_agent(self, node, operator_name):
+    def create_sampling_agent(self, node, operator_skeleton):
+        operator_name = operator_skeleton.type
         if self.sampling_strategy == 'unif':
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
-            return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter, self.c1)
+            return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter, self.c1,
+                                self.voo_sampling_mode)
         elif self.sampling_strategy == 'gpucb':
             return GPUCBGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'doo':
             return DOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'randomized_doo':
-            return RandomizedDOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
+            return RandomizedDOOGenerator(operator_skeleton, self.environment, self.sampling_strategy_exploration_parameter)
         else:
             print "Wrong sampling strategy"
             return -1
@@ -91,7 +95,7 @@ class MCTS:
                         is_init_node)
 
         if not self.environment.is_goal_reached():
-            node.sampling_agent = self.create_sampling_agent(node, operator_skeleton.type)
+            node.sampling_agent = self.create_sampling_agent(node, operator_skeleton)
 
         node.objects_not_in_goal = self.environment.objects_currently_not_in_goal
         node.parent_action_reward = reward
@@ -150,7 +154,10 @@ class MCTS:
             else:
                 we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         elif self.environment.name == 'convbelt':
-            we_evaluated_the_node_enough = False
+            if is_pick_node:
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+            else:
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         else:
             raise NotImplementedError
 
@@ -160,7 +167,9 @@ class MCTS:
         if self.s0_node.is_goal_node:
             best_node = self.tree.root
         else:
-            best_action = self.s0_node.Q.keys()[np.argmax(self.s0_node.Q.values())] # choose the best Q value
+            feasible_actions = [a for a in self.s0_node.A if np.max(self.s0_node.reward_history[a]) > -2]
+            feasible_q_values = [self.s0_node.Q[a] for a in feasible_actions]
+            best_action = feasible_actions[np.argmax(feasible_q_values)]
             best_node = self.s0_node.children[best_action]
         return best_node
 
@@ -197,13 +206,17 @@ class MCTS:
         return search_time_to_reward, plan
 
     def choose_action(self, curr_node):
-        if not curr_node.is_ucb_step(self.widening_parameter, self.environment.infeasible_reward,
-                                     self.use_progressive_widening):
+        if not curr_node.is_reevaluation_step(self.widening_parameter, self.environment.infeasible_reward,
+                                              self.use_progressive_widening, self.use_ucb):
             print "Sampling new action"
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
             curr_node.add_actions(new_continuous_parameters)
-        action = curr_node.perform_ucb_over_actions()
-
+            action = curr_node.A[-1]
+        else:
+            if self.use_ucb:
+                action = curr_node.perform_ucb_over_actions()
+            else:
+                action = curr_node.choose_new_arm()
         return action
 
     @staticmethod

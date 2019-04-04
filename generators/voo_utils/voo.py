@@ -10,8 +10,11 @@ class VOO:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
 
     def sample_next_point(self, evaled_x, evaled_y):
-        rnd = np.random.random()  # this should lie outside
-        is_sample_from_best_v_region = (rnd < 1 - self.explr_p) and len(evaled_x) > 1
+        if len(evaled_x) < 1:
+            is_sample_from_best_v_region = False
+        else:
+            rnd = np.random.random()  # this should lie outside
+            is_sample_from_best_v_region = rnd < (1 - self.explr_p)
         if is_sample_from_best_v_region:
             x = self.sample_from_best_voronoi_region(evaled_x, evaled_y)
         else:

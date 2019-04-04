@@ -14,21 +14,22 @@ import copy
 
 
 class DOOGenerator(Generator):
-    def __init__(self, node, problem_env, explr_p):
-        operator_name = node.operator
-        Generator.__init__(self, operator_name, problem_env)
+    def __init__(self, operator_skeleton, problem_env, explr_p):
+        Generator.__init__(self, operator_skeleton.type, problem_env)
         self.explr_p = explr_p
         self.x_min = copy.deepcopy(self.domain[0])
         self.x_max = copy.deepcopy(self.domain[1])
         self.domain[0] = self.normalize_x_value(self.domain[0])  # (self.domain[0] - self.x_min) / (self.x_max-self.x_min)
         self.domain[1] = self.normalize_x_value(self.domain[1])  # (self.domain[1] - self.x_min) / (self.x_max-self.x_min)
 
+        operator_name = operator_skeleton.type
         if operator_name == 'two_arm_pick':
-            #euclidean_dist = lambda x,y: np.linalg.norm(x-y)
-            obj_pick_dist = lambda x,y: pick_parameter_distance(node.obj,x,y)
+            target_object  = operator_skeleton.discrete_parameters['object']
+            if type(target_object) == str:
+                target_object = self.problem_env.env.GetKinBody(target_object)
+            obj_pick_dist = lambda x, y: pick_parameter_distance(target_object, x, y)
             self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, obj_pick_dist)  # this depends on the problem
         elif operator_name == 'two_arm_place':
-            #euclidean_dist = lambda x,y: np.linalg.norm(x-y)
             self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, place_parameter_distance)  # this depends on the problem
         else:
             print "Wrong operator name"
@@ -67,13 +68,12 @@ class DOOGenerator(Generator):
 
     def unnormalize_x_value(self, x_value):
         return x_value
-        return x_value * (self.x_max - self.x_min) + self.x_min
 
     def normalize_x_value(self, x_value):
         return x_value
-        return (x_value - self.x_min) / (self.x_max - self.x_min)
 
-def main():
+
+def test():
     domain = np.array([[-10, -10], [10, 10]])
     doo_tree = BinaryDOOTree(domain)
 
@@ -96,4 +96,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    test()
