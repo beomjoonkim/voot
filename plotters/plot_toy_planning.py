@@ -198,8 +198,8 @@ def plot_across_algorithms():
                    color=color)
         print "===================="
 
-        sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
-                   ci=95, condition='Avg feasible reward', color='magenta')
+    sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
+               ci=95, condition='Avg feasible reward', color='magenta')
 
     plot_name = args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct)

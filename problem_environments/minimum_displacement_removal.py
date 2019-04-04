@@ -50,10 +50,12 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
     def check_reachability_precondition(self, operator_instance):
         if operator_instance.type == 'two_arm_place':
             held = self.robot.GetGrabbed()[0]
-            with self.robot:
-                set_robot_config(operator_instance.continuous_parameters['base_pose'], self.robot)
-                if self.regions['forbidden_region'].contains(held.ComputeAABB()):
-                    return None, "NoSolution"
+            prev_config = get_body_xytheta(self.robot)
+            set_robot_config(operator_instance.continuous_parameters['base_pose'], self.robot)
+            if self.regions['forbidden_region'].contains(held.ComputeAABB()):
+                set_robot_config(prev_config, self.robot)
+                return None, "NoSolution"
+            set_robot_config(prev_config, self.robot)
 
         return [], 'HasSolution'
 
