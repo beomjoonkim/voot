@@ -32,7 +32,7 @@ def get_result_dir(algo_name, mcts_parameters):
     widening_parameter = mcts_parameters.w
     mcts_iter = mcts_parameters.mcts_iter
     rootdir = './test_results/'
-    result_dir = rootdir + '/minimum_displacement_removal_results/mcts_iter_'+str(mcts_iter)+ \
+    result_dir = rootdir + '/' +  mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
                  '/uct_0.0'+'_widening_' + str(widening_parameter) + '_'
 
     n_feasibility_checks = mcts_parameters.n_feasibility_checks
