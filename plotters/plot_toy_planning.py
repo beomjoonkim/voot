@@ -16,7 +16,6 @@ def savefig(xlabel, ylabel, fname=''):
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
-#def get_result_dir(domain_name, algo_name, widening_parameter, c1, n_feasibility_checks, mcts_iter):
 def get_result_dir(algo_name, mcts_parameters):
     if algo_name.find('voo') != -1:
         sampling_mode = algo_name.split('_')[1]
@@ -31,15 +30,18 @@ def get_result_dir(algo_name, mcts_parameters):
     uct = 0
     widening_parameter = mcts_parameters.w
     mcts_iter = mcts_parameters.mcts_iter
+    n_feasibility_checks = mcts_parameters.n_feasibility_checks
+    addendum = mcts_parameters.add
+
     rootdir = './test_results/'
     result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
-                 '/uct_0.0'+'_widening_' + str(widening_parameter) + '_'
+                 '/uct_0.0'+'_widening_' + str(widening_parameter) + '_' + algo_name
+    result_dir += '_n_feasible_checks_' + str(n_feasibility_checks)
 
-    n_feasibility_checks = mcts_parameters.n_feasibility_checks
-    c1 = mcts_parameters.c1
-    if algo_name.find('plaindoo') == -1:
-        result_dir += algo_name
-    result_dir += '_n_feasible_checks_' + str(n_feasibility_checks) + '/'
+    if addendum != '':
+        result_dir += '_' + addendum + '/'
+    else:
+        result_dir += '/'
 
     if algo_name.find('voo') != -1:
         result_dir += '/sampling_mode/' + sampling_mode + '/'
@@ -163,6 +165,7 @@ def plot_across_algorithms():
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('--r', action='store_true')
+    parser.add_argument('-add', type=str, default='')
 
     args = parser.parse_args()
 
@@ -220,7 +223,7 @@ def plot_across_algorithms():
         plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
 
-    savefig('Number of simulations', 'Average rewards', fname='./plotters/toy_'+plot_name)
+    savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 
 
 if __name__ == '__main__':
