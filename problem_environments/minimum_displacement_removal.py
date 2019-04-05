@@ -105,12 +105,12 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         new_objects_not_in_goal = self.get_objs_in_collision(self.swept_volume,
                                                              'entire_region')  # takes about 0.0284 seconds
         new_config = get_body_xytheta(self.robot)
-        distance_travelled = se2_distance(prev_robot_config, new_config, 1, 1)
+        #distance_travelled = se2_distance(prev_robot_config, new_config, 1, 1)
         if len(prev_objects_not_in_goal) - len(new_objects_not_in_goal) > 0:
-            #distance_travelled = get_trajectory_length(operator_instance.low_level_motion)  # 0.3 ms
+            distance_travelled = get_trajectory_length(operator_instance.low_level_motion)  # 0.3 ms
             reward = min(1.0 / distance_travelled, 2)
         else:
-            #distance_travelled = get_trajectory_length(operator_instance.low_level_motion)
+            distance_travelled = get_trajectory_length(operator_instance.low_level_motion)
             reward = max(-distance_travelled, self.infeasible_reward)
         return reward, new_objects_not_in_goal
 
