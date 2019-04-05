@@ -21,7 +21,7 @@ def worker_p(config):
     add = config['add']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
-        ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
+        ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -w ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode)
     if pw:
