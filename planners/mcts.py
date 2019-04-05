@@ -152,7 +152,7 @@ class MCTS:
             if is_pick_node:
                 we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
             else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 50
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         elif self.environment.name == 'convbelt':
             if is_pick_node:
                 we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
@@ -203,7 +203,7 @@ class MCTS:
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
-            #self.log_current_tree_to_dot_file(iteration)
+            self.log_current_tree_to_dot_file(iteration)
 
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
@@ -271,6 +271,8 @@ class MCTS:
 
         action = self.choose_action(curr_node)
         reward = self.environment.apply_operator_instance(action)
+        print "Executed ", action.type
+        print "reward ", reward
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, is_init_node=False)

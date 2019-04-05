@@ -53,6 +53,7 @@ class TreeNode:
 
         if n_feasible_actions < 1 or next_state_terminal: # sample more actions
             return False
+
         if not use_ucb:
             new_action = self.A[-1]
             if np.max(self.reward_history[new_action]) <= -2:
