@@ -32,7 +32,7 @@ def get_result_dir(algo_name, mcts_parameters):
     widening_parameter = mcts_parameters.w
     mcts_iter = mcts_parameters.mcts_iter
     rootdir = './test_results/'
-    result_dir = rootdir + '/' +  mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
+    result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
                  '/uct_0.0'+'_widening_' + str(widening_parameter) + '_'
 
     n_feasibility_checks = mcts_parameters.n_feasibility_checks
@@ -167,7 +167,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = ['voo_gaussian_0.3', 'unif']
+    algo_names = ['voo_gaussian_0.5', 'unif']
     #algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -207,13 +207,17 @@ def plot_across_algorithms():
             sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                        color=color)
 
+    if args.domain == 'minimum_displacement_removal_results':
+        domain_name = 'mdr'
+    else:
+        domain_name = 'cbelt'
     if args.r:
         sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
-        plot_name = 'reward_toy_'+args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+        plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                         + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
     else:
-        plot_name = 'progress_toy_'+args.domain + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+        plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
 
     savefig('Number of simulations', 'Average rewards', fname='./plotters/toy_'+plot_name)
