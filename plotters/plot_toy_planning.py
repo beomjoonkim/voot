@@ -155,7 +155,7 @@ def get_algo_name(raw_name):
 
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-domain', type=str, default='mdr')
+    parser.add_argument('-domain', type=str, default='minimum_displacement_removal_results')
     parser.add_argument('-w', type=float, default=1.0)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
@@ -167,7 +167,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = ['voo_uniform_0.3','unif']
+    algo_names = ['voo_uniform_0.3', 'unif']
     #algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))

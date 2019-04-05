@@ -52,7 +52,7 @@ class MCTS:
         self.environment = environment
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
-        self.depth_limit = 300
+        self.depth_limit = 1
         self.use_progressive_widening = use_progressive_widening
         self.voo_sampling_mode = voo_sampling_mode
         self.use_ucb = use_ucb
@@ -135,6 +135,7 @@ class MCTS:
             write_dot_file(self.tree, iteration, '')
 
     def is_time_to_switch_initial_node(self):
+        return False
         if self.s0_node.is_goal_node:
             return True
 

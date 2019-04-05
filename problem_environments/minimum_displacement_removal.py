@@ -12,6 +12,8 @@ from minimum_displacement_removal_problem import MinimumDisplacementRemovalProbl
 from mover_library.utils import set_robot_config, grab_obj, two_arm_pick_object, two_arm_place_object, \
     get_trajectory_length, visualize_path, get_body_xytheta, se2_distance
 
+import pickle
+
 OBJECT_ORIGINAL_COLOR = (0, 0, 0)
 COLLIDING_OBJ_COLOR = (0, 1, 1)
 TARGET_OBJ_COLOR = (1, 0, 0)
@@ -40,6 +42,30 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         self.problem_config['env'] = self.env
         self.swept_volume = None
         self.name = 'minimum_displacement_removal'
+
+    def reset_to_init_state(self, node):
+        assert node.is_init_node, "None initial node passed to reset_to_init_state"
+        is_root_node = node.parent is None
+
+        saver = node.state_saver
+        saver.Restore()
+        self.curr_state = self.get_state()
+        self.objects_currently_not_in_goal = node.objects_not_in_goal
+
+        if node.parent_action is not None:
+            is_parent_action_pick = node.parent_action.type == 'two_arm_pick'
+        else:
+            is_parent_action_pick = False
+
+        if is_parent_action_pick:
+            two_arm_pick_object(node.parent_action.discrete_parameters['object'], self.robot,
+                                node.parent_action.continuous_parameters)
+        elif is_root_node:
+            grab_obj(self.robot, node.objects_not_in_goal[0])
+
+
+        self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
+
 
     def set_swept_volume(self, swept_volume):
         self.swept_volume = swept_volume
