@@ -25,8 +25,8 @@ class Generator:
                 place_domain = get_place_domain(problem_env.regions['object_region'])
             else:
                 place_domain = get_place_domain(problem_env.regions['entire_region'])
-                place_domain[0] = place_domain[0] * 2
-                place_domain[1][0:2] = place_domain[1][0:2] * 2
+                #place_domain[0] = place_domain[0] * 2
+                #place_domain[1][0:2] = place_domain[1][0:2] * 2
             self.domain = place_domain
             self.feasibility_checker = PlaceFeasibilityChecker(problem_env)
         elif operator_name == 'next_base_pose':

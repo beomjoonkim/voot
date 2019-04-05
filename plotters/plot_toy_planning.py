@@ -158,19 +158,19 @@ def get_algo_name(raw_name):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='minimum_displacement_removal_results')
-    parser.add_argument('-w', type=float, default=1.0)
+    parser.add_argument('-w', type=float, default=0.0)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-mcts_iter', type=int, default=30)
+    parser.add_argument('-mcts_iter', type=int, default=100)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
-    parser.add_argument('--r', action='store_true')
+    parser.add_argument('--p', action='store_true')
     parser.add_argument('-add', type=str, default='')
 
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = ['voo_gaussian_0.5', 'unif']
+    algo_names = ['voo_uniform_0.3', 'voo_uniform_0.5', 'voo_uniform_0.7', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'voo_gaussian_0.7', 'unif']
     #algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -203,26 +203,26 @@ def plot_across_algorithms():
         else:
             color = np.random.random((1, 3))
 
-        if args.r:
-            sns.tsplot(search_rwd[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
+        if args.p:
+            sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                        color=color)
         else:
-            sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
+            sns.tsplot(search_rwd[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                        color=color)
 
     if args.domain == 'minimum_displacement_removal_results':
         domain_name = 'mdr'
     else:
         domain_name = 'cbelt'
-    if args.r:
+
+    if args.p:
+        plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+                    + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
+    else:
         sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
         plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                         + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
-    else:
-        plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
-                    + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
-
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 
 
