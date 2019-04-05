@@ -171,7 +171,7 @@ def plot_across_algorithms():
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
     algo_names = ['voo_uniform_0.3', 'voo_uniform_0.5', 'voo_uniform_0.7', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'voo_gaussian_0.7', 'unif']
-    algo_names = ['voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
+    algo_names = ['voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.5', 'voo_gaussian_0.5', 'unif']
     #algo_names = ['voo_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
