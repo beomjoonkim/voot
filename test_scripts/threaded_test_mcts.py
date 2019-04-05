@@ -18,6 +18,7 @@ def worker_p(config):
     pw = config['pw']
     voo_sampling_mode = config['voo_sampling_mode']
     use_uct = config['use_uct']
+    add = config['add']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
@@ -28,6 +29,9 @@ def worker_p(config):
 
     if use_uct:
         command += ' -use_uct'
+
+    if add != '':
+        command +=  ' -add ' + add
 
     print command
     os.system(command)
@@ -51,6 +55,7 @@ def main():
     parser.add_argument('-random_seeds', nargs='+', type=int)
     parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
+    parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_uct', action='store_true', default=False)
 
     args = parser.parse_args()
@@ -86,7 +91,8 @@ def main():
                                   'seed': seed,
                                   'voo_sampling_mode': args.voo_sampling_mode,
                                   'pw': args.pw,
-                                  'use_uct':args.use_uct}
+                                  'use_uct':args.use_uct,
+                                  'add':args.add}
                         configs.append(config)
 
     n_workers = int(20)
