@@ -71,9 +71,10 @@ class VOOGenerator(Generator):
             we_have_feasible_action = False
 
         rnd = np.random.random()
-        is_sample_from_best_v_region = rnd < 1 - self.explr_p and we_have_feasible_action
+        is_sample_from_best_v_region = rnd < (1 - self.explr_p) and we_have_feasible_action
 
         if is_sample_from_best_v_region:
+            node.best_v += 1
             print 'Sample ' + node.operator_skeleton.type + ' from best region'
         else:
             maxrwd = None if len(self.evaled_actions) == 0 else np.max(node.reward_history.values())

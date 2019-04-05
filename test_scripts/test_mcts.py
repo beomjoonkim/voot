@@ -141,8 +141,11 @@ def main():
 
     mcts = instantiate_mcts(args, problem_instantiator.environment)
     search_time_to_reward, plan = mcts.search(args.mcts_iter)
-    plan = make_plan_pklable(plan)
+    #plan = make_plan_pklable(plan)
 
+
+    print "Number of best-vregion calls: ",plan
+    import pdb;pdb.set_trace()
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
                 open(stat_file_name, 'wb'))
 
