@@ -145,7 +145,6 @@ def main():
 
 
     print "Number of best-vregion calls: ",plan
-    import pdb;pdb.set_trace()
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
                 open(stat_file_name, 'wb'))
 
