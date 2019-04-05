@@ -204,7 +204,7 @@ class MCTS:
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
-            #self.log_current_tree_to_dot_file(iteration)
+            self.log_current_tree_to_dot_file(iteration)
 
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])

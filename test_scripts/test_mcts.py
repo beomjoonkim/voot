@@ -95,7 +95,7 @@ def make_plan_pklable(plan):
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-widening_parameter', type=float, default=1.0)
+    parser.add_argument('-widening_parameter', type=float, default=0.0)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)
@@ -108,7 +108,7 @@ def main():
     parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
-    parser.add_argument('-n_feasibility_checks', type=int, default=50)
+    parser.add_argument('-n_feasibility_checks', type=int, default=1)
     parser.add_argument('-random_seed', type=int, default=-1)
     parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
     parser.add_argument('-add', type=str, default='')
