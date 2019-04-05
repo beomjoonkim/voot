@@ -12,6 +12,7 @@ import cPickle as pickle
 from mover_library.utils import *
 from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
+from openravepy import DOFAffine, Environment
 
 
 class ConveyorBelt(ProblemEnvironment):
@@ -32,13 +33,30 @@ class ConveyorBelt(ProblemEnvironment):
         self.robot = self.problem_config['env'].GetRobots()[0]
         self.infeasible_reward = -2
 
-        self.curr_obj = self.objects[0]
         self.curr_state = self.get_state()
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.is_init_pick_node = True
         self.init_operator = 'two_arm_place'
         self.name = 'convbelt'
+
+    def reset_to_init_state(self, node):
+        assert node.is_init_node, "None initial node passed to reset_to_init_state"
+        saver = node.state_saver
+        saver.Restore()
+        self.curr_state = self.get_state()
+        self.objects_currently_not_in_goal = node.objects_not_in_goal
+
+        if node.parent_action is not None:
+            is_parent_action_pick = node.parent_action.type == 'two_arm_pick'
+        else:
+            is_parent_action_pick = False
+
+        if is_parent_action_pick:
+            obj = node.parent_action.discrete_parameters['object']
+            grab_obj(self.robot, obj)
+
+        self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
 
     def apply_action_and_get_reward(self, operator_instance, is_op_feasible):
         if is_op_feasible != 'HasSolution':
@@ -56,6 +74,9 @@ class ConveyorBelt(ProblemEnvironment):
                 raise NotImplementedError
 
         return reward
+
+    def check_reachability_precondition(self, operator_instance):
+        return [], 'HasSolution'
 
     def apply_operator_instance(self, operator_instance):
         if not self.check_parameter_feasibility_precondition(operator_instance):
@@ -77,18 +98,6 @@ class ConveyorBelt(ProblemEnvironment):
         two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
         new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
         return 1, new_objects_not_in_goal
-
-    def check_reachability_precondition(self, operator_instance):
-        motion_planning_region_name = 'all_region'
-        goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
-
-        if operator_instance.low_level_motion is not None:
-            motion = operator_instance.low_level_motion
-            status = 'HasSolution'
-            return motion, status
-
-        motion, status = self.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
-        return motion, status
 
     def is_goal_reached(self):
         return len(self.get_objs_in_region('object_region')) == len(self.objects)

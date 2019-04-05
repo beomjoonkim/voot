@@ -127,6 +127,7 @@ class MCTS:
         self.s0_node.is_init_node = False
         self.s0_node = node
         self.s0_node.is_init_node = True
+        import pdb;pdb.set_trace()
         self.environment.reset_to_init_state(node)
         self.found_solution = False
 
@@ -155,7 +156,7 @@ class MCTS:
                 we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         elif self.environment.name == 'convbelt':
             if is_pick_node:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
             else:
                 we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
         else:
