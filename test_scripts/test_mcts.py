@@ -32,12 +32,18 @@ def make_save_dir(args):
     sampling_strategy_exploration_parameter = args.epsilon
     mcts_iter = args.mcts_iter
     n_feasibility_checks = args.n_feasibility_checks
+    addendum = args.add
     c1 = args.c1
 
     save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/'
     save_dir += '/uct_'+str(uct_parameter) + '_widening_' \
                 + str(widening_parameter) + '_' + sampling_strategy + \
-                '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
+                '_n_feasible_checks_'+str(n_feasibility_checks) \
+
+    if addendum != '':
+        save_dir += '_' + addendum + '/'
+    else:
+        save_dir += '/'
 
     if sampling_strategy == 'voo':
         save_dir += '/sampling_mode/' + args.voo_sampling_mode+'/'
@@ -105,6 +111,7 @@ def main():
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-random_seed', type=int, default=-1)
     parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
+    parser.add_argument('-add', type=str, default='')
 
     args = parser.parse_args()
 
