@@ -57,7 +57,16 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
                 return None, "NoSolution"
             set_robot_config(prev_config, self.robot)
 
-        return [], 'HasSolution'
+        motion_planning_region_name = 'entire_region'
+        goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
+
+        if operator_instance.low_level_motion is not None:
+            motion = operator_instance.low_level_motion
+            status = 'HasSolution'
+            return motion, status
+
+        motion, status = self.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
+        return motion, status
 
     def compute_place_reward(self, operator_instance):
         # todo I can potentially save time by keeping the reward in the node
