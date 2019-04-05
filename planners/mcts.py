@@ -127,7 +127,6 @@ class MCTS:
         self.s0_node.is_init_node = False
         self.s0_node = node
         self.s0_node.is_init_node = True
-        import pdb;pdb.set_trace()
         self.environment.reset_to_init_state(node)
         self.found_solution = False
 
