@@ -369,7 +369,7 @@ def get_exploration_parameters(algorithm):
         epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]# , 0.6, 0.7, 0.8, 0.9, 1.0]
         #epsilons = [0.4]
     elif algorithm.__name__ == 'doo':
-        epsilons = [1, 0.1, 5, 10, 30]
+        epsilons = [0.0000001, 0.000001, 0.0001, 0.001, 0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'gpucb':
         # schwefel: best epsilon = 0.1 for dimension 10
         #           best_epsilon = 1 for dimension 20

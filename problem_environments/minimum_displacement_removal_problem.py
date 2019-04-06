@@ -518,6 +518,13 @@ class MinimumDisplacementRemovalProblem:
         place_objs_in_region([self.robot], self.home_region, self.env)
         place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
 
+        self.forbidden_region_xy = [x_extents+0.3, 0]
+        self.forbidden_region_xy_extents = [x_extents/2.0-0.3, y_extents]
+        self.forbidden_region = AARegion('forbidden_region',
+                                     ((-self.forbidden_region_xy_extents[0] + self.forbidden_region_xy[0],
+                                       self.forbidden_region_xy_extents[0] + self.forbidden_region_xy[0]),
+                                     (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
+
         robot=self.robot
         # left arm IK
         robot.SetActiveManipulator('leftarm')
@@ -594,6 +601,7 @@ class MinimumDisplacementRemovalProblem:
     def get_problem_config(self):
         problem_config = {'objects': self.movable_objects,
                           'entire_region': self.home_region,
+                          'forbidden_region': self.forbidden_region,
                           'init_base_config': self.init_base_config,
                           'goal_base_config': self.goal_base_config,
                           'entire_region_xy': self.home_region_xy,

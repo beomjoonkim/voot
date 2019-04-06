@@ -292,7 +292,10 @@ def clean_pose_data(pose_data):
     if len(pose_data.shape) == 1:
         pose_data = pose_data[None, :]
 
-    data_idx_neg_angles = pose_data[:, -1] < 0
+    try:
+        data_idx_neg_angles = pose_data[:, -1] < 0
+    except:
+        import pdb;pdb.set_trace()
     data_idx_big_angles = pose_data[:, -1] > 2 * np.pi
     pose_data[data_idx_neg_angles, -1] += 2 * np.pi
     pose_data[data_idx_big_angles, -1] -= 2 * np.pi

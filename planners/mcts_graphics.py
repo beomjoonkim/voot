@@ -117,9 +117,10 @@ def get_node_info_in_string(node, child_idx):
     else:
         parent_action = 'None'
 
-    info = 'parent_action: '+parent_action + '\n' + \
+    info = 'node_idx: ' + str(node.idx) + '\n' + \
+           'parent_action: ' + parent_action + '\n' + \
            'Nvisited: ' + str(node.Nvisited) + '\n' + \
-           'Q: ' + Q + '\n'+ \
+           'Q: ' + Q + '\n' + \
            'R history: ' + reward_history
     return info
 

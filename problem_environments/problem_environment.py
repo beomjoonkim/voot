@@ -117,25 +117,7 @@ class ProblemEnvironment:
         return config.squeeze()
 
     def reset_to_init_state(self, node):
-        assert node.is_init_node, "None initial node passed to reset_to_init_state"
-        saver = node.state_saver
-        saver.Restore()
-        self.curr_state = self.get_state()
-        self.objects_currently_not_in_goal = node.objects_not_in_goal
-
-        if not self.init_which_opreator != 'two_arm_pick':
-            grab_obj(self.robot, self.curr_obj)
-
-        if node.parent_action is not None:
-            is_parent_action_pick = node.parent_action.type == 'two_arm_pick'
-        else:
-            is_parent_action_pick = False
-
-        if is_parent_action_pick:
-            two_arm_pick_object(node.parent_action.discrete_parameters['object'], self.robot,
-                                node.parent_action.continuous_parameters)
-
-        self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
+        raise NotImplementedError
 
     def enable_movable_objects(self):
         for obj in self.objects:

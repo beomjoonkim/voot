@@ -36,23 +36,32 @@ class TreeNode:
 
         self.sampling_strategy = sampling_strategy
         self.is_goal_node = False
+        self.idx = 1
+
+        # for debugging purpose
+        self.best_v = 0
 
     def get_never_evaluated_action(self):
         # get list of actions that do not have an associated Q values
         no_evaled = [a for a in self.A if a not in self.Q.keys()]
         return np.random.choice(no_evaled)
 
-    def is_ucb_step(self, widening_parameter, infeasible_rwd, use_progressive_widening):
+    def is_reevaluation_step(self, widening_parameter, infeasible_rwd, use_progressive_widening, use_ucb):
         n_arms = len(self.A)
-        if n_arms <= 1:
+        if n_arms < 1:
             return False
 
         max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.reward_history.values()])
         n_feasible_actions = np.sum(max_reward_of_each_action > infeasible_rwd)
         next_state_terminal = np.any([c.is_goal_node for c in self.children.values()])
 
-        if n_feasible_actions <= 1 or next_state_terminal: # sample more actions
+        if n_feasible_actions < 1 or next_state_terminal: # sample more actions
             return False
+
+        if not use_ucb:
+            new_action = self.A[-1]
+            if np.max(self.reward_history[new_action]) <= -2:
+                return False
 
         if use_progressive_widening:
             n_actions = len(self.A)
@@ -87,6 +96,15 @@ class TreeNode:
                     best_value = ucb_value
 
         return best_action
+
+    def choose_new_arm(self):
+        new_arm = self.A[-1]  # what to do if the new action is not a feasible one?
+        is_new_arm_feasible = np.max(self.reward_history[new_arm]) > -2
+        try:
+            assert is_new_arm_feasible
+        except:
+            import pdb;pdb.set_trace()
+        return new_arm
 
     def is_action_tried(self, action):
         return action in self.Q.keys()

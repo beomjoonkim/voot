@@ -14,7 +14,9 @@ class MCTSTree:
     def add_node(self, node, action, parent):
         node.parent = parent
         parent.children[action] = node
-        self.nodes.append(node)
+        if node not in self.nodes:
+            self.nodes.append(node)
+        node.idx = len(self.nodes)
 
     def is_node_just_added(self, node):
         if node == self.root:
@@ -32,9 +34,7 @@ class MCTSTree:
 
     def get_best_trajectory_sum_rewards_and_node(self, discount_factor):
         sumR_list = []
-        leaf_nodes_for_curr_init_state = []
         leaf_nodes = self.get_leaf_nodes()
-        reward_lists = []
 
         for n in leaf_nodes:
             curr_node = n
@@ -43,14 +43,13 @@ class MCTSTree:
             while curr_node.parent is not None:
                 reward_list.append(curr_node.parent.reward_history[curr_node.parent_action][0])
                 curr_node = curr_node.parent
-            reward_lists.append(np.sum(reward_list[::-1]))
+            reward_list = reward_list[::-1]
             discount_rates = [np.power(discount_factor, i) for i in range(len(reward_list))]
-            sumR = np.dot(discount_rates[::-1], reward_list)
+            sumR = np.dot(discount_rates, reward_list)
 
             # exclude the ones that are not the descendents of the current init node
             # todo sumR should be -2 on a node that ended with an infeasible action
             sumR_list.append(sumR)
-            leaf_nodes_for_curr_init_state.append(n)
 
         best_node = leaf_nodes[np.argmax(sumR_list)]
         progress = best_node.objects_not_in_goal

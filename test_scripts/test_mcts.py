@@ -18,7 +18,7 @@ import socket
 import openravepy
 
 hostname = socket.gethostname()
-if hostname == 'dell-XPS-15-9560' or hostname=='phaedra':
+if hostname == 'dell-XPS-15-9560' or hostname=='phaedra' or hostname=='shakey':
     ROOTDIR = './'
 else:
     ROOTDIR = '/data/public/rw/pass.port/gtamp_results/'
@@ -27,27 +27,29 @@ else:
 def make_save_dir(args):
     domain = args.domain
     uct_parameter = args.uct
-    widening_parameter = args.widening_parameter
+    w = args.w
     sampling_strategy = args.sampling_strategy
     sampling_strategy_exploration_parameter = args.epsilon
     mcts_iter = args.mcts_iter
     n_feasibility_checks = args.n_feasibility_checks
+    addendum = args.add
     c1 = args.c1
 
-    if domain == 'minimum_displacement_removal':
-        save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_'\
-                   + str(mcts_iter) + '/uct_' \
-                   + str(uct_parameter) + '_widening_' \
-                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
-    elif domain == 'convbelt':
-        save_dir = ROOTDIR + '/test_results//' + domain + '_results//' + 'mcts_iter_' + str(mcts_iter) + '/uct_' \
-                   + str(uct_parameter) + '_widening_' \
-                   + str(widening_parameter) + '_' + sampling_strategy + '_n_feasible_checks_'+str(n_feasibility_checks) + '/'
+    save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/'
+    save_dir += '/uct_'+str(uct_parameter) + '_widening_' \
+                + str(w) + '_' + sampling_strategy + \
+                '_n_feasible_checks_'+str(n_feasibility_checks) \
+
+    if addendum != '':
+        save_dir += '_' + addendum + '/'
     else:
-        raise NotImplementedError
+        save_dir += '/'
+
+    if sampling_strategy == 'voo':
+        save_dir += '/sampling_mode/' + args.voo_sampling_mode+'/'
 
     if sampling_strategy != 'unif':
-        save_dir = save_dir + '/eps_' + str(sampling_strategy_exploration_parameter) + '/c1_' + str(c1) + '/'
+        save_dir += '/eps_' + str(sampling_strategy_exploration_parameter) +'/'
 
     if not os.path.isdir(save_dir):
         try:
@@ -60,17 +62,19 @@ def make_save_dir(args):
 
 def instantiate_mcts(args, problem_env):
     uct_parameter = args.uct
-    widening_parameter = args.widening_parameter
+    w = args.w
     sampling_strategy = args.sampling_strategy
     sampling_strategy_exploration_parameter = args.epsilon
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
     domain_name = args.domain
     use_progressive_widening = args.pw
+    use_ucb=args.use_ucb
+    sampling_mode = args.voo_sampling_mode
 
-    mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
+    mcts = MCTS(w, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, use_progressive_widening, domain_name)
+                problem_env, use_progressive_widening, use_ucb, sampling_mode)
     return mcts
 
 
@@ -90,8 +94,8 @@ def make_plan_pklable(plan):
 
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-uct', type=float, default=1.0)
-    parser.add_argument('-widening_parameter', type=float, default=1.0)
+    parser.add_argument('-uct', type=float, default=0.0)
+    parser.add_argument('-w', type=float, default=0.0)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)
@@ -99,20 +103,23 @@ def main():
     parser.add_argument('-planner', type=str, default='mcts')
     parser.add_argument('-v', action='store_true', default=False)
     parser.add_argument('-debug', action='store_true', default=False)
+    parser.add_argument('-use_ucb', action='store_true', default=False)
     parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-mcts_iter', type=int, default=500)
-    parser.add_argument('-seed', type=int, default=50)
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
-    parser.add_argument('-n_feasibility_checks', type=int, default=50)
+    parser.add_argument('-n_feasibility_checks', type=int, default=1)
     parser.add_argument('-random_seed', type=int, default=-1)
+    parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
+    parser.add_argument('-add', type=str, default='')
 
     args = parser.parse_args()
 
     if args.pw:
-        assert args.widening_parameter > 0 and args.widening_parameter <= 1
+        assert args.w > 0 and args.w <= 1
     else:
-        assert args.widening_parameter >= 1
+        pass
+        #assert args.w >= 1
 
     if args.sampling_strategy != 'unif':
         assert args.epsilon >= 0.0
@@ -141,8 +148,9 @@ def main():
 
     mcts = instantiate_mcts(args, problem_instantiator.environment)
     search_time_to_reward, plan = mcts.search(args.mcts_iter)
-    plan = make_plan_pklable(plan)
+    #plan = make_plan_pklable(plan)
 
+    print "Number of best-vregion calls: ",plan
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
                 open(stat_file_name, 'wb'))
 
