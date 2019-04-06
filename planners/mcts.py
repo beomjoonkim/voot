@@ -179,7 +179,7 @@ class MCTS:
         time_to_search = 0
         search_time_to_reward = []
         plan = None
-        self.n_iter = 100
+        self.n_iter = n_iter
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
@@ -191,7 +191,6 @@ class MCTS:
             """
 
             if self.is_time_to_switch_initial_node():
-                #import pdb;pdb.set_trace()
                 print "Switching root node!"
                 """
                 max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
