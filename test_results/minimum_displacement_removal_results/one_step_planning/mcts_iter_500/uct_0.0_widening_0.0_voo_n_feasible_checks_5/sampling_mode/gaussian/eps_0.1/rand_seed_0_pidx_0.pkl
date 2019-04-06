@@ -1,0 +1,4024 @@
+(dp1
+S'pidx'
+p2
+I0
+sS'search_time'
+p3
+(lp4
+(lp5
+F0.14016294479370117
+aI0
+acnumpy.core.multiarray
+scalar
+p6
+(cnumpy
+dtype
+p7
+(S'f8'
+I0
+I1
+tRp8
+(I3
+S'<'
+NNNI-1
+I-1
+I0
+tbS'\x00\x00\x00\x00\x00\x00\x00\xc0'
+tRp9
+aI7
+aa(lp10
+F0.51047706604003906
+aI1
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp11
+aI6
+aa(lp12
+F0.56944012641906738
+aI2
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp13
+aI6
+aa(lp14
+F0.62322425842285156
+aI3
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp15
+aI6
+aa(lp16
+F0.67670226097106934
+aI4
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp17
+aI6
+aa(lp18
+F0.73840522766113281
+aI5
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp19
+aI6
+aa(lp20
+F0.76899623870849609
+aI6
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp21
+aI6
+aa(lp22
+F0.87830924987792969
+aI7
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp23
+aI6
+aa(lp24
+F1.1661581993103027
+aI8
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp25
+aI6
+aa(lp26
+F1.2063860893249512
+aI9
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp27
+aI6
+aa(lp28
+F1.3013300895690918
+aI10
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp29
+aI6
+aa(lp30
+F1.3304052352905273
+aI11
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp31
+aI6
+aa(lp32
+F1.3755402565002441
+aI12
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp33
+aI6
+aa(lp34
+F1.4268593788146973
+aI13
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp35
+aI6
+aa(lp36
+F1.5794951915740967
+aI14
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp37
+aI6
+aa(lp38
+F1.6708152294158936
+aI15
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp39
+aI6
+aa(lp40
+F1.8658621311187744
+aI16
+ag6
+(g8
+S'\x91\xe4P\xf5\xc3\xd8\xd5?'
+tRp41
+aI6
+aa(lp42
+F2.0719699859619141
+aI17
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp43
+aI6
+aa(lp44
+F2.3993949890136719
+aI18
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp45
+aI6
+aa(lp46
+F2.6903209686279297
+aI19
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp47
+aI6
+aa(lp48
+F2.9525511264801025
+aI20
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp49
+aI6
+aa(lp50
+F3.3216230869293213
+aI21
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp51
+aI6
+aa(lp52
+F3.5698320865631104
+aI22
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp53
+aI6
+aa(lp54
+F3.8106191158294678
+aI23
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp55
+aI6
+aa(lp56
+F3.8551850318908691
+aI24
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp57
+aI6
+aa(lp58
+F4.0944881439208984
+aI25
+ag6
+(g8
+S'\xd6\x18u\xc0.\x0b\xd8?'
+tRp59
+aI6
+aa(lp60
+F4.2992441654205322
+aI26
+ag6
+(g8
+S'\x18\xdcH\xdb\x06\x0e\xd8?'
+tRp61
+aI6
+aa(lp62
+F4.5529210567474365
+aI27
+ag6
+(g8
+S'\x18\xdcH\xdb\x06\x0e\xd8?'
+tRp63
+aI6
+aa(lp64
+F4.7798912525177002
+aI28
+ag6
+(g8
+S'\x18\xdcH\xdb\x06\x0e\xd8?'
+tRp65
+aI6
+aa(lp66
+F5.0159823894500732
+aI29
+ag6
+(g8
+S'\xd4\xd2#\x85n\x10\xd8?'
+tRp67
+aI6
+aa(lp68
+F5.346144437789917
+aI30
+ag6
+(g8
+S'\xd4\xd2#\x85n\x10\xd8?'
+tRp69
+aI6
+aa(lp70
+F5.5495352745056152
+aI31
+ag6
+(g8
+S'\xd4\xd2#\x85n\x10\xd8?'
+tRp71
+aI6
+aa(lp72
+F5.7015213966369629
+aI32
+ag6
+(g8
+S'\xd4\xd2#\x85n\x10\xd8?'
+tRp73
+aI6
+aa(lp74
+F6.0022244453430176
+aI33
+ag6
+(g8
+S'\xd4\xd2#\x85n\x10\xd8?'
+tRp75
+aI6
+aa(lp76
+F6.2170784473419189
+aI34
+ag6
+(g8
+S'6)2;\xd5\x10\xd8?'
+tRp77
+aI6
+aa(lp78
+F6.4288985729217529
+aI35
+ag6
+(g8
+S'6)2;\xd5\x10\xd8?'
+tRp79
+aI6
+aa(lp80
+F6.6239235401153564
+aI36
+ag6
+(g8
+S'H\xf2>\xde\x12\x11\xd8?'
+tRp81
+aI6
+aa(lp82
+F6.6790275573730469
+aI37
+ag6
+(g8
+S'H\xf2>\xde\x12\x11\xd8?'
+tRp83
+aI6
+aa(lp84
+F7.0178086757659912
+aI38
+ag6
+(g8
+S'H\xf2>\xde\x12\x11\xd8?'
+tRp85
+aI6
+aa(lp86
+F7.2663826942443848
+aI39
+ag6
+(g8
+S'H\xf2>\xde\x12\x11\xd8?'
+tRp87
+aI6
+aa(lp88
+F7.5354807376861572
+aI40
+ag6
+(g8
+S'H\xf2>\xde\x12\x11\xd8?'
+tRp89
+aI6
+aa(lp90
+F7.8544108867645264
+aI41
+ag6
+(g8
+S'H\xf2>\xde\x12\x11\xd8?'
+tRp91
+aI6
+aa(lp92
+F8.1057808399200439
+aI42
+ag6
+(g8
+S'g\xd9_)m\x12\xd8?'
+tRp93
+aI6
+aa(lp94
+F8.3689947128295898
+aI43
+ag6
+(g8
+S'g\xd9_)m\x12\xd8?'
+tRp95
+aI6
+aa(lp96
+F8.4984269142150879
+aI44
+ag6
+(g8
+S'g\xd9_)m\x12\xd8?'
+tRp97
+aI6
+aa(lp98
+F8.7339029312133789
+aI45
+ag6
+(g8
+S'g\xd9_)m\x12\xd8?'
+tRp99
+aI6
+aa(lp100
+F8.953657865524292
+aI46
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp101
+aI6
+aa(lp102
+F9.3330039978027344
+aI47
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp103
+aI6
+aa(lp104
+F9.6393070220947266
+aI48
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp105
+aI6
+aa(lp106
+F9.9309539794921875
+aI49
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp107
+aI6
+aa(lp108
+F10.15547776222229
+aI50
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp109
+aI6
+aa(lp110
+F10.366981744766235
+aI51
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp111
+aI6
+aa(lp112
+F10.61713981628418
+aI52
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp113
+aI6
+aa(lp114
+F10.901846885681152
+aI53
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp115
+aI6
+aa(lp116
+F11.309154033660889
+aI54
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp117
+aI6
+aa(lp118
+F11.378061056137085
+aI55
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp119
+aI6
+aa(lp120
+F11.647014141082764
+aI56
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp121
+aI6
+aa(lp122
+F11.864950180053711
+aI57
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp123
+aI6
+aa(lp124
+F12.188400268554688
+aI58
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp125
+aI6
+aa(lp126
+F12.511102199554443
+aI59
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp127
+aI6
+aa(lp128
+F12.823610067367554
+aI60
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp129
+aI6
+aa(lp130
+F13.088964939117432
+aI61
+ag6
+(g8
+S'g\x95Zq\x95\x12\xd8?'
+tRp131
+aI6
+aa(lp132
+F13.41454291343689
+aI62
+ag6
+(g8
+S'\xc5F\x08r\x95\x12\xd8?'
+tRp133
+aI6
+aa(lp134
+F13.85516881942749
+aI63
+ag6
+(g8
+S'\xc5F\x08r\x95\x12\xd8?'
+tRp135
+aI6
+aa(lp136
+F14.14920973777771
+aI64
+ag6
+(g8
+S'\xc5F\x08r\x95\x12\xd8?'
+tRp137
+aI6
+aa(lp138
+F14.328930854797363
+aI65
+ag6
+(g8
+S'\xc5F\x08r\x95\x12\xd8?'
+tRp139
+aI6
+aa(lp140
+F14.725988864898682
+aI66
+ag6
+(g8
+S'\xffL r\x95\x12\xd8?'
+tRp141
+aI6
+aa(lp142
+F15.081178903579712
+aI67
+ag6
+(g8
+S'\xffL r\x95\x12\xd8?'
+tRp143
+aI6
+aa(lp144
+F15.336025953292847
+aI68
+ag6
+(g8
+S'\xffL r\x95\x12\xd8?'
+tRp145
+aI6
+aa(lp146
+F15.674109935760498
+aI69
+ag6
+(g8
+S'\xffL r\x95\x12\xd8?'
+tRp147
+aI6
+aa(lp148
+F15.991908073425293
+aI70
+ag6
+(g8
+S'\xffL r\x95\x12\xd8?'
+tRp149
+aI6
+aa(lp150
+F16.265994071960449
+aI71
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp151
+aI6
+aa(lp152
+F16.586298227310181
+aI72
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp153
+aI6
+aa(lp154
+F16.941089391708374
+aI73
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp155
+aI6
+aa(lp156
+F17.282041311264038
+aI74
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp157
+aI6
+aa(lp158
+F17.568618297576904
+aI75
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp159
+aI6
+aa(lp160
+F18.082363128662109
+aI76
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp161
+aI6
+aa(lp162
+F18.436666011810303
+aI77
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp163
+aI6
+aa(lp164
+F18.690328121185303
+aI78
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp165
+aI6
+aa(lp166
+F19.037615299224854
+aI79
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp167
+aI6
+aa(lp168
+F19.475561380386353
+aI80
+ag6
+(g8
+S'\x8c\x9d r\x95\x12\xd8?'
+tRp169
+aI6
+aa(lp170
+F19.845427274703979
+aI81
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp171
+aI6
+aa(lp172
+F20.254573345184326
+aI82
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp173
+aI6
+aa(lp174
+F20.607394218444824
+aI83
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp175
+aI6
+aa(lp176
+F21.075303316116333
+aI84
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp177
+aI6
+aa(lp178
+F21.430602312088013
+aI85
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp179
+aI6
+aa(lp180
+F21.76910924911499
+aI86
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp181
+aI6
+aa(lp182
+F22.047425270080566
+aI87
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp183
+aI6
+aa(lp184
+F22.362058401107788
+aI88
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp185
+aI6
+aa(lp186
+F22.813555479049683
+aI89
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp187
+aI6
+aa(lp188
+F23.199224472045898
+aI90
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp189
+aI6
+aa(lp190
+F23.645613431930542
+aI91
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp191
+aI6
+aa(lp192
+F24.132936477661133
+aI92
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp193
+aI6
+aa(lp194
+F24.583314418792725
+aI93
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp195
+aI6
+aa(lp196
+F25.012868404388428
+aI94
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp197
+aI6
+aa(lp198
+F25.476145505905151
+aI95
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp199
+aI6
+aa(lp200
+F25.849536418914795
+aI96
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp201
+aI6
+aa(lp202
+F26.317298412322998
+aI97
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp203
+aI6
+aa(lp204
+F26.415938377380371
+aI98
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp205
+aI6
+aa(lp206
+F26.883249282836914
+aI99
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp207
+aI6
+aa(lp208
+F27.378494262695312
+aI100
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp209
+aI6
+aa(lp210
+F27.765227317810059
+aI101
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp211
+aI6
+aa(lp212
+F28.106771230697632
+aI102
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp213
+aI6
+aa(lp214
+F28.47258734703064
+aI103
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp215
+aI6
+aa(lp216
+F28.905939340591431
+aI104
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp217
+aI6
+aa(lp218
+F29.347723245620728
+aI105
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp219
+aI6
+aa(lp220
+F29.744308233261108
+aI106
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp221
+aI6
+aa(lp222
+F30.183894157409668
+aI107
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp223
+aI6
+aa(lp224
+F30.645646095275879
+aI108
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp225
+aI6
+aa(lp226
+F31.063704967498779
+aI109
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp227
+aI6
+aa(lp228
+F31.420366048812866
+aI110
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp229
+aI6
+aa(lp230
+F31.79504919052124
+aI111
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp231
+aI6
+aa(lp232
+F32.24307107925415
+aI112
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp233
+aI6
+aa(lp234
+F32.658043146133423
+aI113
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp235
+aI6
+aa(lp236
+F33.237853050231934
+aI114
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp237
+aI6
+aa(lp238
+F33.667623043060303
+aI115
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp239
+aI6
+aa(lp240
+F33.833867073059082
+aI116
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp241
+aI6
+aa(lp242
+F34.504004001617432
+aI117
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp243
+aI6
+aa(lp244
+F35.089843988418579
+aI118
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp245
+aI6
+aa(lp246
+F35.499009847640991
+aI119
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp247
+aI6
+aa(lp248
+F35.711493730545044
+aI120
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp249
+aI6
+aa(lp250
+F36.298108816146851
+aI121
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp251
+aI6
+aa(lp252
+F36.799888849258423
+aI122
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp253
+aI6
+aa(lp254
+F36.953665018081665
+aI123
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp255
+aI6
+aa(lp256
+F37.438062906265259
+aI124
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp257
+aI6
+aa(lp258
+F38.124891042709351
+aI125
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp259
+aI6
+aa(lp260
+F38.62639594078064
+aI126
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp261
+aI6
+aa(lp262
+F39.243189811706543
+aI127
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp263
+aI6
+aa(lp264
+F39.647416591644287
+aI128
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp265
+aI6
+aa(lp266
+F40.084744691848755
+aI129
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp267
+aI6
+aa(lp268
+F40.671639680862427
+aI130
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp269
+aI6
+aa(lp270
+F41.191463708877563
+aI131
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp271
+aI6
+aa(lp272
+F41.391974687576294
+aI132
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp273
+aI6
+aa(lp274
+F42.092430830001831
+aI133
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp275
+aI6
+aa(lp276
+F42.655908823013306
+aI134
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp277
+aI6
+aa(lp278
+F43.179301977157593
+aI135
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp279
+aI6
+aa(lp280
+F43.400861978530884
+aI136
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp281
+aI6
+aa(lp282
+F43.858070135116577
+aI137
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp283
+aI6
+aa(lp284
+F44.087087154388428
+aI138
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp285
+aI6
+aa(lp286
+F44.724905014038086
+aI139
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp287
+aI6
+aa(lp288
+F45.257343053817749
+aI140
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp289
+aI6
+aa(lp290
+F45.772529125213623
+aI141
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp291
+aI6
+aa(lp292
+F46.352421998977661
+aI142
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp293
+aI6
+aa(lp294
+F46.879884004592896
+aI143
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp295
+aI6
+aa(lp296
+F47.458281993865967
+aI144
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp297
+aI6
+aa(lp298
+F48.000222206115723
+aI145
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp299
+aI6
+aa(lp300
+F48.55415415763855
+aI146
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp301
+aI6
+aa(lp302
+F49.222685098648071
+aI147
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp303
+aI6
+aa(lp304
+F49.886842966079712
+aI148
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp305
+aI6
+aa(lp306
+F50.397363901138306
+aI149
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp307
+aI6
+aa(lp308
+F50.955390930175781
+aI150
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp309
+aI6
+aa(lp310
+F51.442185878753662
+aI151
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp311
+aI6
+aa(lp312
+F51.672879934310913
+aI152
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp313
+aI6
+aa(lp314
+F52.255825042724609
+aI153
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp315
+aI6
+aa(lp316
+F52.980346918106079
+aI154
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp317
+aI6
+aa(lp318
+F53.576278924942017
+aI155
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp319
+aI6
+aa(lp320
+F54.155241966247559
+aI156
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp321
+aI6
+aa(lp322
+F54.746410846710205
+aI157
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp323
+aI6
+aa(lp324
+F54.975371837615967
+aI158
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp325
+aI6
+aa(lp326
+F55.807093858718872
+aI159
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp327
+aI6
+aa(lp328
+F56.41647481918335
+aI160
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp329
+aI6
+aa(lp330
+F57.049327850341797
+aI161
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp331
+aI6
+aa(lp332
+F57.708999872207642
+aI162
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp333
+aI6
+aa(lp334
+F58.263931035995483
+aI163
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp335
+aI6
+aa(lp336
+F58.777698040008545
+aI164
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp337
+aI6
+aa(lp338
+F59.375054121017456
+aI165
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp339
+aI6
+aa(lp340
+F59.92261004447937
+aI166
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp341
+aI6
+aa(lp342
+F60.17834997177124
+aI167
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp343
+aI6
+aa(lp344
+F60.747628927230835
+aI168
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp345
+aI6
+aa(lp346
+F61.281095027923584
+aI169
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp347
+aI6
+aa(lp348
+F61.931300163269043
+aI170
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp349
+aI6
+aa(lp350
+F62.590286016464233
+aI171
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp351
+aI6
+aa(lp352
+F63.260817050933838
+aI172
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp353
+aI6
+aa(lp354
+F63.924057006835938
+aI173
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp355
+aI6
+aa(lp356
+F64.507194995880127
+aI174
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp357
+aI6
+aa(lp358
+F65.267438888549805
+aI175
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp359
+aI6
+aa(lp360
+F65.85832667350769
+aI176
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp361
+aI6
+aa(lp362
+F66.49354362487793
+aI177
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp363
+aI6
+aa(lp364
+F67.146186590194702
+aI178
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp365
+aI6
+aa(lp366
+F67.82646656036377
+aI179
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp367
+aI6
+aa(lp368
+F68.227983474731445
+aI180
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp369
+aI6
+aa(lp370
+F69.019720554351807
+aI181
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp371
+aI6
+aa(lp372
+F69.636224508285522
+aI182
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp373
+aI6
+aa(lp374
+F70.287644386291504
+aI183
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp375
+aI6
+aa(lp376
+F71.009931564331055
+aI184
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp377
+aI6
+aa(lp378
+F71.767054557800293
+aI185
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp379
+aI6
+aa(lp380
+F72.337091684341431
+aI186
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp381
+aI6
+aa(lp382
+F73.146162748336792
+aI187
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp383
+aI6
+aa(lp384
+F73.487936735153198
+aI188
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp385
+aI6
+aa(lp386
+F74.143724679946899
+aI189
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp387
+aI6
+aa(lp388
+F74.824832677841187
+aI190
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp389
+aI6
+aa(lp390
+F75.236838579177856
+aI191
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp391
+aI6
+aa(lp392
+F75.798328399658203
+aI192
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp393
+aI6
+aa(lp394
+F76.453465461730957
+aI193
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp395
+aI6
+aa(lp396
+F77.075713396072388
+aI194
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp397
+aI6
+aa(lp398
+F77.799736499786377
+aI195
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp399
+aI6
+aa(lp400
+F78.147557497024536
+aI196
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp401
+aI6
+aa(lp402
+F78.949679374694824
+aI197
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp403
+aI6
+aa(lp404
+F79.286571264266968
+aI198
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp405
+aI6
+aa(lp406
+F79.645448207855225
+aI199
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp407
+aI6
+aa(lp408
+F80.378933191299438
+aI200
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp409
+aI6
+aa(lp410
+F80.699508190155029
+aI201
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp411
+aI6
+aa(lp412
+F81.34996509552002
+aI202
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp413
+aI6
+aa(lp414
+F81.699167251586914
+aI203
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp415
+aI6
+aa(lp416
+F82.465975046157837
+aI204
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp417
+aI6
+aa(lp418
+F83.136254072189331
+aI205
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp419
+aI6
+aa(lp420
+F83.974633932113647
+aI206
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp421
+aI6
+aa(lp422
+F84.644631862640381
+aI207
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp423
+aI6
+aa(lp424
+F85.702079772949219
+aI208
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp425
+aI6
+aa(lp426
+F86.48056173324585
+aI209
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp427
+aI6
+aa(lp428
+F87.319033861160278
+aI210
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp429
+aI6
+aa(lp430
+F87.975793838500977
+aI211
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp431
+aI6
+aa(lp432
+F88.868206977844238
+aI212
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp433
+aI6
+aa(lp434
+F89.842862129211426
+aI213
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp435
+aI6
+aa(lp436
+F90.780409097671509
+aI214
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp437
+aI6
+aa(lp438
+F91.597331047058105
+aI215
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp439
+aI6
+aa(lp440
+F92.351924180984497
+aI216
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp441
+aI6
+aa(lp442
+F93.277842283248901
+aI217
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp443
+aI6
+aa(lp444
+F94.241842269897461
+aI218
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp445
+aI6
+aa(lp446
+F95.050853252410889
+aI219
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp447
+aI6
+aa(lp448
+F95.826901197433472
+aI220
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp449
+aI6
+aa(lp450
+F96.637577295303345
+aI221
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp451
+aI6
+aa(lp452
+F97.385512351989746
+aI222
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp453
+aI6
+aa(lp454
+F98.320617437362671
+aI223
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp455
+aI6
+aa(lp456
+F99.121416330337524
+aI224
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp457
+aI6
+aa(lp458
+F99.600277423858643
+aI225
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp459
+aI6
+aa(lp460
+F100.47610545158386
+aI226
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp461
+aI6
+aa(lp462
+F101.2825083732605
+aI227
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp463
+aI6
+aa(lp464
+F102.16888737678528
+aI228
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp465
+aI6
+aa(lp466
+F102.58836245536804
+aI229
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp467
+aI6
+aa(lp468
+F103.46867942810059
+aI230
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp469
+aI6
+aa(lp470
+F104.35070848464966
+aI231
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp471
+aI6
+aa(lp472
+F105.16650652885437
+aI232
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp473
+aI6
+aa(lp474
+F106.08257961273193
+aI233
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp475
+aI6
+aa(lp476
+F106.96051859855652
+aI234
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp477
+aI6
+aa(lp478
+F107.79338979721069
+aI235
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp479
+aI6
+aa(lp480
+F108.78859877586365
+aI236
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp481
+aI6
+aa(lp482
+F109.62682271003723
+aI237
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp483
+aI6
+aa(lp484
+F110.55899882316589
+aI238
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp485
+aI6
+aa(lp486
+F111.53902387619019
+aI239
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp487
+aI6
+aa(lp488
+F112.62568998336792
+aI240
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp489
+aI6
+aa(lp490
+F113.57424187660217
+aI241
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp491
+aI6
+aa(lp492
+F114.56594371795654
+aI242
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp493
+aI6
+aa(lp494
+F115.02983570098877
+aI243
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp495
+aI6
+aa(lp496
+F115.80668473243713
+aI244
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp497
+aI6
+aa(lp498
+F116.70554876327515
+aI245
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp499
+aI6
+aa(lp500
+F117.70131373405457
+aI246
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp501
+aI6
+aa(lp502
+F118.58537673950195
+aI247
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp503
+aI6
+aa(lp504
+F119.40814971923828
+aI248
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp505
+aI6
+aa(lp506
+F120.2883095741272
+aI249
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp507
+aI6
+aa(lp508
+F121.20251655578613
+aI250
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp509
+aI6
+aa(lp510
+F121.98888945579529
+aI251
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp511
+aI6
+aa(lp512
+F122.92072749137878
+aI252
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp513
+aI6
+aa(lp514
+F123.96640563011169
+aI253
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp515
+aI6
+aa(lp516
+F124.90715980529785
+aI254
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp517
+aI6
+aa(lp518
+F125.96588468551636
+aI255
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp519
+aI6
+aa(lp520
+F126.80753469467163
+aI256
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp521
+aI6
+aa(lp522
+F127.7240526676178
+aI257
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp523
+aI6
+aa(lp524
+F128.58912682533264
+aI258
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp525
+aI6
+aa(lp526
+F129.55372977256775
+aI259
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp527
+aI6
+aa(lp528
+F130.157550573349
+aI260
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp529
+aI6
+aa(lp530
+F130.65191864967346
+aI261
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp531
+aI6
+aa(lp532
+F131.59713363647461
+aI262
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp533
+aI6
+aa(lp534
+F132.55114960670471
+aI263
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp535
+aI6
+aa(lp536
+F133.50261354446411
+aI264
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp537
+aI6
+aa(lp538
+F134.51042556762695
+aI265
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp539
+aI6
+aa(lp540
+F135.5608434677124
+aI266
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp541
+aI6
+aa(lp542
+F136.53535962104797
+aI267
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp543
+aI6
+aa(lp544
+F137.52323961257935
+aI268
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp545
+aI6
+aa(lp546
+F138.53593373298645
+aI269
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp547
+aI6
+aa(lp548
+F139.53436374664307
+aI270
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp549
+aI6
+aa(lp550
+F140.72781372070312
+aI271
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp551
+aI6
+aa(lp552
+F141.71156978607178
+aI272
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp553
+aI6
+aa(lp554
+F142.65135192871094
+aI273
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp555
+aI6
+aa(lp556
+F143.56942892074585
+aI274
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp557
+aI6
+aa(lp558
+F144.65093994140625
+aI275
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp559
+aI6
+aa(lp560
+F145.62784576416016
+aI276
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp561
+aI6
+aa(lp562
+F146.78595066070557
+aI277
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp563
+aI6
+aa(lp564
+F147.66058158874512
+aI278
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp565
+aI6
+aa(lp566
+F148.24974751472473
+aI279
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp567
+aI6
+aa(lp568
+F149.41286945343018
+aI280
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp569
+aI6
+aa(lp570
+F150.58160853385925
+aI281
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp571
+aI6
+aa(lp572
+F151.59851956367493
+aI282
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp573
+aI6
+aa(lp574
+F152.72030067443848
+aI283
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp575
+aI6
+aa(lp576
+F153.8079845905304
+aI284
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp577
+aI6
+aa(lp578
+F154.96493458747864
+aI285
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp579
+aI6
+aa(lp580
+F156.08145260810852
+aI286
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp581
+aI6
+aa(lp582
+F157.12030863761902
+aI287
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp583
+aI6
+aa(lp584
+F158.16812348365784
+aI288
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp585
+aI6
+aa(lp586
+F159.25119352340698
+aI289
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp587
+aI6
+aa(lp588
+F160.3452684879303
+aI290
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp589
+aI6
+aa(lp590
+F161.47589945793152
+aI291
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp591
+aI6
+aa(lp592
+F162.58457446098328
+aI292
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp593
+aI6
+aa(lp594
+F163.73388457298279
+aI293
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp595
+aI6
+aa(lp596
+F164.91699862480164
+aI294
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp597
+aI6
+aa(lp598
+F166.01047468185425
+aI295
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp599
+aI6
+aa(lp600
+F166.64214062690735
+aI296
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp601
+aI6
+aa(lp602
+F167.84341549873352
+aI297
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp603
+aI6
+aa(lp604
+F169.0145275592804
+aI298
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp605
+aI6
+aa(lp606
+F170.1607563495636
+aI299
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp607
+aI6
+aa(lp608
+F171.30858826637268
+aI300
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp609
+aI6
+aa(lp610
+F172.71942615509033
+aI301
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp611
+aI6
+aa(lp612
+F174.19005012512207
+aI302
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp613
+aI6
+aa(lp614
+F175.79855012893677
+aI303
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp615
+aI6
+aa(lp616
+F177.38620018959045
+aI304
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp617
+aI6
+aa(lp618
+F178.5133810043335
+aI305
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp619
+aI6
+aa(lp620
+F179.73270988464355
+aI306
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp621
+aI6
+aa(lp622
+F180.95075488090515
+aI307
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp623
+aI6
+aa(lp624
+F182.16885590553284
+aI308
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp625
+aI6
+aa(lp626
+F183.27666783332825
+aI309
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp627
+aI6
+aa(lp628
+F184.48365569114685
+aI310
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp629
+aI6
+aa(lp630
+F185.68888473510742
+aI311
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp631
+aI6
+aa(lp632
+F186.92755270004272
+aI312
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp633
+aI6
+aa(lp634
+F188.06174969673157
+aI313
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp635
+aI6
+aa(lp636
+F189.27088785171509
+aI314
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp637
+aI6
+aa(lp638
+F190.52159190177917
+aI315
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp639
+aI6
+aa(lp640
+F191.67841076850891
+aI316
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp641
+aI6
+aa(lp642
+F192.90378975868225
+aI317
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp643
+aI6
+aa(lp644
+F194.30472588539124
+aI318
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp645
+aI6
+aa(lp646
+F195.81866574287415
+aI319
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp647
+aI6
+aa(lp648
+F197.14547276496887
+aI320
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp649
+aI6
+aa(lp650
+F198.38104963302612
+aI321
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp651
+aI6
+aa(lp652
+F199.73908758163452
+aI322
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp653
+aI6
+aa(lp654
+F201.02240467071533
+aI323
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp655
+aI6
+aa(lp656
+F202.39861845970154
+aI324
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp657
+aI6
+aa(lp658
+F203.68793344497681
+aI325
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp659
+aI6
+aa(lp660
+F204.90939044952393
+aI326
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp661
+aI6
+aa(lp662
+F206.15994238853455
+aI327
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp663
+aI6
+aa(lp664
+F207.25722455978394
+aI328
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp665
+aI6
+aa(lp666
+F208.41181564331055
+aI329
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp667
+aI6
+aa(lp668
+F209.59523963928223
+aI330
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp669
+aI6
+aa(lp670
+F210.7496166229248
+aI331
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp671
+aI6
+aa(lp672
+F212.16719961166382
+aI332
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp673
+aI6
+aa(lp674
+F213.90719771385193
+aI333
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp675
+aI6
+aa(lp676
+F215.09663462638855
+aI334
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp677
+aI6
+aa(lp678
+F216.30338668823242
+aI335
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp679
+aI6
+aa(lp680
+F217.46934676170349
+aI336
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp681
+aI6
+aa(lp682
+F218.7762668132782
+aI337
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp683
+aI6
+aa(lp684
+F220.01563668251038
+aI338
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp685
+aI6
+aa(lp686
+F221.39578461647034
+aI339
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp687
+aI6
+aa(lp688
+F222.83108043670654
+aI340
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp689
+aI6
+aa(lp690
+F224.24755549430847
+aI341
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp691
+aI6
+aa(lp692
+F225.46329164505005
+aI342
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp693
+aI6
+aa(lp694
+F226.75320053100586
+aI343
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp695
+aI6
+aa(lp696
+F228.17359256744385
+aI344
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp697
+aI6
+aa(lp698
+F229.605881690979
+aI345
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp699
+aI6
+aa(lp700
+F231.12953066825867
+aI346
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp701
+aI6
+aa(lp702
+F232.81429266929626
+aI347
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp703
+aI6
+aa(lp704
+F234.12247967720032
+aI348
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp705
+aI6
+aa(lp706
+F235.63298463821411
+aI349
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp707
+aI6
+aa(lp708
+F237.37577557563782
+aI350
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp709
+aI6
+aa(lp710
+F238.98186564445496
+aI351
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp711
+aI6
+aa(lp712
+F240.42153573036194
+aI352
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp713
+aI6
+aa(lp714
+F241.89086055755615
+aI353
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp715
+aI6
+aa(lp716
+F243.38538765907288
+aI354
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp717
+aI6
+aa(lp718
+F245.01833558082581
+aI355
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp719
+aI6
+aa(lp720
+F246.62395167350769
+aI356
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp721
+aI6
+aa(lp722
+F248.20409774780273
+aI357
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp723
+aI6
+aa(lp724
+F249.57467365264893
+aI358
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp725
+aI6
+aa(lp726
+F251.0410487651825
+aI359
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp727
+aI6
+aa(lp728
+F252.50791382789612
+aI360
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp729
+aI6
+aa(lp730
+F253.94394087791443
+aI361
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp731
+aI6
+aa(lp732
+F255.54818987846375
+aI362
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp733
+aI6
+aa(lp734
+F257.1497790813446
+aI363
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp735
+aI6
+aa(lp736
+F258.57970285415649
+aI364
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp737
+aI6
+aa(lp738
+F260.23715591430664
+aI365
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp739
+aI6
+aa(lp740
+F261.87246990203857
+aI366
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp741
+aI6
+aa(lp742
+F263.34897398948669
+aI367
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp743
+aI6
+aa(lp744
+F264.19269394874573
+aI368
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp745
+aI6
+aa(lp746
+F265.77585291862488
+aI369
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp747
+aI6
+aa(lp748
+F267.79746794700623
+aI370
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp749
+aI6
+aa(lp750
+F269.51884889602661
+aI371
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp751
+aI6
+aa(lp752
+F270.99172377586365
+aI372
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp753
+aI6
+aa(lp754
+F272.58235263824463
+aI373
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp755
+aI6
+aa(lp756
+F274.05582356452942
+aI374
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp757
+aI6
+aa(lp758
+F275.79113149642944
+aI375
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp759
+aI6
+aa(lp760
+F277.34629344940186
+aI376
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp761
+aI6
+aa(lp762
+F279.0186173915863
+aI377
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp763
+aI6
+aa(lp764
+F280.76536726951599
+aI378
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp765
+aI6
+aa(lp766
+F282.39950919151306
+aI379
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp767
+aI6
+aa(lp768
+F284.02680921554565
+aI380
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp769
+aI6
+aa(lp770
+F285.6394202709198
+aI381
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp771
+aI6
+aa(lp772
+F287.13445734977722
+aI382
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp773
+aI6
+aa(lp774
+F288.57178139686584
+aI383
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp775
+aI6
+aa(lp776
+F290.28464555740356
+aI384
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp777
+aI6
+aa(lp778
+F292.06743049621582
+aI385
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp779
+aI6
+aa(lp780
+F293.50024151802063
+aI386
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp781
+aI6
+aa(lp782
+F295.00981450080872
+aI387
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp783
+aI6
+aa(lp784
+F296.7624204158783
+aI388
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp785
+aI6
+aa(lp786
+F298.48112845420837
+aI389
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp787
+aI6
+aa(lp788
+F300.00150942802429
+aI390
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp789
+aI6
+aa(lp790
+F301.5498423576355
+aI391
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp791
+aI6
+aa(lp792
+F303.01594853401184
+aI392
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp793
+aI6
+aa(lp794
+F304.45165348052979
+aI393
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp795
+aI6
+aa(lp796
+F306.26289033889771
+aI394
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp797
+aI6
+aa(lp798
+F307.84229731559753
+aI395
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp799
+aI6
+aa(lp800
+F309.72624540328979
+aI396
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp801
+aI6
+aa(lp802
+F311.22577047348022
+aI397
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp803
+aI6
+aa(lp804
+F312.78970551490784
+aI398
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp805
+aI6
+aa(lp806
+F314.31030869483948
+aI399
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp807
+aI6
+aa(lp808
+F315.82496380805969
+aI400
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp809
+aI6
+aa(lp810
+F317.5426938533783
+aI401
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp811
+aI6
+aa(lp812
+F319.28538870811462
+aI402
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp813
+aI6
+aa(lp814
+F321.04058575630188
+aI403
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp815
+aI6
+aa(lp816
+F322.84965777397156
+aI404
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp817
+aI6
+aa(lp818
+F324.35349988937378
+aI405
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp819
+aI6
+aa(lp820
+F326.31013488769531
+aI406
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp821
+aI6
+aa(lp822
+F328.22704291343689
+aI407
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp823
+aI6
+aa(lp824
+F330.07036995887756
+aI408
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp825
+aI6
+aa(lp826
+F331.87305688858032
+aI409
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp827
+aI6
+aa(lp828
+F333.81422901153564
+aI410
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp829
+aI6
+aa(lp830
+F335.75375890731812
+aI411
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp831
+aI6
+aa(lp832
+F337.4949939250946
+aI412
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp833
+aI6
+aa(lp834
+F339.32273387908936
+aI413
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp835
+aI6
+aa(lp836
+F341.19608783721924
+aI414
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp837
+aI6
+aa(lp838
+F342.98163676261902
+aI415
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp839
+aI6
+aa(lp840
+F344.93758773803711
+aI416
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp841
+aI6
+aa(lp842
+F346.83734560012817
+aI417
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp843
+aI6
+aa(lp844
+F348.73453569412231
+aI418
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp845
+aI6
+aa(lp846
+F350.7052686214447
+aI419
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp847
+aI6
+aa(lp848
+F352.59828758239746
+aI420
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp849
+aI6
+aa(lp850
+F354.41252565383911
+aI421
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp851
+aI6
+aa(lp852
+F355.56389284133911
+aI422
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp853
+aI6
+aa(lp854
+F357.18166494369507
+aI423
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp855
+aI6
+aa(lp856
+F359.13031983375549
+aI424
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp857
+aI6
+aa(lp858
+F360.80367064476013
+aI425
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp859
+aI6
+aa(lp860
+F362.50449466705322
+aI426
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp861
+aI6
+aa(lp862
+F364.28582453727722
+aI427
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp863
+aI6
+aa(lp864
+F365.97807145118713
+aI428
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp865
+aI6
+aa(lp866
+F368.02146053314209
+aI429
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp867
+aI6
+aa(lp868
+F369.94710469245911
+aI430
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp869
+aI6
+aa(lp870
+F372.18617677688599
+aI431
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp871
+aI6
+aa(lp872
+F373.91181087493896
+aI432
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp873
+aI6
+aa(lp874
+F375.82357788085938
+aI433
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp875
+aI6
+aa(lp876
+F377.74057269096375
+aI434
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp877
+aI6
+aa(lp878
+F379.62697672843933
+aI435
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp879
+aI6
+aa(lp880
+F381.76271963119507
+aI436
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp881
+aI6
+aa(lp882
+F383.61644554138184
+aI437
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp883
+aI6
+aa(lp884
+F385.73609757423401
+aI438
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp885
+aI6
+aa(lp886
+F387.66820359230042
+aI439
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp887
+aI6
+aa(lp888
+F389.82789254188538
+aI440
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp889
+aI6
+aa(lp890
+F391.95673751831055
+aI441
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp891
+aI6
+aa(lp892
+F393.76149559020996
+aI442
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp893
+aI6
+aa(lp894
+F395.6106264591217
+aI443
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp895
+aI6
+aa(lp896
+F397.77801036834717
+aI444
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp897
+aI6
+aa(lp898
+F400.28323841094971
+aI445
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp899
+aI6
+aa(lp900
+F402.31717562675476
+aI446
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp901
+aI6
+aa(lp902
+F404.53060555458069
+aI447
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp903
+aI6
+aa(lp904
+F406.65759468078613
+aI448
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp905
+aI6
+aa(lp906
+F409.00784063339233
+aI449
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp907
+aI6
+aa(lp908
+F411.46557354927063
+aI450
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp909
+aI6
+aa(lp910
+F413.69869351387024
+aI451
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp911
+aI6
+aa(lp912
+F416.03764057159424
+aI452
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp913
+aI6
+aa(lp914
+F418.29401850700378
+aI453
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp915
+aI6
+aa(lp916
+F420.58248448371887
+aI454
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp917
+aI6
+aa(lp918
+F422.86684346199036
+aI455
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp919
+aI6
+aa(lp920
+F424.93903040885925
+aI456
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp921
+aI6
+aa(lp922
+F427.24535727500916
+aI457
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp923
+aI6
+aa(lp924
+F429.31370520591736
+aI458
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp925
+aI6
+aa(lp926
+F431.942054271698
+aI459
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp927
+aI6
+aa(lp928
+F434.6590051651001
+aI460
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp929
+aI6
+aa(lp930
+F436.39069628715515
+aI461
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp931
+aI6
+aa(lp932
+F438.48614120483398
+aI462
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp933
+aI6
+aa(lp934
+F441.05280637741089
+aI463
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp935
+aI6
+aa(lp936
+F443.17812633514404
+aI464
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp937
+aI6
+aa(lp938
+F445.70410132408142
+aI465
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp939
+aI6
+aa(lp940
+F447.96190643310547
+aI466
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp941
+aI6
+aa(lp942
+F450.90425634384155
+aI467
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp943
+aI6
+aa(lp944
+F452.89060044288635
+aI468
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp945
+aI6
+aa(lp946
+F454.73709726333618
+aI469
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp947
+aI6
+aa(lp948
+F456.41104412078857
+aI470
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp949
+aI6
+aa(lp950
+F458.26385307312012
+aI471
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp951
+aI6
+aa(lp952
+F461.10758805274963
+aI472
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp953
+aI6
+aa(lp954
+F463.74636697769165
+aI473
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp955
+aI6
+aa(lp956
+F466.38968205451965
+aI474
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp957
+aI6
+aa(lp958
+F469.04666304588318
+aI475
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp959
+aI6
+aa(lp960
+F471.77921605110168
+aI476
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp961
+aI6
+aa(lp962
+F474.36663293838501
+aI477
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp963
+aI6
+aa(lp964
+F477.30199790000916
+aI478
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp965
+aI6
+aa(lp966
+F480.16236996650696
+aI479
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp967
+aI6
+aa(lp968
+F482.93880295753479
+aI480
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp969
+aI6
+aa(lp970
+F485.93408298492432
+aI481
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp971
+aI6
+aa(lp972
+F488.87765002250671
+aI482
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp973
+aI6
+aa(lp974
+F491.82881593704224
+aI483
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp975
+aI6
+aa(lp976
+F494.47276592254639
+aI484
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp977
+aI6
+aa(lp978
+F497.32833790779114
+aI485
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp979
+aI6
+aa(lp980
+F499.89476084709167
+aI486
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp981
+aI6
+aa(lp982
+F502.09061074256897
+aI487
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp983
+aI6
+aa(lp984
+F504.51781177520752
+aI488
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp985
+aI6
+aa(lp986
+F507.05227971076965
+aI489
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp987
+aI6
+aa(lp988
+F509.85696172714233
+aI490
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp989
+aI6
+aa(lp990
+F512.05717086791992
+aI491
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp991
+aI6
+aa(lp992
+F513.95686388015747
+aI492
+ag6
+(g8
+S'\xd4\x9d r\x95\x12\xd8?'
+tRp993
+aI6
+aa(lp994
+F516.57019901275635
+aI493
+ag6
+(g8
+S'N\x05g\xbe\x95\x12\xd8?'
+tRp995
+aI6
+aa(lp996
+F519.21348094940186
+aI494
+ag6
+(g8
+S'N\x05g\xbe\x95\x12\xd8?'
+tRp997
+aI6
+aa(lp998
+F521.63091492652893
+aI495
+ag6
+(g8
+S'N\x05g\xbe\x95\x12\xd8?'
+tRp999
+aI6
+aa(lp1000
+F524.06358885765076
+aI496
+ag6
+(g8
+S'N\x05g\xbe\x95\x12\xd8?'
+tRp1001
+aI6
+aa(lp1002
+F526.06643080711365
+aI497
+ag6
+(g8
+S'N\x05g\xbe\x95\x12\xd8?'
+tRp1003
+aI6
+aa(lp1004
+F528.43153977394104
+aI498
+ag6
+(g8
+S'N\x05g\xbe\x95\x12\xd8?'
+tRp1005
+aI6
+aa(lp1006
+F530.98012089729309
+aI499
+ag6
+(g8
+S'N\x05g\xbe\x95\x12\xd8?'
+tRp1007
+aI6
+aasS'plan'
+p1008
+I456
+s.

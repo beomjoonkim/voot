@@ -14,7 +14,9 @@ class MCTSTree:
     def add_node(self, node, action, parent):
         node.parent = parent
         parent.children[action] = node
-        self.nodes.append(node)
+        if node not in self.nodes:
+            self.nodes.append(node)
+        node.idx = len(self.nodes)
 
     def is_node_just_added(self, node):
         if node == self.root:

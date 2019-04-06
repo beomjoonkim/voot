@@ -36,10 +36,11 @@ class TreeNode:
 
         self.sampling_strategy = sampling_strategy
         self.is_goal_node = False
-
+        self.idx = 1
 
         # for debugging purpose
         self.best_v = 0
+
     def get_never_evaluated_action(self):
         # get list of actions that do not have an associated Q values
         no_evaled = [a for a in self.A if a not in self.Q.keys()]

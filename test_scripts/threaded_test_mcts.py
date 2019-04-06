@@ -21,7 +21,7 @@ def worker_p(config):
     add = config['add']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
-        ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -widening_parameter ' + str(w) + \
+        ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -w ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode)
     if pw:
@@ -54,7 +54,7 @@ def main():
     parser.add_argument('-pidxs', nargs='+', type=int)
     parser.add_argument('-random_seeds', nargs='+', type=int)
     parser.add_argument('-pw', action='store_true', default=False)
-    parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
+    parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_uct', action='store_true', default=False)
 

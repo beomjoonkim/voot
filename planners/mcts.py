@@ -52,7 +52,7 @@ class MCTS:
         self.environment = environment
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
-        self.depth_limit = 1
+        self.depth_limit = 3
         self.use_progressive_widening = use_progressive_widening
         self.voo_sampling_mode = voo_sampling_mode
         self.use_ucb = use_ucb
@@ -204,7 +204,7 @@ class MCTS:
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
-            self.log_current_tree_to_dot_file(iteration)
+            #self.log_current_tree_to_dot_file(iteration)
 
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])

@@ -27,7 +27,7 @@ else:
 def make_save_dir(args):
     domain = args.domain
     uct_parameter = args.uct
-    widening_parameter = args.widening_parameter
+    w = args.w
     sampling_strategy = args.sampling_strategy
     sampling_strategy_exploration_parameter = args.epsilon
     mcts_iter = args.mcts_iter
@@ -37,7 +37,7 @@ def make_save_dir(args):
 
     save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/'
     save_dir += '/uct_'+str(uct_parameter) + '_widening_' \
-                + str(widening_parameter) + '_' + sampling_strategy + \
+                + str(w) + '_' + sampling_strategy + \
                 '_n_feasible_checks_'+str(n_feasibility_checks) \
 
     if addendum != '':
@@ -62,7 +62,7 @@ def make_save_dir(args):
 
 def instantiate_mcts(args, problem_env):
     uct_parameter = args.uct
-    widening_parameter = args.widening_parameter
+    w = args.w
     sampling_strategy = args.sampling_strategy
     sampling_strategy_exploration_parameter = args.epsilon
     n_feasibility_checks = args.n_feasibility_checks
@@ -72,7 +72,7 @@ def instantiate_mcts(args, problem_env):
     use_ucb=args.use_ucb
     sampling_mode = args.voo_sampling_mode
 
-    mcts = MCTS(widening_parameter, uct_parameter, sampling_strategy,
+    mcts = MCTS(w, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
                 problem_env, use_progressive_widening, use_ucb, sampling_mode)
     return mcts
@@ -95,7 +95,7 @@ def make_plan_pklable(plan):
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-widening_parameter', type=float, default=0.0)
+    parser.add_argument('-w', type=float, default=0.0)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-problem_idx', type=int, default=0)
@@ -110,16 +110,16 @@ def main():
     parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
     parser.add_argument('-n_feasibility_checks', type=int, default=1)
     parser.add_argument('-random_seed', type=int, default=-1)
-    parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
+    parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
     parser.add_argument('-add', type=str, default='')
 
     args = parser.parse_args()
 
     if args.pw:
-        assert args.widening_parameter > 0 and args.widening_parameter <= 1
+        assert args.w > 0 and args.w <= 1
     else:
         pass
-        #assert args.widening_parameter >= 1
+        #assert args.w >= 1
 
     if args.sampling_strategy != 'unif':
         assert args.epsilon >= 0.0
