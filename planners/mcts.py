@@ -183,6 +183,12 @@ class MCTS:
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
+            """
+            if iteration >= 1000:
+                rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
+                print np.sum(rewards>-2)
+                import pdb;pdb.set_trace()
+            """
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
@@ -209,8 +215,10 @@ class MCTS:
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
             plan = self.retrace_best_plan()
-            print np.array(search_time_to_reward)[-1,:]
-            print self.s0_node.best_v
+            #print np.array(search_time_to_reward)[-1,:]
+            #print self.s0_node.best_v # sampling from best v, checking voo
+            rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
+            print 'n feasible actions ', np.sum(rewards > -2)
 
             if time_to_search > max_time:
                 break
