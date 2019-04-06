@@ -54,7 +54,7 @@ class ProblemEnvironment:
             if operator_instance.type == 'two_arm_pick':
                 two_arm_pick_object(operator_instance.discrete_parameters['object'],
                                     self.robot, operator_instance.continuous_parameters)
-                reward = 0
+                reward = 1
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)

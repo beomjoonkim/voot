@@ -52,7 +52,7 @@ class MCTS:
         self.environment = environment
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
-        self.depth_limit = 3
+        self.depth_limit = np.inf
         self.use_progressive_widening = use_progressive_widening
         self.voo_sampling_mode = voo_sampling_mode
         self.use_ucb = use_ucb
@@ -135,7 +135,6 @@ class MCTS:
             write_dot_file(self.tree, iteration, '')
 
     def is_time_to_switch_initial_node(self):
-        return False
         if self.s0_node.is_goal_node:
             return True
 
@@ -151,9 +150,9 @@ class MCTS:
         # todo run with this setting of switching
         if self.environment.name == 'minimum_displacement_removal':
             if is_pick_node:
-                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
+                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 15
             else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > int(self.n_iter*0.07)
         elif self.environment.name == 'convbelt':
             if is_pick_node:
                 we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
@@ -180,6 +179,7 @@ class MCTS:
         time_to_search = 0
         search_time_to_reward = []
         plan = None
+        self.n_iter = 100
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
@@ -187,10 +187,11 @@ class MCTS:
             if iteration >= 1000:
                 rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
                 print np.sum(rewards>-2)
-                import pdb;pdb.set_trace()
+                #import pdb;pdb.set_trace()
             """
 
             if self.is_time_to_switch_initial_node():
+                #import pdb;pdb.set_trace()
                 print "Switching root node!"
                 """
                 max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])

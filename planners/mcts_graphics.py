@@ -145,6 +145,9 @@ def recursive_write_tree_on_graph(curr_node, curr_node_string_form, graph):
         node.attr['color'] = "red"
 
     for child_idx, child in enumerate(curr_node.children.values()):
+        is_child_infeasible_node = np.max(curr_node.reward_history[child.parent_action]) == -2
+        if is_child_infeasible_node:
+            continue
         child_string_form = get_node_info_in_string(child, child_idx)
 
         graph.add_edge(curr_node_string_form, child_string_form)

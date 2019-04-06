@@ -60,8 +60,8 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         if is_parent_action_pick:
             two_arm_pick_object(node.parent_action.discrete_parameters['object'], self.robot,
                                 node.parent_action.continuous_parameters)
-        elif is_root_node:
-            grab_obj(self.robot, node.objects_not_in_goal[0])
+        #elif is_root_node:
+        #    grab_obj(self.robot, node.objects_not_in_goal[0])
 
 
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])

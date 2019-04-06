@@ -18,9 +18,9 @@ class MinimumConstraintRemovalInstantiator(PlanningProblemInstantiator):
             self.environment.objects.remove(o)
             initial_collisions.remove(o)
         """
-        first_pick = pickle.load(open('tmp.pkl', 'r'))
-        obj = self.environment.env.GetKinBody(first_pick.discrete_parameters['object'])
-        two_arm_pick_object(obj, self.environment.robot, first_pick.continuous_parameters)
+        #first_pick = pickle.load(open('tmp.pkl', 'r'))
+        #obj = self.environment.env.GetKinBody(first_pick.discrete_parameters['object'])
+        #two_arm_pick_object(obj, self.environment.robot, first_pick.continuous_parameters)
 
         self.environment.set_objects_not_in_goal(initial_collisions)
         self.environment.set_swept_volume(swept_volume_to_clear_obstacles_from)

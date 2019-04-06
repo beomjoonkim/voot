@@ -171,8 +171,9 @@ def plot_across_algorithms():
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
     algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
-    algo_names = [ 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
-    algo_names = [ 'unif']
+    algo_names = [ 'voo_gaussian_0.1','voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
+    #algo_names = [ 'voo_gaussian_0.1','voo_gaussian_0.3', 'voo_gaussian_0.5']
+#    algo_names = [ 'unif']
     #algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
     #algo_names = ['voo_0.3', 'unif']
 
@@ -195,7 +196,10 @@ def plot_across_algorithms():
         #if os.path.isfile(pkl_fname):
         #    search_rwd_times, organized_times, max_rwd = pickle.load(open(pkl_fname,'r'))
         #else:
-        search_rwd_times, max_rwd = get_mcts_results(algo, args)
+        try:
+            search_rwd_times, max_rwd = get_mcts_results(algo, args)
+        except OSError:
+            continue
         search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
 
         max_rwds.append(max_rwd)
