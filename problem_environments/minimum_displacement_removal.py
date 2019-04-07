@@ -19,15 +19,17 @@ COLLIDING_OBJ_COLOR = (0, 1, 1)
 TARGET_OBJ_COLOR = (1, 0, 0)
 
 
+
 class MinimumDisplacementRemoval(ProblemEnvironment):
     def __init__(self, problem_idx):
-        ProblemEnvironment.__init__(self)
+        ProblemEnvironment.__init__(self, problem_idx)
         problem = MinimumDisplacementRemovalProblem(self.env, problem_idx)
         self.problem_config = problem.get_problem_config()
         self.robot = self.env.GetRobots()[0]
         self.objects = self.problem_config['objects']
         self.regions = {'entire_region': self.problem_config['entire_region'],
-                        'forbidden_region': self.problem_config['forbidden_region']}
+                        'forbidden_region': self.problem_config['forbidden_region'],
+                        'home_region': self.problem_config['home_region']}
         self.init_base_conf = self.problem_config['init_base_config']
         self.goal_base_conf = self.problem_config['goal_base_config']
         self.problem_idx = self.problem_config['problem_idx']
@@ -42,6 +44,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         self.problem_config['env'] = self.env
         self.swept_volume = None
         self.name = 'minimum_displacement_removal'
+
 
     def reset_to_init_state(self, node):
         assert node.is_init_node, "None initial node passed to reset_to_init_state"
@@ -63,9 +66,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         #elif is_root_node:
         #    grab_obj(self.robot, node.objects_not_in_goal[0])
 
-
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
-
 
     def set_swept_volume(self, swept_volume):
         self.swept_volume = swept_volume
@@ -74,16 +75,18 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         return self.regions['entire_region']
 
     def check_reachability_precondition(self, operator_instance):
-        if operator_instance.type == 'two_arm_place':
-            held = self.robot.GetGrabbed()[0]
-            prev_config = get_body_xytheta(self.robot)
-            set_robot_config(operator_instance.continuous_parameters['base_pose'], self.robot)
-            if self.regions['forbidden_region'].contains(held.ComputeAABB()):
+        if self.problem_idx == 0:
+            if operator_instance.type == 'two_arm_place':
+                held = self.robot.GetGrabbed()[0]
+                prev_config = get_body_xytheta(self.robot)
+                set_robot_config(operator_instance.continuous_parameters['base_pose'], self.robot)
+                if self.regions['forbidden_region'].contains(held.ComputeAABB()) \
+                        or not(self.regions['home_region'].contains(held.ComputeAABB())):
+                    set_robot_config(prev_config, self.robot)
+                    return None, "NoSolution"
                 set_robot_config(prev_config, self.robot)
-                return None, "NoSolution"
-            set_robot_config(prev_config, self.robot)
 
-        motion_planning_region_name = 'entire_region'
+        motion_planning_region_name = 'home_region'
         goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
 
         if operator_instance.low_level_motion is not None:

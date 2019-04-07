@@ -464,12 +464,10 @@ class MinimumDisplacementRemovalProblem:
         set_config(self.robot, mirror_arm_config(FOLDED_LEFT_ARM),
                    self.robot.GetManipulator('rightarm').GetArmIndices())
 
-
         fixed_obj_poses = set_fixed_object_poses(self.env, x_extents, y_extents)
 
         shelf_table = env.GetKinBody('table2')
-        if problem_idx == 1:
-            set_obj_xytheta([-1.5, -3, np.pi/2], shelf_table)
+        set_obj_xytheta([-1.5, -3, np.pi/2], shelf_table)
         shelf_shapes, shelf_xs = generate_shelf_shapes()
         shelf_regions = create_shelves(self.env, shelf_shapes, shelf_xs, 'table2')
         obj_shapes = generate_shelf_obj_shapes()
@@ -481,11 +479,21 @@ class MinimumDisplacementRemovalProblem:
                                        z=0.135, color=np.array((1, 1, 0, 0.25)))
         set_xy(self.env.GetKinBody('computer_table'), 5.5, -2.5)
 
+
+        x_size = x_extents
+        y_size = y_extents
+        self.entire_region_xy = [x_size / 2.0, 0]
+        self.entire_region_xy_extents = [x_size, y_size]
+        self.entire_region = AARegion('entire_region',
+                                    ((-x_size + self.entire_region_xy[0], x_size + self.entire_region_xy[0]),
+                                     (-y_size, y_size)), z=0.135, color=np.array((1, 1, 0, 0.25)))
+
+        # allow it to be entire region
+        # but if not in home_region or in forbidden region, reject in motion planning stage
         self.home_region_xy = [x_extents / 2.0, 0]
-        self.home_region_xy_extents = [x_extents, y_extents]
-        self.home_region = AARegion('entire_region',
-                                    ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]),
-                                     (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
+        self.home_region_xy_extents = [x_extents,y_extents]
+        self.home_region = AARegion('entire_region', ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]), (-x_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
+
         #randomly_place_region(self.env, self.robot, self.home_region)
 
 
@@ -496,26 +504,19 @@ class MinimumDisplacementRemovalProblem:
         computer_chair = self.env.GetKinBody('computer_chair')
         table = self.env.GetKinBody('table')
         # kitchen table location
-        if problem_idx == 0:
-            table_xytheta = [1.5, 2.0, np.pi/2]
-            set_obj_xytheta(table_xytheta, table)
-            computer_chair_xytheta = [4.8, -2.5, 0]
-            place_object_with_gaussian_noise(computer_chair, computer_chair_xytheta, self.env)
-        else:
-            set_obj_xytheta([2, -3.2, -np.pi/2], env.GetKinBody('computer_table'))
-            set_obj_xytheta([1, -3.2, 0], env.GetKinBody('computer_chair'))
+
+        set_obj_xytheta([2, -3.2, -np.pi/2], env.GetKinBody('computer_table'))
+        set_obj_xytheta([1, -3.2, 0], env.GetKinBody('computer_chair'))
 
         self.is_new_env = problem_config is None
         # computer chair location
 
         # place other objects
-        if problem_idx==0:
-            place_objs_in_region(packing_boxes, self.home_region, self.env)
-        else:
-            place_objs_in_region(packing_boxes, self.kitchen_region, self.env)
+
+        place_objs_in_region(packing_boxes, self.kitchen_region, self.env)
 
 
-        place_objs_in_region([self.robot], self.home_region, self.env)
+        place_objs_in_region([self.robot], self.entire_region, self.env)
         place_objs_in_region(kitchen_chairs, self.kitchen_region, self.env)
 
         self.forbidden_region_xy = [x_extents+0.3, 0]
@@ -554,39 +555,18 @@ class MinimumDisplacementRemovalProblem:
         self.movable_objects = [computer_chair] + packing_boxes + kitchen_chairs
 
         self.problem_idx = problem_idx
-        if problem_idx == 0:
-            self.init_base_config = np.array([-1., -3., 0.])
-            self.goal_base_config = np.array([4,2.5,np.pi/2.])
-            set_robot_config(self.init_base_config, self.robot)
-            set_obj_xytheta([0.9,0.8,np.pi/2], table)
-            set_obj_xytheta([1.5, 2.0, np.pi / 2], table)
-            self.set_obj_poses(problem_idx)
-            set_obj_xytheta([-0.2, -2.5, 0], packing_boxes[4])
-            set_obj_xytheta([4, -0.2, 0], packing_boxes[6])
-            set_obj_xytheta([3, -2, 0], packing_boxes[2])
-            set_obj_xytheta([4.5, -0.8, 39 * np.pi / 180], packing_boxes[5])
 
-            #set_obj_xytheta([],packing_boxes[0])
+        self.goal_base_config = np.array([-0,2.5,np.pi/2.])
+        self.init_base_config = np.array([-1.5, -1.5, np.pi/2.])
+        set_robot_config(self.init_base_config, self.robot)
+        set_obj_xytheta([3, 2, 43 * np.pi / 180.], env.GetKinBody('shelf1'))
+        set_obj_xytheta([3, -1.8, 43 * np.pi / 180.], env.GetKinBody('shelf2'))
+        set_obj_xytheta([-0.13, 0.45, 3], packing_boxes[2])
+        self.set_obj_poses(problem_idx)
 
-            for obj in self.movable_objects:
-                print obj.GetName(), get_body_xytheta(obj)
-        elif problem_idx == 1:
-            self.goal_base_config = np.array([-0,2.5,np.pi/2.])
-            self.init_base_config = np.array([-1.5, -1.5, np.pi/2.])
-            set_robot_config(self.init_base_config, self.robot)
-            set_obj_xytheta([3, 2, 43 * np.pi / 180.], env.GetKinBody('shelf1'))
-            set_obj_xytheta([3, -1.8, 43 * np.pi / 180.], env.GetKinBody('shelf2'))
-
-            set_obj_xytheta([-0.13, 0.45, 3], packing_boxes[2])
-            self.set_obj_poses(problem_idx)
-            '''
-            set_obj_xytheta([-.5, -1.5, 0], packing_boxes[-2])
-            set_obj_xytheta([-0.2, -0.2, -np.pi * 2.5 / 2.], packing_boxes[-3])
-            '''
-
-            #self.set_obj_poses(problem_idx)
-            #set_obj_xytheta([4.5, 0, 135 * np.pi / 180.], packing_boxes[5])
-            #set_obj_xytheta([4, -1, 3.26], packing_boxes[-1])
+        if self.problem_idx == 1:
+            env.Remove(env.GetKinBody('shelf1'))
+            env.Remove(env.GetKinBody('shelf2'))
 
 
     def save_obj_poses(self, problem_idx):
@@ -594,19 +574,22 @@ class MinimumDisplacementRemovalProblem:
         pickle.dump(obj_poses, open('./problem_environments/mover_domain_problems/' + str(problem_idx) +'.pkl','wb'))
 
     def set_obj_poses(self, problem_idx):
-        obj_poses = pickle.load(open('./problem_environments/mover_domain_problems/' + str(problem_idx) + '.pkl', 'r'))
+        obj_poses = pickle.load(open('./problem_environments/mover_domain_problems/' + str(1) + '.pkl', 'r'))
         for obj_name, obj_pose in zip(obj_poses.keys(), obj_poses.values()):
             set_obj_xytheta(obj_pose, self.env.GetKinBody(obj_name))
 
     def get_problem_config(self):
         problem_config = {'objects': self.movable_objects,
-                          'entire_region': self.home_region,
+                          'entire_region': self.entire_region,
                           'forbidden_region': self.forbidden_region,
+                          'home_region': self.home_region,
                           'init_base_config': self.init_base_config,
                           'goal_base_config': self.goal_base_config,
-                          'entire_region_xy': self.home_region_xy,
-                          'entire_region_extents': self.home_region_xy_extents,
-                          'problem_idx':self.problem_idx}
+                          'home_region_xy': self.home_region_xy,
+                          'home_region_extents': self.home_region_xy_extents,
+                          'entire_region_xy': self.entire_region_xy,
+                          'entire_region_extents': self.entire_region_xy_extents,
+                          'problem_idx': self.problem_idx}
         return problem_config
 
     def disable_objects_in_region(self, region):

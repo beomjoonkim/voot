@@ -65,7 +65,7 @@ class VOOGenerator(Generator):
         is_more_than_one_action_in_node = len(self.evaled_actions) > 1
         if is_more_than_one_action_in_node:
             max_reward_of_each_action = np.array([np.max(rlist) for rlist in node.reward_history.values()])
-            n_feasible_actions = np.sum(max_reward_of_each_action > 0)
+            n_feasible_actions = np.sum(max_reward_of_each_action > -2)
             we_have_feasible_action = n_feasible_actions >= 1
         else:
             we_have_feasible_action = False

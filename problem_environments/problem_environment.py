@@ -16,7 +16,7 @@ import time
 
 
 class ProblemEnvironment:
-    def __init__(self):
+    def __init__(self, problem_idx):
         self.env = Environment()
         self.initial_placements = []
         self.placements = []
@@ -46,6 +46,7 @@ class ProblemEnvironment:
         self.infeasible_reward = -2
         self.regions = {}
         self.env.StopSimulation()
+        self.problem_idx = problem_idx
 
     def apply_action_and_get_reward(self, operator_instance, is_op_feasible):
         if is_op_feasible != 'HasSolution':
@@ -54,7 +55,10 @@ class ProblemEnvironment:
             if operator_instance.type == 'two_arm_pick':
                 two_arm_pick_object(operator_instance.discrete_parameters['object'],
                                     self.robot, operator_instance.continuous_parameters)
-                reward = 1
+                if self.problem_idx == 1:
+                    reward = 0.5
+                else:
+                    reward = 1
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)

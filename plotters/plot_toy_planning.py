@@ -59,7 +59,7 @@ def get_mcts_results(algo_name, mcts_parameters):
     domain_name = mcts_parameters.domain
     pidx = mcts_parameters.pidx
     search_times = []
-    success = []
+    progress = []
     search_rwd_times = []
     max_rwds = []
     success_idxs = []
@@ -76,16 +76,21 @@ def get_mcts_results(algo_name, mcts_parameters):
             if fin.find('.pkl') == -1:
                 continue
         result = pickle.load(open(result_dir + fin, 'r'))
-        search_time = np.array(result['search_time'])[0:1000,:]
+        search_time = np.array(result['search_time'])
+        progress.append(search_time[-1, -1] == 0)
+        if search_time[-1,-1] ==0:
+            success_idx = np.where( search_time[:,-1]==0)[0][0]
+            success_rewards.append(search_time[success_idx,2])
 
         print len(search_time), fin
-        search_rwd_times.append(search_time[0:1000,:])
+        search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
 
+    print 'progress', np.array(progress).mean()
+    print 'success reward', np.mean(success_rewards)
     """
     print "mcts time and success rate:"
     print 'time', np.array(search_times).mean()
-    print 'success', np.array(success).mean()
     print 'ff solution',np.array(success_idxs).mean()
     print 'max_rwd mean', np.mean(max_rwds)
     print 'ff min score', np.min(success_rewards)
@@ -96,29 +101,30 @@ def get_mcts_results(algo_name, mcts_parameters):
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
-    max_time = 700
-    organized_times = range(100, max_time, 100)
+    max_time = 7000
+    organized_times = range(10, max_time, 1)
 
     all_episode_data = []
+    all_episode_progress_data = []
     for rwd_time in search_rwd_times:
         episode_max_rwds_wrt_organized_times = []
+        episode_max_progress_wrt_organized_times=[]
         for organized_time in organized_times:
-            if isinstance(rwd_time, dict):
-                rwd_time_temp = rwd_time['namo']
-                episode_times = np.array(rwd_time_temp)[:, 0]
-                episode_rwds = np.array(rwd_time_temp)[:, 2]
-            else:
-                episode_times = np.array(rwd_time)[:, 0]
-                episode_rwds = np.array(rwd_time)[:, 2]
+            episode_times = np.array(rwd_time)[:, 0]
+            episode_rwds = np.array(rwd_time)[:, 2]
             idxs = episode_times < organized_time
             if np.any(idxs):
                 max_rwd = np.max(episode_rwds[idxs])
             else:
                 max_rwd = 0
+            episode_progress = -np.array(rwd_time)[:, 3]
+            max_progress = np.max(episode_progress[idxs])
             episode_max_rwds_wrt_organized_times.append(max_rwd)
+            episode_max_progress_wrt_organized_times.append(max_progress)
         all_episode_data.append(episode_max_rwds_wrt_organized_times)
+        all_episode_progress_data.append(episode_max_progress_wrt_organized_times)
 
-    return np.array(all_episode_data), organized_times
+    return np.array(all_episode_data), np.array(all_episode_progress_data), organized_times
 
 
 def get_max_rwds_wrt_samples(search_rwd_times, n_evals):
@@ -171,8 +177,8 @@ def plot_across_algorithms():
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
     algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
-    algo_names = [ 'voo_gaussian_0.1','voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
-    #algo_names = [ 'voo_gaussian_0.1','voo_gaussian_0.3', 'voo_gaussian_0.5']
+    algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
+    #algo_names = [ 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
 #    algo_names = [ 'unif']
     #algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
     #algo_names = ['voo_0.3', 'unif']
@@ -199,8 +205,10 @@ def plot_across_algorithms():
         try:
             search_rwd_times, max_rwd = get_mcts_results(algo, args)
         except OSError:
+            print algo, "not found"
             continue
         search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
+        #search_rwd, search_progress, organized_times = get_max_rwds_wrt_time(search_rwd_times)
 
         max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
@@ -226,11 +234,14 @@ def plot_across_algorithms():
         plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
     else:
-        sns.tsplot([0.962]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
+        sns.tsplot([5.5]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
         plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                         + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
-    plt.ylim(-2,1.5)
+    if args.p:
+        plt.ylim(-7,1)
+    else:
+        plt.ylim(-2,7)
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 
 

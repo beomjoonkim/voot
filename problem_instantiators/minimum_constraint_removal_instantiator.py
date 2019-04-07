@@ -6,10 +6,10 @@ from mover_library.utils import two_arm_pick_object
 
 
 class MinimumConstraintRemovalInstantiator(PlanningProblemInstantiator):
-    def __init__(self, domain_name):
+    def __init__(self, problem_idx, domain_name):
         PlanningProblemInstantiator.__init__(self, domain_name)
 
-        self.environment = MinimumDisplacementRemoval(problem_idx=1)
+        self.environment = MinimumDisplacementRemoval(problem_idx)
         swept_volume_to_clear_obstacles_from = self.load_swept_volume()
         initial_collisions = self.environment.get_objs_in_collision(swept_volume_to_clear_obstacles_from, 'entire_region')
         """
@@ -26,8 +26,7 @@ class MinimumConstraintRemovalInstantiator(PlanningProblemInstantiator):
         self.environment.set_swept_volume(swept_volume_to_clear_obstacles_from)
 
     def load_swept_volume(self):
-        swept_volume_file_name = './problem_environments/mover_domain_problems/fetching_path_' + \
-                                 str(self.environment.problem_idx) + '.pkl'
+        swept_volume_file_name = './problem_environments/mover_domain_problems/fetching_path_1.pkl'
 
         return pickle.load(open(swept_volume_file_name, 'r'))
 

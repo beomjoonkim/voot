@@ -138,7 +138,7 @@ def main():
         return -1
 
     if args.domain == 'minimum_displacement_removal':
-        problem_instantiator = MinimumConstraintRemovalInstantiator(args.domain)
+        problem_instantiator = MinimumConstraintRemovalInstantiator(args.problem_idx, args.domain)
     else:
         # todo make root switching in conveyor belt domain
         problem_instantiator = ConveyorBeltInstantiator(args.domain)

@@ -203,8 +203,10 @@ class MCTS:
                 #self.environment.env.SetViewer('qtcoin');
                 #visualize_path(self.robot, [a.continuous_parameters['base_pose'] for a in self.s0_node.A if a.continuous_parameters['base_pose'] is not None])
                 #import pdb;pdb.set_trace()
+                #import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
+
 
             stime = time.time()
             self.simulate(self.s0_node, depth)

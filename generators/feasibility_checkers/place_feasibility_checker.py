@@ -36,8 +36,10 @@ class PlaceFeasibilityChecker:
                                 self.env.CheckCollision(obj) or self.env.CheckCollision(self.robot)) and \
                                 (target_robot_region.contains(self.robot.ComputeAABB())) and \
                                 (target_obj_region.contains(obj.ComputeAABB()))
+
         self.robot.SetTransform(original_trans)
         obj.SetTransform(original_obj_trans)
+
         if is_base_pose_feasible:
             action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose,
                       'action_parameters': place_parameters}
@@ -59,7 +61,7 @@ class PlaceFeasibilityChecker:
         grab_obj(robot, obj)
         robot.SetTransform(original_robot_T)
         return robot_xytheta
-
+    """
     def predict(self, obj, obj_region, n_iter):
         original_trans = self.robot.GetTransform()
         original_config = self.robot.GetDOFValues()
@@ -111,4 +113,5 @@ class PlaceFeasibilityChecker:
             set_robot_config(robot_xytheta, self.robot)
             grab_obj(self.robot, obj)
         return obj_pose, robot_xytheta
+    """
 
