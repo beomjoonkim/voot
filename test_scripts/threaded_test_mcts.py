@@ -51,7 +51,7 @@ def main():
     parser.add_argument('-uct', nargs='+', type=float)
     parser.add_argument('-n_feasibility_checks', nargs='+', type=int)
     parser.add_argument('-epsilon', nargs='+', type=float)
-    parser.add_argument('-pidxs', nargs='+', type=int)
+    parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('-random_seeds', nargs='+', type=int)
     parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
@@ -69,10 +69,7 @@ def main():
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
     seeds = args.random_seeds if args.random_seeds is not None else range(10)
 
-    if args.domain == 'minimum_displacement_removal':
-        pidx = 0
-    else:
-        pidx = 0
+    pidx = args.pidx
 
     configs = []
     for n_feasibility_check in n_feasibility_checks:
