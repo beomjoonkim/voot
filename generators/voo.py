@@ -59,13 +59,11 @@ class VOOGenerator(Generator):
 
             self.evaled_q_values[np.where(is_in_array)[0][0]] = q_value
 
-    def sample_next_point(self, node, n_iter):
-        self.update_evaled_values(node)
-
+    def sample_point(self, node, n_iter):
         is_more_than_one_action_in_node = len(self.evaled_actions) > 1
         if is_more_than_one_action_in_node:
             max_reward_of_each_action = np.array([np.max(rlist) for rlist in node.reward_history.values()])
-            n_feasible_actions = np.sum(max_reward_of_each_action > -2)
+            n_feasible_actions = np.sum(max_reward_of_each_action > -2)  # -2 or 0?
             we_have_feasible_action = n_feasible_actions >= 1
         else:
             we_have_feasible_action = False
@@ -82,14 +80,12 @@ class VOOGenerator(Generator):
 
         action, status = self.sample_feasible_action(is_sample_from_best_v_region, n_iter, node)
 
-        """
-        if is_more_than_one_action_in_node and n_feasible_actions > 5 \
-                and node.operator_skeleton.type == 'two_arm_place':
-            import pdb;pdb.set_trace()
-            to_plot = self.get_to_draw_configs(node)
-            set_robot_config(self.get_best_evaled_action(), self.robot)
-            import pdb;pdb.set_trace()
-        """
+        return action, status
+
+    def sample_next_point(self, node, n_iter):
+        self.update_evaled_values(node)
+
+        action, status = self.sample_point(node, n_iter)
 
         if status != 'HasSolution':
             print node.operator_skeleton.type + " sampling failed"
@@ -100,14 +96,16 @@ class VOOGenerator(Generator):
 
         return action
 
-    def get_to_draw_configs(self, node):
+    def visualize_samples(self, node, n_samples):
         to_plot = []
-        for i in range(30):
-            action, status = self.sample_feasible_action(True, 50, node)
+        for i in range(n_samples):
+            action, status = self.sample_feasible_action(True, 100, node)
             if status == 'HasSolution':
-                to_plot.append(action['action_parameters'])
+                to_plot.append(action['base_pose'])
         to_plot.append(get_body_xytheta(self.robot))
         to_plot.append(self.get_best_evaled_action())
+        visualize_path(self.robot, to_plot)
+        print len(to_plot)
         return to_plot
 
     def sample_feasible_action(self, is_sample_from_best_v_region, n_iter, node):
@@ -140,7 +138,11 @@ class VOOGenerator(Generator):
         DEBUG = True
         if DEBUG:
             if 'update_me' in self.evaled_q_values:
-                best_action_idxs = np.argwhere(self.evaled_q_values[:-1] == np.amax(self.evaled_q_values[:-1]))
+                try:
+                    best_action_idxs = np.argwhere(self.evaled_q_values[:-1] == np.amax(self.evaled_q_values[:-1]))
+                except:
+                    import pdb;pdb.set_trace()
+
             else:
                 best_action_idxs = np.argwhere(self.evaled_q_values == np.amax(self.evaled_q_values))
             best_action_idxs = best_action_idxs.reshape((len(best_action_idxs, )))

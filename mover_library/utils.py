@@ -102,6 +102,10 @@ def draw_robot_at_conf(conf, transparency, name, robot, env, color=None):
 
 
 def visualize_path(robot, path):
+    is_robot_holding = len(robot.GetGrabbed()) > 0
+    if is_robot_holding:
+        held = robot.GetGrabbed()[0]
+        original_transform = held.GetTransform()
     assert path[0].shape[0] == robot.GetActiveDOF(), 'robot and path should have same dof'
     env = robot.GetEnv()
     if len(path) > 1000:
@@ -115,6 +119,10 @@ def visualize_path(robot, path):
         else:
             draw_robot_at_conf(conf, 0.9, 'path' + str(idx), robot, env)
     raw_input("Continue?")
+
+    if is_robot_holding:
+        held.SetTransform(original_transform)
+        grab_obj(robot, held)
     remove_drawn_configs('path', env)
 
 

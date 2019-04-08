@@ -1,6 +1,7 @@
 import numpy as np
 from mcts_utils import is_action_hashable, make_action_hashable, make_action_executable
 from trajectory_representation.operator import Operator
+from mover_library.utils import visualize_path
 
 
 def upper_confidence_bound(n, n_sa):
@@ -122,6 +123,5 @@ class TreeNode:
                               low_level_motion=None)
         self.A.append(new_action)
         self.N[new_action] = 0
-
 
 

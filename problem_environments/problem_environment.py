@@ -47,18 +47,27 @@ class ProblemEnvironment:
         self.regions = {}
         self.env.StopSimulation()
         self.problem_idx = problem_idx
+        self.prev_object_picked = None
 
-    def apply_action_and_get_reward(self, operator_instance, is_op_feasible):
+    def apply_action_and_get_reward(self, operator_instance, is_op_feasible, node):
         if is_op_feasible != 'HasSolution':
             reward = self.infeasible_reward
         else:
             if operator_instance.type == 'two_arm_pick':
                 two_arm_pick_object(operator_instance.discrete_parameters['object'],
                                     self.robot, operator_instance.continuous_parameters)
-                if self.problem_idx == 1:
-                    reward = 0.5
+
+                obj = operator_instance.discrete_parameters['object']
+                # if the object that I am moving is the same as before...
+                is_obj_next_obj_to_move = node.parent_action_reward > 0
+                if is_obj_next_obj_to_move:
+                    if self.problem_idx == 1:
+                        reward = 0.5
+                    else:
+                        reward = 1
                 else:
-                    reward = 1
+                    reward = 0
+                self.prev_object_picked = obj # what if it resets? Take care of it in reset_init
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)
@@ -89,14 +98,14 @@ class ProblemEnvironment:
         motion, status = self.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
         return motion, status
 
-    def apply_operator_instance(self, operator_instance):
+    def apply_operator_instance(self, operator_instance, node):
         if not self.check_parameter_feasibility_precondition(operator_instance):
             operator_instance.update_low_level_motion(None)
             return self.infeasible_reward
 
         motion_plan, status = self.check_reachability_precondition(operator_instance)
         operator_instance.update_low_level_motion(motion_plan)
-        reward = self.apply_action_and_get_reward(operator_instance, status)
+        reward = self.apply_action_and_get_reward(operator_instance, status, node)
         return reward
 
     def set_objects_not_in_goal(self, objects_not_in_goal):

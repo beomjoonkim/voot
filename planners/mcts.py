@@ -11,10 +11,9 @@ from generators.doo import DOOGenerator
 from generators.randomized_doo import RandomizedDOOGenerator
 
 ## openrave helper libraries
-sys.path.append('../mover_library/')
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
-from samplers import *
-from utils import *
+from mover_library.samplers import *
+from mover_library.utils import *
 
 import time
 from generators.doo_utils.doo_tree import BinaryDOOTree, DOOTreeNode
@@ -142,23 +141,20 @@ class MCTS:
         is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
 
         if len(self.s0_node.Q) == 0:
-            we_have_feasible_action = False
+            n_feasible_actions = 0
         else:
             root_node_reward_history = self.s0_node.reward_history.values()
-            root_node_reward_history = [r for R in root_node_reward_history for r in R]
-            we_have_feasible_action = np.max(root_node_reward_history) >= 0
+            root_node_reward_history = np.array([np.max(R) for R in root_node_reward_history])
+            n_feasible_actions = np.sum(root_node_reward_history >= 0)
 
         # todo run with this setting of switching
         if self.environment.name == 'minimum_displacement_removal':
             if is_pick_node:
-                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 15
+                we_evaluated_the_node_enough = n_feasible_actions > 0 #and self.s0_node.Nvisited > 15
             else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > self.n_switch
+                we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch # and self.s0_node.Nvisited > self.n_switch
         elif self.environment.name == 'convbelt':
-            if is_pick_node:
-                we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
-            else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > self.n_switch
+            raise NotImplementedError
         else:
             raise NotImplementedError
 
@@ -184,6 +180,7 @@ class MCTS:
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
+
             """
             if iteration >= 1000:
                 rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
@@ -205,9 +202,18 @@ class MCTS:
                 #visualize_path(self.robot, [a.continuous_parameters['base_pose'] for a in self.s0_node.A if a.continuous_parameters['base_pose'] is not None])
                 #import pdb;pdb.set_trace()
                 #import pdb;pdb.set_trace()
+                #if self.s0_node.A[0].type == 'two_arm_place':
+                    #toplot = [self.s0_node.sampling_agent.sample_feasible_action(True, 100, self.s0_node)[0]['base_pose'] for _ in range(50)]
+                    #visualize_path(self.robot, toplot)
+                    #import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
+            """
+            if self.s0_node.A[0].type == 'two_arm_place' and len(self.s0_node.A) > 10:
+                import pdb;pdb.set_trace()
+                self.s0_node.sampling_agent.sample_feasible_action(True, 100, self.s0_node)
+            """
 
             stime = time.time()
             self.simulate(self.s0_node, depth)
@@ -283,7 +289,7 @@ class MCTS:
             print "Is it time to pick?", self.environment.is_pick_time()
 
         action = self.choose_action(curr_node)
-        reward = self.environment.apply_operator_instance(action)
+        reward = self.environment.apply_operator_instance(action, curr_node)
         print "Executed ", action.type
         print "reward ", reward
 

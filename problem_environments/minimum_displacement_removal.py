@@ -19,7 +19,6 @@ COLLIDING_OBJ_COLOR = (0, 1, 1)
 TARGET_OBJ_COLOR = (1, 0, 0)
 
 
-
 class MinimumDisplacementRemoval(ProblemEnvironment):
     def __init__(self, problem_idx):
         ProblemEnvironment.__init__(self, problem_idx)
@@ -45,7 +44,6 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         self.swept_volume = None
         self.name = 'minimum_displacement_removal'
 
-
     def reset_to_init_state(self, node):
         assert node.is_init_node, "None initial node passed to reset_to_init_state"
         is_root_node = node.parent is None
@@ -67,6 +65,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         #    grab_obj(self.robot, node.objects_not_in_goal[0])
 
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
+        self.prev_object_picked = None
 
     def set_swept_volume(self, swept_volume):
         self.swept_volume = swept_volume
