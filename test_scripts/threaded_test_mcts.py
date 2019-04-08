@@ -53,7 +53,7 @@ def main():
     parser.add_argument('-n_feasibility_checks', nargs='+', type=int)
     parser.add_argument('-epsilon', nargs='+', type=float)
     parser.add_argument('-pidx', type=int, default=0)
-    parser.add_argument('-random_seeds', nargs='+', type=int)
+    parser.add_argument('-seeds', nargs='+', type=int)
     parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
     parser.add_argument('-add', type=str, default='')
@@ -70,11 +70,10 @@ def main():
     ucts = args.uct if args.uct is not None else [0.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
 
-    seeds = range(args.random_seeds[0], args.random_seeds[1]) if args.random_seeds is not None else range(20)
+    seeds = range(args.seeds[0], args.seeds[1]) if args.seeds is not None else range(20)
     n_switches = args.n_switch if args.n_switch is not None else [35]
 
     pidx = args.pidx
-
     configs = []
     for n_switch in n_switches:
         for n_feasibility_check in n_feasibility_checks:
