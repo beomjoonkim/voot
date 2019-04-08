@@ -32,11 +32,13 @@ def get_result_dir(algo_name, mcts_parameters):
     mcts_iter = mcts_parameters.mcts_iter
     n_feasibility_checks = mcts_parameters.n_feasibility_checks
     addendum = mcts_parameters.add
+    n_switch = mcts_parameters.n_switch
 
     rootdir = './test_results/'
     result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
                  '/uct_0.0'+'_widening_' + str(widening_parameter) + '_' + algo_name
     result_dir += '_n_feasible_checks_' + str(n_feasibility_checks)
+    result_dir += '_n_switch_' + str(n_switch)
 
     if addendum != '':
         result_dir += '_' + addendum + '/'
@@ -166,11 +168,12 @@ def plot_across_algorithms():
     parser.add_argument('-w', type=float, default=0.0)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-mcts_iter', type=int, default=100)
+    parser.add_argument('-mcts_iter', type=int, default=500)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('--p', action='store_true')
     parser.add_argument('-add', type=str, default='')
+    parser.add_argument('-n_switch', type=int, default=100)
 
     args = parser.parse_args()
 
@@ -185,7 +188,7 @@ def plot_across_algorithms():
     #algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
     #algo_names = [ 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -246,7 +249,8 @@ def plot_across_algorithms():
                        ci=95, condition='Avg feasible reward', color='magenta')
 
         plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
-                        + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
+                        + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks) \
+                        + "_n_switch_" + str(args.n_switch)
     if args.p:
         plt.ylim(-7,1)
     else:

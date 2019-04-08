@@ -69,7 +69,7 @@ def main():
     mcts_iter = args.mcts_iter
     ucts = args.uct if args.uct is not None else [0.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
-    seeds = args.random_seeds if args.random_seeds is not None else range(10)
+    seeds = args.random_seeds if args.random_seeds is not None else range(20)
     n_switches = args.n_switch if args.n_switch is not None else [35]
 
     pidx = args.pidx
