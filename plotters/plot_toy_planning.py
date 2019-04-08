@@ -65,16 +65,15 @@ def get_mcts_results(algo_name, mcts_parameters):
     success_idxs = []
     success_rewards = []
     for fin in os.listdir(result_dir):
-        if domain_name == 'namo':
-            if fin.find('pidx') == -1:
-                continue
-            sd = int(fin.split('_')[2])
-            file_pidx = int(fin.split('_')[-1].split('.')[0])
+        if fin.find('pidx') == -1:
+            continue
+        sd = int(fin.split('_')[2])
+        file_pidx = int(fin.split('_')[-1].split('.')[0])
 
-            if file_pidx != pidx:
-                continue
-            if fin.find('.pkl') == -1:
-                continue
+        if file_pidx != pidx:
+            continue
+        if fin.find('.pkl') == -1:
+            continue
         result = pickle.load(open(result_dir + fin, 'r'))
         search_time = np.array(result['search_time'])
         progress.append(search_time[-1, -1] == 0)
@@ -178,6 +177,7 @@ def plot_across_algorithms():
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
     algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'unif']
     #algo_names = [ 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
 #    algo_names = [ 'unif']
     #algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
@@ -234,14 +234,23 @@ def plot_across_algorithms():
         plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
     else:
-        sns.tsplot([5.5]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
-                   ci=95, condition='Avg feasible reward', color='magenta')
+        if args.pidx == 0:
+            sns.tsplot([5.5]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
+                       ci=95, condition='Avg feasible reward', color='magenta')
+        else:
+            sns.tsplot([2.97]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
+                       ci=95, condition='Avg feasible reward', color='magenta')
+
         plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                         + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
     if args.p:
         plt.ylim(-7,1)
     else:
-        plt.ylim(-2,7)
+        if args.pidx == 0:
+            plt.ylim(-2, 6)
+        else:
+            plt.ylim(-2, 3.1)
+
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 
 

@@ -152,7 +152,7 @@ class MCTS:
             if is_pick_node:
                 we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 15
             else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > int(self.n_iter*0.07)
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
         elif self.environment.name == 'convbelt':
             if is_pick_node:
                 we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
