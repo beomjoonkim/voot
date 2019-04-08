@@ -176,12 +176,16 @@ def plot_across_algorithms():
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
     algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
     #algo_names = [ 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
 #    algo_names = [ 'unif']
     #algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
     #algo_names = ['voo_0.3', 'unif']
+    #algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
+    #algo_names = [ 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -235,7 +239,7 @@ def plot_across_algorithms():
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
     else:
         if args.pidx == 0:
-            sns.tsplot([5.5]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
+            sns.tsplot([5.26]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
                        ci=95, condition='Avg feasible reward', color='magenta')
         else:
             sns.tsplot([2.97]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
@@ -247,7 +251,7 @@ def plot_across_algorithms():
         plt.ylim(-7,1)
     else:
         if args.pidx == 0:
-            plt.ylim(-2, 6)
+            plt.ylim(-2, 5.5)
         else:
             plt.ylim(-2, 3.1)
 

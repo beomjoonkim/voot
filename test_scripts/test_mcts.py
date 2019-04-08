@@ -39,6 +39,7 @@ def make_save_dir(args):
     save_dir += '/uct_'+str(uct_parameter) + '_widening_' \
                 + str(w) + '_' + sampling_strategy + \
                 '_n_feasible_checks_'+str(n_feasibility_checks) \
+                +'_n_switch_' + str(args.n_switch)
 
     if addendum != '':
         save_dir += '_' + addendum + '/'
@@ -74,7 +75,7 @@ def instantiate_mcts(args, problem_env):
 
     mcts = MCTS(w, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, use_progressive_widening, use_ucb, sampling_mode)
+                problem_env, use_progressive_widening, use_ucb, sampling_mode, args.n_switch)
     return mcts
 
 
@@ -108,9 +109,10 @@ def main():
     parser.add_argument('-mcts_iter', type=int, default=3000)
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
-    parser.add_argument('-n_feasibility_checks', type=int, default=3)
+    parser.add_argument('-n_feasibility_checks', type=int, default=100)
     parser.add_argument('-random_seed', type=int, default=-1)
     parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
+    parser.add_argument('-n_switch', type=int, default=35)
     parser.add_argument('-add', type=str, default='')
 
     args = parser.parse_args()

@@ -43,7 +43,7 @@ def create_doo_agent(operator):
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                 environment, use_progressive_widening, use_ucb, voo_sampling_mode='gaussian'):
+                 environment, use_progressive_widening, use_ucb, voo_sampling_mode='gaussian', n_switch=35):
         self.c1 = c1
         self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
@@ -56,6 +56,7 @@ class MCTS:
         self.use_progressive_widening = use_progressive_widening
         self.voo_sampling_mode = voo_sampling_mode
         self.use_ucb = use_ucb
+        self.n_switch = n_switch
 
         self.env = self.environment.env
         self.robot = self.environment.robot
@@ -152,12 +153,12 @@ class MCTS:
             if is_pick_node:
                 we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 15
             else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 20
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > self.n_switch
         elif self.environment.name == 'convbelt':
             if is_pick_node:
                 we_evaluated_the_node_enough = we_have_feasible_action #and self.s0_node.Nvisited > 30
             else:
-                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > 30
+                we_evaluated_the_node_enough = we_have_feasible_action and self.s0_node.Nvisited > self.n_switch
         else:
             raise NotImplementedError
 
