@@ -45,7 +45,7 @@ def worker_wrapper_multi_input(multi_args):
 
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-sampling', type=str, default='unif')
+    parser.add_argument('-sampling_strategy', type=str, default='unif')
     parser.add_argument('-domain', type=str, default='minimum_displacement_removal')
     parser.add_argument('-mcts_iter', type=int, default=1000)
     parser.add_argument('-w', nargs='+', type=float)
@@ -62,7 +62,7 @@ def main():
 
     args = parser.parse_args()
 
-    sampling_strategy = args.sampling
+    sampling_strategy = args.sampling_strategy
     epsilons = args.epsilon if args.epsilon is not None else [-1.0]
     domain = args.domain
     widening_parameters = args.w if args.w is not None else [1]
