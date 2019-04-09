@@ -161,8 +161,10 @@ class MCTS:
         return we_evaluated_the_node_enough
 
     def choose_child_node_to_descend_to(self):
-        if self.s0_node.is_goal_node:
+        is_child_goal_node = np.any([c.is_goal_node for c in self.s0_node.children.values()])
+        if is_child_goal_node:
             best_node = self.tree.root
+            self.n_switch += self.n_switch
         else:
             feasible_actions = [a for a in self.s0_node.A if np.max(self.s0_node.reward_history[a]) > -2]
             feasible_q_values = [self.s0_node.Q[a] for a in feasible_actions]
@@ -206,6 +208,9 @@ class MCTS:
                     #toplot = [self.s0_node.sampling_agent.sample_feasible_action(True, 100, self.s0_node)[0]['base_pose'] for _ in range(50)]
                     #visualize_path(self.robot, toplot)
                     #import pdb;pdb.set_trace()
+                #if self.s0_node.A[0].type == 'two_arm_place':
+                #    import pdb;pdb.set_trace()
+
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
