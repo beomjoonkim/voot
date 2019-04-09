@@ -79,7 +79,8 @@ class MCTS:
         elif self.sampling_strategy == 'doo':
             return DOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'randomized_doo':
-            return RandomizedDOOGenerator(operator_skeleton, self.environment, self.sampling_strategy_exploration_parameter)
+            return RandomizedDOOGenerator(operator_skeleton, self.environment,
+                                          self.sampling_strategy_exploration_parameter)
         else:
             print "Wrong sampling strategy"
             return -1
