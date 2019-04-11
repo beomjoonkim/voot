@@ -110,6 +110,8 @@ class VOOGenerator(Generator):
 
     def sample_feasible_action(self, is_sample_from_best_v_region, n_iter, node):
         action = None
+        if is_sample_from_best_v_region:
+            print "Trying to sample a feasible sample from best v region..."
         for i in range(n_iter):
             if is_sample_from_best_v_region:
                 action_parameters = self.sample_from_best_voronoi_region(node)
@@ -121,6 +123,8 @@ class VOOGenerator(Generator):
                 break
             else:
                 pass
+        if is_sample_from_best_v_region:
+            print "Done sampling from best v region"
         return action, status
 
     def sample_from_best_voronoi_region(self, node):

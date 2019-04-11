@@ -40,24 +40,26 @@ class DOOGenerator(Generator):
         self.update_evaled_values(node)
 
         normalized_evaled_actions = [self.normalize_x_value(a) for a in self.evaled_actions]
-        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values, self.problem_env.infeasible_reward)
+        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values,
+                                           self.problem_env.infeasible_reward)
         print "DOO sampling..."
 
+        action, status, doo_node, action_parameters = self.sample_feasible_action(node, n_iter)
+        if status == 'HasSolution':
+            self.evaled_actions.append(action_parameters)
+            self.doo_tree.expand_node(self.update_flag, doo_node)
+            self.evaled_q_values.append(self.update_flag)
+            print "Found feasible sample"
+
+        return action
+
+    def sample_feasible_action(self, node, n_iter):
         for i in range(n_iter):
             action_parameters, doo_node = self.choose_next_point()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
             if status == 'HasSolution':
-                self.evaled_actions.append(action_parameters)
-                self.doo_tree.expand_node(self.update_flag, doo_node)
-                self.evaled_q_values.append(self.update_flag)
-                print "Found feasible sample"
-                break
-            else:
-                #self.evaled_q_values.append(self.problem_env.infeasible_reward)
-                #self.doo_tree.expand_node(self.problem_env.infeasible_reward, doo_node)
-                pass
-
-        return action
+                return action, status, doo_node, action_parameters
+        return action, status, doo_node, action_parameters
 
     def choose_next_point(self):
         next_node = self.doo_tree.get_next_point_and_node_to_evaluate()

@@ -52,14 +52,16 @@ def add_line(curr_line, action, value):
         base_pose = action.continuous_parameters['base_pose']
         if action.type == 'two_arm_pick':
             if base_pose is None:
-                curr_line += 'pick failed %d: %.2f ' % (pick_failed_node_idx, value)
-                pick_failed_node_idx += 1
+                pass
+                #curr_line += ''; #'pick failed %d: %.2f ' % (pick_failed_node_idx, value)
+                #pick_failed_node_idx += 1
             else:
                 curr_line += 'pick (%.2f,%.2f,%.2f):%.2f ' % (base_pose[0], base_pose[1], base_pose[2], value)
         elif action.type == 'two_arm_place':
             if base_pose is None:
-                curr_line += 'place failed %d: %.2f' % (place_failed_node_idx, value)
-                place_failed_node_idx += 1
+                pass
+                #curr_line += 'place failed %d: %.2f' % (place_failed_node_idx, value)
+                #place_failed_node_idx += 1
             else:
                 curr_line += 'place (%.2f,%.2f,%.2f):%.2f ' % (base_pose[0], base_pose[1], base_pose[2], value)
 

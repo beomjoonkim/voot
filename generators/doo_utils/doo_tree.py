@@ -53,6 +53,8 @@ class BinaryDOOTree:
         for leaf_node in self.leaves:
             if leaf_node.f_value is None:
                 return leaf_node
+            if leaf_node.f_value == 'update_me':
+                continue
             node_upper_bound = leaf_node.f_value + self.explr_p*leaf_node.delta_h
             if node_upper_bound > max_upper_bound:
                 best_leaf = leaf_node

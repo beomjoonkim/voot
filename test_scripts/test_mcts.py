@@ -68,7 +68,6 @@ def instantiate_mcts(args, problem_env):
     sampling_strategy_exploration_parameter = args.epsilon
     n_feasibility_checks = args.n_feasibility_checks
     c1 = args.c1
-    domain_name = args.domain
     use_progressive_widening = args.pw
     use_ucb=args.use_ucb
     sampling_mode = args.voo_sampling_mode
@@ -109,9 +108,9 @@ def main():
     parser.add_argument('-mcts_iter', type=int, default=1500)
     parser.add_argument('-max_time', type=float, default=np.inf)
     parser.add_argument('-c1', type=float, default=1) # weight for measuring distances in SE(2)
-    parser.add_argument('-n_feasibility_checks', type=int, default=100)
+    parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-random_seed', type=int, default=-1)
-    parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
+    parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-add', type=str, default='')
 
@@ -121,7 +120,6 @@ def main():
         assert args.w > 0 and args.w <= 1
     else:
         pass
-        #assert args.w >= 1
 
     if args.sampling_strategy != 'unif':
         assert args.epsilon >= 0.0
@@ -149,10 +147,10 @@ def main():
         problem_instantiator.environment.env.SetViewer('qtcoin')
 
     mcts = instantiate_mcts(args, problem_instantiator.environment)
-    search_time_to_reward, plan = mcts.search(args.mcts_iter)
-    #plan = make_plan_pklable(plan)
+    search_time_to_reward, best_v_region_calls, plan = mcts.search(args.mcts_iter)
+    plan = make_plan_pklable(plan)
 
-    print "Number of best-vregion calls: ",plan
+    print "Number of best-vregion calls: ", best_v_region_calls
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
                 open(stat_file_name, 'wb'))
 

@@ -92,7 +92,7 @@ def create_obstacles(env, loading_regions):
 
 
 def create_objects(env, conveyor_belt):
-    num_objects = 5
+    num_objects = 10
     objects = []
     obj_shapes = {}
     obj_poses = {}
@@ -222,21 +222,26 @@ def create_conveyor_belt_problem(env, obj_setup=None):
     tobj_xytheta[0, -1] = (160 / 180.0) * np.pi
     set_obj_xytheta(tobj_xytheta, tobj.GetLinks()[1])
     """
+
     init_base_conf = np.array([0, 1.05, 0])
     set_robot_config(np.array([0, 1.05, 0]), robot)
     objects = []
+    i=1
     for tobj in env.GetBodies():
         if tobj.GetName().find('tobj') == -1: continue
         randomly_place_in_region(env, tobj, conveyor_belt)
+        set_obj_xytheta([2+i, 1.05, 0], tobj)
         objects.append(tobj)
+        i+=1.1
 
-    # todo make infinite sequence of objects
+    square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
+    objects += square_objects
 
     initial_saver = DynamicEnvironmentStateSaver(env)
     initial_state = (initial_saver, [])
     problem = {'initial_state': initial_state,
                'objects': objects,
-               'conveyor_belt_region':conveyor_belt,
+               'conveyor_belt_region': conveyor_belt,
                'loading_region': loading_region,
                'env': env,
                'entire_region': entire_region,

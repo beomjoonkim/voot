@@ -49,11 +49,11 @@ class PickFeasibilityChecker(object):
                 pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
                                'grasp_params': grasp_params, 'g_config': g_config}
                 two_arm_pick_object(obj, self.robot, pick_action)
-                inside_region = self.problem_env.regions['entire_region'].contains(self.robot.ComputeAABB())
 
                 if self.problem_env.name == 'convbelt':
-                    feasible = inside_region
+                    feasible = True
                 else:
+                    inside_region = self.problem_env.regions['entire_region'].contains(self.robot.ComputeAABB())
                     not_in_collision = not self.env.CheckCollision(self.robot)
                     feasible = inside_region and not_in_collision
 

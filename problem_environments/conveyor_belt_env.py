@@ -18,11 +18,10 @@ from openravepy import DOFAffine, Environment
 class ConveyorBelt(ProblemEnvironment):
     def __init__(self, problem_idx):
         self.problem_idx = problem_idx
-        ProblemEnvironment.__init__(self)
+        ProblemEnvironment.__init__(self, problem_idx)
         obj_setup = None
         self.problem_config = create_conveyor_belt_problem(self.env, obj_setup)
         self.objects = self.problem_config['objects']
-        #self.objects[1], self.objects[0] = self.objects[0], self.objects[1]
 
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
@@ -39,6 +38,17 @@ class ConveyorBelt(ProblemEnvironment):
         self.is_init_pick_node = True
         self.init_operator = 'two_arm_place'
         self.name = 'convbelt'
+
+    def check_reachability_precondition(self, operator_instance):
+        goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
+
+        if operator_instance.low_level_motion is not None:
+            motion = operator_instance.low_level_motion
+            status = 'HasSolution'
+            return motion, status
+
+        motion, status = self.get_base_motion_plan(goal_robot_xytheta, None)
+        return motion, status
 
     def reset_to_init_state(self, node):
         assert node.is_init_node, "None initial node passed to reset_to_init_state"
@@ -58,7 +68,7 @@ class ConveyorBelt(ProblemEnvironment):
 
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
 
-    def apply_action_and_get_reward(self, operator_instance, is_op_feasible):
+    def apply_action_and_get_reward(self, operator_instance, is_op_feasible, node):
         if is_op_feasible != 'HasSolution':
             reward = self.infeasible_reward
         else:
@@ -66,7 +76,7 @@ class ConveyorBelt(ProblemEnvironment):
                 two_arm_pick_object(operator_instance.discrete_parameters['object'],
                                     self.robot, operator_instance.continuous_parameters)
                 set_robot_config(self.init_base_conf, self.robot)
-                reward = 0
+                reward = 1
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)
@@ -75,10 +85,7 @@ class ConveyorBelt(ProblemEnvironment):
 
         return reward
 
-    def check_reachability_precondition(self, operator_instance):
-        return [], 'HasSolution'
-
-    def apply_operator_instance(self, operator_instance):
+    def apply_operator_instance(self, operator_instance, node):
         if not self.check_parameter_feasibility_precondition(operator_instance):
             operator_instance.update_low_level_motion(None)
             return self.infeasible_reward
@@ -89,7 +96,7 @@ class ConveyorBelt(ProblemEnvironment):
         else:
             status = "HasSolution"
 
-        reward = self.apply_action_and_get_reward(operator_instance, status)
+        reward = self.apply_action_and_get_reward(operator_instance, status, node)
         return reward
 
     def compute_place_reward(self, operator_instance):
@@ -97,7 +104,8 @@ class ConveyorBelt(ProblemEnvironment):
         object_held = self.robot.GetGrabbed()[0]
         two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
         new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
-        return 1, new_objects_not_in_goal
+        reward = self.objects.index(object_held)+1 # reward gradually increases
+        return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):
         return len(self.get_objs_in_region('object_region')) == len(self.objects)

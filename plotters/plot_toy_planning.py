@@ -51,7 +51,7 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += 'eps_' + str(epsilon) + '/'
     if algo_name.find('doo') != -1 or algo_name.find('gpucb') != -1:
         result_dir += 'eps_' + str(epsilon) + '/'
-        result_dir += os.listdir(result_dir)[0] + '/' #  + 'c1_' + str(c1) + '/'
+    #    result_dir += os.listdir(result_dir)[0] + '/' #  + 'c1_' + str(c1) + '/'
     print result_dir
     return result_dir
 
@@ -184,7 +184,7 @@ def plot_across_algorithms():
     algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
+    algo_names = ['randomized_doo_0.001','randomized_doo_0.01','randomized_doo_0.1', 'randomized_doo_1']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()

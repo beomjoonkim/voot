@@ -148,14 +148,16 @@ class MCTS:
             root_node_reward_history = np.array([np.max(R) for R in root_node_reward_history])
             n_feasible_actions = np.sum(root_node_reward_history >= 0)
 
-        # todo run with this setting of switching
         if self.environment.name == 'minimum_displacement_removal':
             if is_pick_node:
-                we_evaluated_the_node_enough = n_feasible_actions > 0 #and self.s0_node.Nvisited > 15
+                we_evaluated_the_node_enough = n_feasible_actions > 0
             else:
-                we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch # and self.s0_node.Nvisited > self.n_switch
+                we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
         elif self.environment.name == 'convbelt':
-            raise NotImplementedError
+            if is_pick_node:
+                we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
+            else:
+                we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
         else:
             raise NotImplementedError
 
@@ -173,8 +175,14 @@ class MCTS:
             best_node = self.s0_node.children[best_action]
         return best_node
 
+    def visualize_value_functions_of_evaled_actions(self):
+        toplot = [child.parent_action.continuous_parameters['base_pose'] for child in
+                      self.s0_node.children.values()]
+
+        #visualize_path(self.robot, toplot)
+        raise NotImplementedError
+
     def search(self, n_iter=100, max_time=np.inf):
-        # n_optimal_iter: additional number of iterations you are allowed to run after finding a solution
         depth = 0
         time_to_search = 0
         search_time_to_reward = []
@@ -184,54 +192,21 @@ class MCTS:
             print '*****SIMULATION ITERATION %d' % iteration
             self.environment.reset_to_init_state(self.s0_node)
 
-            """
-            if iteration >= 1000:
-                rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
-                print np.sum(rewards>-2)
-                #import pdb;pdb.set_trace()
-            """
-
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
-                """
-                max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
-                n_feasible_actions = np.sum(max_reward_of_each_action > -2)
-                print n_feasible_actions
-                print np.max(self.s0_node.Q.values())
                 import pdb;pdb.set_trace()
-                """
-                #import pdb;pdb.set_trace()
-                #self.environment.env.SetViewer('qtcoin');
-                #visualize_path(self.robot, [a.continuous_parameters['base_pose'] for a in self.s0_node.A if a.continuous_parameters['base_pose'] is not None])
-                #import pdb;pdb.set_trace()
-                #import pdb;pdb.set_trace()
-                #if self.s0_node.A[0].type == 'two_arm_place':
-                    #toplot = [self.s0_node.sampling_agent.sample_feasible_action(True, 100, self.s0_node)[0]['base_pose'] for _ in range(50)]
-                    #visualize_path(self.robot, toplot)
-                    #import pdb;pdb.set_trace()
-                #if self.s0_node.A[0].type == 'two_arm_place':
-                #    import pdb;pdb.set_trace()
-
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
-
-            """
-            if self.s0_node.A[0].type == 'two_arm_place' and len(self.s0_node.A) > 10:
-                import pdb;pdb.set_trace()
-                self.s0_node.sampling_agent.sample_feasible_action(True, 100, self.s0_node)
-            """
 
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
+            #self.visualize_value_functions_of_evaled_actions()
             #self.log_current_tree_to_dot_file(iteration)
-
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
             plan = self.retrace_best_plan()
-            #print np.array(search_time_to_reward)[-1,:]
-            #print self.s0_node.best_v # sampling from best v, checking voo
             rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
             print 'n feasible actions ', np.sum(rewards > -2)
 
@@ -239,17 +214,17 @@ class MCTS:
                 break
 
         self.environment.reset_to_init_state(self.s0_node)
-        return search_time_to_reward, self.s0_node.best_v
+        return search_time_to_reward, self.s0_node.best_v, plan
 
     def choose_action(self, curr_node):
         if not curr_node.is_reevaluation_step(self.widening_parameter, self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
-            print "Sampling new action"
+            print "Is time to sample new action? True"
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
             curr_node.add_actions(new_continuous_parameters)
             action = curr_node.A[-1]
         else:
-            print "Re-evaluation"
+            print "Re-evaluation? True"
             if self.use_ucb:
                 action = curr_node.perform_ucb_over_actions()
             else:

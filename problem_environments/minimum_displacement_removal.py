@@ -96,6 +96,34 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         motion, status = self.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
         return motion, status
 
+    def apply_action_and_get_reward(self, operator_instance, is_op_feasible, node):
+        if is_op_feasible != 'HasSolution':
+            reward = self.infeasible_reward
+        else:
+            if operator_instance.type == 'two_arm_pick':
+                two_arm_pick_object(operator_instance.discrete_parameters['object'],
+                                    self.robot, operator_instance.continuous_parameters)
+
+                obj = operator_instance.discrete_parameters['object']
+                # if the object that I am moving is the same as before...
+                is_obj_next_obj_to_move = node.parent_action_reward > 0
+                if is_obj_next_obj_to_move:
+                    # todo this is so specific to mdr domain
+                    if self.problem_idx == 1:
+                        reward = 0.5
+                    else:
+                        reward = 1
+                else:
+                    reward = 0
+                self.prev_object_picked = obj # what if it resets? Take care of it in reset_init
+            elif operator_instance.type == 'two_arm_place':
+                reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
+                self.set_objects_not_in_goal(new_objects_not_in_goal)
+            else:
+                raise NotImplementedError
+
+        return reward
+
     def compute_place_reward(self, operator_instance):
         # todo I can potentially save time by keeping the reward in the node
         assert len(self.robot.GetGrabbed()) == 1
