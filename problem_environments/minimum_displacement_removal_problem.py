@@ -143,10 +143,8 @@ def create_doors(x_lim, y_lim, door_x, door_y, door_width, th, env):
         right_wall_size = (door_x - door_width / 2.0 - (-x_lim)) / 2.0
         left_wall_size = (x_lim - door_width / 2.0 - door_x) / 2.0
 
-    left_wall = box_body(env,
-                         0.04 * 2, left_wall_size * 2, 1 * 2,
-                         name='left_wall'+str(np.random.rand()),
-                         color=(0, 0, 0))
+    left_wall = box_body(env, 0.04 * 2, left_wall_size * 2, 1 * 2,
+                         name='left_wall'+str(np.random.rand()), color=(0, 0, 0))
     right_wall = box_body(env,
                          0.04 * 2, right_wall_size * 2, 1 * 2,
                           name='right_wall'+str(np.random.rand()),

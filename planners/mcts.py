@@ -12,15 +12,14 @@ from generators.randomized_doo import RandomizedDOOGenerator
 
 ## openrave helper libraries
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
-from mover_library.samplers import *
 from mover_library.utils import *
+from manipulation.bodies.bodies import box_body
 
 import time
-from generators.doo_utils.doo_tree import BinaryDOOTree, DOOTreeNode
+from generators.doo_utils.doo_tree import BinaryDOOTree
 sys.path.append('../mover_library/')
 from utils import get_pick_domain, get_place_domain
 from generators.gpucb import GPUCBGenerator
-from trajectory_representation.operator import Operator
 
 sys.setrecursionlimit(15000)
 
@@ -176,11 +175,22 @@ class MCTS:
         return best_node
 
     def visualize_value_functions_of_evaled_actions(self):
-        toplot = [child.parent_action.continuous_parameters['base_pose'] for child in
-                      self.s0_node.children.values()]
+        #toplot = [child.parent_action.continuous_parameters['base_pose'] for child in
+        #              self.s0_node.children.values()]
+        # get base poses and their Q-values
+        base_pose = [0,0,0]
+        Qval = 10
+        width = 0.1
+        length = 0.1
+        height = 1
+        i = 1
+        new_body = box_body(self.environment.env, width, length, height,
+                            name='obj%s' % i,
+                            color=(0, Qval, 0))
+        self.environment.env.Add(new_body)
+        import pdb;pdb.set_trace()
 
         #visualize_path(self.robot, toplot)
-        raise NotImplementedError
 
     def search(self, n_iter=100, max_time=np.inf):
         depth = 0
@@ -194,7 +204,6 @@ class MCTS:
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
-                import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
