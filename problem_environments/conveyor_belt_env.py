@@ -40,6 +40,28 @@ class ConveyorBelt(ProblemEnvironment):
         self.name = 'convbelt'
 
     def check_reachability_precondition(self, operator_instance):
+        # we can potentially make this faster by just checking the collision at the door
+        # actually, check collisions at 360 degree, with 20 degrees increments.
+        # We don't need to call motion planner.
+
+        # the condition is where the object is facing.
+        grabbed_obj = self.robot.GetGrabbed()[0]
+        obj_name = grabbed_obj.GetName()
+        if obj_name.find('tobj') != -1:
+            obj_theta = get_body_xytheta(grabbed_obj)[0][-1] * 180/np.pi
+            if obj_theta < 0:
+                obj_theta += 360
+            assert obj_theta > 0
+            no_solution = False
+            if obj_name == 'tobj1' or obj_name == 'tobj4':
+                if obj_theta < 45 or 135 < obj_theta < 225 or obj_theta > 315:
+                    no_solution = True
+            elif obj_name == 'tobj3':
+                if (45 < obj_theta < 135) or (225 < obj_theta < 315):
+                    no_solution = True
+            if no_solution:
+                return None, "NoSolution"
+
         goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
 
         if operator_instance.low_level_motion is not None:
@@ -104,7 +126,7 @@ class ConveyorBelt(ProblemEnvironment):
         object_held = self.robot.GetGrabbed()[0]
         two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
         new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
-        reward = self.objects.index(object_held)+1 # reward gradually increases
+        reward = self.objects.index(object_held)+1  # reward gradually increases
         return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):

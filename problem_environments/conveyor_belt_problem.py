@@ -232,7 +232,7 @@ def create_conveyor_belt_problem(env, obj_setup=None):
         randomly_place_in_region(env, tobj, conveyor_belt)
         set_obj_xytheta([2+i, 1.05, 0], tobj)
         objects.append(tobj)
-        i+=1.1
+        i += 1.1
 
     square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
     objects += square_objects
