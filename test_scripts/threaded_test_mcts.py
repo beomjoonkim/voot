@@ -31,11 +31,14 @@ def worker_p(config):
     if use_uct:
         command += ' -use_uct'
 
+    if config['use_max_backup']:
+        command += ' -use_max_backup'
+
     if add != '':
         command +=  ' -add ' + add
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -59,6 +62,7 @@ def main():
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_uct', action='store_true', default=False)
     parser.add_argument('-n_switch', nargs='+', type=int)
+    parser.add_argument('-use_max_backup', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -94,7 +98,8 @@ def main():
                                       'pw': args.pw,
                                       'use_uct': args.use_uct,
                                       'add': args.add,
-                                      'n_switch': n_switch}
+                                      'n_switch': n_switch,
+                                      'use_max_backup': args.use_max_backup}
                             configs.append(config)
 
     n_workers = int(20)

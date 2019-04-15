@@ -39,7 +39,8 @@ def make_save_dir(args):
     save_dir += '/uct_'+str(uct_parameter) + '_widening_' \
                 + str(w) + '_' + sampling_strategy + \
                 '_n_feasible_checks_'+str(n_feasibility_checks) \
-                +'_n_switch_' + str(args.n_switch)
+                +'_n_switch_' + str(args.n_switch) \
+                +'_max_backup_' + str(args.use_max_backup)
 
     if addendum != '':
         save_dir += '_' + addendum + '/'
