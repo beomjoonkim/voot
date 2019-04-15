@@ -1,7 +1,3 @@
-import sys
-import socket
-import numpy as np
-
 from mcts_tree_node import TreeNode
 from mcts_tree import MCTSTree
 
@@ -10,16 +6,15 @@ from generators.voo import VOOGenerator
 from generators.doo import DOOGenerator
 from generators.randomized_doo import RandomizedDOOGenerator
 
-## openrave helper libraries
-from manipulation.primitives.savers import DynamicEnvironmentStateSaver
-from mover_library.utils import *
-from manipulation.bodies.bodies import box_body
+from mover_library.utils import CustomStateSaver, get_pick_domain, get_place_domain
+
+from generators.doo_utils.doo_tree import BinaryDOOTree
+from generators.gpucb import GPUCBGenerator
 
 import time
-from generators.doo_utils.doo_tree import BinaryDOOTree
-sys.path.append('../mover_library/')
-from utils import get_pick_domain, get_place_domain
-from generators.gpucb import GPUCBGenerator
+import sys
+import socket
+import numpy as np
 
 sys.setrecursionlimit(15000)
 
@@ -42,13 +37,16 @@ class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
                  environment, use_progressive_widening, use_ucb, use_max_backup,
-                 voo_sampling_mode='gaussian', n_switch=35):
+                 voo_sampling_mode, n_switch):
         self.c1 = c1
         self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
         self.time_limit = np.inf
-        self.discount_rate = 0.9
         self.environment = environment
+        if self.environment.name == 'convbelt':
+            self.discount_rate = 0.99  # do we need this?
+        else:
+            self.discount_rate = 0.9
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
         self.depth_limit = np.inf
@@ -92,7 +90,7 @@ class MCTS:
         else:
             operator_skeleton = self.environment.get_applicable_op_skeleton()
 
-        state_saver = DynamicEnvironmentStateSaver(self.environment.env)
+        state_saver = CustomStateSaver(self.environment.env)
         node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
                         is_init_node)
 
@@ -156,7 +154,11 @@ class MCTS:
                 we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
         elif self.environment.name == 'convbelt':
             if is_pick_node:
-                we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
+                if self.environment.problem_idx == 1:
+                    we_evaluated_the_node_enough = n_feasible_actions > 0
+                else:
+                    we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
+
             else:
                 we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
         else:
@@ -189,6 +191,8 @@ class MCTS:
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
+                self.s0_node.store_node_information(self.environment.name)
+                import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 

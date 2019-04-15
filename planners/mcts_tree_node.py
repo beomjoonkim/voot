@@ -1,9 +1,12 @@
 import numpy as np
+import os
+import pickle
+
 from mcts_utils import is_action_hashable, make_action_hashable, make_action_executable
 from trajectory_representation.operator import Operator
 from mover_library.utils import visualize_path
 
-
+import openravepy
 def upper_confidence_bound(n, n_sa):
     return 2 * np.sqrt(np.log(n) / float(n_sa))
 
@@ -97,6 +100,33 @@ class TreeNode:
                     best_value = ucb_value
 
         return best_action
+
+    def make_actions_pklable(self):
+        for a in self.A:
+            if a.type == 'two_arm_pick' and type(a.discrete_parameters['object']) != str:
+                a.discrete_parameters['object'] = str(a.discrete_parameters['object'].GetName())
+
+    def make_actions_executable(self):
+        assert len(openravepy.RaveGetEnvironments()) == 1
+        env = openravepy.RaveGetEnvironment(1)
+        for a in self.A:
+            if a.type == 'two_arm_pick' and type(a.discrete_parameters['object']) == str:
+                a.discrete_parameters['object'] = env.GetKinBody(a.discrete_parameters['object'])
+
+    def store_node_information(self, domain_name):
+        # state_saver, q_values, actions, reward_history, parent_action
+        self.make_actions_pklable()
+        fdir = './test_results/node_idx_'+str(self.idx) + '/' + domain_name + '/'
+        if not os.path.isdir(fdir):
+            os.makedirs(fdir)
+
+        to_store ={
+            'Q': self.Q,
+            'saver': self.state_saver
+        }
+        pickle.dump(to_store, open(fdir + self.sampling_strategy+'.pkl', 'wb'))
+        self.make_actions_executable()
+
 
     def choose_new_arm(self):
         new_arm = self.A[-1]  # what to do if the new action is not a feasible one?

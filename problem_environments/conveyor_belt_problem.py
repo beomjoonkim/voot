@@ -222,7 +222,6 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
         objects += square_objects
     else:
         objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=20)
-    import pdb;pdb.set_trace()
     initial_saver = DynamicEnvironmentStateSaver(env)
     initial_state = (initial_saver, [])
     problem = {'initial_state': initial_state,
