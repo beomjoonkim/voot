@@ -154,6 +154,7 @@ def get_max_rwds_wrt_samples(search_rwd_times, n_evals):
 
 def get_algo_name(raw_name):
     if raw_name.find('randomized_doo') !=-1:
+        return raw_name
         return "RandDOOT"
     elif raw_name.find('voo') != -1:
         return raw_name
@@ -183,9 +184,12 @@ def plot_across_algorithms():
     algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
+    if args.n_feasibility_checks == 100:
+        algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'unif']
+    elif args.n_feasibility_checks == 50:
+        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.5', 'unif']
 
-    #algo_names = ['randomized_doo_0.001', 'randomized_doo_10.0','randomized_doo_20.0','randomized_doo_100.0','randomized_doo_1000.0']
+    #algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01','randomized_doo_0.1','randomized_doo_1.0']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]

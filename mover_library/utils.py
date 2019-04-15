@@ -127,6 +127,28 @@ def visualize_path(robot, path):
     remove_drawn_configs('path', env)
 
 
+def visualize_configs(robot, path, transparency=0.5):
+    is_robot_holding = len(robot.GetGrabbed()) > 0
+    if is_robot_holding:
+        held = robot.GetGrabbed()[0]
+        original_transform = held.GetTransform()
+    assert path[0].shape[0] == robot.GetActiveDOF(), 'robot and path should have same dof'
+    env = robot.GetEnv()
+    if len(path) > 1000:
+        path_reduced = path[0:len(path) - 1:int(len(path) * 0.1)]
+    else:
+        path_reduced = path
+    for idx, conf in enumerate(path_reduced):
+        draw_robot_at_conf(conf, transparency, 'path' + str(idx), robot, env)
+        set_transparency(held, transparency)
+    raw_input("Continue?")
+
+    if is_robot_holding:
+        held.SetTransform(original_transform)
+        grab_obj(robot, held)
+    remove_drawn_configs('path', env)
+
+
 def get_best_weight_file(train_results_dir):
     try:
         assert (os.path.isfile(train_results_dir + '/best_weight.txt'))

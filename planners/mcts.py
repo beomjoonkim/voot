@@ -192,7 +192,6 @@ class MCTS:
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
                 self.s0_node.store_node_information(self.environment.name)
-                import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 

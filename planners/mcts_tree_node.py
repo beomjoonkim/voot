@@ -35,7 +35,7 @@ class TreeNode:
         self.state_saver = state_saver
         self.operator_skeleton = operator_skeleton
         self.is_init_node = is_init_node
-        self.objs_in_collision = None
+        self.objects_not_in_goal = None
         self.n_ucb_iterations = 0
 
         self.sampling_strategy = sampling_strategy
@@ -116,15 +116,16 @@ class TreeNode:
     def store_node_information(self, domain_name):
         # state_saver, q_values, actions, reward_history, parent_action
         self.make_actions_pklable()
-        fdir = './test_results/node_idx_'+str(self.idx) + '/' + domain_name + '/'
+        fdir = './test_results/' + domain_name + '_results/visualization_purpose/'
         if not os.path.isdir(fdir):
             os.makedirs(fdir)
 
         to_store ={
             'Q': self.Q,
-            'saver': self.state_saver
+            'saver': self.state_saver,
+            'progress': len(self.objects_not_in_goal)
         }
-        pickle.dump(to_store, open(fdir + self.sampling_strategy+'.pkl', 'wb'))
+        pickle.dump(to_store, open(fdir + 'node_idx_' + str(self.idx) + '_' + self.sampling_strategy+'.pkl', 'wb'))
         self.make_actions_executable()
 
 
