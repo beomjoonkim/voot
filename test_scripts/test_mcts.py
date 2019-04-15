@@ -142,7 +142,7 @@ def main():
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.problem_idx, args.domain)
     else:
         # todo make root switching in conveyor belt domain
-        problem_instantiator = ConveyorBeltInstantiator(args.domain)
+        problem_instantiator = ConveyorBeltInstantiator(args.problem_idx, args.domain)
 
     if args.v:
         problem_instantiator.environment.env.SetViewer('qtcoin')

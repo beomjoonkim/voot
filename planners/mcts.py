@@ -191,7 +191,6 @@ class MCTS:
                 print "Switching root node!"
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
-                import pdb;pdb.set_trace()
 
             stime = time.time()
             self.simulate(self.s0_node, depth)
@@ -202,7 +201,7 @@ class MCTS:
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
             plan = self.retrace_best_plan()
             rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
-            print 'n feasible actions ', np.sum(rewards > -2)
+            print 'n feasible actions ', np.sum(rewards >= 0)
 
             if time_to_search > max_time:
                 break
