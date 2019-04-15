@@ -174,8 +174,8 @@ def plot_across_algorithms():
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('--p', action='store_true')
-    parser.add_argument('-add', type=str, default='')
-    parser.add_argument('-n_switch', type=int, default=-1)
+    parser.add_argument('-add', type=str, default='fullplanning')
+    parser.add_argument('-n_switch', type=int, default=10)
 
     args = parser.parse_args()
 
@@ -185,7 +185,7 @@ def plot_across_algorithms():
     algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
 
-    algo_names = ['randomized_doo_0.001', 'randomized_doo_10.0','randomized_doo_20.0','randomized_doo_100.0','randomized_doo_1000.0']
+    #algo_names = ['randomized_doo_0.001', 'randomized_doo_10.0','randomized_doo_20.0','randomized_doo_100.0','randomized_doo_1000.0']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
