@@ -41,7 +41,8 @@ def create_doo_agent(operator):
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                 environment, use_progressive_widening, use_ucb, voo_sampling_mode='gaussian', n_switch=35):
+                 environment, use_progressive_widening, use_ucb, use_max_backup,
+                 voo_sampling_mode='gaussian', n_switch=35):
         self.c1 = c1
         self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
@@ -55,6 +56,7 @@ class MCTS:
         self.voo_sampling_mode = voo_sampling_mode
         self.use_ucb = use_ucb
         self.n_switch = n_switch
+        self.use_max_backup = use_max_backup
 
         self.env = self.environment.env
         self.robot = self.environment.robot
@@ -174,29 +176,12 @@ class MCTS:
             best_node = self.s0_node.children[best_action]
         return best_node
 
-    def visualize_value_functions_of_evaled_actions(self):
-        #toplot = [child.parent_action.continuous_parameters['base_pose'] for child in
-        #              self.s0_node.children.values()]
-        # get base poses and their Q-values
-        base_pose = [0,0,0]
-        Qval = 10
-        width = 0.1
-        length = 0.1
-        height = 1
-        i = 1
-        new_body = box_body(self.environment.env, width, length, height,
-                            name='obj%s' % i,
-                            color=(0, Qval, 0))
-        self.environment.env.Add(new_body)
-        import pdb;pdb.set_trace()
-
-        #visualize_path(self.robot, toplot)
-
     def search(self, n_iter=100, max_time=np.inf):
         depth = 0
         time_to_search = 0
         search_time_to_reward = []
         plan = None
+
         self.n_iter = n_iter
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
@@ -206,12 +191,12 @@ class MCTS:
                 print "Switching root node!"
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
+                import pdb;pdb.set_trace()
 
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
 
-            #self.visualize_value_functions_of_evaled_actions()
             #self.log_current_tree_to_dot_file(iteration)
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
@@ -240,8 +225,7 @@ class MCTS:
                 action = curr_node.choose_new_arm()
         return action
 
-    @staticmethod
-    def update_node_statistics(curr_node, action, sum_rewards, reward):
+    def update_node_statistics(self, curr_node, action, sum_rewards, reward):
         # todo rewrite this function
         curr_node.Nvisited += 1
 
@@ -253,13 +237,20 @@ class MCTS:
         else:
             curr_node.reward_history[action].append(reward)
             curr_node.N[action] += 1
-            curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
+            if self.use_max_backup and sum_rewards > curr_node.Q[action]:
+                curr_node.Q[action] = sum_rewards
+            else:
+                curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
 
     @staticmethod
     def update_goal_node_statistics(curr_node, reward):
         # todo rewrite this function
         curr_node.Nvisited += 1
         curr_node.reward = reward
+
+    def visualize_samples_from_sampling_agent(self, node):
+        action, status, doo_node, action_parameters = node.sampling_agent.sample_feasible_action(node,
+                                                                                                 self.n_feasibility_checks)
 
     def simulate(self, curr_node, depth):
         if self.environment.is_goal_reached():

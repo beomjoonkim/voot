@@ -167,7 +167,7 @@ def get_algo_name(raw_name):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='minimum_displacement_removal_results')
-    parser.add_argument('-w', type=float, default=0.0)
+    parser.add_argument('-w', type=float, default=5.0)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
     parser.add_argument('-mcts_iter', type=int, default=1500)
@@ -180,12 +180,12 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'unif']
+    algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = ['voo_uniform_0.1', 'voo_uniform_0.3', 'voo_uniform_0.5', 'voo_gaussian_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = ['randomized_doo_0.001','randomized_doo_0.01','randomized_doo_0.1', 'randomized_doo_1']
 
+    algo_names = ['randomized_doo_0.001', 'randomized_doo_10.0','randomized_doo_20.0','randomized_doo_100.0','randomized_doo_1000.0']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -248,13 +248,10 @@ def plot_across_algorithms():
                         + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
-    if args.p:
-        plt.ylim(-7, 1)
-    else:
+
+    if args.domain.find('minimum') != -1:
         if args.pidx == 0:
             plt.ylim(-2, 4.6)
-        else:
-            plt.ylim(-2, 3.1)
 
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 

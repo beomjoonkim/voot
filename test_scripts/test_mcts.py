@@ -74,7 +74,7 @@ def instantiate_mcts(args, problem_env):
 
     mcts = MCTS(w, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, use_progressive_widening, use_ucb, sampling_mode, args.n_switch)
+                problem_env, use_progressive_widening, use_ucb, args.use_max_backup, sampling_mode, args.n_switch)
     return mcts
 
 
@@ -113,6 +113,7 @@ def main():
     parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-add', type=str, default='')
+    parser.add_argument('-use_max_backup', action='store_true', default=False)
 
     args = parser.parse_args()
 

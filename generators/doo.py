@@ -50,6 +50,19 @@ class DOOGenerator(Generator):
             self.doo_tree.expand_node(self.update_flag, doo_node)
             self.evaled_q_values.append(self.update_flag)
             print "Found feasible sample"
+        else:
+            self.evaled_actions.append(action_parameters)
+            self.doo_tree.expand_node(-2, doo_node)
+            self.evaled_q_values.append(-2)
+            """
+            doo_node.f_value = -2 # todo this is giving advantage to doo, but w/e
+            if doo_node.parent is not None:
+                is_left_child_evaluated = doo_node.parent.l_child.f_value is not None
+                is_right_child_evaluated = doo_node.parent.r_child.f_value is not None
+                if is_left_child_evaluated and is_right_child_evaluated:
+                    self.doo_tree.add_to_leaf(doo_node.parent.l_child)
+                    self.doo_tree.add_to_leaf(doo_node.parent.r_child)
+            """
 
         return action
 

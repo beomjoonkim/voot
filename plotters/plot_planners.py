@@ -186,7 +186,7 @@ def get_algo_name(raw_name):
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='mdr')
-    parser.add_argument('-w', type=float, default=1.0)
+    parser.add_argument('-w', type=float, default=5.0)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
     parser.add_argument('-mcts_iter', type=int, default=1000)

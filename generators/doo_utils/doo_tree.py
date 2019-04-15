@@ -3,7 +3,7 @@ import copy
 
 
 class DOOTreeNode:
-    def __init__(self, cell_mid_point, cell_min, cell_max, parent_node, distance_fn):
+    def __init__(self, cell_mid_point, cell_min, cell_max, parent_node, distance_fn, idx):
         self.cell_mid_point = cell_mid_point
         self.evaluated_x = None
         self.l_child = None
@@ -13,6 +13,7 @@ class DOOTreeNode:
         self.delta_h = distance_fn(cell_mid_point, self.cell_min) + distance_fn(cell_mid_point, self.cell_min)
         self.parent = parent_node
         self.f_value = None
+        self.idx = idx
 
     def update_node_f_value(self, fval):
         self.f_value = fval
@@ -31,7 +32,7 @@ class BinaryDOOTree:
         self.node_to_update = None
 
     def create_node(self, cell_mid_point, cell_min, cell_max, parent_node):
-        new_node = DOOTreeNode(cell_mid_point, cell_min, cell_max, parent_node, self.distance_fn)
+        new_node = DOOTreeNode(cell_mid_point, cell_min, cell_max, parent_node, self.distance_fn, idx=len(self.nodes))
         return new_node
 
     def add_left_child(self, parent_node):

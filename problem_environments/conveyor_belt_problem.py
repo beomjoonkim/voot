@@ -91,8 +91,7 @@ def create_obstacles(env, loading_regions):
     return obstacles, obstacle_shapes, obstacle_poses
 
 
-def create_objects(env, conveyor_belt):
-    num_objects = 10
+def create_objects(env, conveyor_belt, num_objects):
     objects = []
     obj_shapes = {}
     obj_poses = {}
@@ -144,7 +143,7 @@ def load_objects(env, obj_shapes, obj_poses, color):
     return objects
 
 
-def create_conveyor_belt_problem(env, obj_setup=None):
+def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
     if obj_setup is not None:
         obj_shapes = obj_setup['object_shapes']
         obj_poses = obj_setup['object_poses']
@@ -152,7 +151,11 @@ def create_conveyor_belt_problem(env, obj_setup=None):
         obst_poses = obj_setup['obst_poses']
 
     fdir=os.path.dirname(os.path.abspath(__file__))
-    env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
+    if problem_idx == 0:
+        env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
+    else:
+        env.Load(fdir + '/convbelt_env.xml')
+
     robot = env.GetRobots()[0]
     set_default_robot_config(robot)
 
@@ -202,40 +205,24 @@ def create_conveyor_belt_problem(env, obj_setup=None):
 
     entire_region = AARegion('entire_region', ((-3.51, 20 * max_width + conv_x),(-y_extents, y_extents)),
                              z=0.01, color=np.array((1, 1, 0, 0.25)))
-    """
-    if obj_setup is None:
-        objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
-        obstacles, obst_shapes, obst_poses = create_obstacles(env, loading_region)
-    else:
-        objects = load_objects(env, obj_shapes, obj_poses, color=(0, 1, 0))
-        obstacles = load_objects(env, obst_shapes, obst_poses, color=(0, 0, 1))
-
-    #set_obj_xytheta([-1, -1, 1], obstacles[0])
-    #set_obj_xytheta([-2, 2.3, 0], obstacles[1])
-    #obst_poses = [randomly_place_in_region(env, obj, loading_region) for obj in obstacles]
-    #obst_poses = [get_body_xytheta(obj) for obj in obstacles]
-
-    """
-    """
-    tobj = env.GetKinBody('tobj3')
-    tobj_xytheta = get_body_xytheta(tobj.GetLinks()[1])
-    tobj_xytheta[0, -1] = (160 / 180.0) * np.pi
-    set_obj_xytheta(tobj_xytheta, tobj.GetLinks()[1])
-    """
-
     init_base_conf = np.array([0, 1.05, 0])
     set_robot_config(np.array([0, 1.05, 0]), robot)
-    objects = []
-    i=1
-    for tobj in env.GetBodies():
-        if tobj.GetName().find('tobj') == -1: continue
-        randomly_place_in_region(env, tobj, conveyor_belt)
-        set_obj_xytheta([2+i, 1.05, 0], tobj)
-        objects.append(tobj)
-        i += 1.1
 
-    square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt)
-    objects += square_objects
+
+    if problem_idx == 0:
+        objects = []
+        i=1
+        for tobj in env.GetBodies():
+            if tobj.GetName().find('tobj') == -1: continue
+            randomly_place_in_region(env, tobj, conveyor_belt)
+            set_obj_xytheta([2+i, 1.05, 0], tobj)
+            objects.append(tobj)
+            i += 1.1
+
+        square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=10)
+        objects += square_objects
+    else:
+        objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=20)
 
     initial_saver = DynamicEnvironmentStateSaver(env)
     initial_state = (initial_saver, [])

@@ -20,7 +20,7 @@ class ConveyorBelt(ProblemEnvironment):
         self.problem_idx = problem_idx
         ProblemEnvironment.__init__(self, problem_idx)
         obj_setup = None
-        self.problem_config = create_conveyor_belt_problem(self.env, obj_setup)
+        self.problem_config = create_conveyor_belt_problem(self.env, obj_setup, problem_idx)
         self.objects = self.problem_config['objects']
 
         self.init_base_conf = np.array([0, 1.05, 0])
