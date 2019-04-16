@@ -52,11 +52,7 @@ class VOOGenerator(Generator):
                            for a in self.evaled_actions]
             is_action_included = np.any(is_in_array)
 
-            try:
-                assert is_action_included
-            except AssertionError:
-                import pdb; pdb.set_trace()
-
+            assert is_action_included
             self.evaled_q_values[np.where(is_in_array)[0][0]] = q_value
 
     def sample_point(self, node, n_iter):
@@ -122,7 +118,10 @@ class VOOGenerator(Generator):
             if status == 'HasSolution':
                 break
             else:
-                pass
+                # todo update the score with infeasible reward
+                self.evaled_actions.append(action_parameters)
+                self.evaled_q_values.append(-2)
+                #pass
         if is_sample_from_best_v_region:
             print "Done sampling from best v region"
         return action, status

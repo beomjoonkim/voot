@@ -109,17 +109,18 @@ def create_objects(env, conveyor_belt, num_objects):
         width = np.random.rand(1) * (max_width - min_width) + min_width
         length = np.random.rand(1) * (max_width - min_length) + min_length
         height = np.random.rand(1) * (max_height - min_height) + min_height
-        new_body = box_body(env, width, length, height, \
-                            name='obj%s' % i, \
+        new_body = box_body(env, width, length, height,
+                            name='obj%s' % i,
                             color=(0, (i + .5) / num_objects, 0))
-        trans = np.eye(4);
+        trans = np.eye(4)
         trans[2, -1] = 0.075
-        env.Add(new_body);
+        env.Add(new_body)
         new_body.SetTransform(trans)
         xytheta = randomly_place_in_region(env, new_body, conveyor_belt)
         objects.append(new_body)
         obj_shapes['obj%s' % i] = [width[0], length[0], height[0]]
         obj_poses['obj%s' % i] = xytheta
+
     return objects, obj_shapes, obj_poses
 
 

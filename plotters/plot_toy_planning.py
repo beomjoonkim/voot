@@ -41,6 +41,9 @@ def get_result_dir(algo_name, mcts_parameters):
     if n_switch != -1:
         result_dir += '_n_switch_' + str(n_switch)
 
+    if mcts_parameters.use_max_backup:
+        result_dir += '_max_backup_True'
+
     if addendum != '':
         result_dir += '_' + addendum + '/'
     else:
@@ -177,6 +180,7 @@ def plot_across_algorithms():
     parser.add_argument('--p', action='store_true')
     parser.add_argument('-add', type=str, default='fullplanning')
     parser.add_argument('-n_switch', type=int, default=10)
+    parser.add_argument('-use_max_backup', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -184,10 +188,20 @@ def plot_across_algorithms():
     algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
     algo_names = [ 'voo_uniform_0.3', 'unif']
-    if args.n_feasibility_checks == 100:
-        algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'unif']
-    elif args.n_feasibility_checks == 50:
-        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.5', 'unif']
+
+    if args.domain == 'minimum_displacement_removal_results':
+        if args.n_feasibility_checks == 100:
+            algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'unif']
+        elif args.n_feasibility_checks == 50:
+            algo_names = ['randomized_doo_1.0', 'voo_uniform_0.5', 'unif']
+    else:
+        algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
+                      'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
+    #algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
+    #              'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
+
+    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
+                  'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
 
     #algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01','randomized_doo_0.1','randomized_doo_1.0']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -249,7 +263,7 @@ def plot_across_algorithms():
                        ci=95, condition='Avg feasible reward', color='magenta')
 
         plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
-                        + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
+                        + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup)
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
 

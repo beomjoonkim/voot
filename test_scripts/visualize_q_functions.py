@@ -32,6 +32,7 @@ def get_penv(args):
 def load_data(args):
     fdir = './test_results/'+args.domain+'_results/visualization_purpose/'
     fname = 'node_idx_' + args.node_idx + '_' + args.algo + '.pkl'
+    print "Loading ", fdir+fname
     data = pickle.load(open(fdir+fname, 'r'))
     return data
 
@@ -42,13 +43,18 @@ def visualize_base_poses_and_q_values(q_function, penv):
 
     base_poses = []
     for action, q_val in zip(q_function.keys(), q_function.values()):
-        if q_val == -infeasible_rwd_compensation:
-            continue
-        draw_q_value_rod_for_action(action_idx, action, q_val + infeasible_rwd_compensation, penv, 22)
+        #if q_val == -infeasible_rwd_compensation:
+        #    continue
+
+        if penv.name == 'convbelt':
+            maxQ = 22
+        else:
+            maxQ = 4
+        draw_q_value_rod_for_action(action_idx, action, q_val + infeasible_rwd_compensation, penv, maxQ)
         action_idx += 1
         base_poses.append(action.continuous_parameters['base_pose'])
-
     visualize_configs(penv.robot, base_poses, 0.8)
+
 
 def main():
     parser = argparse.ArgumentParser(description='MCTS parameters')
@@ -64,6 +70,7 @@ def main():
     state_saver.Restore()
 
     q_function = visualization_data['Q']
+
     visualize_base_poses_and_q_values(q_function, penv)
 
     import pdb;pdb.set_trace()

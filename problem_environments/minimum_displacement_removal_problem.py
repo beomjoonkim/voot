@@ -144,15 +144,15 @@ def create_doors(x_lim, y_lim, door_x, door_y, door_width, th, env):
         left_wall_size = (x_lim - door_width / 2.0 - door_x) / 2.0
 
     left_wall = box_body(env, 0.04 * 2, left_wall_size * 2, 1 * 2,
-                         name='left_wall'+str(np.random.rand()), color=(0, 0, 0))
+                         name='left_wall', color=(0, 0, 0))
     right_wall = box_body(env,
                          0.04 * 2, right_wall_size * 2, 1 * 2,
-                          name='right_wall'+str(np.random.rand()),
+                          name='right_wall',
                           color=(0, 0, 0))
 
     middle_wall = box_body(env,
                           0.04 * 2, middle_wall_size * 2, 1 * 2,
-                          name='middle_wall'+str(np.random.rand()),
+                          name='middle_wall',
                           color=(0, 0, 0))
     place_body(env, left_wall, (door_x, door_y + left_wall_size + (door_width / 2.), th),
                base_name='bottom_wall')
@@ -160,8 +160,8 @@ def create_doors(x_lim, y_lim, door_x, door_y, door_width, th, env):
                base_name='bottom_wall')
     place_body(env, right_wall, (door_x, middle_door_y-door_width-middle_wall_size-door_width, th), base_name='bottom_wall')
 
-    wall_in_room_l = box_body(env, 0.04 * 2, 1, 2, name='wall_in_room_l' + str(np.random.rand()), color=(0, 0, 0))
-    wall_in_room_r = box_body(env, 0.04 * 2, 1, 2, name='wall_in_room_r' + str(np.random.rand()), color=(0, 0, 0))
+    wall_in_room_l = box_body(env, 0.04 * 2, 1, 2, name='wall_in_room_l', color=(0, 0, 0))
+    wall_in_room_r = box_body(env, 0.04 * 2, 1, 2, name='wall_in_room_r', color=(0, 0, 0))
     place_body(env, wall_in_room_l, (3.3,0, np.pi/2), base_name='bottom_wall')
     place_body(env, wall_in_room_r, (5.5,0, np.pi/2), base_name='bottom_wall')
 

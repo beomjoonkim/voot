@@ -140,6 +140,7 @@ def visualize_configs(robot, path, transparency=0.5):
         path_reduced = path
     for idx, conf in enumerate(path_reduced):
         draw_robot_at_conf(conf, transparency, 'path' + str(idx), robot, env)
+
         set_transparency(held, transparency)
     raw_input("Continue?")
 
@@ -607,7 +608,11 @@ class CustomStateSaver:
             release_obj(robot, held_obj)
 
         for obj_name, obj_pose in zip(self.object_poses.keys(), self.object_poses.values()):
-            set_obj_xytheta(obj_pose, env.GetKinBody(obj_name))
+            try:
+                set_obj_xytheta(obj_pose, env.GetKinBody(obj_name))
+            except:
+                print "Object ", obj_name, 'does not exist in the environment'
+                continue
         set_robot_config(self.robot_base_pose, robot)
         robot.SetDOFValues(self.robot_dof_values)
 
