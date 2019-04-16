@@ -397,7 +397,10 @@ def main():
             save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
 
     if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
+        try:
+            os.makedirs(save_dir)
+        except OSError:
+            pass
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
