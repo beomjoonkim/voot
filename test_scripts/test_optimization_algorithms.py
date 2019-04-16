@@ -391,13 +391,16 @@ def main():
                    '/ucb_' + str(ucb_parameter) + \
                    '/widening_'+str(widening_parameter)
     else:
-        save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+        if socket.gethostname() != 'shakey' or socket.gethostname() != 'phaedra' or socket.gethostname() != 'dell-XPS-15-9560':
+            save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+        else:
+            save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
-        #return
 
     if stochastic_objective:
         if algo_name == 'uniform':
