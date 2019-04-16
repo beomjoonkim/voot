@@ -118,8 +118,9 @@ class VOOGenerator(Generator):
             if status == 'HasSolution':
                 break
             else:
-                self.evaled_actions.append(action_parameters)
-                self.evaled_q_values.append(-2)
+                pass
+                #self.evaled_actions.append(action_parameters)
+                #self.evaled_q_values.append(-2)
 
         if is_sample_from_best_v_region:
             print "Done sampling from best v region"

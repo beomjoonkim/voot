@@ -25,10 +25,15 @@ algo_name = args.algo_name
 dim_x = 2
 n_fcn_evals = args.n_fcn_evals
 
-NUMMAX = 10
+# todo create multiple local optima
 config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(2)+'.pkl', 'r'))
 A = config['A']
 C = config['C']
+
+NUMMAX=2
+A = np.random.rand(NUMMAX, dim_x)
+C = np.random.rand(NUMMAX)
+
 domain = np.array([[-500.]*dim_x, [500.]*dim_x])
 
 save_dir = './test_results/function_optimization/visualization/shekel' + '/dim_' + str(dim_x) + \
@@ -202,6 +207,7 @@ def main():
     np.random.seed(seed)
     random.seed(seed)
     ax = draw_shekel()
+    import pdb;pdb.set_trace()
     evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, ax)
 
 
