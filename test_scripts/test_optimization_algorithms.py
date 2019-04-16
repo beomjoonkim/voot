@@ -366,25 +366,14 @@ def voo(explr_p):
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]# , 0.6, 0.7, 0.8, 0.9, 1.0]
-        #epsilons = [0.4]
+        epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
         epsilons = [np.finfo(float).eps, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.0001, 0.001, 0.01, 1, 0.1]
     elif algorithm.__name__ == 'gpucb':
-        # schwefel: best epsilon = 0.1 for dimension 10
-        #           best_epsilon = 1 for dimension 20
-        if obj_fcn == 'schwefel':
-            if dim_x == 3:
-                epsilons = [0.1]
-            elif dim_x == 10:
-                epsilons = [1]
-            elif dim_x == 20:
-                epsilons = [1]
-        else:
-            epsilons = [0.01, 1, 0.1, 5, 10, 30]
+        epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__.find('soo') != -1:
         epsilons = [0]
-    elif algorithm.__name__.find('random_search') !=-1 or algorithm.__name__.find('stounif') !=-1:
+    elif algorithm.__name__.find('random_search') != -1 or algorithm.__name__.find('stounif') != -1:
         epsilons = [0]  
     else:
         print algorithm.__name__
