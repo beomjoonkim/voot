@@ -16,16 +16,8 @@ def savefig(xlabel, ylabel, fname=''):
     print 'Saving figure ', fname + '.png'
     plt.savefig(fname + '.png', dpi=100, format='png')
 
-ROOTDIR = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
 def get_result_dir(algo_name, dimension, obj_fcn):
-    if obj_fcn != 'shekel':
-        result_dir =  ROOTDIR+'/function_optimization/' + str(obj_fcn) + '/dim_' + str(
-            dimension) + '/' + algo_name + '/'
-    else:
-        result_dir = ROOTDIR+'/function_optimization/' + 'dim_' + str(dimension) + '/' + algo_name + '/'
-        if algo_name == 'gpucb' and dimension == 10:
-            result_dir = './test_results/function_optimization/' + 'dim_' + str(
-                dimension) + '/' + algo_name + '/' + 'n_eval_200/'
+    ROOTDIR = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
     result_dir = ROOTDIR+'/function_optimization/' + str(obj_fcn) + '/dim_' + str(
         dimension) + '/' + algo_name + '/'
     return result_dir
@@ -33,36 +25,25 @@ def get_result_dir(algo_name, dimension, obj_fcn):
 
 def get_results(algo_name, dimension, obj_fcn):
     result_dir = get_result_dir(algo_name, dimension, obj_fcn)
-    search_times = []
     max_y_values = []
-    time_takens = []
     for fin in os.listdir(result_dir):
-    #for fin in os.listdir('./test_results//function_optimization/shekel/'+'dim_'+str(dimension)+'/gpucb/'):
         if fin.find('.pkl') == -1:
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         if algo_name == 'doo':
-            #if obj_fcn != 'griewank':
-            #    idxs = [0, 4, 10, 11, 12]
-            #    optimal_epsilon_idx = np.argmax(max_ys[idxs, -1])
-            #else:
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         else:
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         max_y = max_ys[optimal_epsilon_idx, :]
         if len(max_y) < 500:
             continue
-        #if dimension == 2 and obj_fcn == 'shekel':
-        #    max_y_values.append(max_y[:100])
-        #    time_takens.append(result['time_takens'][optimal_epsilon_idx][:100])
         else:
             max_y_values.append(max_y)
         print fin, len(max_y_values[-1]), max_y[-1], optimal_epsilon_idx
 
-            #time_takens.append(result['time_takens'][optimal_epsilon_idx])
     print 'number of functions tested ', len(max_y_values)
-    return np.array(max_y_values)#, np.array(time_takens)
+    return np.array(max_y_values)
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
@@ -101,7 +82,6 @@ def get_max_rwds_wrt_samples(search_rwd_times):
             if isinstance(rwd_time, dict):
                 rwd_time_temp = rwd_time['namo']
                 episode_times = np.array(rwd_time_temp)[:, 1]
-                # episode_rwds = np.array(rwd_time_temp)[:, -1]
                 episode_rwds = np.array(rwd_time_temp)[:, 2]
             else:
                 episode_times = np.array(rwd_time)[:, 1]
@@ -124,9 +104,6 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['gpucb', 'soo', 'doo', 'voo', 'uniform']
-    #algo_names = ['voo']
-    #algo_names = ['soo','voo','doo']
-    #algo_names = ['gpucb']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -138,31 +115,18 @@ def plot_across_algorithms():
     if args.obj_fcn != 'shekel':
         sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
 
+    if args.obj_fcn == 'shekel' and args.dim == 3:
+        n_samples = 500
+    else:
+        n_samples = 1000
+
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        #search_rwd_times, time_takens = get_results(algo, n_dim, args.obj_fcn)
         search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
-        mask = np.ones(len(search_rwd_times), dtype=bool)
-        #too_large = \
-        #np.where(search_rwd_times[:, -1] > np.mean(search_rwd_times[:, -1]) + np.std(search_rwd_times[:, -1]))[0]
-        """
-        if n_dim == 2:
-            import pdb;pdb.set_trace()
-        if n_dim == 20:
-            mask[125] = False
-        if algo == 'voo':
-            mask[too_large] = False
-        if algo == 'doo' and args.obj_fcn == 'shekel' and args.dim == 2:
-            mask[too_large] = False
-        """
-        #mask[too_large] = False
-        #search_rwd_times = search_rwd_times[mask]
-        #time_takens = time_takens[mask]
-        # sns.tsplot(search_rwd_times, time_takens.mean(axis=0), ci=95, condition=algo, color=color_dict[color_names[algo_idx]])
-        n_samples = search_rwd_times.shape[-1]
+
         best_mean_with_many_evaluations = np.mean(search_rwd_times[:, -1])
-        print algo, n_samples,  np.mean(search_rwd_times[:,-1])
-        search_rwd_times = search_rwd_times[:, 0:1000]
+        print algo, n_samples, np.mean(search_rwd_times[:, -1])
+        search_rwd_times = search_rwd_times[:, 0:n_samples]
         n_samples = search_rwd_times.shape[-1]
 
         if args.obj_fcn == 'shekel' and args.dim == 10 and algo == 'soo':
@@ -171,7 +135,7 @@ def plot_across_algorithms():
             sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='10xSOO', color='magenta')
 
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
-        print  "===================="
+        print "===================="
 
     savefig('Number of function evaluations', 'Best function values',
             fname='./plotters/' + args.obj_fcn + '_fcn_optimization_' + str(args.dim))

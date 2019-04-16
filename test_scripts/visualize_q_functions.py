@@ -50,14 +50,14 @@ def visualize_base_poses_and_q_values(q_function, penv):
         #    continue
 
         if penv.name == 'convbelt':
-            maxQ = 22
+            maxQ = 1
         else:
             maxQ = 4
         draw_q_value_rod_for_action(action_idx, action, q_val + infeasible_rwd_compensation, penv, maxQ)
         action_idx += 1
         if action.continuous_parameters['base_pose'] is not None:
             base_poses.append(action.continuous_parameters['base_pose'])
-    visualize_configs(penv.robot, base_poses, 0.8)
+    visualize_configs(penv.robot, base_poses, 0.7)
 
 
 def main():

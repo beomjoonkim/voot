@@ -23,7 +23,7 @@ class ConveyorBelt(ProblemEnvironment):
         self.problem_config = create_conveyor_belt_problem(self.env, obj_setup, problem_idx)
         self.objects = self.problem_config['objects']
         self.objects[0], self.objects[2] = self.objects[2] ,self.objects[0]
-        set_color( self.objects[0] , [1,0,0] )
+        #set_color( self.objects[0] , [1,0,0] )
 
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
