@@ -381,7 +381,7 @@ def get_exploration_parameters(algorithm):
             elif dim_x == 20:
                 epsilons = [1]
         else:
-            epsilons = [1, 0.1, 5, 10, 30]
+            epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__.find('soo') != -1:
         epsilons = [0]
     elif algorithm.__name__.find('random_search') !=-1 or algorithm.__name__.find('stounif') !=-1:

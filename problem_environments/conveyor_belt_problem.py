@@ -97,14 +97,14 @@ def create_objects(env, conveyor_belt, num_objects):
     obj_poses = {}
 
     for i in range(num_objects):
-        if i > 10 and i < 15:
+        if 10 < i < 15:
             min_width = 0.7
             max_width = 0.7
             min_length = 0.6
         else:
-            min_width = 0.2
-            max_width = 0.6
-            min_length = 0.2
+            min_width = 0.4
+            max_width = 0.8
+            min_length = 0.5
 
         width = np.random.rand(1) * (max_width - min_width) + min_width
         length = np.random.rand(1) * (max_width - min_length) + min_length

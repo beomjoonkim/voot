@@ -19,17 +19,20 @@ def draw_q_value_rod_for_action(action_idx, action, q_val, penv, maxQ):
     penv.env.Add(new_body)
 
     base_pose = action.continuous_parameters['base_pose']
-    set_obj_xytheta(base_pose, new_body)
+    if base_pose is not None:
+        set_obj_xytheta(base_pose, new_body)
 
 
 def get_penv(args):
     if args.domain == 'convbelt':
-        return ConveyorBelt(problem_idx=1)
+        return ConveyorBelt(problem_idx=0)
     else:
         return MinimumDisplacementRemoval(problem_idx=0)
 
 
 def load_data(args):
+    fdir = './test_results/'+args.domain+'_results/visualization_purpose/with_infeasibles/'
+    #fdir = './test_results/'+args.domain+'_results/visualization_purpose/without_infeasibles/'
     fdir = './test_results/'+args.domain+'_results/visualization_purpose/'
     fname = 'node_idx_' + args.node_idx + '_' + args.algo + '.pkl'
     print "Loading ", fdir+fname
@@ -52,7 +55,8 @@ def visualize_base_poses_and_q_values(q_function, penv):
             maxQ = 4
         draw_q_value_rod_for_action(action_idx, action, q_val + infeasible_rwd_compensation, penv, maxQ)
         action_idx += 1
-        base_poses.append(action.continuous_parameters['base_pose'])
+        if action.continuous_parameters['base_pose'] is not None:
+            base_poses.append(action.continuous_parameters['base_pose'])
     visualize_configs(penv.robot, base_poses, 0.8)
 
 

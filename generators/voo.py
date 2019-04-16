@@ -120,7 +120,7 @@ class VOOGenerator(Generator):
             else:
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(-2)
-                #pass
+
         if is_sample_from_best_v_region:
             print "Done sampling from best v region"
         return action, status

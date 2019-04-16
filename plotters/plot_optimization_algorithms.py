@@ -58,7 +58,7 @@ def get_results(algo_name, dimension, obj_fcn):
         #    time_takens.append(result['time_takens'][optimal_epsilon_idx][:100])
         else:
             max_y_values.append(max_y)
-        print fin, len(max_y_values[0]), max_y[-1], optimal_epsilon_idx
+        print fin, len(max_y_values[-1]), max_y[-1], optimal_epsilon_idx
 
             #time_takens.append(result['time_takens'][optimal_epsilon_idx])
     print 'number of functions tested ', len(max_y_values)
@@ -123,7 +123,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['soo', 'doo', 'voo', 'uniform']
+    algo_names = ['gpucb', 'soo', 'doo', 'voo', 'uniform']
     #algo_names = ['voo']
     #algo_names = ['soo','voo','doo']
     #algo_names = ['gpucb']
