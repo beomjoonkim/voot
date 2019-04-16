@@ -118,7 +118,6 @@ class VOOGenerator(Generator):
             if status == 'HasSolution':
                 break
             else:
-                # todo update the score with infeasible reward
                 self.evaled_actions.append(action_parameters)
                 self.evaled_q_values.append(-2)
                 #pass
