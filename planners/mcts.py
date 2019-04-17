@@ -36,7 +36,7 @@ def create_doo_agent(operator):
 class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                 environment, use_progressive_widening, use_ucb, use_max_backup,
+                 environment, use_progressive_widening, use_ucb, use_max_backup, pick_switch,
                  voo_sampling_mode, voo_counter_ratio, n_switch):
         self.c1 = c1
         self.widening_parameter = widening_parameter
@@ -56,6 +56,7 @@ class MCTS:
         self.use_ucb = use_ucb
         self.n_switch = n_switch
         self.use_max_backup = use_max_backup
+        self.pick_switch = pick_switch
 
         self.env = self.environment.env
         self.robot = self.environment.robot
@@ -150,7 +151,11 @@ class MCTS:
 
         if self.environment.name == 'minimum_displacement_removal':
             if is_pick_node:
-                we_evaluated_the_node_enough = n_feasible_actions > 0
+                if self.pick_switch:
+                    import pdb;pdb.set_trace()
+                    we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
+                else:
+                    we_evaluated_the_node_enough = n_feasible_actions > 0
             else:
                 we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
         elif self.environment.name == 'convbelt':

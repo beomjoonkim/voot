@@ -40,7 +40,8 @@ def make_save_dir(args):
                 + str(w) + '_' + sampling_strategy + \
                 '_n_feasible_checks_'+str(n_feasibility_checks) \
                 +'_n_switch_' + str(args.n_switch) \
-                +'_max_backup_' + str(args.use_max_backup)
+                +'_max_backup_' + str(args.use_max_backup) \
+                +'_pick_switch_' + str(args.pick_switch)
 
     if addendum != '':
         save_dir += '_' + addendum + '/'
@@ -75,7 +76,7 @@ def instantiate_mcts(args, problem_env):
 
     mcts = MCTS(w, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, use_progressive_widening, use_ucb, args.use_max_backup,
+                problem_env, use_progressive_widening, use_ucb, args.use_max_backup, args.pick_switch,
                 sampling_mode, args.voo_counter_ratio, args.n_switch)
     return mcts
 
@@ -117,6 +118,7 @@ def main():
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_max_backup', action='store_true', default=False)
+    parser.add_argument('-pick_switch', action='store_true', default=False)
 
     args = parser.parse_args()
 

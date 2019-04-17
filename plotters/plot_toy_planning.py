@@ -18,8 +18,13 @@ def savefig(xlabel, ylabel, fname=''):
 
 def get_result_dir(algo_name, mcts_parameters):
     if algo_name.find('voo') != -1:
-        sampling_mode = algo_name.split('_')[1]
-        epsilon = algo_name.split('_')[2]
+        if algo_name.find('standard_uniform') != -1:
+            sampling_mode = 'standard_uniform'
+        elif algo_name.find('gaussian') != -1:
+            sampling_mode = 'gaussian'
+        else:
+            sampling_mode = 'centered_uniform'
+        epsilon = algo_name.split('_')[-1]
         algo_name = algo_name.split('_')[0]
     elif algo_name.find('unif') != -1:
         algo_name = 'unif'
@@ -51,6 +56,7 @@ def get_result_dir(algo_name, mcts_parameters):
 
     if algo_name.find('voo') != -1:
         result_dir += '/sampling_mode/' + sampling_mode + '/'
+        result_dir += 'counter_ratio_' + str(mcts_parameters.counter_ratio) + '/'
         result_dir += 'eps_' + str(epsilon) + '/'
     if algo_name.find('doo') != -1 or algo_name.find('gpucb') != -1:
         result_dir += 'eps_' + str(epsilon) + '/'
@@ -181,6 +187,7 @@ def plot_across_algorithms():
     parser.add_argument('-add', type=str, default='fullplanning')
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-use_max_backup', action='store_true', default=False)
+    parser.add_argument('-counter_ratio', type=int, default=10)
 
     args = parser.parse_args()
 
@@ -204,8 +211,8 @@ def plot_across_algorithms():
     #              'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
 
     #algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01','randomized_doo_0.1','randomized_doo_1.0']
-    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
-                  'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
+    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_standard_uniform_0.3', 'voo_standard_uniform_0.5', 'unif']
+    #algo_names = ['voo_standard_uniform_0.3', 'voo_standard_uniform_0.5', 'unif']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
