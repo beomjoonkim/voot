@@ -185,7 +185,7 @@ class VOOGenerator(Generator):
         other_actions = self.evaled_actions
 
         new_parameters = None
-        while np.any(best_dist > other_dists) and counter < 50000:
+        while np.any(best_dist > other_dists) and counter < 5000:
             new_parameters = self.sample_near_best_action(best_evaled_action, counter)
             best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
             other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
