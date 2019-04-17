@@ -70,7 +70,7 @@ def main():
     parser.add_argument('-n_switch', nargs='+', type=int)
     parser.add_argument('-use_max_backup', action='store_true', default=False)
     parser.add_argument('-voo_counter_ratio', nargs='+', type=int)
-    parser.add_argument('-use_pick_switch', action='store_true', default=False)
+    parser.add_argument('-pick_switch', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -111,7 +111,7 @@ def main():
                                           'n_switch': n_switch,
                                           'use_max_backup': args.use_max_backup,
                                           'counter_ratio': counter_ratio,
-                                          'use_pick_switch': args.use_pick_switch}
+                                          'pick_switch': args.pick_switch}
                                 configs.append(config)
 
     n_workers = int(20)
