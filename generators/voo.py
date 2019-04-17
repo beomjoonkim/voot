@@ -176,7 +176,6 @@ class VOOGenerator(Generator):
         new_parameters = np.random.uniform(self.domain[0], self.domain[1], (dim_x,))
         return new_parameters
 
-
     def sample_place_from_best_voroi_region(self):
         best_dist = np.inf
         other_dists = np.array([-1])
@@ -187,18 +186,21 @@ class VOOGenerator(Generator):
 
         new_parameters = None
         while np.any(best_dist > other_dists) and counter < 50000:
-            if self.sampling_mode == 'gaussian':
-                new_parameters = self.gaussian_sample_near_best_action(best_evaled_action, counter)
-            elif self.sampling_mode == 'centered_uniform':
-                new_parameters = self.centered_uniform_sample_near_best_action(best_evaled_action, counter)
-            else:
-                new_parameters = self.uniform_sample_near_best_action(best_evaled_action)
-
+            new_parameters = self.sample_near_best_action(best_evaled_action, counter)
             best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
             other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
             counter += 1
 
         print "Counter ", counter
+        return new_parameters
+
+    def sample_near_best_action(self, best_evaled_action, counter):
+        if self.sampling_mode == 'gaussian':
+            new_parameters = self.gaussian_sample_near_best_action(best_evaled_action, counter)
+        elif self.sampling_mode == 'centered_uniform':
+            new_parameters = self.centered_uniform_sample_near_best_action(best_evaled_action, counter)
+        else:
+            new_parameters = self.uniform_sample_near_best_action(best_evaled_action)
         return new_parameters
 
     def sample_pick_from_best_voroi_region(self, obj):
