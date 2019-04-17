@@ -122,6 +122,7 @@ class VOOGenerator(Generator):
             print "Done sampling from best v region"
         return action, status
 
+    """
     def sample_from_best_voronoi_region(self, node):
         operator = node.operator_skeleton.type
         if operator == 'two_arm_pick':
@@ -132,6 +133,7 @@ class VOOGenerator(Generator):
         else:
             raise NotImplementedError
         return params
+    """
 
     def get_best_evaled_action(self):
         DEBUG = True
@@ -176,6 +178,7 @@ class VOOGenerator(Generator):
         new_parameters = np.random.uniform(self.domain[0], self.domain[1], (dim_x,))
         return new_parameters
 
+    """
     def sample_place_from_best_voroi_region(self):
         best_dist = np.inf
         other_dists = np.array([-1])
@@ -193,6 +196,42 @@ class VOOGenerator(Generator):
 
         print "Counter ", counter
         return new_parameters
+    """
+
+    def sample_from_best_voronoi_region(self, node):
+        best_dist = np.inf
+        other_dists = np.array([-1])
+        counter = 0
+        operator = node.operator_skeleton.type
+
+        best_evaled_action = self.get_best_evaled_action()
+        other_actions = self.evaled_actions
+
+        if operator == 'two_arm_pick':
+            obj = node.operator_skeleton.discrete_parameters['object']
+            def dist_fcn(x, y): return pick_parameter_distance(obj, x, y)
+        elif operator == 'two_arm_place':
+            def dist_fcn(x, y): return place_parameter_distance(x, y, self.c1)
+        else:
+            raise NotImplementedError
+
+        new_parameters = None
+        closest_best_dist = np.inf
+        max_counter = 5000
+        while np.any(best_dist > other_dists) and counter < max_counter:
+            new_parameters = self.sample_near_best_action(best_evaled_action, counter)
+            best_dist = dist_fcn(new_parameters, best_evaled_action)
+            other_dists = np.array([dist_fcn(other, new_parameters) for other in other_actions])
+            counter += 1
+            if closest_best_dist > best_dist:
+                closest_best_dist = best_dist
+                best_parameters = new_parameters
+
+        print "Counter ", counter
+        if counter >= max_counter:
+            return best_parameters
+        else:
+            return new_parameters
 
     def sample_near_best_action(self, best_evaled_action, counter):
         if self.sampling_mode == 'gaussian':
@@ -203,6 +242,7 @@ class VOOGenerator(Generator):
             new_parameters = self.uniform_sample_near_best_action(best_evaled_action)
         return new_parameters
 
+    """
     def sample_pick_from_best_voroi_region(self, obj):
         best_dist = np.inf
         other_dists = np.array([-1])
@@ -212,15 +252,15 @@ class VOOGenerator(Generator):
         other_actions = self.evaled_actions
 
         new_parameters = None
-        while np.any(best_dist > other_dists) and counter < 50000:
+        while np.any(best_dist > other_dists) and counter < 5000:
             new_parameters = self.sample_near_best_action(best_evaled_action, counter)
-
             best_dist = [pick_parameter_distance(obj, new_parameters, best_evaled_action)]
             other_dists = np.array([pick_parameter_distance(obj, other, new_parameters) for other in other_actions])
             counter += 1
 
         print "Counter ", counter
         return new_parameters
+    """
 
 
 
