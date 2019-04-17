@@ -20,11 +20,13 @@ def worker_p(config):
     use_uct = config['use_uct']
     add = config['add']
     n_switch = config['n_switch']
+    voo_counter_ratio = config['counter_ratio']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -w ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
-        ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode) + ' -n_switch ' + str(n_switch)
+        ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode) + ' -n_switch ' + str(n_switch) + \
+        ' -voo_counter_ratio ' + str(voo_counter_ratio)
     if pw:
         command += ' -pw '
 
@@ -38,7 +40,7 @@ def worker_p(config):
         command +=  ' -add ' + add
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -63,44 +65,48 @@ def main():
     parser.add_argument('-use_uct', action='store_true', default=False)
     parser.add_argument('-n_switch', nargs='+', type=int)
     parser.add_argument('-use_max_backup', action='store_true', default=False)
+    parser.add_argument('-voo_counter_ratio', nargs='+', type=int)
 
     args = parser.parse_args()
 
     sampling_strategy = args.sampling_strategy
-    epsilons = args.epsilon if args.epsilon is not None else [-1.0]
+    epsilons = args.epsilon if args.epsilon is not None else [-1]
     domain = args.domain
     widening_parameters = args.w if args.w is not None else [1]
     mcts_iter = args.mcts_iter
     ucts = args.uct if args.uct is not None else [0.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
+    counter_ratios = args.voo_counter_ratio if args.voo_counter_ratio is not None else [10]
 
     seeds = range(args.seeds[0], args.seeds[1]) if args.seeds is not None else range(20)
-    n_switches = args.n_switch if args.n_switch is not None else [35]
+    n_switches = args.n_switch if args.n_switch is not None else [10]
 
     pidx = args.pidx
     configs = []
-    for n_switch in n_switches:
-        for n_feasibility_check in n_feasibility_checks:
-            for uct in ucts:
-                for e in epsilons:
-                    for seed in seeds:
-                        for widening_parameter in widening_parameters:
-                            config = {"widening_parameter": widening_parameter,
-                                      "epsilon": e,
-                                      'pidx': pidx,
-                                      'domain': domain,
-                                      'sampling_strategy': sampling_strategy,
-                                      'mcts_iter': mcts_iter,
-                                      'uct': uct,
-                                      'n_feasibility_checks': n_feasibility_check,
-                                      'seed': seed,
-                                      'voo_sampling_mode': args.voo_sampling_mode,
-                                      'pw': args.pw,
-                                      'use_uct': args.use_uct,
-                                      'add': args.add,
-                                      'n_switch': n_switch,
-                                      'use_max_backup': args.use_max_backup}
-                            configs.append(config)
+    for counter_ratio in counter_ratios:
+        for n_switch in n_switches:
+            for n_feasibility_check in n_feasibility_checks:
+                for uct in ucts:
+                    for e in epsilons:
+                        for seed in seeds:
+                            for widening_parameter in widening_parameters:
+                                config = {"widening_parameter": widening_parameter,
+                                          "epsilon": e,
+                                          'pidx': pidx,
+                                          'domain': domain,
+                                          'sampling_strategy': sampling_strategy,
+                                          'mcts_iter': mcts_iter,
+                                          'uct': uct,
+                                          'n_feasibility_checks': n_feasibility_check,
+                                          'seed': seed,
+                                          'voo_sampling_mode': args.voo_sampling_mode,
+                                          'pw': args.pw,
+                                          'use_uct': args.use_uct,
+                                          'add': args.add,
+                                          'n_switch': n_switch,
+                                          'use_max_backup': args.use_max_backup,
+                                          'counter_ratio': counter_ratio}
+                                configs.append(config)
 
     n_workers = int(20)
     print configs
