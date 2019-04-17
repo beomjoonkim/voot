@@ -62,7 +62,7 @@ class DOOGenerator(Generator):
             action_parameters, doo_node = self.choose_next_point()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
             if status == 'HasSolution':
-                return action, status, doo_node, action_parameters
+                break
         return action, status, doo_node, action_parameters
 
     def choose_next_point(self):

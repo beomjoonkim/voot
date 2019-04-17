@@ -8,18 +8,16 @@ import time
 
 
 class VOOGenerator(Generator):
-    def __init__(self, operator_name, problem_env, explr_p, c1, sampling_mode):
+    def __init__(self, operator_name, problem_env, explr_p, c1, sampling_mode, counter_ratio):
         Generator.__init__(self, operator_name, problem_env)
         self.explr_p = explr_p
         self.evaled_actions = []
         self.evaled_q_values = []
         self.c1 = c1
-        self.feasible_actions = []
-        self.feasible_q_values = []
         self.idx_to_update = None
         self.robot = self.problem_env.robot
         self.sampling_mode = sampling_mode
-        self.counter_ratio = 0.1
+        self.counter_ratio = 1.0 / counter_ratio
 
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()
@@ -83,12 +81,14 @@ class VOOGenerator(Generator):
 
         action, status = self.sample_point(node, n_iter)
 
-        if status != 'HasSolution':
-            print node.operator_skeleton.type + " sampling failed"
-        else:
+        if status == 'HasSolution':
             self.evaled_actions.append(action['action_parameters'])
             self.evaled_q_values.append('update_me')
             self.idx_to_update = len(self.evaled_actions) - 1
+        else:
+            print node.operator_skeleton.type + " sampling failed"
+            self.evaled_actions.append(action['action_parameters'])
+            self.evaled_q_values.append(-2)
 
         return action
 
@@ -117,10 +117,6 @@ class VOOGenerator(Generator):
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
             if status == 'HasSolution':
                 break
-            else:
-                pass
-                #self.evaled_actions.append(action_parameters)
-                #self.evaled_q_values.append(-2)
 
         if is_sample_from_best_v_region:
             print "Done sampling from best v region"
@@ -156,7 +152,7 @@ class VOOGenerator(Generator):
             best_action_idx = np.random.choice(best_action_idxs)
         return self.evaled_actions[best_action_idx]
 
-    def sample_near_best_action(self, best_evaled_action, counter):
+    def centered_uniform_sample_near_best_action(self, best_evaled_action, counter):
         dim_x = self.domain[1].shape[-1]
         possible_max = (self.domain[1] - best_evaled_action) / np.exp(self.counter_ratio*counter)
         possible_min = (self.domain[0] - best_evaled_action) / np.exp(self.counter_ratio*counter)
@@ -169,11 +165,17 @@ class VOOGenerator(Generator):
         return new_parameters
 
     def gaussian_sample_near_best_action(self, best_evaled_action, counter):
-        variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
+        variance = (self.domain[1] - self.domain[0]) / np.exp(self.counter_ratio*counter)
         new_parameters = np.random.normal(best_evaled_action, variance)
         new_parameters = np.clip(new_parameters, self.domain[0], self.domain[1])
 
         return new_parameters
+
+    def uniform_sample_near_best_action(self, best_evaled_action):
+        dim_x = self.domain[1].shape[-1]
+        new_parameters = np.random.uniform(self.domain[0], self.domain[1], (dim_x,))
+        return new_parameters
+
 
     def sample_place_from_best_voroi_region(self):
         best_dist = np.inf
@@ -184,16 +186,19 @@ class VOOGenerator(Generator):
         other_actions = self.evaled_actions
 
         new_parameters = None
-        while np.any(best_dist > other_dists) and counter < 1000:
+        while np.any(best_dist > other_dists) and counter < 50000:
             if self.sampling_mode == 'gaussian':
                 new_parameters = self.gaussian_sample_near_best_action(best_evaled_action, counter)
+            elif self.sampling_mode == 'centered_uniform':
+                new_parameters = self.centered_uniform_sample_near_best_action(best_evaled_action, counter)
             else:
-                new_parameters = self.sample_near_best_action(best_evaled_action, counter)
+                new_parameters = self.uniform_sample_near_best_action(best_evaled_action)
 
             best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
             other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
             counter += 1
 
+        print "Counter ", counter
         return new_parameters
 
     def sample_pick_from_best_voroi_region(self, obj):
@@ -205,7 +210,7 @@ class VOOGenerator(Generator):
         other_actions = self.evaled_actions
 
         new_parameters = None
-        while np.any(best_dist > other_dists) and counter < 1000:
+        while np.any(best_dist > other_dists) and counter < 50000:
             new_parameters = self.sample_near_best_action(best_evaled_action, counter)
 
             best_dist = [pick_parameter_distance(obj, new_parameters, best_evaled_action)]

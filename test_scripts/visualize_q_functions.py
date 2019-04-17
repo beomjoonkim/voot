@@ -52,7 +52,7 @@ def visualize_base_poses_and_q_values(q_function, penv):
         if penv.name == 'convbelt':
             maxQ = 1
         else:
-            maxQ = 4
+            maxQ = 1
         draw_q_value_rod_for_action(action_idx, action, q_val + infeasible_rwd_compensation, penv, maxQ)
         action_idx += 1
         if action.continuous_parameters['base_pose'] is not None:

@@ -37,7 +37,7 @@ class MCTS:
     def __init__(self, widening_parameter, exploration_parameters,
                  sampling_strategy, sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
                  environment, use_progressive_widening, use_ucb, use_max_backup,
-                 voo_sampling_mode, n_switch):
+                 voo_sampling_mode, voo_counter_ratio, n_switch):
         self.c1 = c1
         self.widening_parameter = widening_parameter
         self.exploration_parameters = exploration_parameters
@@ -52,6 +52,7 @@ class MCTS:
         self.depth_limit = np.inf
         self.use_progressive_widening = use_progressive_widening
         self.voo_sampling_mode = voo_sampling_mode
+        self.voo_counter_ratio = voo_counter_ratio
         self.use_ucb = use_ucb
         self.n_switch = n_switch
         self.use_max_backup = use_max_backup
@@ -72,7 +73,7 @@ class MCTS:
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
             return VOOGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter, self.c1,
-                                self.voo_sampling_mode)
+                                self.voo_sampling_mode, self.voo_counter_ratio)
         elif self.sampling_strategy == 'gpucb':
             return GPUCBGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'doo':
@@ -191,8 +192,9 @@ class MCTS:
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
-                if self.s0_node.A[0].type == 'two_arm_place':
-                    self.s0_node.store_node_information(self.environment.name)
+                #if self.s0_node.A[0].type == 'two_arm_place':
+                #    self.s0_node.store_node_information(self.environment.name)
+                #import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 

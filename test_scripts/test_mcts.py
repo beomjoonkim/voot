@@ -49,6 +49,7 @@ def make_save_dir(args):
 
     if sampling_strategy == 'voo':
         save_dir += '/sampling_mode/' + args.voo_sampling_mode+'/'
+        save_dir += '/counter_ratio_' + str(args.voo_counter_ratio)+'/'
 
     if sampling_strategy != 'unif':
         save_dir += '/eps_' + str(sampling_strategy_exploration_parameter) +'/'
@@ -58,7 +59,6 @@ def make_save_dir(args):
             os.makedirs(save_dir)
         except OSError:
             pass
-
     return save_dir
 
 
@@ -75,7 +75,8 @@ def instantiate_mcts(args, problem_env):
 
     mcts = MCTS(w, uct_parameter, sampling_strategy,
                 sampling_strategy_exploration_parameter, c1, n_feasibility_checks,
-                problem_env, use_progressive_widening, use_ucb, args.use_max_backup, sampling_mode, args.n_switch)
+                problem_env, use_progressive_widening, use_ucb, args.use_max_backup,
+                sampling_mode, args.voo_counter_ratio, args.n_switch)
     return mcts
 
 
@@ -112,6 +113,7 @@ def main():
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-random_seed', type=int, default=-1)
     parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
+    parser.add_argument('-voo_counter_ratio', type=int, default=100)
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_max_backup', action='store_true', default=False)
