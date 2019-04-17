@@ -152,7 +152,6 @@ class MCTS:
         if self.environment.name == 'minimum_displacement_removal':
             if is_pick_node:
                 if self.pick_switch:
-                    import pdb;pdb.set_trace()
                     we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
                 else:
                     we_evaluated_the_node_enough = n_feasible_actions > 0
