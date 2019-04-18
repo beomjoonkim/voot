@@ -109,12 +109,18 @@ class VOOGenerator(Generator):
         if is_sample_from_best_v_region:
             print "Trying to sample a feasible sample from best v region..."
         for i in range(n_iter):
+            #print "feasibility check iteration:", i
             if is_sample_from_best_v_region:
+                stime = time.time()
                 action_parameters = self.sample_from_best_voronoi_region(node)
+                print "Best V region sampling time", time.time()-stime
             else:
                 action_parameters = self.sample_from_uniform()
 
+            stime = time.time()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
+            #print "Feasibility checking time", time.time()-stime
+            #print "Done checking feasibility"
             if status == 'HasSolution':
                 break
 
@@ -217,7 +223,7 @@ class VOOGenerator(Generator):
 
         new_parameters = None
         closest_best_dist = np.inf
-        max_counter = 5000
+        max_counter = 1000
         while np.any(best_dist > other_dists) and counter < max_counter:
             new_parameters = self.sample_near_best_action(best_evaled_action, counter)
             best_dist = dist_fcn(new_parameters, best_evaled_action)
@@ -225,10 +231,13 @@ class VOOGenerator(Generator):
             counter += 1
             if closest_best_dist > best_dist:
                 closest_best_dist = best_dist
+                best_other_dists = other_dists
                 best_parameters = new_parameters
 
         print "Counter ", counter
+        print "n actions = ", len(self.evaled_actions)
         if counter >= max_counter:
+            print closest_best_dist, best_other_dists
             return best_parameters
         else:
             return new_parameters

@@ -39,6 +39,7 @@ def get_result_dir(algo_name, mcts_parameters):
     addendum = mcts_parameters.add
     n_switch = mcts_parameters.n_switch
 
+
     rootdir = './test_results/'
     result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
                  '/uct_0.0'+'_widening_' + str(widening_parameter) + '_' + algo_name
@@ -48,6 +49,9 @@ def get_result_dir(algo_name, mcts_parameters):
 
     if mcts_parameters.use_max_backup:
         result_dir += '_max_backup_True'
+    if mcts_parameters.pick_switch:
+        result_dir += '_pick_switch_True'
+
 
     if addendum != '':
         result_dir += '_' + addendum + '/'
@@ -113,7 +117,7 @@ def get_mcts_results(algo_name, mcts_parameters):
 
 
 def get_max_rwds_wrt_time(search_rwd_times):
-    max_time = 7000
+    max_time = 15000
     organized_times = range(10, max_time, 1)
 
     all_episode_data = []
@@ -130,9 +134,9 @@ def get_max_rwds_wrt_time(search_rwd_times):
             else:
                 max_rwd = 0
             episode_progress = -np.array(rwd_time)[:, 3]
-            max_progress = np.max(episode_progress[idxs])
+            #max_progress = np.max(episode_progress[idxs])
             episode_max_rwds_wrt_organized_times.append(max_rwd)
-            episode_max_progress_wrt_organized_times.append(max_progress)
+            #episode_max_progress_wrt_organized_times.append(max_progress)
         all_episode_data.append(episode_max_rwds_wrt_organized_times)
         all_episode_progress_data.append(episode_max_progress_wrt_organized_times)
 
@@ -188,13 +192,9 @@ def plot_across_algorithms():
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-use_max_backup', action='store_true', default=False)
     parser.add_argument('-counter_ratio', type=int, default=10)
+    parser.add_argument('-pick_switch', action='store_true', default=False)
 
     args = parser.parse_args()
-
-    algo_names = ['randomized_doo_1.0', 'voo_0.3', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'unif']
-    algo_names = [ 'voo_uniform_0.3', 'unif']
 
     if args.domain == 'minimum_displacement_removal_results':
         if args.n_feasibility_checks == 100:
@@ -204,15 +204,8 @@ def plot_across_algorithms():
     else:
         algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
                       'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
-    #algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
-    #              'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
 
-    #algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
-    #              'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
-
-    #algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01','randomized_doo_0.1','randomized_doo_1.0']
-    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_standard_uniform_0.3', 'voo_standard_uniform_0.5', 'unif']
-    #algo_names = ['voo_standard_uniform_0.3', 'voo_standard_uniform_0.5', 'unif']
+    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1','voo_standard_uniform_0.1', 'voo_standard_uniform_0.3', 'voo_standard_uniform_0.5', 'unif']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -252,7 +245,7 @@ def plot_across_algorithms():
             sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                        color=color)
         else:
-            sns.tsplot(search_rwd[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
+            sns.tsplot(search_rwd[:, :], organized_times[:], ci=95, condition=algo_name,
                        color=color)
 
     if args.domain == 'minimum_displacement_removal_results':
@@ -264,15 +257,13 @@ def plot_across_algorithms():
         plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
     else:
-        if args.pidx == 0:
-            sns.tsplot([4.1]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
-                       ci=95, condition='Avg feasible reward', color='magenta')
-        else:
-            sns.tsplot([2.97]*len(organized_times[:args.mcts_iter]), organized_times[:args.mcts_iter],
-                       ci=95, condition='Avg feasible reward', color='magenta')
+        sns.tsplot([4.1]*len(organized_times[:]), organized_times[:args.mcts_iter],
+                   ci=95, condition='Avg feasible reward', color='magenta')
 
-        plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
-                        + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup)
+        plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' \
+                    + str(args.mcts_iter) + "_uct_" + str(args.uct) + "_n_feasibility_checks_" \
+                    + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup) \
+                    + '_pick_switch_' + str(args.pick_switch)
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
 

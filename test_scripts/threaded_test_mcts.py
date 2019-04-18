@@ -39,12 +39,11 @@ def worker_p(config):
     if config['pick_switch']:
         command += ' -pick_switch'
 
-
     if add != '':
         command +=  ' -add ' + add
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
