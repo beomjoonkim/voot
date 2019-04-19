@@ -40,7 +40,7 @@ def worker_p(config):
         command += ' -pick_switch'
 
     if add != '':
-        command +=  ' -add ' + add
+        command += ' -add ' + add
 
     print command
     os.system(command)
@@ -76,7 +76,7 @@ def main():
     sampling_strategy = args.sampling_strategy
     epsilons = args.epsilon if args.epsilon is not None else [-1]
     domain = args.domain
-    widening_parameters = args.w if args.w is not None else [1]
+    widening_parameters = args.w if args.w is not None else [5]
     mcts_iter = args.mcts_iter
     ucts = args.uct if args.uct is not None else [0.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
