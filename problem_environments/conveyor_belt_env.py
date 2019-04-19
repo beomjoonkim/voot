@@ -22,7 +22,11 @@ class ConveyorBelt(ProblemEnvironment):
         obj_setup = None
         self.problem_config = create_conveyor_belt_problem(self.env, obj_setup, problem_idx)
         self.objects = self.problem_config['objects']
-        self.objects = self.objects[4:]
+        if self.problem_idx == 0:
+            self.objects = self.objects[4:]
+        else:
+            pass
+
         #self.objects[0], self.objects[2] = self.objects[2] ,self.objects[0]
         #set_color( self.objects[0] , [1,0,0] )
 
@@ -48,6 +52,7 @@ class ConveyorBelt(ProblemEnvironment):
         # We don't need to call motion planner.
 
         # the condition is where the object is facing.
+        """
         grabbed_obj = self.robot.GetGrabbed()[0]
         obj_name = grabbed_obj.GetName()
         if obj_name.find('tobj') != -1:
@@ -64,6 +69,7 @@ class ConveyorBelt(ProblemEnvironment):
                     no_solution = True
             if no_solution:
                 return None, "NoSolution"
+        """
 
         goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
 

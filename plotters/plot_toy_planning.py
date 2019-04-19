@@ -205,7 +205,7 @@ def plot_across_algorithms():
         algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
                       'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
 
-    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_standard_uniform_0.5', 'voo_standard_uniform_0.3', 'voo_standard_uniform_0.1', 'unif']
+    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_standard_uniform_0.1', 'unif']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -231,6 +231,7 @@ def plot_across_algorithms():
             print algo, "not found"
             continue
         search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
+        import pdb;pdb.set_trace()
         #search_rwd, search_progress, organized_times = get_max_rwds_wrt_time(search_rwd_times)
 
         max_rwds.append(max_rwd)
@@ -269,7 +270,7 @@ def plot_across_algorithms():
 
     if args.domain.find('minimum') != -1:
         if args.pidx == 0:
-            plt.ylim(-2, 4.6)
+            plt.ylim(-2, 5)
 
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 

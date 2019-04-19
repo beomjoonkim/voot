@@ -26,16 +26,28 @@ dim_x = 2
 n_fcn_evals = args.n_fcn_evals
 
 # todo create multiple local optima
+"""
 config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(2)+'.pkl', 'r'))
 A = config['A']
 C = config['C']
+"""
 
 NUMMAX=2
-A = np.random.rand(NUMMAX, dim_x)
-C = np.random.rand(NUMMAX)
 
+#A = np.random.rand(NUMMAX, dim_x)*10
+#C = np.random.rand(NUMMAX)*10
+
+A = np.array([[
+    0.5, 0.5],
+    [0.25, 0.25],
+    [0.25, 0.75],
+    [0.75, 0.25],
+    [0.75, 0.75]
+]) * 500
+C = np.array([0.002, 0.005, 0.005, 0.005, 0.005]) * 500
 domain = np.array([[-500.]*dim_x, [500.]*dim_x])
 
+# todo define X near 0.5,0.5 , and 500,500. Both shows difference in mu(R)/mu(X)
 save_dir = './test_results/function_optimization/visualization/shekel' + '/dim_' + str(dim_x) + \
            '/'+algo_name+'/'
 
@@ -127,7 +139,7 @@ def voo(explr_p, ax):
     voo = VOO(domain, explr_p)
     times = []
     stime = time.time()
-    print 'explr_p',explr_p
+    print 'explr_p', explr_p
 
     for i in range(n_fcn_evals):
         x = voo.choose_next_point(evaled_x, evaled_y)
@@ -207,7 +219,6 @@ def main():
     np.random.seed(seed)
     random.seed(seed)
     ax = draw_shekel()
-    import pdb;pdb.set_trace()
     evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, ax)
 
 

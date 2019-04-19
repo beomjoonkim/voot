@@ -152,10 +152,13 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
         obst_poses = obj_setup['obst_poses']
 
     fdir=os.path.dirname(os.path.abspath(__file__))
+    env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
+    """
     if problem_idx == 0:
         env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
     else:
         env.Load(fdir + '/convbelt_env.xml')
+    """
 
     robot = env.GetRobots()[0]
     set_default_robot_config(robot)
@@ -209,9 +212,21 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
     init_base_conf = np.array([0, 1.05, 0])
     set_robot_config(np.array([0, 1.05, 0]), robot)
 
+    objects = []
+    i = 1
+    for tobj in env.GetBodies():
+        if tobj.GetName().find('tobj') == -1: continue
+        randomly_place_in_region(env, tobj, conveyor_belt)
+        set_obj_xytheta([2 + i, 1.05, 0], tobj)
+        objects.append(tobj)
+        i += 1.1
+
+    square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=10)
+    objects += square_objects
+    """
     if problem_idx == 0:
         objects = []
-        i=1
+        i = 1
         for tobj in env.GetBodies():
             if tobj.GetName().find('tobj') == -1: continue
             randomly_place_in_region(env, tobj, conveyor_belt)
@@ -223,6 +238,8 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
         objects += square_objects
     else:
         objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=20)
+    """
+
     initial_saver = DynamicEnvironmentStateSaver(env)
     initial_state = (initial_saver, [])
     problem = {'initial_state': initial_state,

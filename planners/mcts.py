@@ -149,25 +149,13 @@ class MCTS:
             root_node_reward_history = np.array([np.max(R) for R in root_node_reward_history])
             n_feasible_actions = np.sum(root_node_reward_history >= 0)
 
-        if self.environment.name == 'minimum_displacement_removal':
-            if is_pick_node:
-                if self.pick_switch:
-                    we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
-                else:
-                    we_evaluated_the_node_enough = n_feasible_actions > 0
-            else:
+        if is_pick_node:
+            if self.pick_switch:
                 we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
-        elif self.environment.name == 'convbelt':
-            if is_pick_node:
-                if self.environment.problem_idx == 1:
-                    we_evaluated_the_node_enough = n_feasible_actions > 0
-                else:
-                    we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
-
             else:
-                we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
+                we_evaluated_the_node_enough = n_feasible_actions > 0
         else:
-            raise NotImplementedError
+            we_evaluated_the_node_enough = n_feasible_actions >= self.n_switch
 
         return we_evaluated_the_node_enough
 
@@ -196,9 +184,9 @@ class MCTS:
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
-                #if self.s0_node.A[0].type == 'two_arm_place':
-                #    self.s0_node.store_node_information(self.environment.name)
-                #    import pdb;pdb.set_trace()
+                if self.s0_node.A[0].type == 'two_arm_place':
+                    self.s0_node.store_node_information(self.environment.name)
+                    import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
@@ -212,6 +200,7 @@ class MCTS:
             plan = self.retrace_best_plan()
             rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
             print 'n feasible actions ', np.sum(rewards >= 0)
+            print search_time_to_reward[-1]
 
             if time_to_search > max_time:
                 break
