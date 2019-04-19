@@ -8,6 +8,8 @@ import random
 from deap.benchmarks import shekel
 from deap import benchmarks
 
+import matplotlib
+matplotlib.use('Agg')
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
 
@@ -46,6 +48,7 @@ A = np.array([[
 ]) * 500
 C = np.array([0.002, 0.005, 0.005, 0.005, 0.005]) * 500
 domain = np.array([[-500.]*dim_x, [500.]*dim_x])
+domain = np.array([[0.]*dim_x, [500.]*dim_x])
 
 # todo define X near 0.5,0.5 , and 500,500. Both shows difference in mu(R)/mu(X)
 save_dir = './test_results/function_optimization/visualization/shekel' + '/dim_' + str(dim_x) + \
