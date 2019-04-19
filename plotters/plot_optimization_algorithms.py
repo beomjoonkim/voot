@@ -129,10 +129,10 @@ def plot_across_algorithms():
         search_rwd_times = search_rwd_times[:, 0:n_samples]
         n_samples = search_rwd_times.shape[-1]
 
-        if args.obj_fcn == 'shekel' and args.dim == 10 and algo == 'soo':
-            sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='5xSOO', color='magenta')
-        elif args.obj_fcn == 'shekel' and args.dim == 20 and algo == 'soo':
-            sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='10xSOO', color='magenta')
+        #if args.obj_fcn == 'shekel' and args.dim == 10 and algo == 'soo':
+        #    sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='5xSOO', color='magenta')
+        #elif args.obj_fcn == 'shekel' and args.dim == 20 and algo == 'soo':
+        #    sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='10xSOO', color='magenta')
 
         sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
         print "===================="
