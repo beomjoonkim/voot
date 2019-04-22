@@ -1,0 +1,189 @@
+<Environment>
+  <camtrans>0 -4 6</camtrans>
+  <camrotationaxis>-1 0 0 150</camrotationaxis>
+  <camfocal>0</camfocal>
+
+  <Robot file="robots/pr2-beta-static.zae">
+    <translation>0 1.05 0.075</translation>
+  </Robot>
+
+  <KinBody name="floorwalls">
+    <Body type="static">
+      <Translation>0 0 0</Translation>
+      <!--> floor </!-->
+      <Geom type="box">
+        <extents>3.625 5 0.005</extents>
+        <translation>-3.78 -2.510</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--side walls-->
+      <Geom type="box">
+        <extents>0.825 0.01 1</extents>
+        <translation>-1.47 -0.5 1</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <Geom type="box">
+        <extents>3.625 0.01 0.2</extents>
+        <translation>-3.78 2.5 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+     <Geom type="box">
+        <extents>3.625 0.01 0.2</extents>
+        <translation>-3.78 -7.5 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+
+     <!--back wall-->
+      <Geom type="box">
+        <extents>0.01 5.5 1</extents>
+        <translation>-7.4 -2.0 1</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--second door-->
+      <Geom type="box">
+        <extents>0.01 4.5 1</extents>
+        <translation>-3.4 -2.0 1</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--conveyor belt-->
+      <Geom type="box">
+        <extents>8 0.5 0.005</extents>
+        <translation>5 1.05 -0.005</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--walls near conveyor belt-->
+      <!--Geom type="box">
+        <extents>0.01 0.5 0.2</extents>
+        <translation>0.95 2 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom-->
+      <!--Geom type="box">
+        <extents>0.01 1.5 0.2</extents>
+        <translation>0.95 -1 0.2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom-->
+
+      <!--> door left wall </!-->
+      <Geom type="box">
+        <extents>0.04 0.4 1</extents>
+        <translation>-0.7 2.0 1</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+      <!--> door right wall </!-->
+       <Geom type="box">
+        <extents>0.04 4.0 1</extents>
+        <translation>-0.7 -3.9 1</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+
+      <!--> door top </!-->
+      <Geom type="box">
+        <extents>0.04 2.4 0.2</extents>
+        <translation>-0.7 0 2</translation>
+        <diffuseColor>.82 .70 .55</diffuseColor>
+      </Geom>
+    </Body>
+  </KinBody>
+
+
+  <KinBody name="tobj1">
+     <KinBody name = "lowerbox">
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 0 0.3775</Translation>
+        <extents>0.2 0.3 0.5</extents>
+        <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+      </Body>
+    </KinBody>
+    <KinBody name = "top_obj">
+    <Translation >0  0 0.5</Translation>
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 -0.25 0.5</Translation>
+        <extents>0.2 0.63 0.2</extents>
+        <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+    </Body>
+    </KinBody>
+
+  </KinBody>
+
+   <KinBody name="tobj2">
+      <KinBody name = "lowerbox">
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 0 0.3775</Translation>
+        <extents>0.2 0.3 0.5</extents>
+            <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+      </Body>
+    </KinBody>
+    <KinBody name = "middle_obj">
+    <Translation >0 0 0.5</Translation>
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>-0.25 0.3 0.5</Translation>
+        <extents>.25 0.5 0.05</extents>
+            <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+    </Body>
+    </KinBody>
+    </KinBody>
+
+   <!--KinBody name="tobj3">
+      <KinBody name = "lowerbox">
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 0 0.3775</Translation>
+        <extents>0.3 0.3 0.4</extents>
+            <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+      </Body>
+    </KinBody>
+    <KinBody name = "middle_obj">
+    <Translation >0 0 0.5</Translation>
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0.3 0 0.5</Translation>
+        <extents>0.7 0.1 0.1</extents>
+        <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+    </Body>
+    </KinBody>
+    </KinBody-->
+
+
+    <!--KinBody name="tobj4">
+      <KinBody name = "lowerbox">
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0 0 0.3775</Translation>
+        <extents>0.2 0.2 0.5</extents>
+            <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+      </Body>
+    </KinBody>
+    <KinBody name = "middle_obj">
+    <Translation >0 0 0.2</Translation>
+      <Body type="dynamic">
+        <Geom type="box">
+        <Translation>0.0 0.8 -0.1</Translation>
+        <extents>0.2 0.6 0.2</extents>
+        <diffuseColor>0. 0.2 0.</diffuseColor>
+      </Geom>
+    </Body>
+    </KinBody>
+    </KinBody-->
+
+
+
+
+</Environment>

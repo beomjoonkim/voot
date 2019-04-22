@@ -16,6 +16,8 @@ import sys
 import socket
 import numpy as np
 
+from test_scripts.visualize_q_functions import visualize_base_poses_and_q_values
+
 sys.setrecursionlimit(15000)
 
 DEBUG = True
@@ -184,15 +186,19 @@ class MCTS:
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
-                if self.s0_node.A[0].type == 'two_arm_place':
-                    self.s0_node.store_node_information(self.environment.name)
-                    import pdb;pdb.set_trace()
+                #if self.s0_node.A[0].type == 'two_arm_place':
+                    #self.s0_node.store_node_information(self.environment.name)
+                    #import pdb;pdb.set_trace()
+                    #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
+                    #import pdb; pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
+
 
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
+
 
             #self.log_current_tree_to_dot_file(iteration)
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
@@ -200,7 +206,7 @@ class MCTS:
             plan = self.retrace_best_plan()
             rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
             print 'n feasible actions ', np.sum(rewards >= 0)
-            print search_time_to_reward[-1]
+            print search_time_to_reward[-1], np.argmax(np.array(search_time_to_reward)[:,2])
 
             if time_to_search > max_time:
                 break

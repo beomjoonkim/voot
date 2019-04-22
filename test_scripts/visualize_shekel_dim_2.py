@@ -103,6 +103,7 @@ def doo(explr_p, ax):
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
+        print np.max(evaled_y)
 
         draw_points(evaled_x, ax)
     print "Max value found", np.max(evaled_y)
@@ -155,6 +156,7 @@ def voo(explr_p, ax):
         times.append(time.time()-stime)
 
         draw_points(evaled_x, ax)
+        print np.max(evaled_y)
 
     best_idx = np.where(evaled_y == max_y[-1])[0][0]
     print evaled_x[best_idx], evaled_y[best_idx]
@@ -188,8 +190,7 @@ def draw_shekel():
 def draw_points(points, ax):
     points = np.array(points)
     evaluations = [benchmarks.shekel(x, A, C)[0] for x in points]
-    ax.scatter(points[:, 0], points[:, 1], evaluations, c='black')
-    ax.scatter(points[-1, 0], points[-1, 1], evaluations[-1], c='red')
+    ax.scatter(points[:, 0], points[:, 1], evaluations, c='black', marker='>')
     plt.savefig(save_dir+'/'+str(points.shape[0])+'.png')
 
 
@@ -210,7 +211,7 @@ def main():
         return
 
     if algo_name == 'voo':
-        epsilon = 0.3
+        epsilon = 0.5
     elif algo_name == 'soo':
         epsilon = 0
     elif algo_name == 'doo':

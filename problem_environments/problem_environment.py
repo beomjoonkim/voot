@@ -220,8 +220,8 @@ class ProblemEnvironment:
         self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
         if region_name is None:
             assert self.name == 'convbelt'
-            d_fn = base_distance_fn(self.robot, x_extents=3.51, y_extents=2.51)
-            s_fn = base_sample_fn(self.robot, x_extents=3.51, y_extents=2.51)
+            d_fn = base_distance_fn(self.robot, x_extents=3.9, y_extents=7.1)
+            s_fn = base_sample_fn(self.robot, x_extents=4.6, y_extents=5, x=-2.8, y=-3)
         else:
             region_x = self.problem_config[region_name+'_xy'][0]
             region_y = self.problem_config[region_name+'_xy'][1]
@@ -233,16 +233,13 @@ class ProblemEnvironment:
         c_fn = collision_fn(self.env, self.robot)
         q_init = self.robot.GetActiveDOFValues()
 
+
         if n_iterations is None:
-            if self.name == 'convbelt':
-                #n_iterations = [20, 50, 100, 500, 3000]
-                n_iterations = [20, 50, 100, 500] #700]
-            else:
-                n_iterations = [20, 50, 100, 500, 1000]
+            n_iterations = [20, 50, 100, 500, 1000]
 
         print "Base motion planning..."
         path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
-        print "Status,",status
+        print "Status,", status
         return path, status
 
     def get_arm_motion_plan(self, goal, manip_name=None):

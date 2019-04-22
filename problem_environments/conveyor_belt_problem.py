@@ -38,7 +38,7 @@ from mover_library.utils import *
 
 import pickle
 # obj definitions
-min_height = 0.4
+min_height = 0.7
 max_height = 1
 
 min_width = 0.2
@@ -97,20 +97,21 @@ def create_objects(env, conveyor_belt, num_objects):
     obj_poses = {}
 
     for i in range(num_objects):
-        if 10 < i < 15:
-            min_width = 0.7
+        if 0 <= i < 3:
+            min_width = 0.6
             max_width = 0.7
-            min_length = 0.6
+            min_length = 0.7
+            name = 'big_obj'
         else:
-            min_width = 0.4
-            max_width = 0.8
-            min_length = 0.5
-
+            min_width = 0.3
+            max_width = 0.6
+            min_length = 0.6
+            name = 'small_obj'
         width = np.random.rand(1) * (max_width - min_width) + min_width
         length = np.random.rand(1) * (max_width - min_length) + min_length
         height = np.random.rand(1) * (max_height - min_height) + min_height
         new_body = box_body(env, width, length, height,
-                            name='obj%s' % i,
+                            name=name+'%s' % i,
                             color=(0, (i + .5) / num_objects, 0))
         trans = np.eye(4)
         trans[2, -1] = 0.075
@@ -133,11 +134,11 @@ def load_objects(env, obj_shapes, obj_poses, color):
         width, length, height = obj_shapes[obj_name]
         quat = quat_from_z_rot(xytheta[-1])
 
-        new_body = box_body(env, width, length, height, \
-                            name=obj_name, \
+        new_body = box_body(env, width, length, height,
+                            name=obj_name,
                             color=np.array(color) / float(nobj - i))
         i += 1
-        env.Add(new_body);
+        env.Add(new_body)
         set_point(new_body, [xytheta[0], xytheta[1], 0.075])
         set_quat(new_body, quat)
         objects.append(new_body)
@@ -152,7 +153,12 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
         obst_poses = obj_setup['obst_poses']
 
     fdir=os.path.dirname(os.path.abspath(__file__))
-    env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
+
+    if problem_idx == 0 or problem_idx == 1:
+        env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
+    else:
+        env.Load(fdir + '/convbelt_env_diffcult_shapes_two_rooms.xml')
+
     """
     if problem_idx == 0:
         env.Load(fdir + '/convbelt_env_diffcult_shapes.xml')
@@ -186,7 +192,7 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
         ikmodel2.autogenerate()
 
     # loading areas
-    loading_region = AARegion('loading_area', ((-3.51, -0.81), (-2.51, 2.51)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    loading_region = AARegion('loading_area', ((-7.4, -0.5), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
     """
     self.home_region_xy = [x_extents / 2.0, 0]
     self.home_region_xy_extents = [x_extents, y_extents]
@@ -194,35 +200,51 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
                                 ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]),
                                  (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
     """
-
     # converyor belt region
     conv_x = 3
     conv_y = 1
     conveyor_belt = AARegion('conveyor_belt', ((-1 + conv_x, 20 * max_width + conv_x),
                                                (-0.4 + conv_y, 0.5 + conv_y)), z=0.01, color=np.array((1, 0, 0, 0.25)))
 
-    y_extents = 2.51
+    y_extents = 5.0
     x_extents = 3.01
-    all_region_xy = [-0.5, 0]
-    all_region_xy_extents = [x_extents, y_extents]
-    all_region = AARegion('all_region', ((-x_extents+all_region_xy[0], x_extents+all_region_xy[0]),(-y_extents, y_extents)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    entire_region = AARegion('entire_region', ((-7.4, 20 * max_width + conv_x), (-y_extents - 2.5, y_extents - 2)), z=0.01, color=np.array((1, 1, 0, 0.25)))
 
-    entire_region = AARegion('entire_region', ((-3.51, 20 * max_width + conv_x),(-y_extents, y_extents)),
-                             z=0.01, color=np.array((1, 1, 0, 0.25)))
     init_base_conf = np.array([0, 1.05, 0])
     set_robot_config(np.array([0, 1.05, 0]), robot)
 
-    objects = []
-    i = 1
-    for tobj in env.GetBodies():
-        if tobj.GetName().find('tobj') == -1: continue
-        randomly_place_in_region(env, tobj, conveyor_belt)
-        set_obj_xytheta([2 + i, 1.05, 0], tobj)
-        objects.append(tobj)
-        i += 1.1
+    big_region_1 = AARegion('big_region', ((-3.4, -0.5), (-7.5, -0.4)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    big_region_2 = AARegion('big_region', ((-7.4, -3.5), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    if problem_idx == 0 or problem_idx == 1:
+        objects = []
+        i = 1
+        for tobj in env.GetBodies():
+            if tobj.GetName().find('tobj') == -1: continue
+            randomly_place_in_region(env, tobj, conveyor_belt)
+            set_obj_xytheta([2 + i, 1.05, 0], tobj)
+            objects.append(tobj)
+            i += 1.1
 
-    square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=10)
-    objects += square_objects
+        square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=10)
+        objects += square_objects
+    else:
+        objects = []
+        i = 1
+        for tobj in env.GetBodies():
+            if tobj.GetName().find('tobj') == -1: continue
+            randomly_place_in_region(env, tobj, conveyor_belt)
+            set_obj_xytheta([2 + i, 1.05,  get_body_xytheta(tobj)[0, -1]], tobj)
+            #objects.append(tobj)
+            i += 1.1
+
+        square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=10)
+        for obj in square_objects:
+            set_obj_xytheta([2 + i, 1.05, get_body_xytheta(obj)[0, -1]], obj)
+            objects.append(obj)
+            i += 1.1
+
+        #objects += square_objects
+
     """
     if problem_idx == 0:
         objects = []
@@ -246,11 +268,10 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
                'objects': objects,
                'conveyor_belt_region': conveyor_belt,
                'loading_region': loading_region,
+               'big_region_1': big_region_1,
+               'big_region_2': big_region_2,
                'env': env,
                'entire_region': entire_region,
-               'all_region': all_region,
-               'all_region_xy': all_region_xy,
-               'all_region_extents': all_region_xy_extents,
                'init_base_conf': init_base_conf}
     return problem  # the second is for indicating 0 placed objs
 

@@ -15,6 +15,7 @@ from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 from openravepy import DOFAffine, Environment
 from manipulation.bodies.bodies import set_color
 
+
 class ConveyorBelt(ProblemEnvironment):
     def __init__(self, problem_idx):
         self.problem_idx = problem_idx
@@ -27,18 +28,17 @@ class ConveyorBelt(ProblemEnvironment):
         else:
             pass
 
-        #self.objects[0], self.objects[2] = self.objects[2] ,self.objects[0]
-        #set_color( self.objects[0] , [1,0,0] )
 
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
 
         self.regions = {'entire_region': self.problem_config['entire_region'],
-                        'object_region': self.problem_config['loading_region']}
+                        'object_region': self.problem_config['loading_region'],
+                        'big_region_1': self.problem_config['big_region_1'],
+                        'big_region_2': self.problem_config['big_region_2']}
 
         self.robot = self.problem_config['env'].GetRobots()[0]
         self.infeasible_reward = -2
-
         self.curr_state = self.get_state()
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
@@ -70,6 +70,15 @@ class ConveyorBelt(ProblemEnvironment):
             if no_solution:
                 return None, "NoSolution"
         """
+        held = self.robot.GetGrabbed()[0]
+        if held.GetName().find('big') != -1:
+            original_xytheta = get_body_xytheta(self.robot)
+            set_robot_config(operator_instance.continuous_parameters['base_pose'], self.robot)
+            if self.regions['big_region_1'].contains(held.ComputeAABB()) or \
+                    self.regions['big_region_2'].contains(held.ComputeAABB()):
+                set_robot_config(original_xytheta, self.robot)
+                return None, "NoSolution"
+            set_robot_config(original_xytheta, self.robot)
 
         goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
 
@@ -107,7 +116,7 @@ class ConveyorBelt(ProblemEnvironment):
                 two_arm_pick_object(operator_instance.discrete_parameters['object'],
                                     self.robot, operator_instance.continuous_parameters)
                 set_robot_config(self.init_base_conf, self.robot)
-                reward = 1
+                reward = 0
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)
@@ -135,7 +144,8 @@ class ConveyorBelt(ProblemEnvironment):
         object_held = self.robot.GetGrabbed()[0]
         two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
         new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
-        reward = self.objects.index(object_held)+1  # reward gradually increases
+        reward = 1
+        #reward = self.objects.index(object_held)+1  # reward gradually increases
         return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):

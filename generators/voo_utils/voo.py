@@ -25,6 +25,7 @@ class VOO:
         return self.sample_next_point(evaled_x, evaled_y)
 
     def sample_from_best_voronoi_region(self, evaled_x, evaled_y):
+        print "Sampling from best V"
         best_dist = np.inf
         other_dists = np.array([-1])
         counter = 1
@@ -57,7 +58,6 @@ class VOO:
                 dim_x = self.domain[1].shape[-1]
                 possible_max = (self.domain[1] - best_evaled_x) / np.exp(counter)
                 possible_min = (self.domain[0] - best_evaled_x) / np.exp(counter)
-
                 possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
                 new_x = best_evaled_x + possible_values
                 while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):

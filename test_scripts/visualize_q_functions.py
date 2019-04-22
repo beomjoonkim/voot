@@ -18,14 +18,14 @@ def draw_q_value_rod_for_action(action_idx, action, q_val, penv, maxQ):
                         color=(1, 0, 0))
     penv.env.Add(new_body)
 
-    base_pose = action.continuous_parameters['base_pose']
+    base_pose = action.continuous_parameters['action_parameters']
     if base_pose is not None:
         set_obj_xytheta(base_pose, new_body)
 
 
 def get_penv(args):
     if args.domain == 'convbelt':
-        return ConveyorBelt(problem_idx=0)
+        return ConveyorBelt(problem_idx=3)
     else:
         return MinimumDisplacementRemoval(problem_idx=0)
 
@@ -58,6 +58,7 @@ def visualize_base_poses_and_q_values(q_function, penv):
         if action.continuous_parameters['base_pose'] is not None:
             base_poses.append(action.continuous_parameters['base_pose'])
     visualize_configs(penv.robot, base_poses, 0.7)
+    [penv.env.Remove(b) for b in penv.env.GetBodies() if b.GetName().find('q_value') != -1]
 
 
 def main():
