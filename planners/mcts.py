@@ -178,10 +178,9 @@ class MCTS:
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
                 if self.s0_node.A[0].type == 'two_arm_place':
-                    pass
                     #self.s0_node.store_node_information(self.environment.name)
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
-                    #import pdb; pdb.set_trace()
+                    pass
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 

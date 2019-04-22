@@ -94,6 +94,7 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
             return motion, status
 
         motion, status = self.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
+
         return motion, status
 
     def apply_action_and_get_reward(self, operator_instance, is_op_feasible, node):
@@ -151,8 +152,15 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
         goal_achieved = len(self.objects_currently_not_in_goal) == 0
         return goal_achieved
 
-    def get_applicable_op_skeleton(self):
+    def get_applicable_op_skeleton(self, parent_action):
         op_name = self.which_operator()
+        if parent_action is None:
+            op_name = 'two_arm_pick'
+        else:
+            if parent_action.type == 'two_arm_pick':
+                op_name = 'two_arm_place'
+            else:
+                op_name = 'two_arm_pick'
         if op_name == 'two_arm_place':
             op = Operator(operator_type=op_name,
                           discrete_parameters={'region': self.regions['entire_region']},
