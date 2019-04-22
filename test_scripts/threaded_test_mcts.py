@@ -26,7 +26,7 @@ def worker_p(config):
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -w ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode) + ' -n_switch ' + str(n_switch) + \
-        ' -voo_counter_ratio ' + str(voo_counter_ratio)
+        ' -voo_counter_ratio ' + str(voo_counter_ratio) + ' -c1 ' + str(config['c1'])
     if pw:
         command += ' -pw '
 
@@ -70,6 +70,7 @@ def main():
     parser.add_argument('-use_max_backup', action='store_true', default=False)
     parser.add_argument('-voo_counter_ratio', nargs='+', type=int)
     parser.add_argument('-pick_switch', action='store_true', default=False)
+    parser.add_argument('-c1', type=float, default=1)
 
     args = parser.parse_args()
 
@@ -110,7 +111,8 @@ def main():
                                           'n_switch': n_switch,
                                           'use_max_backup': args.use_max_backup,
                                           'counter_ratio': counter_ratio,
-                                          'pick_switch': args.pick_switch}
+                                          'pick_switch': args.pick_switch,
+                                          'c1': args.c1}
                                 configs.append(config)
 
     n_workers = int(20)

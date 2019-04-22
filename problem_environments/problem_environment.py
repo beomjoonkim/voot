@@ -173,21 +173,12 @@ class ProblemEnvironment:
         return in_region
 
     def get_motion_plan(self, q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations):
-        stime = time.time()
         for n_iter in n_iterations:
             path = rrt_connect(q_init, goal, d_fn, s_fn, e_fn, c_fn, iterations=n_iter)
             if path is not None:
+                print "Found solution at iteration ", n_iter
                 path = smooth_path(path, e_fn, c_fn)
-                #print "Path Found, took %.2f"%(time.time()-stime)
-
-                #if self.env.GetViewer() is not None:
-                #    remove_drawn_configs('goal', self.env)
                 return path, "HasSolution"
-
-        #if self.env.GetViewer() is not None: #and not self.is_solving_ramo:
-        #    remove_drawn_configs('goal', self.env)
-
-        #print "Path not found, took %.2f"%(time.time()-stime)
         return None, 'NoPath'
 
     def get_arm_base_motion_plan(self, goal, region_name=None, manip_name=None):
@@ -221,7 +212,11 @@ class ProblemEnvironment:
         if region_name is None:
             assert self.name == 'convbelt'
             d_fn = base_distance_fn(self.robot, x_extents=3.9, y_extents=7.1)
-            s_fn = base_sample_fn(self.robot, x_extents=4.6, y_extents=5, x=-2.8, y=-3)
+            #s_fn = base_sample_fn(self.robot, x_extents=4.6, y_extents=5, x=-2.8, y=-3)
+            s_fn = base_sample_fn(self.robot, x_extents=2.4, y_extents=5, x=-1, y=-3)
+            #smpls = [s_fn() for i in range(100)]
+            #visualize_path(self.robot, smpls)
+            #import pdb;pdb.set_trace()
         else:
             region_x = self.problem_config[region_name+'_xy'][0]
             region_y = self.problem_config[region_name+'_xy'][1]

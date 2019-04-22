@@ -97,14 +97,15 @@ def create_objects(env, conveyor_belt, num_objects):
     obj_poses = {}
 
     for i in range(num_objects):
-        if 0 <= i < 3:
+        #if 0 <= i < 0:
+        if i == 0 or i == 5:
             min_width = 0.6
             max_width = 0.7
             min_length = 0.7
             name = 'big_obj'
         else:
-            min_width = 0.3
-            max_width = 0.6
+            min_width = 0.4
+            max_width = 0.5
             min_length = 0.6
             name = 'small_obj'
         width = np.random.rand(1) * (max_width - min_width) + min_width
@@ -192,7 +193,6 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
         ikmodel2.autogenerate()
 
     # loading areas
-    loading_region = AARegion('loading_area', ((-7.4, -0.5), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
     """
     self.home_region_xy = [x_extents / 2.0, 0]
     self.home_region_xy_extents = [x_extents, y_extents]
@@ -209,12 +209,13 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
     y_extents = 5.0
     x_extents = 3.01
     entire_region = AARegion('entire_region', ((-7.4, 20 * max_width + conv_x), (-y_extents - 2.5, y_extents - 2)), z=0.01, color=np.array((1, 1, 0, 0.25)))
-
+    loading_region = AARegion('loading_area', ((-7.4, -0.5), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
     init_base_conf = np.array([0, 1.05, 0])
     set_robot_config(np.array([0, 1.05, 0]), robot)
 
-    big_region_1 = AARegion('big_region', ((-3.4, -0.5), (-7.5, -0.4)), z=0.01, color=np.array((1, 1, 0, 0.25)))
-    big_region_2 = AARegion('big_region', ((-7.4, -3.5), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    big_region_1 = AARegion('big_region_1', ((-5, -0.5), (-7.5, -0.4)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    big_region_2 = AARegion('big_region_2', ((-7.4, -3.0), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+
     if problem_idx == 0 or problem_idx == 1:
         objects = []
         i = 1

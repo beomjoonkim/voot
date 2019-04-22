@@ -46,8 +46,8 @@
 
       <!--second door-->
       <Geom type="box">
-        <extents>0.01 4.5 1</extents>
-        <translation>-3.4 -2.0 1</translation>
+        <extents>0.01 4.0 1</extents>
+        <translation>-3.4 -1.5 1</translation>
         <diffuseColor>.82 .70 .55</diffuseColor>
       </Geom>
 

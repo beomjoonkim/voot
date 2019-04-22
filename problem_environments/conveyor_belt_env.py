@@ -13,7 +13,9 @@ from mover_library.utils import *
 from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 from openravepy import DOFAffine, Environment
-from manipulation.bodies.bodies import set_color
+
+
+from mover_library.motion_planner import collision_fn, base_extend_fn, base_sample_fn, base_distance_fn
 
 
 class ConveyorBelt(ProblemEnvironment):
@@ -27,7 +29,6 @@ class ConveyorBelt(ProblemEnvironment):
             self.objects = self.objects[4:]
         else:
             pass
-
 
         self.init_base_conf = np.array([0, 1.05, 0])
         self.fetch_planner = None
@@ -52,24 +53,6 @@ class ConveyorBelt(ProblemEnvironment):
         # We don't need to call motion planner.
 
         # the condition is where the object is facing.
-        """
-        grabbed_obj = self.robot.GetGrabbed()[0]
-        obj_name = grabbed_obj.GetName()
-        if obj_name.find('tobj') != -1:
-            obj_theta = get_body_xytheta(grabbed_obj)[0][-1] * 180/np.pi
-            if obj_theta < 0:
-                obj_theta += 360
-            assert obj_theta > 0
-            no_solution = False
-            if obj_name == 'tobj1' or obj_name == 'tobj4':
-                if obj_theta < 45 or 135 < obj_theta < 225 or obj_theta > 315:
-                    no_solution = True
-            elif obj_name == 'tobj3':
-                if (45 < obj_theta < 135) or (225 < obj_theta < 315):
-                    no_solution = True
-            if no_solution:
-                return None, "NoSolution"
-        """
         held = self.robot.GetGrabbed()[0]
         if held.GetName().find('big') != -1:
             original_xytheta = get_body_xytheta(self.robot)
@@ -88,7 +71,60 @@ class ConveyorBelt(ProblemEnvironment):
             return motion, status
 
         motion, status = self.get_base_motion_plan(goal_robot_xytheta, None)
+        grabbed_obj = self.robot.GetGrabbed()[0]
+        obj_name = grabbed_obj.GetName()
         return motion, status
+
+    def get_base_motion_plan(self, goal, region_name=None, n_iterations=None):
+        self.robot.SetActiveDOFs([], DOFAffine.X | DOFAffine.Y | DOFAffine.RotationAxis, [0, 0, 1])
+
+        # first plan to the narrow passage
+        d_fn = base_distance_fn(self.robot, x_extents=3.9, y_extents=7.1)
+        s_fn = base_sample_fn(self.robot, x_extents=4.225, y_extents=5, x=-3.175, y=-3)
+        e_fn = base_extend_fn(self.robot)
+        c_fn = collision_fn(self.env, self.robot)
+        q_init = self.robot.GetActiveDOFValues()
+
+        held = self.robot.GetGrabbed()[0]
+        print "Base motion planning..."
+        if held.GetName().find('big') != -1:
+            n_iterations = [20, 50, 100, 500, 1000]
+            path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
+        # todo if it is in the big-region, then just to moton planning
+        else:
+            set_robot_config(goal, self.robot)
+            if not self.regions['big_region_1'].contains(held.ComputeAABB()):
+                n_iterations = [20, 50, 100, 500, 1000]
+                set_robot_config(q_init, self.robot)
+                path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
+            else:
+                subgoal = np.array([-2.8, -0.5, 0])
+                angles = np.linspace(0, 350, 30)
+                is_subgoal_collision = True
+                for angle in angles:
+                    subgoal[-1] = angle * np.pi/180
+                    set_robot_config(subgoal, self.robot)
+                    if not self.env.CheckCollision(self.robot):
+                        is_subgoal_collision = False
+                        break
+                set_robot_config(q_init, self.robot)
+                if is_subgoal_collision:
+                    return None, "NoSolution"
+                else:
+                    n_iterations = [20, 50, 100, 500, 1000, 2000]
+                    path1, status = self.get_motion_plan(q_init, subgoal, d_fn, s_fn, e_fn, c_fn, n_iterations)
+                    if path1 is None:
+                        return path1, status
+                    set_robot_config(subgoal, self.robot)
+                    n_iterations = [20, 50, 100, 500, 1000]
+                    path2, status = self.get_motion_plan(subgoal, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
+                    if path2 is None:
+                        return path2, status
+                path = path1+path2
+
+        set_robot_config(q_init, self.robot)
+        print "Status,", status
+        return path, status
 
     def reset_to_init_state(self, node):
         assert node.is_init_node, "None initial node passed to reset_to_init_state"
@@ -144,12 +180,15 @@ class ConveyorBelt(ProblemEnvironment):
         object_held = self.robot.GetGrabbed()[0]
         two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
         new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
-        reward = 1
+        #reward = 1
         #reward = self.objects.index(object_held)+1  # reward gradually increases
+        #reward = np.exp(-se2_distance(self.init_base_conf, operator_instance.continuous_parameters['base_pose'], 1, 1))
+        reward = np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion))
         return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):
-        return len(self.get_objs_in_region('object_region')) == len(self.objects)
+        #return len(self.get_objs_in_region('object_region')) == len(self.objects)
+        return len(self.objects_currently_not_in_goal) == 0
 
     def load_object_setup(self):
         object_setup_file_name = './problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl'
@@ -166,8 +205,16 @@ class ConveyorBelt(ProblemEnvironment):
                           'obst_shapes': self.problem_config['obst_shapes']}
         pickle.dump(object_configs, open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'wb'))
 
-    def get_applicable_op_skeleton(self):
-        op_name = self.which_operator()
+    def get_applicable_op_skeleton(self, parent_action):
+        #op_name = self.which_operator()
+        if parent_action is None:
+            op_name = 'two_arm_pick'
+        else:
+            if parent_action.type == 'two_arm_pick':
+                op_name = 'two_arm_place'
+            else:
+                op_name = 'two_arm_pick'
+
         if op_name == 'two_arm_place':
             op = Operator(operator_type=op_name,
                           discrete_parameters={'region': self.regions['object_region']},
@@ -178,7 +225,6 @@ class ConveyorBelt(ProblemEnvironment):
                           discrete_parameters={'object': self.objects_currently_not_in_goal[0]},
                           continuous_parameters=None,
                           low_level_motion=None)
-
         return op
 
 

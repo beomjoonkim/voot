@@ -55,8 +55,11 @@ class TreeNode:
         if n_arms < 1:
             return False
 
-        max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.reward_history.values()])
-        n_feasible_actions = np.sum(max_reward_of_each_action > infeasible_rwd)
+        #max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.reward_history.values()])
+        #n_feasible_actions = np.sum(max_reward_of_each_action > infeasible_rwd)
+
+        n_feasible_actions = len([a for a in self.A if a.continuous_parameters['base_pose'] is not None])
+        # MCD did not re-try the feasible actions
         next_state_terminal = np.any([c.is_goal_node for c in self.children.values()])
 
         if n_feasible_actions < 1 or next_state_terminal: # sample more actions
@@ -64,8 +67,11 @@ class TreeNode:
 
         if not use_ucb:
             new_action = self.A[-1]
-            if np.max(self.reward_history[new_action]) <= -2:
+            if new_action.continuous_parameters['base_pose'] is None:
                 return False
+            #if np.max(self.reward_history[new_action]) <= -2:
+            #if np.max(self.reward_history[new_action]) <= -2:
+            #    return False
 
         if use_progressive_widening:
             n_actions = len(self.A)
@@ -128,10 +134,10 @@ class TreeNode:
         pickle.dump(to_store, open(fdir + 'node_idx_' + str(self.idx) + '_' + self.sampling_strategy+'.pkl', 'wb'))
         self.make_actions_executable()
 
-
     def choose_new_arm(self):
         new_arm = self.A[-1]  # what to do if the new action is not a feasible one?
-        is_new_arm_feasible = np.max(self.reward_history[new_arm]) > -2
+        #is_new_arm_feasible = np.max(self.reward_history[new_arm]) > -2
+        is_new_arm_feasible = new_arm.continuous_parameters['base_pose'] is not None
         try:
             assert is_new_arm_feasible
         except:

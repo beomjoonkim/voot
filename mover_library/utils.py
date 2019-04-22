@@ -556,7 +556,9 @@ def convert_se2_to_base_pose(basepose_se2):
 
 
 def place_parameter_distance(param1, param2, c1=1):
-    return se2_distance(param1, param2, c1, 0)
+    # if mcd, use c2=0
+    # if convbelt, use c2=1, c1= 0.18, to equally weight the distance in base xy and theta
+    return se2_distance(param1, param2, c1, 1)
 
 
 def get_place_domain(region):

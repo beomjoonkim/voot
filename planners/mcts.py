@@ -6,7 +6,7 @@ from generators.voo import VOOGenerator
 from generators.doo import DOOGenerator
 from generators.randomized_doo import RandomizedDOOGenerator
 
-from mover_library.utils import CustomStateSaver, get_pick_domain, get_place_domain
+from mover_library.utils import CustomStateSaver, get_pick_domain, get_place_domain, visualize_path
 
 from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.gpucb import GPUCBGenerator
@@ -25,14 +25,6 @@ DEBUG = True
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560':
     from mcts_graphics import write_dot_file
-
-
-def create_doo_agent(operator):
-    if operator == 'two_arm_pick':
-        domain = get_pick_domain()
-    else:
-        domain = get_place_domain()
-    return BinaryDOOTree(domain)
 
 
 class MCTS:
@@ -92,12 +84,11 @@ class MCTS:
         if self.environment.is_goal_reached():
             operator_skeleton = None
         else:
-            operator_skeleton = self.environment.get_applicable_op_skeleton()
+            operator_skeleton = self.environment.get_applicable_op_skeleton(parent_action)
 
         state_saver = CustomStateSaver(self.environment.env)
         node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
                         is_init_node)
-
         if not self.environment.is_goal_reached():
             node.sampling_agent = self.create_sampling_agent(node, operator_skeleton)
 
@@ -186,19 +177,17 @@ class MCTS:
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
-                #if self.s0_node.A[0].type == 'two_arm_place':
+                if self.s0_node.A[0].type == 'two_arm_place':
+                    pass
                     #self.s0_node.store_node_information(self.environment.name)
-                    #import pdb;pdb.set_trace()
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
                     #import pdb; pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
-
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
-
 
             #self.log_current_tree_to_dot_file(iteration)
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
@@ -206,7 +195,7 @@ class MCTS:
             plan = self.retrace_best_plan()
             rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
             print 'n feasible actions ', np.sum(rewards >= 0)
-            print search_time_to_reward[-1], np.argmax(np.array(search_time_to_reward)[:,2])
+            print search_time_to_reward[-1], np.argmax(np.array(search_time_to_reward)[:, 2])
 
             if time_to_search > max_time:
                 break
@@ -260,6 +249,7 @@ class MCTS:
         if self.environment.is_goal_reached():
             # arrived at the goal state
             if not curr_node.is_goal_and_already_visited:
+                #todo mark the goal trajectory, and don't revisit the actions on the goal trajectory?
                 self.found_solution = True
                 curr_node.is_goal_node = True
                 print "Solution found, returning the goal reward", self.goal_reward
@@ -275,8 +265,11 @@ class MCTS:
 
         action = self.choose_action(curr_node)
         reward = self.environment.apply_operator_instance(action, curr_node)
-        print "Executed ", action.type
+        print "Executed ", action.type, action.continuous_parameters['base_pose'], action.discrete_parameters
         print "reward ", reward
+
+        # for the same action, we now get different results because RRT calls to the same goal would result in
+        # both feasible and infeasible.
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, is_init_node=False)
