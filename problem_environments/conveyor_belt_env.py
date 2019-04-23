@@ -94,13 +94,14 @@ class ConveyorBelt(ProblemEnvironment):
         # todo if it is in the big-region, then just to moton planning
         else:
             set_robot_config(goal, self.robot)
-            if not self.regions['big_region_1'].contains(held.ComputeAABB()):
+            if not self.regions['big_region_1'].contains(held.ComputeAABB()) and \
+                    not self.regions['big_region_2'].contains(held.ComputeAABB()) :
                 n_iterations = [20, 50, 100, 500, 1000]
                 set_robot_config(q_init, self.robot)
                 path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
             else:
                 subgoal = np.array([-2.8, -0.5, 0])
-                angles = np.linspace(0, 350, 30)
+                angles = np.random.permutation(np.linspace(0, 350, 30))
                 is_subgoal_collision = True
                 for angle in angles:
                     subgoal[-1] = angle * np.pi/180
@@ -110,17 +111,21 @@ class ConveyorBelt(ProblemEnvironment):
                         break
                 set_robot_config(q_init, self.robot)
                 if is_subgoal_collision:
+                    print 'Subgoal collision'
                     return None, "NoSolution"
                 else:
                     n_iterations = [20, 50, 100, 500, 1000, 2000]
                     path1, status = self.get_motion_plan(q_init, subgoal, d_fn, s_fn, e_fn, c_fn, n_iterations)
                     if path1 is None:
                         return path1, status
+                    print "Path 1 found"
                     set_robot_config(subgoal, self.robot)
-                    n_iterations = [20, 50, 100, 500, 1000]
+                    n_iterations = [20, 50, 100, 500, 1000, 2000]
                     path2, status = self.get_motion_plan(subgoal, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
                     if path2 is None:
+                        set_robot_config(q_init, self.robot)
                         return path2, status
+                    print "Path 2 found"
                 path = path1+path2
 
         set_robot_config(q_init, self.robot)
