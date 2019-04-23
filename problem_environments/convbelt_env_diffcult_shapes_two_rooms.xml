@@ -93,51 +93,6 @@
   </KinBody>
 
 
-  <KinBody name="tobj1">
-     <KinBody name = "lowerbox">
-      <Body type="dynamic">
-        <Geom type="box">
-        <Translation>0 0 0.3775</Translation>
-        <extents>0.2 0.3 0.5</extents>
-        <diffuseColor>0. 0.2 0.</diffuseColor>
-      </Geom>
-      </Body>
-    </KinBody>
-    <KinBody name = "top_obj">
-    <Translation >0  0 0.5</Translation>
-      <Body type="dynamic">
-        <Geom type="box">
-        <Translation>0 -0.25 0.5</Translation>
-        <extents>0.2 0.63 0.2</extents>
-        <diffuseColor>0. 0.2 0.</diffuseColor>
-      </Geom>
-    </Body>
-    </KinBody>
-
-  </KinBody>
-
-   <KinBody name="tobj2">
-      <KinBody name = "lowerbox">
-      <Body type="dynamic">
-        <Geom type="box">
-        <Translation>0 0 0.3775</Translation>
-        <extents>0.2 0.3 0.5</extents>
-            <diffuseColor>0. 0.2 0.</diffuseColor>
-      </Geom>
-      </Body>
-    </KinBody>
-    <KinBody name = "middle_obj">
-    <Translation >0 0 0.5</Translation>
-      <Body type="dynamic">
-        <Geom type="box">
-        <Translation>-0.25 0.3 0.5</Translation>
-        <extents>.25 0.5 0.05</extents>
-            <diffuseColor>0. 0.2 0.</diffuseColor>
-      </Geom>
-    </Body>
-    </KinBody>
-    </KinBody>
-
    <!--KinBody name="tobj3">
       <KinBody name = "lowerbox">
       <Body type="dynamic">

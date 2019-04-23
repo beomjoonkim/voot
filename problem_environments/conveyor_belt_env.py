@@ -101,7 +101,7 @@ class ConveyorBelt(ProblemEnvironment):
                 path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
             else:
                 subgoal = np.array([-2.8, -0.5, 0])
-                angles = np.random.permutation(np.linspace(0, 350, 30))
+                angles = np.random.permutation(np.linspace(10, 120, 30))
                 is_subgoal_collision = True
                 for angle in angles:
                     subgoal[-1] = angle * np.pi/180
@@ -117,6 +117,7 @@ class ConveyorBelt(ProblemEnvironment):
                     n_iterations = [20, 50, 100, 500, 1000, 2000]
                     path1, status = self.get_motion_plan(q_init, subgoal, d_fn, s_fn, e_fn, c_fn, n_iterations)
                     if path1 is None:
+                        print 'Path 1 not found'
                         return path1, status
                     print "Path 1 found"
                     set_robot_config(subgoal, self.robot)
@@ -124,6 +125,7 @@ class ConveyorBelt(ProblemEnvironment):
                     path2, status = self.get_motion_plan(subgoal, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
                     if path2 is None:
                         set_robot_config(q_init, self.robot)
+                        print 'Path 2 not found'
                         return path2, status
                     print "Path 2 found"
                 path = path1+path2
