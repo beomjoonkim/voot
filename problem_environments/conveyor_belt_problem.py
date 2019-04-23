@@ -98,7 +98,7 @@ def create_objects(env, conveyor_belt, num_objects):
 
     for i in range(num_objects):
         #if 0 <= i < 0:
-        if i == 0 or i == 5:
+        if i == 0 or i == 1:
             min_width = 0.6
             max_width = 0.7
             min_length = 0.7
