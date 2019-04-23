@@ -36,14 +36,23 @@ class TreeNode:
         self.operator_skeleton = operator_skeleton
         self.is_init_node = is_init_node
         self.objects_not_in_goal = None
-        self.n_ucb_iterations = 0
+        self.reeval_iterations = 0
 
         self.sampling_strategy = sampling_strategy
         self.is_goal_node = False
+        self.is_goal_traj = False
+        self.have_been_used_as_root = False
         self.idx = 1
 
         # for debugging purpose
         self.best_v = 0
+
+    def is_action_feasible(self, action, infeasible_rwd=-2):
+        return np.max(self.reward_history[action]) > infeasible_rwd
+
+    def get_n_feasible_actions(self, infeasible_rwd):
+        n_feasible_actions = np.sum([self.is_action_feasible(a) for a in self.A])
+        return n_feasible_actions
 
     def get_never_evaluated_action(self):
         # get list of actions that do not have an associated Q values
@@ -55,8 +64,7 @@ class TreeNode:
         if n_arms < 1:
             return False
 
-        max_reward_of_each_action = np.array([np.max(rlist) for rlist in self.reward_history.values()])
-        n_feasible_actions = np.sum(max_reward_of_each_action > infeasible_rwd)
+        n_feasible_actions = self.get_n_feasible_actions(infeasible_rwd)
         next_state_terminal = np.any([c.is_goal_node for c in self.children.values()])
 
         if n_feasible_actions < 1 or next_state_terminal: # sample more actions
@@ -72,11 +80,11 @@ class TreeNode:
             is_time_to_sample = n_actions <= widening_parameter * self.Nvisited
             return is_time_to_sample
         else:
-            if self.n_ucb_iterations < widening_parameter:
-                self.n_ucb_iterations += 1
+            if self.reeval_iterations < widening_parameter:
+                self.reeval_iterations += 1
                 return True
             else:
-                self.n_ucb_iterations = 0
+                self.reeval_iterations = 0
                 return False
 
     def perform_ucb_over_actions(self):
@@ -120,7 +128,7 @@ class TreeNode:
         if not os.path.isdir(fdir):
             os.makedirs(fdir)
 
-        to_store ={
+        to_store = {
             'Q': self.Q,
             'saver': self.state_saver,
             'progress': len(self.objects_not_in_goal)
@@ -130,7 +138,7 @@ class TreeNode:
 
     def choose_new_arm(self):
         new_arm = self.A[-1]  # what to do if the new action is not a feasible one?
-        is_new_arm_feasible = np.max(self.reward_history[new_arm]) > -2
+        is_new_arm_feasible = self.is_action_feasible(new_arm)
         #is_new_arm_feasible = new_arm.continuous_parameters['base_pose'] is not None
         try:
             assert is_new_arm_feasible

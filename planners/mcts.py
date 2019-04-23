@@ -49,6 +49,7 @@ class MCTS:
         self.voo_counter_ratio = voo_counter_ratio
         self.use_ucb = use_ucb
         self.n_switch = n_switch
+        self.n_switch_original = self.n_switch
         self.use_max_backup = use_max_backup
         self.pick_switch = pick_switch
 
@@ -60,6 +61,7 @@ class MCTS:
         self.tree = MCTSTree(self.s0_node, self.exploration_parameters)
         self.found_solution = False
         self.goal_reward = 2
+        self.infeasible_reward = -2
         self.n_feasibility_checks = n_feasibility_checks
 
     def create_sampling_agent(self, node, operator_skeleton):
@@ -86,10 +88,7 @@ class MCTS:
         else:
             operator_skeleton = self.environment.get_applicable_op_skeleton(parent_action)
 
-        try:
-            state_saver = CustomStateSaver(self.environment.env)
-        except:
-            import pdb;pdb.set_trace()
+        state_saver = CustomStateSaver(self.environment.env)
         node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
                         is_init_node)
         if not self.environment.is_goal_reached():
@@ -161,10 +160,30 @@ class MCTS:
             best_node = self.tree.root
             self.n_switch += self.n_switch
         else:
-            feasible_actions = [a for a in self.s0_node.A if np.max(self.s0_node.reward_history[a]) > -2]
-            feasible_q_values = [self.s0_node.Q[a] for a in feasible_actions]
-            best_action = feasible_actions[np.argmax(feasible_q_values)]
+            non_goal_traj_feasible_actions = []
+            non_goal_traj_q_values = []
+            is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
+            for a in self.s0_node.A:
+                is_action_feasible = np.max(self.s0_node.reward_history[a]) > self.infeasible_reward
+
+                if is_pick_node and not self.pick_switch:
+                    is_action_evaled_enough = False  # free-pass if we are not doing pick switch
+                else:
+                    is_action_evaled_enough = self.s0_node.children[a].have_been_used_as_root
+                """
+                if is_pick_node and not self.pick_switch:
+                    is_action_evaled_enough = False  # free-pass if we are not doing pick switch
+                else:
+                    is_action_evaled_enough = self.s0_node.children[a].get_n_feasible_actions(self.infeasible_reward) \
+                                              >= self.n_switch_original
+                """
+
+                if is_action_feasible and (not is_action_evaled_enough):
+                    non_goal_traj_feasible_actions.append(a)
+                    non_goal_traj_q_values.append(a)
+            best_action = non_goal_traj_feasible_actions[np.argmax(non_goal_traj_q_values)]
             best_node = self.s0_node.children[best_action]
+            best_node.have_been_used_as_root = True
         return best_node
 
     def search(self, n_iter=100, max_time=np.inf):
@@ -176,14 +195,14 @@ class MCTS:
         self.n_iter = n_iter
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
+            print '*****Root node idx %d' % self.s0_node.idx
             self.environment.reset_to_init_state(self.s0_node)
 
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
                 if self.s0_node.A[0].type == 'two_arm_place':
-                    #self.s0_node.store_node_information(self.environment.name)
+                    self.s0_node.store_node_information(self.environment.name)
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
-                    pass
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
 
@@ -196,7 +215,7 @@ class MCTS:
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
             plan = self.retrace_best_plan()
             rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
-            print 'n feasible actions ', np.sum(rewards >= 0)
+            print 'n feasible actions , n_switch ', np.sum(rewards >= 0), self.n_switch
             print search_time_to_reward[-1], np.argmax(np.array(search_time_to_reward)[:, 2])
 
             if time_to_search > max_time:
@@ -205,8 +224,10 @@ class MCTS:
         self.environment.reset_to_init_state(self.s0_node)
         return search_time_to_reward, self.s0_node.best_v, plan
 
-    def choose_action(self, curr_node):
-        if not curr_node.is_reevaluation_step(self.widening_parameter, self.environment.infeasible_reward,
+    def choose_action(self, curr_node, depth):
+        plan_horizon = len(self.environment.objects) * 2
+        print "Widening parameter ", self.widening_parameter*np.power(0.9, depth)
+        if not curr_node.is_reevaluation_step(self.widening_parameter*np.power(0.9, depth), self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
             print "Is time to sample new action? True"
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)
@@ -251,7 +272,7 @@ class MCTS:
         if self.environment.is_goal_reached():
             # arrived at the goal state
             if not curr_node.is_goal_and_already_visited:
-                #todo mark the goal trajectory, and don't revisit the actions on the goal trajectory?
+                # todo mark the goal trajectory, and don't revisit the actions on the goal trajectory
                 self.found_solution = True
                 curr_node.is_goal_node = True
                 print "Solution found, returning the goal reward", self.goal_reward
@@ -265,7 +286,7 @@ class MCTS:
             print "At depth ", depth
             print "Is it time to pick?", self.environment.is_pick_time()
 
-        action = self.choose_action(curr_node)
+        action = self.choose_action(curr_node, depth)
         reward = self.environment.apply_operator_instance(action, curr_node)
         print "Executed ", action.type, action.continuous_parameters['base_pose'], action.discrete_parameters
         print "reward ", reward
@@ -274,7 +295,11 @@ class MCTS:
         # both feasible and infeasible.
 
         if not curr_node.is_action_tried(action):
-            next_node = self.create_node(action, depth+1, reward, is_init_node=False)
+            try:
+                next_node = self.create_node(action, depth+1, reward, is_init_node=False)
+            except:
+                import pdb;pdb.set_trace()
+
             self.tree.add_node(next_node, action, curr_node)
             next_node.sum_ancestor_action_rewards = next_node.parent.sum_ancestor_action_rewards + reward
         else:

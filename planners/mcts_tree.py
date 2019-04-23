@@ -38,11 +38,18 @@ class MCTSTree:
 
         for n in leaf_nodes:
             curr_node = n
-
             reward_list = []
+
+            if n.is_goal_node:
+                is_goal_traj = True
+            else:
+                is_goal_traj = False
+
             while curr_node.parent is not None:
                 reward_list.append(curr_node.parent.reward_history[curr_node.parent_action][0])
                 curr_node = curr_node.parent
+                curr_node.is_goal_traj = is_goal_traj
+
             reward_list = reward_list[::-1]
             discount_rates = [np.power(discount_factor, i) for i in range(len(reward_list))]
             sumR = np.dot(discount_rates, reward_list)

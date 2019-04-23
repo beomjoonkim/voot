@@ -48,6 +48,7 @@ class ConveyorBelt(ProblemEnvironment):
         self.name = 'convbelt'
 
     def check_reachability_precondition(self, operator_instance):
+        #return [], "HasSolution"
         # we can potentially make this faster by just checking the collision at the door
         # actually, check collisions at 360 degree, with 20 degrees increments.
         # We don't need to call motion planner.
@@ -184,11 +185,11 @@ class ConveyorBelt(ProblemEnvironment):
         #reward = self.objects.index(object_held)+1  # reward gradually increases
         #reward = np.exp(-se2_distance(self.init_base_conf, operator_instance.continuous_parameters['base_pose'], 1, 1))
         reward = np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion))
+        #reward = np.exp(-se2_distance(self.init_base_conf, operator_instance.continuous_parameters['base_pose'], 1, 1))
         return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):
-        #return len(self.get_objs_in_region('object_region')) == len(self.objects)
-        return len(self.objects_currently_not_in_goal) == 0
+        return len(self.get_objs_in_region('object_region')) == len(self.objects)
 
     def load_object_setup(self):
         object_setup_file_name = './problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl'

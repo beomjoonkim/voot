@@ -223,7 +223,7 @@ class VOOGenerator(Generator):
 
         new_parameters = None
         closest_best_dist = np.inf
-        max_counter = 5000
+        max_counter = 100
         while np.any(best_dist > other_dists) and counter < max_counter:
             new_parameters = self.sample_near_best_action(best_evaled_action, counter)
             stime = time.time()
