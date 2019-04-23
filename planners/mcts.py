@@ -86,7 +86,10 @@ class MCTS:
         else:
             operator_skeleton = self.environment.get_applicable_op_skeleton(parent_action)
 
-        state_saver = CustomStateSaver(self.environment.env)
+        try:
+            state_saver = CustomStateSaver(self.environment.env)
+        except:
+            import pdb;pdb.set_trace()
         node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
                         is_init_node)
         if not self.environment.is_goal_reached():
