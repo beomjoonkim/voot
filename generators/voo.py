@@ -110,7 +110,6 @@ class VOOGenerator(Generator):
             print "Trying to sample a feasible sample from best v region..."
         for i in range(n_iter):
             if is_sample_from_best_v_region:
-                import pdb;pdb.set_trace()
                 stime = time.time()
                 action_parameters = self.sample_from_best_voronoi_region(node)
                 print "Best V region sampling time", time.time()-stime
