@@ -110,6 +110,7 @@ class VOOGenerator(Generator):
             print "Trying to sample a feasible sample from best v region..."
         for i in range(n_iter):
             if is_sample_from_best_v_region:
+                import pdb;pdb.set_trace()
                 stime = time.time()
                 action_parameters = self.sample_from_best_voronoi_region(node)
                 print "Best V region sampling time", time.time()-stime
@@ -181,6 +182,8 @@ class VOOGenerator(Generator):
             def dist_fcn(x, y): return pick_parameter_distance(obj, x, y)
         elif operator == 'two_arm_place':
             def dist_fcn(x, y): return place_parameter_distance(x, y, self.c1)
+        elif operator == 'two_paps':
+            def dist_fcn(x, y): return place_parameter_distance(x[0:3], y[0:3], 1) + place_parameter_distance(x[3:6], y[3:6], 1)
         else:
             raise NotImplementedError
 

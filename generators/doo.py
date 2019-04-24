@@ -30,13 +30,8 @@ class DOOGenerator(Generator):
         elif operator_name == 'two_arm_place':
             dist_fn = place_parameter_distance
         elif operator_name == 'two_paps':
-            obj1 = operator_skeleton.discrete_parameters['object1']
-            obj2 = operator_skeleton.discrete_parameters['object2']
-            dist_fn = lambda x, y: pick_parameter_distance(obj1, x[0:6], y[0:6])\
-                                    + pick_parameter_distance(obj2, x[6:12], y[6:12])\
-                                    + place_parameter_distance(x[12:], y[12:])
+            dist_fn = lambda x, y: place_parameter_distance(x[0:3], y[0:3]) + place_parameter_distance(x[3:6], y[3:6])
         else:
-            import pdb;pdb.set_trace()
             print "Wrong operator name"
             raise ValueError
         self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, dist_fn)  # this depends on the problem
