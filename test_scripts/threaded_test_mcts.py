@@ -63,7 +63,7 @@ def main():
     parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('-seeds', nargs='+', type=int)
     parser.add_argument('-pw', action='store_true', default=False)
-    parser.add_argument('-voo_sampling_mode', type=str, default='gaussian')
+    parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_uct', action='store_true', default=False)
     parser.add_argument('-n_switch', nargs='+', type=int)
