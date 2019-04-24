@@ -109,7 +109,6 @@ class VOOGenerator(Generator):
         if is_sample_from_best_v_region:
             print "Trying to sample a feasible sample from best v region..."
         for i in range(n_iter):
-            #print "feasibility check iteration:", i
             if is_sample_from_best_v_region:
                 stime = time.time()
                 action_parameters = self.sample_from_best_voronoi_region(node)
@@ -117,29 +116,13 @@ class VOOGenerator(Generator):
             else:
                 action_parameters = self.sample_from_uniform()
 
-            stime = time.time()
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)
-            #print "Feasibility checking time", time.time()-stime
-            #print "Done checking feasibility"
             if status == 'HasSolution':
                 break
 
         if is_sample_from_best_v_region:
             print "Done sampling from best v region"
         return action, status
-
-    """
-    def sample_from_best_voronoi_region(self, node):
-        operator = node.operator_skeleton.type
-        if operator == 'two_arm_pick':
-            obj = node.operator_skeleton.discrete_parameters['object']
-            params = self.sample_pick_from_best_voroi_region(obj)
-        elif operator == 'two_arm_place':
-            params = self.sample_place_from_best_voroi_region()
-        else:
-            raise NotImplementedError
-        return params
-    """
 
     def get_best_evaled_action(self):
         DEBUG = True
@@ -183,26 +166,6 @@ class VOOGenerator(Generator):
         dim_x = self.domain[1].shape[-1]
         new_parameters = np.random.uniform(self.domain[0], self.domain[1], (dim_x,))
         return new_parameters
-
-    """
-    def sample_place_from_best_voroi_region(self):
-        best_dist = np.inf
-        other_dists = np.array([-1])
-        counter = 0
-
-        best_evaled_action = self.get_best_evaled_action()
-        other_actions = self.evaled_actions
-
-        new_parameters = None
-        while np.any(best_dist > other_dists) and counter < 5000:
-            new_parameters = self.sample_near_best_action(best_evaled_action, counter)
-            best_dist = place_parameter_distance(new_parameters, best_evaled_action, self.c1)
-            other_dists = np.array([place_parameter_distance(other, new_parameters, self.c1) for other in other_actions])
-            counter += 1
-
-        print "Counter ", counter
-        return new_parameters
-    """
 
     def sample_from_best_voronoi_region(self, node):
         best_dist = np.inf
@@ -254,25 +217,6 @@ class VOOGenerator(Generator):
             new_parameters = self.uniform_sample_near_best_action(best_evaled_action)
         return new_parameters
 
-    """
-    def sample_pick_from_best_voroi_region(self, obj):
-        best_dist = np.inf
-        other_dists = np.array([-1])
-        counter = 0
-
-        best_evaled_action = self.get_best_evaled_action()
-        other_actions = self.evaled_actions
-
-        new_parameters = None
-        while np.any(best_dist > other_dists) and counter < 5000:
-            new_parameters = self.sample_near_best_action(best_evaled_action, counter)
-            best_dist = [pick_parameter_distance(obj, new_parameters, best_evaled_action)]
-            other_dists = np.array([pick_parameter_distance(obj, other, new_parameters) for other in other_actions])
-            counter += 1
-
-        print "Counter ", counter
-        return new_parameters
-    """
 
 
 

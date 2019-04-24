@@ -57,7 +57,7 @@ class ProblemEnvironment:
 
     @staticmethod
     def check_parameter_feasibility_precondition(operator_instance):
-        if operator_instance.continuous_parameters['base_pose'] is None:
+        if not operator_instance.continuous_parameters['is_feasible']:
             return False
         else:
             return True

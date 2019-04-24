@@ -5,10 +5,10 @@ from generators.uniform import UniformGenerator
 from generators.voo import VOOGenerator
 from generators.doo import DOOGenerator
 from generators.randomized_doo import RandomizedDOOGenerator
+from generators.presampled_pick_generator import PreSampledPickGenerator
 
-from mover_library.utils import CustomStateSaver, get_pick_domain, get_place_domain, visualize_path
+from mover_library.utils import CustomStateSaver
 
-from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.gpucb import GPUCBGenerator
 
 import time
@@ -66,6 +66,9 @@ class MCTS:
 
     def create_sampling_agent(self, node, operator_skeleton):
         operator_name = operator_skeleton.type
+
+        if operator_name == 'two_arm_pick' and self.environment.name == 'convbelt':
+            return PreSampledPickGenerator()
         if self.sampling_strategy == 'unif':
             return UniformGenerator(operator_name, self.environment)
         elif self.sampling_strategy == 'voo':
@@ -201,9 +204,8 @@ class MCTS:
             if self.is_time_to_switch_initial_node():
                 print "Switching root node!"
                 if self.s0_node.A[0].type == 'two_arm_place':
-                    pass
-                    #self.s0_node.store_node_information(self.environment.name)
-                    #import pdb;pdb.set_trace()
+                    self.s0_node.store_node_information(self.environment.name)
+                    import pdb;pdb.set_trace()
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
@@ -227,7 +229,6 @@ class MCTS:
         return search_time_to_reward, self.s0_node.best_v, plan
 
     def choose_action(self, curr_node, depth):
-        plan_horizon = len(self.environment.objects) * 2
         print "Widening parameter ", self.widening_parameter*np.power(0.8, depth)
         if not curr_node.is_reevaluation_step(self.widening_parameter*np.power(0.8, depth), self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
@@ -290,18 +291,14 @@ class MCTS:
 
         action = self.choose_action(curr_node, depth)
         reward = self.environment.apply_operator_instance(action, curr_node)
-        print "Executed ", action.type, action.continuous_parameters['base_pose'], action.discrete_parameters
+        print "Executed ", action.type, action.continuous_parameters['is_feasible'], action.discrete_parameters
         print "reward ", reward
 
         # for the same action, we now get different results because RRT calls to the same goal would result in
         # both feasible and infeasible.
 
         if not curr_node.is_action_tried(action):
-            try:
-                next_node = self.create_node(action, depth+1, reward, is_init_node=False)
-            except:
-                import pdb;pdb.set_trace()
-
+            next_node = self.create_node(action, depth+1, reward, is_init_node=False)
             self.tree.add_node(next_node, action, curr_node)
             next_node.sum_ancestor_action_rewards = next_node.parent.sum_ancestor_action_rewards + reward
         else:

@@ -42,11 +42,11 @@ class PlaceFeasibilityChecker:
 
         if is_base_pose_feasible:
             action = {'operator_name': 'two_arm_place', 'base_pose': robot_xytheta, 'object_pose': obj_pose,
-                      'action_parameters': place_parameters}
+                      'action_parameters': place_parameters, 'is_feasible': True}
             return action, 'HasSolution'
         else:
             action = {'operator_name': 'two_arm_place', 'base_pose': None, 'object_pose': None,
-                      'action_parameters': place_parameters}
+                      'action_parameters': place_parameters, 'is_feasible': False}
             return action, 'NoSolution'
 
     @staticmethod

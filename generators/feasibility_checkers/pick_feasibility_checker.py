@@ -24,11 +24,12 @@ class PickFeasibilityChecker(object):
 
         if g_config is not None:
             pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
-                           'grasp_params': grasp_params, 'g_config': g_config, 'action_parameters': pick_parameters}
+                           'grasp_params': grasp_params, 'g_config': g_config, 'action_parameters': pick_parameters,
+                           'is_feasible': True}
             return pick_action, 'HasSolution'
         else:
             pick_action = {'operator_name': 'two_arm_pick', 'base_pose': None, 'grasp_params': None, 'g_config': None,
-                           'action_parameters': pick_parameters}
+                           'action_parameters': pick_parameters, 'is_feasible': False}
             return pick_action, "NoSolution"
 
     def compute_grasp_config(self, obj, pick_base_pose, grasp_params):
@@ -43,7 +44,8 @@ class PickFeasibilityChecker(object):
         return g_config
 
     def compute_g_config(self, obj, pick_base_pose, grasp_params):
-        with self.robot:
+        original_config = get_body_xytheta(self.robot)
+        if True:
             g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
             if g_config is not None:
                 pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
@@ -59,9 +61,14 @@ class PickFeasibilityChecker(object):
 
                 if feasible:
                     two_arm_place_object(obj, self.robot, pick_action)
+                    set_robot_config(original_config, self.robot)
                     return g_config
                 else:
+                    set_robot_config(original_config, self.robot)
                     two_arm_place_object(obj, self.robot, pick_action)
             else:
+                #if obj.GetName().find("1") != -1:
+                #    import pdb;pdb.set_trace()
+                set_robot_config(original_config, self.robot)
                 return None
 

@@ -6,6 +6,7 @@ from utils import get_pick_domain, get_place_domain
 
 from feasibility_checkers.pick_feasibility_checker import PickFeasibilityChecker
 from feasibility_checkers.place_feasibility_checker import PlaceFeasibilityChecker
+from feasibility_checkers.two_pap_feasibility_checker import TwoPapFeasibilityChecker
 from feasibility_checkers.base_pose_feasibility_checker import BasePoseFeasibilityChecker
 from planners.mcts_utils import make_action_executable
 
@@ -25,13 +26,18 @@ class Generator:
                 place_domain = get_place_domain(problem_env.regions['object_region'])
             else:
                 place_domain = get_place_domain(problem_env.regions['entire_region'])
-                #place_domain[0] = place_domain[0] * 2
-                #place_domain[1][0:2] = place_domain[1][0:2] * 2
             self.domain = place_domain
             self.feasibility_checker = PlaceFeasibilityChecker(problem_env)
-        elif operator_name == 'next_base_pose':
-            self.domain = np.array([[-0.2,-0.2,-20.*np.pi/180.0],[0.2,0.2,20*np.pi/180.0]])
-            self.feasibility_checker = BasePoseFeasibilityChecker(self.problem_env)
+        elif operator_name == 'two_paps':
+            assert problem_env.name == 'convbelt'
+            self.place_domain = get_place_domain(problem_env.regions['object_region'])
+            self.pick_domain = get_pick_domain()
+            #self.domain = np.hstack((self.pick_domain[0], self.pick_domain[1], self.place_domain[0],
+            #                         self.place_domain[1]))
+
+            self.domain = np.vstack([np.hstack([self.place_domain[0], self.place_domain[0]]),
+                                     np.hstack([self.place_domain[1], self.place_domain[1]])])
+            self.feasibility_checker = TwoPapFeasibilityChecker(problem_env)
         else:
             raise ValueError
 

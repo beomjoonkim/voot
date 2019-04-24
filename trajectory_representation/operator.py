@@ -10,7 +10,9 @@ class Operator:
         assert type(discrete_parameters) is dict, "Discrete parameters of an operator must be a dictionary"
         self.discrete_parameters = discrete_parameters
         self.continuous_parameters = continuous_parameters
-        self.low_level_motion = low_level_motion
+        self.low_level_motion = None
 
     def update_low_level_motion(self, low_level_motion):
         self.low_level_motion = low_level_motion
+
+

@@ -5,7 +5,6 @@ sys.path.append('../mover_library/')
 from generator import Generator
 from planners.mcts_utils import make_action_executable
 
-from utils import pick_parameter_distance, place_parameter_distance
 from doo_utils.doo_tree import BinaryDOOTree
 from utils import pick_parameter_distance, place_parameter_distance
 
@@ -24,16 +23,23 @@ class DOOGenerator(Generator):
 
         operator_name = operator_skeleton.type
         if operator_name == 'two_arm_pick':
-            target_object  = operator_skeleton.discrete_parameters['object']
+            target_object = operator_skeleton.discrete_parameters['object']
             if type(target_object) == str:
                 target_object = self.problem_env.env.GetKinBody(target_object)
-            obj_pick_dist = lambda x, y: pick_parameter_distance(target_object, x, y)
-            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, obj_pick_dist)  # this depends on the problem
+            dist_fn = lambda x, y: pick_parameter_distance(target_object, x, y)
         elif operator_name == 'two_arm_place':
-            self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, place_parameter_distance)  # this depends on the problem
+            dist_fn = place_parameter_distance
+        elif operator_name == 'two_paps':
+            obj1 = operator_skeleton.discrete_parameters['object1']
+            obj2 = operator_skeleton.discrete_parameters['object2']
+            dist_fn = lambda x, y: pick_parameter_distance(obj1, x[0:6], y[0:6])\
+                                    + pick_parameter_distance(obj2, x[6:12], y[6:12])\
+                                    + place_parameter_distance(x[12:], y[12:])
         else:
+            import pdb;pdb.set_trace()
             print "Wrong operator name"
-            sys.exit(-1)
+            raise ValueError
+        self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, dist_fn)  # this depends on the problem
         self.update_flag = 'update_me'
 
     def sample_next_point(self, node, n_iter):

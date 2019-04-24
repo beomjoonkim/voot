@@ -8,7 +8,7 @@ from conveyor_belt_problem import create_conveyor_belt_problem
 from problem_environment import ProblemEnvironment
 from trajectory_representation.operator import Operator
 import cPickle as pickle
-
+import re
 from mover_library.utils import *
 from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
@@ -46,15 +46,11 @@ class ConveyorBelt(ProblemEnvironment):
         self.is_init_pick_node = True
         self.init_operator = 'two_arm_place'
         self.name = 'convbelt'
+        self.picks = pickle.load(open('problem_environments/convbelt_picks.pkl', 'r'))
 
     def check_reachability_precondition(self, operator_instance):
-        #return [], "HasSolution"
-        # we can potentially make this faster by just checking the collision at the door
-        # actually, check collisions at 360 degree, with 20 degrees increments.
-        # We don't need to call motion planner.
-
-        # the condition is where the object is facing.
         held = self.robot.GetGrabbed()[0]
+        # todo refactor
         if held.GetName().find('big') != -1:
             original_xytheta = get_body_xytheta(self.robot)
             set_robot_config(operator_instance.continuous_parameters['base_pose'], self.robot)
@@ -164,6 +160,9 @@ class ConveyorBelt(ProblemEnvironment):
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)
+            elif operator_instance.type == 'two_paps':
+                reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
+                self.set_objects_not_in_goal(new_objects_not_in_goal)
             else:
                 raise NotImplementedError
 
@@ -174,25 +173,76 @@ class ConveyorBelt(ProblemEnvironment):
             operator_instance.update_low_level_motion(None)
             return self.infeasible_reward
 
+        status = 'NoSolution'
         if operator_instance.type == 'two_arm_place':
             motion_plan, status = self.check_reachability_precondition(operator_instance)
             operator_instance.update_low_level_motion(motion_plan)
+        elif operator_instance.type == 'two_paps':
+            # todo refactor
+            state_saver = CustomStateSaver(self.env)
+            objects = operator_instance.discrete_parameters['objects']
+            place_base_poses = operator_instance.continuous_parameters['base_poses']
+            motion_plans = []
+            for obj, bpose in zip(objects, place_base_poses):
+                self.pick_object(obj)
+                operator_instance.continuous_parameters['base_pose'] = bpose
+                motion_plan, status = self.check_reachability_precondition(operator_instance)
+                if status == 'NoSolution':
+                    release_obj(self.robot, obj)
+                    break
+                else:
+                    motion_plans.append(motion_plan)
+                    two_arm_place_object(obj, self.robot, operator_instance.continuous_parameters)
+
+            if status == 'HasSolution':
+                if operator_instance.low_level_motion is None:
+                    operator_instance.update_low_level_motion(motion_plans)
+
+            state_saver.Restore()
         else:
             status = "HasSolution"
 
         reward = self.apply_action_and_get_reward(operator_instance, status, node)
         return reward
 
+    def pick_object(self, target_object):
+        held = None
+        if len(self.robot.GetGrabbed()) > 0:
+            held = self.robot.GetGrabbed()[0]
+            release_obj(self.robot, held)
+
+        if target_object == held:
+            grab_obj(self.robot, held)
+        else:
+            pick_params = self.get_pick_for_obj(target_object)
+            two_arm_pick_object(target_object, self.robot, pick_params)
+
     def compute_place_reward(self, operator_instance):
-        assert len(self.robot.GetGrabbed()) == 1
-        object_held = self.robot.GetGrabbed()[0]
-        two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
-        new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
-        #reward = 1
-        #reward = self.objects.index(object_held)+1  # reward gradually increases
-        #reward = np.exp(-se2_distance(self.init_base_conf, operator_instance.continuous_parameters['base_pose'], 1, 1))
-        reward = np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion))
-        #reward = np.exp(-se2_distance(self.init_base_conf, operator_instance.continuous_parameters['base_pose'], 1, 1))
+        if operator_instance.type == 'two_arm_place':
+            assert len(self.robot.GetGrabbed()) == 1
+            object_held = self.robot.GetGrabbed()[0]
+            two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
+            new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
+            reward = np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion))
+        elif operator_instance.type == 'two_paps':
+            objects = operator_instance.discrete_parameters['objects']
+            place_base_poses = operator_instance.continuous_parameters['base_poses']
+            reward = 0
+            for idx, obj_bpose in enumerate(zip(objects, place_base_poses)):
+                obj = obj_bpose[0]
+                bpose = obj_bpose[1]
+                self.pick_object(obj)
+                operator_instance.continuous_parameters['base_pose'] = bpose
+                two_arm_place_object(obj, self.robot, operator_instance.continuous_parameters)
+                try:
+                    reward += np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion[idx]))
+                except:
+                    import pdb;pdb.set_trace()
+            new_objects_not_in_goal = self.objects_currently_not_in_goal[2:]
+        else:
+            raise NotImplementedError
+
+
         return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):
@@ -214,12 +264,14 @@ class ConveyorBelt(ProblemEnvironment):
         pickle.dump(object_configs, open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'wb'))
 
     def get_applicable_op_skeleton(self, parent_action):
-        #op_name = self.which_operator()
         if parent_action is None:
             op_name = 'two_arm_pick'
         else:
             if parent_action.type == 'two_arm_pick':
-                op_name = 'two_arm_place'
+                if self.objects_currently_not_in_goal[0].GetName().find('big') != -1:
+                    op_name = 'two_paps'
+                else:
+                    op_name = 'two_arm_place'
             else:
                 op_name = 'two_arm_pick'
 
@@ -228,12 +280,24 @@ class ConveyorBelt(ProblemEnvironment):
                           discrete_parameters={'region': self.regions['object_region']},
                           continuous_parameters=None,
                           low_level_motion=None)
-        else:
+        elif op_name == 'two_arm_pick':
             op = Operator(operator_type=op_name,
                           discrete_parameters={'object': self.objects_currently_not_in_goal[0]},
                           continuous_parameters=None,
                           low_level_motion=None)
+        elif op_name == 'two_paps':
+            op = Operator(operator_type=op_name,
+                          discrete_parameters={'objects': [self.objects_currently_not_in_goal[0],
+                                                           self.objects_currently_not_in_goal[1]],
+                                               'region': self.regions['object_region']
+                                               },
+                          continuous_parameters=None,
+                          low_level_motion=None)
+        else:
+            raise NotImplementedError
         return op
 
-
+    def get_pick_for_obj(self, obj):
+        obj_number = int(re.search(r'\d+', obj.GetName()).group())
+        return self.picks[obj_number]
 

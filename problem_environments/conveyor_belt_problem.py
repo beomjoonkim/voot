@@ -239,7 +239,7 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
             #objects.append(tobj)
             i += 1.1
 
-        square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=30)
+        square_objects, obj_shapes, obj_poses = create_objects(env, conveyor_belt, num_objects=10)
         for obj in square_objects:
             set_obj_xytheta([2 + i, 1.05, get_body_xytheta(obj)[0, -1]], obj)
             objects.append(obj)

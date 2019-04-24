@@ -392,8 +392,11 @@ def grab_obj(robot, obj):
     robot.Grab(obj)
 
 
-def release_obj(robot, obj):
-    robot.Release(obj)
+def release_obj(robot, obj=None):
+    if obj is None:
+        robot.Release(robot.GetGrabbed()[0])
+    else:
+        robot.Release(obj)
 
 
 def one_arm_pick_object(obj, robot, pick_action):
