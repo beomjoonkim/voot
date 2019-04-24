@@ -114,7 +114,7 @@ def main():
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-random_seed', type=int, default=-1)
     parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
-    parser.add_argument('-voo_counter_ratio', type=int, default=100)
+    parser.add_argument('-voo_counter_ratio', type=int, default=1)
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_max_backup', action='store_true', default=False)

@@ -224,19 +224,12 @@ class VOOGenerator(Generator):
         new_parameters = None
         closest_best_dist = np.inf
         print "Q diff", np.max(node.Q.values()) - np.min(node.Q.values())
-        max_counter = 100
+        max_counter = 1000 # 100 vs 1000 does not really make difference in MCD domain
         while np.any(best_dist > other_dists) and counter < max_counter:
             new_parameters = self.sample_near_best_action(best_evaled_action, counter)
-            stime = time.time()
             best_dist = dist_fcn(new_parameters, best_evaled_action)
             other_dists = np.array([dist_fcn(other, new_parameters) for other in other_actions])
-            #print "Time to compute distance ", time.time() -stime
             counter += 1
-
-            #if best_dist < 0.5:
-            #    break
-            #if len(other_dists) > 10:
-            #    import pdb;pdb.set_trace()
 
             if closest_best_dist > best_dist:
                 closest_best_dist = best_dist
@@ -246,6 +239,7 @@ class VOOGenerator(Generator):
         print "Counter ", counter
         print "n actions = ", len(self.evaled_actions)
         if counter >= max_counter:
+            self.sampling_mode = 'gaussian'
             print closest_best_dist, best_other_dists
             return best_parameters
         else:

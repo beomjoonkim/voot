@@ -48,7 +48,7 @@ A = np.array([[
 ]) * 500
 C = np.array([0.002, 0.005, 0.005, 0.005, 0.005]) * 500
 domain = np.array([[-500.]*dim_x, [500.]*dim_x])
-domain = np.array([[0.]*dim_x, [500.]*dim_x])
+#domain = np.array([[0.]*dim_x, [500.]*dim_x])
 
 # todo define X near 0.5,0.5 , and 500,500. Both shows difference in mu(R)/mu(X)
 save_dir = './test_results/function_optimization/visualization/shekel' + '/dim_' + str(dim_x) + \
@@ -93,6 +93,7 @@ def doo(explr_p, ax):
     times = []
     stime = time.time()
     for i in range(n_fcn_evals):
+        print "Iteration ",i
         next_node = doo_tree.get_next_point_and_node_to_evaluate()
         x_to_evaluate = next_node.cell_mid_point
         next_node.evaluated_x = x_to_evaluate
@@ -146,6 +147,7 @@ def voo(explr_p, ax):
     print 'explr_p', explr_p
 
     for i in range(n_fcn_evals):
+        print "Iteration ",i
         x = voo.choose_next_point(evaled_x, evaled_y)
         if len(x.shape) == 0:
             x = np.array([x])
@@ -211,11 +213,11 @@ def main():
         return
 
     if algo_name == 'voo':
-        epsilon = 0.5
+        epsilon = 0.3
     elif algo_name == 'soo':
         epsilon = 0
     elif algo_name == 'doo':
-        epsilon = 0.00001
+        epsilon = 0.000001
     else:
         raise NotImplementedError
 

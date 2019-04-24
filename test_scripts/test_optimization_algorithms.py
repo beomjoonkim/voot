@@ -50,13 +50,28 @@ widening_parameter = args.widening_parameter
 
 NUMMAX = 10
 if obj_fcn == 'shekel':
-    np.random.seed(problem_idx)
-    A = np.random.rand(NUMMAX, dim_x)*10
-    C = np.random.rand(NUMMAX)
-    import pdb;pdb.set_trace()
+
+    #np.random.seed(problem_idx)
+    #A = np.random.rand(NUMMAX, dim_x)*10
+    #C = np.random.rand(NUMMAX)
     #config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(args.dim_x)+'.pkl', 'r'))
     #A = config['A']
     #C = config['C']
+
+    if args.dim_x == 2:
+        A = np.array([[
+            0.5, 0.5],
+            [0.25, 0.25],
+            [0.25, 0.75],
+            [0.75, 0.25],
+            [0.75, 0.75]
+        ]) * 500
+        C = np.array([0.002, 0.005, 0.005, 0.005, 0.005]) * 500
+    else:
+        config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(args.dim_x)+'.pkl', 'r'))
+        A = config['A']
+        C = config['C']
+
 
 if obj_fcn == 'shekel':
     domain =np.array([[-500.]*dim_x, [500.]*dim_x])
