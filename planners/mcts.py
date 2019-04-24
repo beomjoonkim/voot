@@ -202,6 +202,7 @@ class MCTS:
                 print "Switching root node!"
                 if self.s0_node.A[0].type == 'two_arm_place':
                     self.s0_node.store_node_information(self.environment.name)
+                    import pdb;pdb.set_trace()
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
@@ -226,8 +227,8 @@ class MCTS:
 
     def choose_action(self, curr_node, depth):
         plan_horizon = len(self.environment.objects) * 2
-        print "Widening parameter ", self.widening_parameter*np.power(0.9, depth)
-        if not curr_node.is_reevaluation_step(self.widening_parameter*np.power(0.9, depth), self.environment.infeasible_reward,
+        print "Widening parameter ", self.widening_parameter*np.power(0.8, depth)
+        if not curr_node.is_reevaluation_step(self.widening_parameter*np.power(0.8, depth), self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
             print "Is time to sample new action? True"
             new_continuous_parameters = self.sample_continuous_parameters(curr_node)

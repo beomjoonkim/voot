@@ -200,6 +200,9 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
                                 ((-x_extents + self.home_region_xy[0], x_extents + self.home_region_xy[0]),
                                  (-y_extents, y_extents)), z=0.135, color=np.array((1, 1, 0, 0.25)))
     """
+    init_base_conf = np.array([0, 1.05, 0])
+    set_robot_config(np.array([0, 1.05, 0]), robot)
+
     # converyor belt region
     conv_x = 3
     conv_y = 1
@@ -210,11 +213,9 @@ def create_conveyor_belt_problem(env, obj_setup=None, problem_idx=0):
     x_extents = 3.01
     entire_region = AARegion('entire_region', ((-7.4, 20 * max_width + conv_x), (-y_extents - 2.5, y_extents - 2)), z=0.01, color=np.array((1, 1, 0, 0.25)))
     loading_region = AARegion('loading_area', ((-7.4, -0.5), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
-    init_base_conf = np.array([0, 1.05, 0])
-    set_robot_config(np.array([0, 1.05, 0]), robot)
 
     big_region_1 = AARegion('big_region_1', ((-5, -0.5), (-7.5, -0.4)), z=0.01, color=np.array((1, 1, 0, 0.25)))
-    big_region_2 = AARegion('big_region_2', ((-7.4, -3.0), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
+    big_region_2 = AARegion('big_region_2', ((-7.4, -4.0), (-7.5, 3.0)), z=0.01, color=np.array((1, 1, 0, 0.25)))
 
     if problem_idx == 0 or problem_idx == 1:
         objects = []
