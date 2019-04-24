@@ -81,6 +81,7 @@ class TreeNode:
             return is_time_to_sample
         else:
             if self.reeval_iterations < widening_parameter:
+                print 'reeval iter: %d, widening: %d'%(self.reeval_iterations, widening_parameter)
                 self.reeval_iterations += 1
                 return True
             else:
