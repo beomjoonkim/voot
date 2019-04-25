@@ -182,10 +182,10 @@ class VOOGenerator(Generator):
         elif operator == 'two_arm_place':
             def dist_fcn(x, y): return place_parameter_distance(x, y, self.c1)
         elif operator == 'two_paps':
+            # todo fix
             def dist_fcn(x, y): return place_parameter_distance(x[0:3], y[0:3], 1) + place_parameter_distance(x[3:6], y[3:6], 1)
         else:
             raise NotImplementedError
-
         new_parameters = None
         closest_best_dist = np.inf
         print "Q diff", np.max(node.Q.values()) - np.min(node.Q.values())

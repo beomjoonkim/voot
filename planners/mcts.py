@@ -293,8 +293,6 @@ class MCTS:
         reward = self.environment.apply_operator_instance(action, curr_node)
         print "Executed ", action.type, action.continuous_parameters['is_feasible'], action.discrete_parameters
         print "reward ", reward
-        if action.type.find('paps') != -1 and reward > -2:
-            import pdb;pdb.set_trace()
 
         # for the same action, we now get different results because RRT calls to the same goal would result in
         # both feasible and infeasible.

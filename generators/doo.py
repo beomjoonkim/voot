@@ -29,7 +29,8 @@ class DOOGenerator(Generator):
             dist_fn = lambda x, y: pick_parameter_distance(target_object, x, y)
         elif operator_name == 'two_arm_place':
             dist_fn = place_parameter_distance
-        elif operator_name == 'two_paps':
+        elif operator_name.find('_paps') != -1:
+            # todo fix
             dist_fn = lambda x, y: place_parameter_distance(x[0:3], y[0:3]) + place_parameter_distance(x[3:6], y[3:6])
         else:
             print "Wrong operator name"
