@@ -97,7 +97,6 @@ def make_plan_pklable(plan):
                 p.discrete_parameters['objects'][idx] = obj.GetName()
             if 'object' in p.discrete_parameters.keys():
                 p.discrete_parameters['object'] =  p.discrete_parameters['object'].GetName()
-            import pdb;pdb.set_trace()
     return plan
 
 
