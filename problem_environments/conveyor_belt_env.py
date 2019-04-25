@@ -19,7 +19,7 @@ from mover_library.motion_planner import collision_fn, base_extend_fn, base_samp
 
 
 class ConveyorBelt(ProblemEnvironment):
-    def __init__(self, problem_idx):
+    def __init__(self, problem_idx, n_actions_per_node):
         self.problem_idx = problem_idx
         ProblemEnvironment.__init__(self, problem_idx)
         obj_setup = None
@@ -41,6 +41,7 @@ class ConveyorBelt(ProblemEnvironment):
         self.robot = self.problem_config['env'].GetRobots()[0]
         self.infeasible_reward = -2
         self.curr_state = self.get_state()
+        self.n_actions_per_node = n_actions_per_node
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.is_init_pick_node = True
@@ -160,7 +161,7 @@ class ConveyorBelt(ProblemEnvironment):
             elif operator_instance.type == 'two_arm_place':
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)
-            elif operator_instance.type == 'two_paps':
+            elif operator_instance.type.find('_paps') != -1:
                 reward, new_objects_not_in_goal = self.compute_place_reward(operator_instance)
                 self.set_objects_not_in_goal(new_objects_not_in_goal)
             else:
@@ -177,7 +178,7 @@ class ConveyorBelt(ProblemEnvironment):
         if operator_instance.type == 'two_arm_place':
             motion_plan, status = self.check_reachability_precondition(operator_instance)
             operator_instance.update_low_level_motion(motion_plan)
-        elif operator_instance.type == 'two_paps':
+        elif operator_instance.type.find('_paps') != -1:
             # todo refactor
             state_saver = CustomStateSaver(self.env)
             objects = operator_instance.discrete_parameters['objects']
@@ -197,7 +198,6 @@ class ConveyorBelt(ProblemEnvironment):
             if status == 'HasSolution':
                 if operator_instance.low_level_motion is None:
                     operator_instance.update_low_level_motion(motion_plans)
-
             state_saver.Restore()
         else:
             status = "HasSolution"
@@ -224,7 +224,7 @@ class ConveyorBelt(ProblemEnvironment):
             two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
             new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
             reward = np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion))
-        elif operator_instance.type == 'two_paps':
+        elif operator_instance.type.find('_paps') != -1:
             objects = operator_instance.discrete_parameters['objects']
             place_base_poses = operator_instance.continuous_parameters['base_poses']
             reward = 0
@@ -234,14 +234,10 @@ class ConveyorBelt(ProblemEnvironment):
                 self.pick_object(obj)
                 operator_instance.continuous_parameters['base_pose'] = bpose
                 two_arm_place_object(obj, self.robot, operator_instance.continuous_parameters)
-                try:
-                    reward += np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion[idx]))
-                except:
-                    import pdb;pdb.set_trace()
-            new_objects_not_in_goal = self.objects_currently_not_in_goal[2:]
+                reward += np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion[idx]))
+            new_objects_not_in_goal = self.objects_currently_not_in_goal[self.n_actions_per_node:]
         else:
             raise NotImplementedError
-
 
         return reward, new_objects_not_in_goal
 
@@ -268,8 +264,8 @@ class ConveyorBelt(ProblemEnvironment):
             op_name = 'two_arm_pick'
         else:
             if parent_action.type == 'two_arm_pick':
-                if self.objects_currently_not_in_goal[0].GetName().find('big') != -1:
-                    op_name = 'two_paps'
+                if self.n_actions_per_node > 1:
+                    op_name = str(self.n_actions_per_node)+'_paps'
                 else:
                     op_name = 'two_arm_place'
             else:
@@ -285,10 +281,10 @@ class ConveyorBelt(ProblemEnvironment):
                           discrete_parameters={'object': self.objects_currently_not_in_goal[0]},
                           continuous_parameters=None,
                           low_level_motion=None)
-        elif op_name == 'two_paps':
+        elif op_name == str(self.n_actions_per_node)+'_paps':
+            objects = self.objects_currently_not_in_goal[0:self.n_actions_per_node]
             op = Operator(operator_type=op_name,
-                          discrete_parameters={'objects': [self.objects_currently_not_in_goal[0],
-                                                           self.objects_currently_not_in_goal[1]],
+                          discrete_parameters={'objects': objects,
                                                'region': self.regions['object_region']
                                                },
                           continuous_parameters=None,

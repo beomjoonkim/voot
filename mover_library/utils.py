@@ -425,6 +425,7 @@ def two_arm_place_object(obj, robot, place_action):
 
     set_robot_config(place_base_pose, robot)
     release_obj(robot, obj)
+    FOLDED_LEFT_ARM = [0.0, 1.29023451, 0.0, -2.121308, 0.0, -0.69800004, 0.0]
     set_config(robot, FOLDED_LEFT_ARM, leftarm_manip.GetArmIndices())
     set_config(robot, mirror_arm_config(FOLDED_LEFT_ARM), rightarm_manip.GetArmIndices())
 

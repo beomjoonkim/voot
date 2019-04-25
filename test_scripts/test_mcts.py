@@ -16,6 +16,8 @@ import numpy as np
 import random
 import socket
 import openravepy
+from openravepy import RaveSetDebugLevel, DebugLevel
+
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560' or hostname=='phaedra' or hostname=='shakey':
@@ -124,8 +126,12 @@ def main():
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-use_max_backup', action='store_true', default=False)
     parser.add_argument('-pick_switch', action='store_true', default=False)
+    parser.add_argument('-n_actions_per_node', type=int, default=1)
 
     args = parser.parse_args()
+
+    RaveSetDebugLevel(DebugLevel.Error)
+
 
     if args.pw:
         assert args.w > 0 and args.w <= 1
@@ -152,7 +158,7 @@ def main():
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.problem_idx, args.domain)
     else:
         # todo make root switching in conveyor belt domain
-        problem_instantiator = ConveyorBeltInstantiator(args.problem_idx, args.domain)
+        problem_instantiator = ConveyorBeltInstantiator(args.problem_idx, args.domain, args.n_actions_per_node)
 
     if args.v:
         problem_instantiator.environment.env.SetViewer('qtcoin')
