@@ -181,9 +181,16 @@ class VOOGenerator(Generator):
             def dist_fcn(x, y): return pick_parameter_distance(obj, x, y)
         elif operator == 'two_arm_place':
             def dist_fcn(x, y): return place_parameter_distance(x, y, self.c1)
-        elif operator == 'two_paps':
-            # todo fix
-            def dist_fcn(x, y): return place_parameter_distance(x[0:3], y[0:3], 1) + place_parameter_distance(x[3:6], y[3:6], 1)
+        elif operator.find('_paps') != -1:
+            n_actions = int(operator.split('_')[0])
+
+            def dist_fcn(x, y):
+                x_obj_placements = np.split(x, n_actions)
+                y_obj_placements = np.split(y, n_actions)
+                dist = 0
+                for x, y in zip(x_obj_placements, y_obj_placements):
+                    dist += place_parameter_distance(x, y, 1)
+                return dist
         else:
             raise NotImplementedError
         new_parameters = None

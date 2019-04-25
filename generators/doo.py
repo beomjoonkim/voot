@@ -30,8 +30,15 @@ class DOOGenerator(Generator):
         elif operator_name == 'two_arm_place':
             dist_fn = place_parameter_distance
         elif operator_name.find('_paps') != -1:
-            # todo fix
-            dist_fn = lambda x, y: place_parameter_distance(x[0:3], y[0:3]) + place_parameter_distance(x[3:6], y[3:6])
+            n_actions = int(operator_name.split('_')[0])
+
+            def dist_fn(x, y):
+                x_obj_placements = np.split(x, n_actions)
+                y_obj_placements = np.split(y, n_actions)
+                dist = 0
+                for x, y in zip(x_obj_placements, y_obj_placements):
+                    dist += place_parameter_distance(x, y, 1)
+                return dist
         else:
             print "Wrong operator name"
             raise ValueError
