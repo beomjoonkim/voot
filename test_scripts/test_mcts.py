@@ -43,8 +43,8 @@ def make_save_dir(args):
                 '_n_feasible_checks_'+str(n_feasibility_checks) \
                 +'_n_switch_' + str(args.n_switch) \
                 +'_max_backup_' + str(args.use_max_backup) \
-                +'_pick_switch_' + str(args.pick_switch)
-
+                +'_pick_switch_' + str(args.pick_switch) \
+                +'_n_actions_per_node_' + str(args.n_actions_per_node)
     if addendum != '':
         save_dir += '_' + addendum + '/'
     else:

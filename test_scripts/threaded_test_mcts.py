@@ -21,12 +21,14 @@ def worker_p(config):
     add = config['add']
     n_switch = config['n_switch']
     voo_counter_ratio = config['counter_ratio']
+    n_actions_per_node = config['n_actions_per_node']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -w ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode) + ' -n_switch ' + str(n_switch) + \
-        ' -voo_counter_ratio ' + str(voo_counter_ratio) + ' -c1 ' + str(config['c1'])
+        ' -voo_counter_ratio ' + str(voo_counter_ratio) + ' -c1 ' + str(config['c1']) + ' -n_actions_per_node ' + \
+          str(n_actions_per_node)
     if pw:
         command += ' -pw '
 
@@ -60,7 +62,7 @@ def main():
     parser.add_argument('-uct', nargs='+', type=float)
     parser.add_argument('-n_feasibility_checks', nargs='+', type=int)
     parser.add_argument('-epsilon', nargs='+', type=float)
-    parser.add_argument('-pidx', type=int, default=0)
+    parser.add_argument('-problem_idx', type=int, default=0)
     parser.add_argument('-seeds', nargs='+', type=int)
     parser.add_argument('-pw', action='store_true', default=False)
     parser.add_argument('-voo_sampling_mode', type=str, default='uniform')
@@ -71,6 +73,7 @@ def main():
     parser.add_argument('-voo_counter_ratio', nargs='+', type=int)
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-c1', type=float, default=1)
+    parser.add_argument('-n_actions_per_node', type=int, default=1)
 
     args = parser.parse_args()
 
@@ -86,7 +89,7 @@ def main():
     seeds = range(args.seeds[0], args.seeds[1]) if args.seeds is not None else range(20)
     n_switches = args.n_switch if args.n_switch is not None else [10]
 
-    pidx = args.pidx
+    pidx = args.problem_idx
     configs = []
     for counter_ratio in counter_ratios:
         for n_switch in n_switches:
@@ -112,7 +115,8 @@ def main():
                                           'use_max_backup': args.use_max_backup,
                                           'counter_ratio': counter_ratio,
                                           'pick_switch': args.pick_switch,
-                                          'c1': args.c1}
+                                          'c1': args.c1,
+                                          'n_actions_per_node': args.n_actions_per_node}
                                 configs.append(config)
 
     n_workers = int(20)

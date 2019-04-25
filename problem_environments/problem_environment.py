@@ -179,7 +179,7 @@ class ProblemEnvironment:
                 print "Found solution at iteration ", n_iter
                 path = smooth_path(path, e_fn, c_fn)
                 return path, "HasSolution"
-        return None, 'NoPath'
+        return None, 'NoSolution'
 
     def get_arm_base_motion_plan(self, goal, region_name=None, manip_name=None):
         if region_name is None:
