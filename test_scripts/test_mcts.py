@@ -92,6 +92,12 @@ def make_plan_pklable(plan):
             p.discrete_parameters['object'] = p.discrete_parameters['object'].GetName()
         elif p.type == 'two_arm_place':
             p.discrete_parameters['region'] = p.discrete_parameters['region'].name
+        elif p.type == 'two_paps':
+            for idx, obj in enumerate(p.discrete_parameters['objects']):
+                p.discrete_parameters['objects'][idx] = obj.GetName()
+            if 'object' in p.discrete_parameters.keys():
+                p.discrete_parameters['object'] =  p.discrete_parameters['object'].GetName()
+            import pdb;pdb.set_trace()
     return plan
 
 
