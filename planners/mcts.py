@@ -272,6 +272,7 @@ class MCTS:
                                                                                                  self.n_feasibility_checks)
 
     def simulate(self, curr_node, depth):
+        print "Curr node idx", curr_node.idx
         if self.environment.is_goal_reached():
             # arrived at the goal state
             if not curr_node.is_goal_and_already_visited:
@@ -293,9 +294,6 @@ class MCTS:
         reward = self.environment.apply_operator_instance(action, curr_node)
         print "Executed ", action.type, action.continuous_parameters['is_feasible'], action.discrete_parameters
         print "reward ", reward
-
-        # for the same action, we now get different results because RRT calls to the same goal would result in
-        # both feasible and infeasible.
 
         if not curr_node.is_action_tried(action):
             next_node = self.create_node(action, depth+1, reward, is_init_node=False)

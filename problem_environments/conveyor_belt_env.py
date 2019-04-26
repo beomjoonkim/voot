@@ -186,6 +186,7 @@ class ConveyorBelt(ProblemEnvironment):
             motion_plans = []
             for obj, bpose in zip(objects, place_base_poses):
                 self.pick_object(obj)
+                set_robot_config(self.init_base_conf, self.robot)
                 operator_instance.continuous_parameters['base_pose'] = bpose
                 motion_plan, status = self.check_reachability_precondition(operator_instance)
                 if status == 'NoSolution':
