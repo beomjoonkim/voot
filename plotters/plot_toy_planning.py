@@ -55,6 +55,7 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += '_pick_switch_True'
     else:
         result_dir += '_pick_switch_False'
+
     if mcts_parameters.domain == 'convbelt_results':
         result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
@@ -217,8 +218,8 @@ def plot_across_algorithms():
     algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     algo_names = ['randomized_doo_1.0', 'randomized_doo_0.5', 'randomized_doo_0.01', 'voo_uniform_0.1',
                   'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
-    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_uniform_0.3', 'unif']
-    algo_names = ['unif']
+    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
+    #algo_names = ['unif']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -282,6 +283,8 @@ def plot_across_algorithms():
                     + str(args.mcts_iter) + "_uct_" + str(args.uct) + "_n_feasibility_checks_" \
                     + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup) \
                     + '_pick_switch_' + str(args.pick_switch)
+        if args.domain == 'convbelt_results':
+            plot_name += '_n_actions_per_node_' + str(args.n_actions_per_node)
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
 

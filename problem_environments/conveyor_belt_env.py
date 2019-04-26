@@ -271,8 +271,10 @@ class ConveyorBelt(ProblemEnvironment):
         if parent_action is None:
             op_name = 'two_arm_pick'
         else:
+            use_multipaps = parent_action.discrete_parameters['object'].GetName().find("big") != -1
+            #use_multipaps = self.n_actions_per_node > 2
             if parent_action.type == 'two_arm_pick':
-                if self.n_actions_per_node > 1:
+                if use_multipaps:
                     op_name = str(self.n_actions_per_node)+'_paps'
                 else:
                     op_name = 'two_arm_place'
@@ -281,7 +283,8 @@ class ConveyorBelt(ProblemEnvironment):
 
         if op_name == 'two_arm_place':
             op = Operator(operator_type=op_name,
-                          discrete_parameters={'region': self.regions['object_region']},
+                          discrete_parameters={'region': self.regions['object_region'],
+                                               'object': self.objects_currently_not_in_goal[0]},
                           continuous_parameters=None,
                           low_level_motion=None)
         elif op_name == 'two_arm_pick':
@@ -289,7 +292,7 @@ class ConveyorBelt(ProblemEnvironment):
                           discrete_parameters={'object': self.objects_currently_not_in_goal[0]},
                           continuous_parameters=None,
                           low_level_motion=None)
-        elif op_name == str(self.n_actions_per_node)+'_paps':
+        elif op_name.find('_paps') != -1:
             objects = self.objects_currently_not_in_goal[0:self.n_actions_per_node]
             op = Operator(operator_type=op_name,
                           discrete_parameters={'objects': objects,

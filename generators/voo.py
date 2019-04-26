@@ -197,6 +197,7 @@ class VOOGenerator(Generator):
         closest_best_dist = np.inf
         print "Q diff", np.max(node.Q.values()) - np.min(node.Q.values())
         max_counter = 1000 # 100 vs 1000 does not really make difference in MCD domain
+        # todo I think I can squeeze out performance by using gaussian in higher dimension
         while np.any(best_dist > other_dists) and counter < max_counter:
             new_parameters = self.sample_near_best_action(best_evaled_action, counter)
             best_dist = dist_fcn(new_parameters, best_evaled_action)
