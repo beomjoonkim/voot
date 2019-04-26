@@ -94,7 +94,7 @@ def make_plan_pklable(plan):
             p.discrete_parameters['object'] = p.discrete_parameters['object'].GetName()
         elif p.type == 'two_arm_place':
             p.discrete_parameters['region'] = p.discrete_parameters['region'].name
-        elif p.type == 'two_paps':
+        elif p.type.find('_paps') != -1:
             for idx, obj in enumerate(p.discrete_parameters['objects']):
                 p.discrete_parameters['objects'][idx] = obj.GetName()
             if 'object' in p.discrete_parameters.keys():
@@ -131,7 +131,6 @@ def main():
     args = parser.parse_args()
 
     RaveSetDebugLevel(DebugLevel.Error)
-
 
     if args.pw:
         assert args.w > 0 and args.w <= 1
