@@ -61,6 +61,7 @@ class ConveyorBelt(ProblemEnvironment):
                 return None, "NoSolution"
             set_robot_config(original_xytheta, self.robot)
 
+
         goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
 
         if operator_instance.low_level_motion is not None:
@@ -97,6 +98,11 @@ class ConveyorBelt(ProblemEnvironment):
                 set_robot_config(q_init, self.robot)
                 path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
             else:
+                n_iterations = [20, 50, 100, 500, 1000]
+                set_robot_config(q_init, self.robot)
+                path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
+
+                """
                 subgoal = np.array([-2.8, -0.5, 0])
                 angles = np.random.permutation(np.linspace(10, 120, 30))
                 is_subgoal_collision = True
@@ -126,6 +132,7 @@ class ConveyorBelt(ProblemEnvironment):
                         return path2, status
                     print "Path 2 found"
                 path = path1+path2
+                """
 
         set_robot_config(q_init, self.robot)
         print "Status,", status
