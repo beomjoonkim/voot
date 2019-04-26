@@ -271,8 +271,8 @@ class ConveyorBelt(ProblemEnvironment):
         if parent_action is None:
             op_name = 'two_arm_pick'
         else:
-            use_multipaps = parent_action.discrete_parameters['object'].GetName().find("big") != -1
-            #use_multipaps = self.n_actions_per_node > 2
+            #use_multipaps = parent_action.discrete_parameters['object'].GetName().find("big") != -1
+            use_multipaps = self.n_actions_per_node > 1
             if parent_action.type == 'two_arm_pick':
                 if use_multipaps:
                     op_name = str(self.n_actions_per_node)+'_paps'
