@@ -130,7 +130,7 @@ class TreeNode:
             os.makedirs(fdir)
 
         to_store = {
-            'Q': self.Q,
+            'Q': [self.Q[a] for a in self.A],
             'saver': self.state_saver,
             'progress': len(self.objects_not_in_goal)
         }

@@ -19,6 +19,8 @@ import openravepy
 from openravepy import RaveSetDebugLevel, DebugLevel
 
 
+
+
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560' or hostname=='phaedra' or hostname=='shakey':
     ROOTDIR = './'

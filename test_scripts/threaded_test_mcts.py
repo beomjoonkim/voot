@@ -84,11 +84,10 @@ def main():
     mcts_iter = args.mcts_iter
     ucts = args.uct if args.uct is not None else [0.0]
     n_feasibility_checks = args.n_feasibility_checks if args.n_feasibility_checks is not None else [50]
-    counter_ratios = args.voo_counter_ratio if args.voo_counter_ratio is not None else [10]
+    counter_ratios = args.voo_counter_ratio if args.voo_counter_ratio is not None else [1]
 
     seeds = range(args.seeds[0], args.seeds[1]) if args.seeds is not None else range(20)
     n_switches = args.n_switch if args.n_switch is not None else [10]
-
     pidx = args.problem_idx
     configs = []
     for counter_ratio in counter_ratios:

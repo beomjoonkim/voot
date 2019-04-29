@@ -172,10 +172,8 @@ def get_max_rwds_wrt_samples(search_rwd_times, n_evals):
 
 def get_algo_name(raw_name):
     if raw_name.find('randomized_doo') !=-1:
-        return raw_name
         return "RandDOOT"
     elif raw_name.find('voo') != -1:
-        return raw_name
         return 'VOOT'
     elif raw_name.find('unif') != -1:
         return "UniformT"
@@ -218,7 +216,9 @@ def plot_across_algorithms():
     algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     algo_names = ['randomized_doo_1.0', 'randomized_doo_0.5', 'randomized_doo_0.01', 'voo_uniform_0.1',
                   'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
-    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
+    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_gaussian_0.3', 'unif']
+    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+    #algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
     #algo_names = ['unif']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
