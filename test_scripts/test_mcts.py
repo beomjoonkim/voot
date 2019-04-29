@@ -131,8 +131,36 @@ def main():
     parser.add_argument('-n_actions_per_node', type=int, default=1)
 
     args = parser.parse_args()
-
     RaveSetDebugLevel(DebugLevel.Error)
+
+    if args.domain == 'convbelt':
+        args.mcts_iter = 3000
+        args.voo_sampling_mode = 'uniform'
+        args.n_switch = 10
+        args.pick_switch = False
+        args.use_max_backup = True
+        args.n_feasibility_checks = 200
+        args.pidx = 3
+        args.widening_parameter = 5
+        args.n_actions_per_node = 3
+        if args.sampling_strategy == 'voo':
+            args.epsilon = 0.1
+        elif args.sampling_strategy == 'randomized_doo':
+            args.epsilon = 1.0
+    elif args.domain == 'minimum_displacement_removal':
+        args.mcts_iter = 2000
+        args.voo_sampling_mode = 'uniform'
+        args.n_switch = 10
+        args.pick_switch = True
+        args.use_max_backup = True
+        args.n_feasibility_checks = 50
+        args.pidx = 0
+        args.widening_parameter = 5
+        args.n_actions_per_node = 1
+        if args.sampling_strategy == 'voo':
+            args.epsilon = 0.1
+        elif args.sampling_strategy == 'randomized_doo':
+            args.epsilon = 1.0
 
     if args.pw:
         assert args.w > 0 and args.w <= 1
