@@ -175,8 +175,8 @@ def draw_shekel():
     from matplotlib import cm
     from matplotlib.colors import LogNorm
 
-    X = np.arange(domain[0][0], domain[1][0], 5)
-    Y = np.arange(domain[0][1], domain[1][1], 5)
+    X = np.arange(domain[0][0], domain[1][0], 0.01)
+    Y = np.arange(domain[0][1], domain[1][1], 0.01)
     X, Y = np.meshgrid(X, Y)
     print "Evaluating shekel"
     Z = np.fromiter(map(shekel_arg0, zip(X.flat, Y.flat)), dtype=np.float, count=X.shape[0] * X.shape[1]).reshape(
