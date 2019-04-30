@@ -40,7 +40,6 @@ class VOO:
         best_evaled_x = evaled_x[best_evaled_x_idx]
         other_best_evaled_xs = evaled_x
 
-
         closest_best_dist = np.inf
         while np.any(best_dist > other_dists):
             if self.GAUSSIAN:
