@@ -83,6 +83,8 @@ elif obj_fcn == 'ackley':
     domain = np.array([[-30.]*dim_x, [30.]*dim_x])
 elif obj_fcn == 'griewank':
     domain = np.array([[-600.]*dim_x, [600.]*dim_x])
+elif obj_fcn == 'rosenbrock':
+    domain = np.array([[-100.]*dim_x, [100.]*dim_x])
 else:
     raise NotImplementedError
 
@@ -98,6 +100,8 @@ def get_objective_function(sol):
         return -benchmarks.rastrigin(sol)[0]
     elif obj_fcn == 'ackley':
         return -benchmarks.ackley(sol)[0]
+    elif obj_fcn == 'rosenbrock':
+        return -benchmarks.rosenbrock(sol)[0]
     else:
         print "wrong function name"
         sys.exit(-1)
