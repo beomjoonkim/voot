@@ -29,7 +29,6 @@ class VOO:
         return self.sample_next_point(evaled_x, evaled_y)
 
     def sample_from_best_voronoi_region(self, evaled_x, evaled_y):
-        print "Sampling from best V"
         best_dist = np.inf
         other_dists = np.array([-1])
         counter = 1
@@ -75,7 +74,7 @@ class VOO:
             if closest_best_dist > best_dist:
                 closest_best_dist = best_dist
                 best_new_x = new_x
-            if counter > 1000:
+            if counter > 100:
                 new_x = best_new_x
                 print "Counter reached, switching to Gaussian"
                 self.GAUSSIAN = True

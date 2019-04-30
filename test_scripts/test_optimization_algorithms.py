@@ -363,9 +363,9 @@ def voo(explr_p):
     """
 
     for i in range(n_fcn_evals):
-        #print "%d / %d" % (i, n_fcn_evals)
-        #if i > 0:
-        #    print 'max value is ', np.max(evaled_y)
+        print "%d / %d" % (i, n_fcn_evals)
+        if i > 0:
+            print 'max value is ', np.max(evaled_y)
         x = voo.choose_next_point(evaled_x, evaled_y)
         if len(x.shape) == 0:
             x = np.array([x])
