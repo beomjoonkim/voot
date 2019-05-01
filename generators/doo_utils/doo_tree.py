@@ -136,7 +136,7 @@ class BinaryDOOTree:
                     try:
                         l.f_value = self.find_evaled_f_value(l.evaluated_x, evaled_x_to_update, evaled_y_to_update)
                     except:
-                        import pdb;pdb.set_trace()
+                        import pdb; pdb.set_trace()
 
         if self.node_to_update is not None:
             if len(evaled_x_to_update) > 0:
