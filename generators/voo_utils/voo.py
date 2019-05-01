@@ -7,7 +7,7 @@ class VOO:
         self.explr_p = explr_p
         if distance_fn is None:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
-        self.CENTERED_UNIFORM = False
+        self.CENTERED_UNIFORM = True
         self.GAUSSIAN = False
         self.UNIFORM_TOUCHING_BOUNDARY = False
 
