@@ -94,8 +94,6 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
             return motion, status
 
         motion, status = self.get_base_motion_plan(goal_robot_xytheta, motion_planning_region_name)
-
-
         return motion, status
 
     def apply_action_and_get_reward(self, operator_instance, is_op_feasible, node):

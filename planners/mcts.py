@@ -164,6 +164,11 @@ class MCTS:
             best_node = self.tree.root
             self.n_switch += self.n_switch
         else:
+            feasible_actions = [a for a in self.s0_node.A if np.max(self.s0_node.reward_history[a]) > -2]
+            feasible_q_values = [self.s0_node.Q[a] for a in feasible_actions]
+            best_action = feasible_actions[np.argmax(feasible_q_values)]
+            best_node = self.s0_node.children[best_action]
+            """
             non_goal_traj_feasible_actions = []
             non_goal_traj_q_values = []
             is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
@@ -173,21 +178,17 @@ class MCTS:
                 if is_pick_node and not self.pick_switch:
                     is_action_evaled_enough = False  # free-pass if we are not doing pick switch
                 else:
+                    import pdb;pdb.set_trace()
                     is_action_evaled_enough = self.s0_node.children[a].have_been_used_as_root
-                """
-                if is_pick_node and not self.pick_switch:
-                    is_action_evaled_enough = False  # free-pass if we are not doing pick switch
-                else:
-                    is_action_evaled_enough = self.s0_node.children[a].get_n_feasible_actions(self.infeasible_reward) \
-                                              >= self.n_switch_original
-                """
 
                 if is_action_feasible and (not is_action_evaled_enough):
                     non_goal_traj_feasible_actions.append(a)
                     non_goal_traj_q_values.append(a)
+
             best_action = non_goal_traj_feasible_actions[np.argmax(non_goal_traj_q_values)]
             best_node = self.s0_node.children[best_action]
             best_node.have_been_used_as_root = True
+            """
         return best_node
 
     def search(self, n_iter=100, max_time=np.inf):
@@ -230,9 +231,9 @@ class MCTS:
         return search_time_to_reward, self.s0_node.best_v, plan
 
     def choose_action(self, curr_node, depth):
-        print "Widening parameter ", self.widening_parameter*np.power(0.8, depth)
         w_param = self.widening_parameter*np.power(0.8, depth)
-        #w_param = self.widening_parameter
+        w_param = self.widening_parameter
+        print "Widening parameter ", w_param
         if not curr_node.is_reevaluation_step(w_param, self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
             print "Is time to sample new action? True"

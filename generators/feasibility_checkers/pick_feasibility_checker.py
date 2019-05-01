@@ -47,23 +47,23 @@ class PickFeasibilityChecker(object):
     def compute_g_config(self, obj, pick_base_pose, grasp_params):
 
         original_config = get_body_xytheta(self.robot)
-        if True:
-        #with self.robot:
+        #if True:
+        with self.robot:
             g_config = self.compute_grasp_config(obj, pick_base_pose, grasp_params)
             if g_config is not None:
                 pick_action = {'operator_name': 'two_arm_pick', 'base_pose': pick_base_pose,
                                'grasp_params': grasp_params, 'g_config': g_config}
+                two_arm_pick_object(obj, self.robot, pick_action)
 
                 if self.problem_env.name == 'convbelt':
                     feasible = True
                 else:
                     inside_region = self.problem_env.regions['entire_region'].contains(self.robot.ComputeAABB())
-                    #set_robot_config(pick_action['base_pose'], self.robot)
-                    #prepick_config_not_in_collision = not self.env.CheckCollision(self.robot)
-                    two_arm_pick_object(obj, self.robot, pick_action)
                     pick_config_not_in_collision = not self.env.CheckCollision(self.robot)
-                    #feasible = inside_region and prepick_config_not_in_collision and pick_config_not_in_collision
                     feasible = inside_region and pick_config_not_in_collision
+
+                    not_in_collision = not self.env.CheckCollision(self.robot)
+                    feasible = inside_region and not_in_collision
 
                 if feasible:
                     two_arm_place_object(obj, self.robot, pick_action)
