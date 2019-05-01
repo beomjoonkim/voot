@@ -188,7 +188,7 @@ def plot_across_algorithms():
     parser.add_argument('-w', type=float, default=5.0)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
-    parser.add_argument('-mcts_iter', type=int, default=1500)
+    parser.add_argument('-mcts_iter', type=int, default=2000)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
     parser.add_argument('-pidx', type=int, default=0)
     parser.add_argument('--p', action='store_true')
