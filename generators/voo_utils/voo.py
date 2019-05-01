@@ -9,8 +9,8 @@ class VOO:
         if distance_fn is None:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
 
-        self.GAUSSIAN = False
-        self.UNIFORM_TOUCHING_BOUNDARY = True
+        self.GAUSSIAN = True
+        self.UNIFORM_TOUCHING_BOUNDARY = False
         self.DECREASING_UNIFORM = False
 
     def sample_next_point(self, evaled_x, evaled_y):
@@ -74,11 +74,11 @@ class VOO:
             if closest_best_dist > best_dist:
                 closest_best_dist = best_dist
                 best_new_x = new_x
-            if counter > 100:
-                new_x = best_new_x
+            #if counter > 100:
+            #    new_x = best_new_x
                 #print "Counter reached, switching to Gaussian"
                 #self.GAUSSIAN = True
-                break
+                #break
 
         return new_x
 
