@@ -161,6 +161,8 @@ def main():
             args.epsilon = 0.1
         elif args.sampling_strategy == 'randomized_doo':
             args.epsilon = 1.0
+        elif args.sampling_strategy == 'doo':
+            args.epsilon = 1.0
 
     if args.pw:
         assert args.w > 0 and args.w <= 1

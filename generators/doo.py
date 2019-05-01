@@ -60,6 +60,8 @@ class DOOGenerator(Generator):
             self.evaled_q_values.append(self.update_flag)
             print "Found feasible sample"
         else:
+            # I had this  bug where I was not updating when the action was infeasible. Now I've fixed it,
+            # DOO should work better I think
             self.evaled_actions.append(action_parameters)
             self.doo_tree.expand_node(-2, doo_node)
             self.evaled_q_values.append(-2)
