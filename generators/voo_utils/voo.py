@@ -7,6 +7,9 @@ class VOO:
         self.explr_p = explr_p
         if distance_fn is None:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
+        self.CENTERED_UNIFORM = False
+        self.GAUSSIAN = False
+        self.UNIFORM_TOUCHING_BOUNDARY = False
 
     def sample_next_point(self, evaled_x, evaled_y):
         rnd = np.random.random()  # this should lie outside
@@ -31,17 +34,15 @@ class VOO:
         best_evaled_x = evaled_x[best_evaled_x_idx]
         other_best_evaled_xs = evaled_x
 
-        GAUSSIAN = False
-        UNIFORM_TOUCHING_BOUNDARY = False
         # todo perhaps this is reason why it performs so poorly
         while np.any(best_dist > other_dists):
-            if GAUSSIAN:
+            if self.GAUSSIAN:
                 variance = (self.domain[1] - self.domain[0]) / np.exp(counter)
                 new_x = np.random.normal(best_evaled_x, variance)
                 while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
                     #print "Edge detecting, sampling other points"
                     new_x = np.random.normal(best_evaled_x, variance)
-            elif UNIFORM_TOUCHING_BOUNDARY:
+            elif self.UNIFORM_TOUCHING_BOUNDARY:
                 dim_x = self.domain[1].shape[-1]
                 possible_range = (self.domain[1] - self.domain[0]) / np.exp(counter)
                 possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
@@ -49,7 +50,7 @@ class VOO:
                 while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
                     possible_values = np.random.uniform(-possible_range, possible_range, (dim_x,))
                     new_x = best_evaled_x + possible_values
-            else:
+            elif self.CENTERED_UNIFORM:
                 dim_x = self.domain[1].shape[-1]
                 possible_max = (self.domain[1] - best_evaled_x) / np.exp(counter)
                 possible_min = (self.domain[0] - best_evaled_x) / np.exp(counter)
@@ -59,12 +60,12 @@ class VOO:
                 while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
                     possible_values = np.random.uniform(possible_min, possible_max, (dim_x,))
                     new_x = best_evaled_x + possible_values
-
-            """
-            new_x = np.random.uniform(self.domain[0], self.domain[1])
-            while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
+            else:
                 new_x = np.random.uniform(self.domain[0], self.domain[1])
-            """
+                while np.any(new_x > self.domain[1]) or np.any(new_x < self.domain[0]):
+                    new_x = np.random.uniform(self.domain[0], self.domain[1])
+                if counter > 5000:
+                    self.CENTERED_UNIFORM = True
 
             best_dist = self.distance_fn(new_x, best_evaled_x)
             other_dists = np.array([self.distance_fn(other, new_x) for other in other_best_evaled_xs])
