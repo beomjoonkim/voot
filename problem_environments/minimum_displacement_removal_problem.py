@@ -166,6 +166,7 @@ def create_doors(x_lim, y_lim, door_x, door_y, door_width, th, env):
     place_body(env, wall_in_room_r, (5.5,0, np.pi/2), base_name='bottom_wall')
 
 
+
 def create_box_bodies(body_shape, color, name, n_objs, env):
     if color == 'green':
         box_bodies = [box_body(env, body_shape[i][0], body_shape[i][1], body_shape[i][2], name=name + '%s' % i,
@@ -440,6 +441,7 @@ def place_object_with_gaussian_noise(obj, reference_xytheta, env, scale=0.3):
 class MinimumDisplacementRemovalProblem:
     def __init__(self, env, problem_idx, problem_config=None):
         self.env = env
+        self.env.SetViewer('qtcoin')
         fdir = os.path.dirname(os.path.abspath(__file__))
         self.env.Load(fdir + '/resources/mover_env.xml')
         self.robot = self.env.GetRobots()[0]
@@ -565,6 +567,10 @@ class MinimumDisplacementRemovalProblem:
         if self.problem_idx == 1:
             env.Remove(env.GetKinBody('shelf1'))
             env.Remove(env.GetKinBody('shelf2'))
+
+        else:
+            wall_in_kitchen = box_body(env, 0.04 * 2, 1.3, 2, name='wall_in_kitchen', color=(0, 0, 0))
+            place_body(env, wall_in_kitchen, (2.1, 0, np.pi / 2), base_name='bottom_wall')
 
 
     def save_obj_poses(self, problem_idx):

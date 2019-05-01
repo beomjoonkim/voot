@@ -232,7 +232,7 @@ class MCTS:
     def choose_action(self, curr_node, depth):
         print "Widening parameter ", self.widening_parameter*np.power(0.8, depth)
         w_param = self.widening_parameter*np.power(0.8, depth)
-        w_param = self.widening_parameter
+        #w_param = self.widening_parameter
         if not curr_node.is_reevaluation_step(w_param, self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
             print "Is time to sample new action? True"

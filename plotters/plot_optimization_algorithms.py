@@ -18,6 +18,7 @@ def savefig(xlabel, ylabel, fname=''):
 
 def get_result_dir(algo_name, dimension, obj_fcn):
     ROOTDIR = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
+    #ROOTDIR = './test_results/'
     result_dir = ROOTDIR+'/function_optimization/' + str(obj_fcn) + '/dim_' + str(
         dimension) + '/' + algo_name + '/'
     return result_dir
@@ -127,7 +128,6 @@ def plot_across_algorithms():
         n_samples = 5000
     elif args.obj_fcn == 'shekel' and args.dim == 20:
         n_samples = 5000
-        import pdb;pdb.set_trace()
     else:
         n_samples = 1000
 
@@ -138,14 +138,12 @@ def plot_across_algorithms():
             continue
 
         search_rwd_times = search_rwd_times[:, 0:n_samples]
-        #n_samples = search_rwd_times.shape[-1]
-        best_mean_with_many_evaluations = np.mean(search_rwd_times[:, -1])
-        print algo, n_samples, np.mean(search_rwd_times[:, -1])
-        #plt.ylim(-10000, 0)
-        try:
+        n_samples_tested = search_rwd_times.shape[-1]
+        if n_samples_tested < n_samples:
+            sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
+        else:
             sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
-        except:
-            continue
+        print algo, n_samples, np.mean(search_rwd_times[:, -1])
         print "===================="
 
 

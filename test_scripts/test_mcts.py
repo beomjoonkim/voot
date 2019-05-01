@@ -134,9 +134,9 @@ def main():
     RaveSetDebugLevel(DebugLevel.Error)
 
     if args.domain == 'convbelt':
-        args.mcts_iter = 3000
+        args.mcts_iter = 5000
         args.voo_sampling_mode = 'uniform'
-        args.n_switch = 10
+        args.n_switch = 30
         args.pick_switch = False
         args.use_max_backup = True
         args.n_feasibility_checks = 200

@@ -56,9 +56,9 @@ def get_result_dir(algo_name, mcts_parameters):
     else:
         result_dir += '_pick_switch_False'
 
-    if mcts_parameters.domain == 'convbelt_results':
-        result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
-    result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
+    #if mcts_parameters.domain == 'convbelt_results':
+    #    result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
+    #result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
     if addendum != '':
         result_dir += '_' + addendum + '/'
@@ -99,10 +99,18 @@ def get_mcts_results(algo_name, mcts_parameters):
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
         search_time = np.array(result['search_time'])
-        progress.append(search_time[-1, -1] == 0)
-        if search_time[-1,-1] ==0:
-            success_idx = np.where( search_time[:,-1]==0)[0][0]
-            success_rewards.append(search_time[success_idx,2])
+
+        if mcts_parameters.domain.find('convbelt') !=-1:
+            success = search_time[-1, -1] < 10
+        else:
+            success = search_time[-1, -1] == 0
+        progress.append(search_time[-1, -1])
+        if success:
+            if mcts_parameters.domain.find('convbelt') !=-1:
+                success_idx = np.where(search_time[:, -1] < 10)[0][0]
+            else:
+                success_idx = np.where(search_time[:, -1] == 0)[0][0]
+            success_rewards.append(search_time[success_idx, 2])
 
         print len(search_time), fin
         search_rwd_times.append(search_time)
@@ -224,9 +232,9 @@ def plot_across_algorithms():
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
-    color_dict['RandDOOT'] = [0, 0, 0]
+    color_dict['RandDOOT'] = [0, 0, 1]
     color_dict['VOOT'] = [1, 0, 0]
-    color_dict['UniformT'] = [0, 0, 1]
+    color_dict['UniformT'] = [0.8901960784313725, 0.6745098039215687, 0]
 
     # DOO - black
     # VOO - red
@@ -271,27 +279,22 @@ def plot_across_algorithms():
     if args.p:
         plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
+        sns.tsplot([0]*len(organized_times[:]), organized_times[:args.mcts_iter],
+                   ci=95, condition='Avg feasible reward', color='magenta')
     else:
         if domain_name == 'mdr':
             sns.tsplot([4.1]*len(organized_times[:]), organized_times[:args.mcts_iter],
                        ci=95, condition='Avg feasible reward', color='magenta')
-        else:
-            sns.tsplot([2.6]*len(organized_times[:]), organized_times[:args.mcts_iter],
-                       ci=95, condition='Avg feasible reward', color='magenta')
-
 
         plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' \
                     + str(args.mcts_iter) + "_uct_" + str(args.uct) + "_n_feasibility_checks_" \
                     + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup) \
                     + '_pick_switch_' + str(args.pick_switch)
+
         if args.domain == 'convbelt_results':
             plot_name += '_n_actions_per_node_' + str(args.n_actions_per_node)
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
-
-    if args.domain.find('minimum') != -1:
-        if args.pidx == 0:
-            plt.ylim(-2, 5)
 
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 
