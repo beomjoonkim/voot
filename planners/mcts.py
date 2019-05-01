@@ -292,7 +292,6 @@ class MCTS:
         if DEBUG:
             print "At depth ", depth
             print "Is it time to pick?", self.environment.is_pick_time()
-
         action = self.choose_action(curr_node, depth)
         reward = self.environment.apply_operator_instance(action, curr_node)
         print "Executed ", action.type, action.continuous_parameters['is_feasible'], action.discrete_parameters
