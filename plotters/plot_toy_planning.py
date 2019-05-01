@@ -58,7 +58,7 @@ def get_result_dir(algo_name, mcts_parameters):
 
     #if mcts_parameters.domain == 'convbelt_results':
     #    result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
-    #result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
+    result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
     if addendum != '':
         result_dir += '_' + addendum + '/'
