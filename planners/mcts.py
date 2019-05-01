@@ -78,7 +78,7 @@ class MCTS:
         elif self.sampling_strategy == 'gpucb':
             return GPUCBGenerator(operator_name, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'doo':
-            return DOOGenerator(node, self.environment, self.sampling_strategy_exploration_parameter)
+            return DOOGenerator(operator_skeleton, self.environment, self.sampling_strategy_exploration_parameter)
         elif self.sampling_strategy == 'randomized_doo':
             return RandomizedDOOGenerator(operator_skeleton, self.environment,
                                           self.sampling_strategy_exploration_parameter)
@@ -232,6 +232,7 @@ class MCTS:
     def choose_action(self, curr_node, depth):
         print "Widening parameter ", self.widening_parameter*np.power(0.8, depth)
         w_param = self.widening_parameter*np.power(0.8, depth)
+        w_param = self.widening_parameter
         if not curr_node.is_reevaluation_step(w_param, self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
             print "Is time to sample new action? True"
