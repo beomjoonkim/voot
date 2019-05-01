@@ -9,7 +9,7 @@ class VOO:
         if distance_fn is None:
             self.distance_fn = lambda x, y: np.linalg.norm(x-y)
 
-        self.GAUSSIAN = False
+        self.GAUSSIAN = True
         self.UNIFORM_TOUCHING_BOUNDARY = False
         self.DECREASING_UNIFORM = False
 

@@ -26,7 +26,13 @@ def get_result_dir(algo_name, dimension, obj_fcn):
 def get_results(algo_name, dimension, obj_fcn):
     result_dir = get_result_dir(algo_name, dimension, obj_fcn)
     max_y_values = []
-    for fin in os.listdir(result_dir):
+
+    try:
+        result_files = os.listdir(result_dir)
+    except OSError:
+        return None
+
+    for fin in result_files:
         if fin.find('.pkl') == -1:
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
@@ -117,25 +123,31 @@ def plot_across_algorithms():
 
     if args.obj_fcn == 'shekel' and args.dim == 3:
         n_samples = 500
+    elif args.obj_fcn == 'rosenbrock':
+        n_samples = 5000
+    elif args.obj_fcn == 'shekel' and args.dim == 20:
+        n_samples = 5000
+        import pdb;pdb.set_trace()
     else:
         n_samples = 1000
 
     for algo_idx, algo in enumerate(algo_names):
         print algo
         search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
+        if search_rwd_times is None:
+            continue
 
+        search_rwd_times = search_rwd_times[:, 0:n_samples]
+        #n_samples = search_rwd_times.shape[-1]
         best_mean_with_many_evaluations = np.mean(search_rwd_times[:, -1])
         print algo, n_samples, np.mean(search_rwd_times[:, -1])
-        search_rwd_times = search_rwd_times[:, 0:n_samples]
-        n_samples = search_rwd_times.shape[-1]
-
-        #if args.obj_fcn == 'shekel' and args.dim == 10 and algo == 'soo':
-        #    sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='5xSOO', color='magenta')
-        #elif args.obj_fcn == 'shekel' and args.dim == 20 and algo == 'soo':
-        #    sns.tsplot([best_mean_with_many_evaluations]*n_samples, range(n_samples), ci=95, condition='10xSOO', color='magenta')
-
-        sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
+        #plt.ylim(-10000, 0)
+        try:
+            sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
+        except:
+            continue
         print "===================="
+
 
     savefig('Number of function evaluations', 'Best function values',
             fname='./plotters/' + args.obj_fcn + '_fcn_optimization_' + str(args.dim))
