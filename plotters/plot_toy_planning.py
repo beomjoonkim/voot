@@ -109,7 +109,6 @@ def get_mcts_results(algo_name, mcts_parameters):
         print len(search_time), fin
         search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
-    import pdb;pdb.set_trace()
     print 'progress', np.array(progress).mean()
     print 'success reward', np.mean(success_rewards)
     print 'n_tested', len(progress)
@@ -203,6 +202,28 @@ def plot_across_algorithms():
     parser.add_argument('-n_actions_per_node', type=int, default=1)
 
     args = parser.parse_args()
+
+
+    if args.domain == 'convbelt_results':
+        args.mcts_iter = 3000
+        args.voo_sampling_mode = 'uniform'
+        args.n_switch = 10
+        args.pick_switch = False
+        args.use_max_backup = True
+        args.n_feasibility_checks = 200
+        args.problem_idx = 3
+        args.widening_parameter = 5
+        args.n_actions_per_node = 3
+    elif args.domain == 'minimum_displacement_removal_results':
+        args.mcts_iter = 2000
+        args.voo_sampling_mode = 'uniform'
+        args.n_switch = 10
+        args.pick_switch = True
+        args.use_max_backup = True
+        args.n_feasibility_checks = 50
+        args.problem_idx = 0
+        args.widening_parameter = 5
+        args.n_actions_per_node = 1
 
     if args.domain == 'minimum_displacement_removal_results':
         if args.n_feasibility_checks == 100:
