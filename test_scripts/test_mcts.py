@@ -140,7 +140,7 @@ def main():
         args.pick_switch = False
         args.use_max_backup = True
         args.n_feasibility_checks = 200
-        args.pidx = 3
+        args.problem_idx = 3
         args.widening_parameter = 5
         args.n_actions_per_node = 3
         if args.sampling_strategy == 'voo':
@@ -154,7 +154,7 @@ def main():
         args.pick_switch = True
         args.use_max_backup = True
         args.n_feasibility_checks = 50
-        args.pidx = 0
+        args.problem_idx = 0
         args.widening_parameter = 5
         args.n_actions_per_node = 1
         if args.sampling_strategy == 'voo':

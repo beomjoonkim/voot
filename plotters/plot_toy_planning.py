@@ -56,8 +56,6 @@ def get_result_dir(algo_name, mcts_parameters):
     else:
         result_dir += '_pick_switch_False'
 
-    #if mcts_parameters.domain == 'convbelt_results':
-    #    result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
     result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
     if addendum != '':
@@ -71,7 +69,6 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += 'eps_' + str(epsilon) + '/'
     if algo_name.find('doo') != -1 or algo_name.find('gpucb') != -1:
         result_dir += 'eps_' + str(epsilon) + '/'
-    #    result_dir += os.listdir(result_dir)[0] + '/' #  + 'c1_' + str(c1) + '/'
     print result_dir
     return result_dir
 
@@ -79,23 +76,20 @@ def get_result_dir(algo_name, mcts_parameters):
 def get_mcts_results(algo_name, mcts_parameters):
     result_dir = get_result_dir(algo_name, mcts_parameters)
 
-    domain_name = mcts_parameters.domain
     pidx = mcts_parameters.pidx
-    search_times = []
     progress = []
     search_rwd_times = []
     max_rwds = []
-    success_idxs = []
     success_rewards = []
     for fin in os.listdir(result_dir):
         if fin.find('pidx') == -1:
+            print "Continuing"
             continue
         sd = int(fin.split('_')[2])
         file_pidx = int(fin.split('_')[-1].split('.')[0])
 
         if file_pidx != pidx:
-            continue
-        if fin.find('.pkl') == -1:
+            print "Continuing"
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
         search_time = np.array(result['search_time'])
@@ -115,6 +109,7 @@ def get_mcts_results(algo_name, mcts_parameters):
         print len(search_time), fin
         search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
+    import pdb;pdb.set_trace()
     print 'progress', np.array(progress).mean()
     print 'success reward', np.mean(success_rewards)
     print 'n_tested', len(progress)
@@ -227,8 +222,8 @@ def plot_across_algorithms():
                   'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
     algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_gaussian_0.3', 'unif']
     algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
-    #algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
-    #algo_names = ['unif']
+
+    algo_names = ['unif']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
