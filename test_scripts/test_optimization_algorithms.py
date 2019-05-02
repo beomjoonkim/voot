@@ -10,7 +10,9 @@ from deap.benchmarks import shekel
 from deap import benchmarks
 
 import socket
-#if socket.gethostname() != 'shakey':
+if socket.gethostname() == 'dell-XPS-15-9560':
+    import pygmo as pg
+
 if True:
   from generators.gpucb_utils.gp import StandardContinuousGP
   from generators.gpucb_utils.functions import UCB, Domain
@@ -248,7 +250,6 @@ def voo(explr_p):
 
     return evaled_x, evaled_y, max_y, times
 
-import pygmo as pg
 
 
 class ShekelProblem:
@@ -261,7 +262,7 @@ class ShekelProblem:
 
 def genetic_algorithm(explr_p):
     prob = pg.problem(ShekelProblem())
-    sade = pg.sade(gen=1000000, ftol=1e-30, xtol=1e-30)
+    sade = pg.sade(gen=1000000, ftol=1e-3, xtol=1e-3)
     algo = pg.algorithm(sade)
     algo.set_verbosity(1)
     pop = pg.population(prob, size=1000)
@@ -298,7 +299,10 @@ def main():
         save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
 
     if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
+        try:
+            os.makedirs(save_dir)
+        except OSError:
+            pass
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
