@@ -227,7 +227,6 @@ def voo(explr_p):
     print "Max value found", np.max(evaled_y)
     print "Magnitude", np.linalg.norm(evaled_x[best_idx])
     print "Explr p", explr_p
-    import pdb;pdb.set_trace()
     return evaled_x, evaled_y, max_y, times
 
 
