@@ -131,6 +131,8 @@ class TreeNode:
 
         to_store = {
             'Q': [self.Q[a] for a in self.A],
+            'A': [a.continuous_parameters['base_pose'] for a in self.A],
+            'Nvisited': self.Nvisited,
             'saver': self.state_saver,
             'progress': len(self.objects_not_in_goal)
         }

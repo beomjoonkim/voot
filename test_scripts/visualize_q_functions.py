@@ -7,18 +7,22 @@ import pickle
 import argparse
 
 
-def draw_q_value_rod_for_action(action_idx, action, q_val, penv, maxQ):
+def draw_q_value_rod_for_action(action_idx, base_pose, q_val, penv, maxQ):
     normalized_q = q_val/float(maxQ)
     width = 0.2
     length = 0.2
     height = normalized_q
 
+    if height == 0.5:
+        color = (0, 0, 1)
+    else:
+        color = (0.8, 0.2, 0.5)
+
     new_body = box_body(penv.env, width, length, height,
                         name='q_value_obj%s' % action_idx,
-                        color=(1, 0, 0))
+                        color=color)
     penv.env.Add(new_body)
 
-    base_pose = action.continuous_parameters['action_parameters']
     if base_pose is not None:
         set_obj_xytheta(base_pose, new_body)
 
@@ -40,24 +44,20 @@ def load_data(args):
     return data
 
 
-def visualize_base_poses_and_q_values(q_function, penv):
-    infeasible_rwd_compensation = 2
+def visualize_base_poses_and_q_values(base_poses, q_values, penv):
+    infeasible_rwd_compensation = 2.5
     action_idx = 0
 
-    base_poses = []
-    for action, q_val in zip(q_function.keys(), q_function.values()):
-        #if q_val == -infeasible_rwd_compensation:
-        #    continue
-
+    for base_pose, q_val in zip(base_poses, q_values):
         if penv.name == 'convbelt':
             maxQ = 1
         else:
             maxQ = 1
-        draw_q_value_rod_for_action(action_idx, action, q_val + infeasible_rwd_compensation, penv, maxQ)
+        draw_q_value_rod_for_action(action_idx, base_pose, q_val + infeasible_rwd_compensation, penv, maxQ)
         action_idx += 1
-        if action.continuous_parameters['base_pose'] is not None:
-            base_poses.append(action.continuous_parameters['base_pose'])
-    visualize_configs(penv.robot, base_poses, 0.7)
+        base_poses.append(base_pose)
+    visualize_configs(penv.robot, base_poses, 0.95)
+    import pdb;pdb.set_trace()
     [penv.env.Remove(b) for b in penv.env.GetBodies() if b.GetName().find('q_value') != -1]
 
 
@@ -74,10 +74,9 @@ def main():
     state_saver = visualization_data['saver']
     state_saver.Restore()
 
-    q_function = visualization_data['Q']
-
-    visualize_base_poses_and_q_values(q_function, penv)
-
+    q_values = visualization_data['Q']
+    actions = visualization_data['A']
+    visualize_base_poses_and_q_values(actions, q_values, penv)
     import pdb;pdb.set_trace()
 
 

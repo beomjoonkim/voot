@@ -140,11 +140,13 @@ def visualize_configs(robot, path, transparency=0.5):
         draw_robot_at_conf(conf, transparency, 'path' + str(idx), robot, env)
 
         set_transparency(held, transparency)
-    raw_input("Continue?")
 
     if is_robot_holding:
         held.SetTransform(original_transform)
         grab_obj(robot, held)
+        set_transparency(held, 0)
+    raw_input("Continue?")
+
     remove_drawn_configs('path', env)
 
 
