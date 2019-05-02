@@ -30,8 +30,8 @@ parser.add_argument('-algo_name', type=str, default='stosoo')
 parser.add_argument('-obj_fcn', type=str, default='ackley')
 parser.add_argument('-dim_x', type=int, default=20)
 parser.add_argument('-n_fcn_evals', type=int, default=500)
-parser.add_argument('-stochastic_objective', action='store_true', default=False)
-parser.add_argument('-function_noise', type=float, default=10.0)
+parser.add_argument('-voo_sampling_mode', type=str, default='centered_uniform')
+parser.add_argument('-switch_counter', type=int, default=100)
 args = parser.parse_args()
 
 problem_idx = args.problem_idx
@@ -40,7 +40,6 @@ dim_x = args.dim_x
 n_fcn_evals = args.n_fcn_evals
 obj_fcn = args.obj_fcn
 stochastic_objective = args.stochastic_objective
-noise = args.function_noise
 
 np.random.seed(problem_idx)
 random.seed(problem_idx)
@@ -105,136 +104,6 @@ def get_objective_function(sol):
     else:
         print "wrong function name"
         sys.exit(-1)
-
-
-def evaluate_stochastic_objective_function(x_value):
-    y = get_objective_function(x_value)
-    noisy_y = y + np.random.normal(0, noise)
-
-    return y, noisy_y
-
-
-def stosoo(dummy):
-    n_total_evals = args.n_fcn_evals
-    delta = 1/np.sqrt(n_total_evals)
-    k = int(n_total_evals / np.power(np.log(n_total_evals), 3))
-    stosoo_tree = BinaryStoSOOTree(delta, k, n_total_evals, domain)
-
-    evaled_x = []
-    evaled_y = []
-    max_y = []
-    times = []
-
-    stime = time.time()
-    for i in range(n_fcn_evals):
-        next_node = stosoo_tree.get_next_point_and_node_to_evaluate()
-        x_to_evaluate = next_node.cell_mid_point
-        next_node.evaluated_x = x_to_evaluate
-        y, noisy_y = evaluate_stochastic_objective_function(x_to_evaluate)
-        stosoo_tree.expand_node(noisy_y, next_node)
-
-        arm_with_highest_expected_value = stosoo_tree.get_best_node()
-        best_arm_x_value = arm_with_highest_expected_value.cell_mid_point
-        best_arm_true_y = get_objective_function(best_arm_x_value)
-        evaled_x.append(best_arm_x_value)
-        evaled_y.append(best_arm_true_y)
-        max_y.append(np.max(evaled_y))
-
-        times.append(time.time()-stime)
-
-    print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, max_y[-1]
-
-
-def stounif(explr_p):
-    evaled_x = []
-    evaled_y = []
-    max_y = []
-    stounif = StoUniform(domain, ucb_parameter, widening_parameter)
-    times = []
-
-    stime = time.time()
-    for i in range(n_fcn_evals):
-        evaled_arm = stounif.choose_next_point()
-        y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
-        stounif.update_evaluated_arms(evaled_arm, noisy_y)
-
-        # act as if we terminated now with i number of iterations
-        arm_with_highest_expected_value = stounif.arms[np.argmax([a.expected_value for a in stounif.arms])]
-        best_arm_x_value = arm_with_highest_expected_value.x_value
-        best_arm_true_y = get_objective_function(best_arm_x_value)
-        evaled_x.append(best_arm_x_value)
-        evaled_y.append(best_arm_true_y)
-        max_y.append(np.max(evaled_y))
-
-        times.append(time.time()-stime)
-
-    print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, max_y[-1]
-
-
-def stovoo(explr_p):
-    evaled_x = []
-    evaled_y = []
-    max_y = []
-    stovoo = StoVOO(domain, ucb_parameter, widening_parameter, explr_p)
-    times = []
-
-    stime = time.time()
-    print 'explr_p',explr_p
-    for i in range(n_fcn_evals):
-        #if i % 100 == 0:
-        #    print "%d / %d" % (i, n_fcn_evals)
-        #if i > 0:
-        #    print 'max value is ', np.max(evaled_y)
-        evaled_arm = stovoo.choose_next_point()
-        y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
-        stovoo.update_evaluated_arms(evaled_arm, noisy_y)
-
-        # act as if we terminated now with i number of iterations
-        # there is sth wrong here..
-        arm_with_highest_expected_value = stovoo.arms[np.argmax([a.expected_value for a in stovoo.arms])]
-        best_arm_x_value = arm_with_highest_expected_value.x_value
-        best_arm_true_y = get_objective_function(best_arm_x_value)
-        evaled_x.append(best_arm_x_value)
-        evaled_y.append(best_arm_true_y)
-        max_y.append(np.max(evaled_y))
-
-        times.append(time.time()-stime)
-
-    print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, max_y[-1]
-
-
-def stovoo_with_N_eta(explr_p):
-    evaled_x = []
-    evaled_y = []
-    max_y = []
-    stovoo = StoVOO(domain, ucb_parameter, widening_parameter, explr_p, distance_fn=None, is_progressive_widening=False)
-    times = []
-
-    stime = time.time()
-    print 'explr_p', explr_p
-    for i in range(n_fcn_evals):
-        print "%d / %d" % (i, n_fcn_evals)
-        if i > 0:
-            print 'max value is ', np.max(evaled_y)
-        evaled_arm = stovoo.choose_next_point()
-        y, noisy_y = evaluate_stochastic_objective_function(evaled_arm.x_value)
-        stovoo.update_evaluated_arms(evaled_arm, noisy_y)
-
-        arm_with_highest_expected_value = stovoo.arms[np.argmax([a.expected_value for a in stovoo.arms])]
-        best_arm_x_value = arm_with_highest_expected_value.x_value
-        best_arm_true_y = get_objective_function(best_arm_x_value)
-        evaled_x.append(best_arm_x_value)
-        evaled_y.append(best_arm_true_y)
-
-        max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
-
-    print "Max value found", np.max(evaled_y)
-    return evaled_x, evaled_y, max_y, times, max_y[-1]
-
 
 
 def random_search(epsilon):
@@ -340,27 +209,10 @@ def voo(explr_p):
     evaled_x = []
     evaled_y = []
     max_y = []
-    voo = VOO(domain, explr_p)
+    voo = VOO(domain, explr_p, args.voo_sampling_mode, args.switch_counter)
     times = []
     stime = time.time()
     print 'explr_p',explr_p
-    """
-    from mpl_toolkits.mplot3d import Axes3D
-    import matplotlib.pyplot as plt
-    import pdb;pdb.set_trace()
-    x1=np.linspace(domain[0][0], domain[1][0], 1000)
-    x2=np.linspace(domain[0][1], domain[1][1], 1000)
-
-    x_to_eval=np.array([[x,y] for x in x1 for y in x2 ])
-    if args.obj_fcn == 'shekel':
-        evaluations = [benchmarks.shekel(x,A,C)[0] for x in x_to_eval]
-    else:
-        evaluations = [get_objective_function(x) for x in x_to_eval]
-
-    ax = plt.axes(projection='3d')
-    ax.plot3D(x_to_eval[:,0], x_to_eval[:,1], evaluations)
-    import pdb;pdb.set_trace()
-    """
 
     for i in range(n_fcn_evals):
         print "%d / %d" % (i, n_fcn_evals)
@@ -374,21 +226,21 @@ def voo(explr_p):
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time()-stime)
-        #if max_y[-1] > 0.5:
-        #    import pdb;pdb.set_trace()
-        #print evaled_x[-1]
+
     best_idx = np.where(evaled_y == max_y[-1])[0][0]
     print evaled_x[best_idx], evaled_y[best_idx]
     print "Max value found", np.max(evaled_y)
     print "Magnitude", np.linalg.norm(evaled_x[best_idx])
+    print "Explr p", explr_p
+    import pdb;pdb.set_trace()
     return evaled_x, evaled_y, max_y, times
 
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.1, 0.2, 0.3, 0.4, 0.5]
+        epsilons = [0.3, 0.1, 0.2, 0.4, 0.5]
     elif algorithm.__name__ == 'doo':
-        epsilons = [np.finfo(float).eps, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.0001, 0.001, 0.01, 1, 0.1]
+        epsilons = [np.finfo(float).eps, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.0001, 0.001, 0.01, 1, 0.1] # this has more initial points
     elif algorithm.__name__ == 'gpucb':
         epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__.find('soo') != -1:
@@ -403,18 +255,11 @@ def get_exploration_parameters(algorithm):
 
 
 def main():
-    if stochastic_objective:
-        save_dir = './test_results/stochastic_function_optimization/' + obj_fcn + \
-                   '/dim_' + str(dim_x) + '/' +  \
-                   '/noise_' + str(noise) + '/' + \
-                   algo_name + '/' +\
-                   '/ucb_' + str(ucb_parameter) + \
-                   '/widening_'+str(widening_parameter)
+    if socket.gethostname() != 'shakey' and socket.gethostname() != 'phaedra' and socket.gethostname() != 'dell-XPS-15-9560':
+        save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
     else:
-        if socket.gethostname() != 'shakey' and socket.gethostname() != 'phaedra' and socket.gethostname() != 'dell-XPS-15-9560':
-            save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
-        else:
-            save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+        save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 
@@ -422,57 +267,36 @@ def main():
         print "Already done"
         return 
 
-    if stochastic_objective:
-        if algo_name == 'uniform':
-            algorithm = random_search
-        elif algo_name == 'stosoo':
-            algorithm = stosoo
-        elif algo_name == 'stovoo_with_N_eta':
-            algorithm = stovoo_with_N_eta
-        elif algo_name == 'stovoo':
-            algorithm = stovoo
-        elif algo_name == 'stounif':
-            algorithm = stounif
-        else:
-            raise NotImplementedError
+    if algo_name == 'uniform':
+        algorithm = random_search
+    elif algo_name == 'voo':
+        algorithm = voo
+    elif algo_name == 'doo':
+        algorithm = doo
+    elif algo_name == 'gpucb':
+        algorithm = gpucb
+    elif algo_name == 'soo':
+        algorithm = soo
     else:
-        if algo_name == 'uniform':
-            algorithm = random_search
-        elif algo_name == 'voo':
-            algorithm = voo
-        elif algo_name == 'doo':
-            algorithm = doo
-        elif algo_name == 'gpucb':
-            algorithm = gpucb
-        elif algo_name == 'soo':
-            algorithm = soo
-        else:
-            print "Wrong algo name"
-            return
+        print "Wrong algo name"
+        return
 
     epsilons = get_exploration_parameters(algorithm)
 
     max_ys = []
     time_takens = []
     for epsilon in epsilons:
-        if stochastic_objective:
-            evaled_x, evaled_y, max_y, time_taken, best_arm_value = algorithm(epsilon)
+        if algo_name == 'gpucb':
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
         else:
-            if algo_name == 'gpucb':
-                evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
-            else:
-                evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
 
         max_ys.append(max_y)
         time_takens.append(time_taken)
 
-    if stochastic_objective:
-        pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens,
-                     'best_arm_value': best_arm_value},
-                    open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
-    else:
-        pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
-                        open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+    pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
+                open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+
     return epsilons, max_ys, time_takens
 
 

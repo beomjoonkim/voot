@@ -10,10 +10,6 @@ def worker_p(config):
     algo_name = config[2]
     dim = config[3]
     obj_fcn = config[4]
-    stochastic_objective = config[5]
-    ucb = config[6]
-    widening_parameter = config[7]
-    noise = config[8]
 
     command = 'python ./test_scripts/test_optimization_algorithms.py -problem_idx ' \
               + str(problem_idx) \
@@ -21,12 +17,6 @@ def worker_p(config):
               + ' -dim_x ' + str(dim) \
               + ' -n_fcn_evals ' + str(n_iter) \
               + ' -obj_fcn ' + str(obj_fcn) \
-              + ' -widening_parameter ' + str(widening_parameter) \
-              + ' -function_noise ' + str(noise)
-
-    if stochastic_objective:
-        command += ' -stochastic_objective'
-        command += ' -ucb ' + str(ucb)
 
     print command
     os.system(command)
@@ -45,26 +35,10 @@ def main():
     pidxs = sys.argv[4].split(',')
     pidxs = range(int(pidxs[0]), int(pidxs[1]))
     obj_fcn = sys.argv[5]
-    stochastic_objective = int(sys.argv[6])
-    ucbs = sys.argv[7].split(',')
-    ucbs = [float(ucb) for ucb in ucbs] 
 
     configs= []
-    if stochastic_objective:
-        widening_parameter = sys.argv[8].split(',')
-        widening_parameters = [float(w) for w in widening_parameter]
-
-        function_noise = sys.argv[9].split(',')
-        function_noises = [int(f) for f in function_noise]
-        for function_noise in function_noises:
-          for ucb in ucbs:
-            for widening_parameter in widening_parameters:
-                for t in pidxs:
-                    configs.append([n_iter, t, algo_name, dim, obj_fcn, stochastic_objective, ucb, widening_parameter,
-                                    function_noise])
-    else:
-        for t in pidxs:
-            configs.append([n_iter, t, algo_name, dim, obj_fcn, stochastic_objective, 0, 0, 0])
+    for pidx in pidxs:
+        configs.append([n_iter, pidx, algo_name, dim, obj_fcn])
 
     if algo_name == 'gpucb':
         n_workers = int(3)
