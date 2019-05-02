@@ -241,12 +241,6 @@ def voo(explr_p):
     print "Max value found", np.max(evaled_y)
     print "Magnitude", np.linalg.norm(evaled_x[best_idx])
     print "Explr p", explr_p
-    import pdb;pdb.set_trace()
-
-    print evaled_x[best_idx]
-    optimal_x = A.mean(axis=0)
-    optimal_value = get_objective_function(optimal_x)
-    import pdb;pdb.set_trace()
 
     return evaled_x, evaled_y, max_y, times
 
@@ -262,7 +256,7 @@ class ShekelProblem:
 
 def genetic_algorithm(explr_p):
     prob = pg.problem(ShekelProblem())
-    sade = pg.sade(gen=1000000, ftol=1e-3, xtol=1e-3)
+    sade = pg.sade(gen=1000000, ftol=1e-10, xtol=1e-10)
     algo = pg.algorithm(sade)
     algo.set_verbosity(1)
     pop = pg.population(prob, size=1000)
