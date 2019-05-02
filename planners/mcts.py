@@ -169,6 +169,7 @@ class MCTS:
             best_action = feasible_actions[np.argmax(feasible_q_values)]
             best_node = self.s0_node.children[best_action]
 
+            # todo Why does the code below make it hard for MCD domain?
             """
             non_goal_traj_feasible_actions = []
             non_goal_traj_q_values = []

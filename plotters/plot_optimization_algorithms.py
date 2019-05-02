@@ -121,6 +121,15 @@ def plot_across_algorithms():
 
     if args.obj_fcn != 'shekel':
         sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
+    else:
+        if n_dim == 3:
+            sns.tsplot([53.404] * 2000, range(2000), ci=95, condition='GA_1.3k_evals', color='magenta')
+        elif n_dim == 10:
+            #sns.tsplot([] * 2000, range(2000), ci=95, condition='GA_1.3k_evals', color='magenta')
+            pass
+        elif n_dim == 20:
+            sns.tsplot([5.32] * 2000, range(2000), ci=95, condition='GA_750k_evals', color='magenta')
+
 
     if args.obj_fcn == 'shekel' and args.dim == 3:
         n_samples = 500

@@ -48,9 +48,6 @@ if obj_fcn == 'shekel':
     #np.random.seed(problem_idx)
     #A = np.random.rand(NUMMAX, dim_x)*10
     #C = np.random.rand(NUMMAX)
-    #config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(args.dim_x)+'.pkl', 'r'))
-    #A = config['A']
-    #C = config['C']
 
     if args.dim_x == 2:
         A = np.array([[
@@ -65,7 +62,10 @@ if obj_fcn == 'shekel':
         config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(args.dim_x)+'.pkl', 'r'))
         A = config['A']
         C = config['C']
-
+    #np.random.seed(problem_idx)
+    #A = np.random.rand(NUMMAX, dim_x)*10
+    #C = np.random.rand(NUMMAX)
+    #import pdb;pdb.set_trace()
 
 if obj_fcn == 'shekel':
     domain =np.array([[-500.]*dim_x, [500.]*dim_x])
@@ -139,6 +139,9 @@ def doo(explr_p):
     times = []
     stime = time.time()
     for i in range(n_fcn_evals):
+        print "%d / %d" % (i, n_fcn_evals)
+        if i > 0:
+            print 'max value is ', np.max(evaled_y)
         next_node = doo_tree.get_next_point_and_node_to_evaluate()
         x_to_evaluate = next_node.cell_mid_point
         next_node.evaluated_x = x_to_evaluate
@@ -236,20 +239,51 @@ def voo(explr_p):
     print "Max value found", np.max(evaled_y)
     print "Magnitude", np.linalg.norm(evaled_x[best_idx])
     print "Explr p", explr_p
+    import pdb;pdb.set_trace()
+
+    print evaled_x[best_idx]
+    optimal_x = A.mean(axis=0)
+    optimal_value = get_objective_function(optimal_x)
+    import pdb;pdb.set_trace()
+
     return evaled_x, evaled_y, max_y, times
+
+import pygmo as pg
+
+
+class ShekelProblem:
+    def fitness(self, x):
+        return [-get_objective_function(x)]
+
+    def get_bounds(self):
+        return (domain[0].tolist(), domain[1].tolist())
+
+
+def genetic_algorithm(explr_p):
+    prob = pg.problem(ShekelProblem())
+    sade = pg.sade(gen=1000000, ftol=1e-30, xtol=1e-30)
+    algo = pg.algorithm(sade)
+    algo.set_verbosity(1)
+    pop = pg.population(prob, size=1000)
+    pop = algo.evolve(pop)
+    print pop.champion_f
+    champion_x = pop.champion_x
+    import pdb;pdb.set_trace()
 
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.5, 0.4, 0.3, 0.2, 0.1]
+        epsilons = [0.5, 0.3, 0.4, 0.3, 0.2, 0.1]
     elif algorithm.__name__ == 'doo':
-        epsilons = [np.finfo(float).eps, 1, 0.1, 0.01, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.0001, 0.001, 0.01] # this has more initial points
+        epsilons = [np.finfo(float).eps, 0.0001, 1, 0.1, 0.01, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.001, 0.01] # this has more initial points
     elif algorithm.__name__ == 'gpucb':
         epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__.find('soo') != -1:
         epsilons = [0]
     elif algorithm.__name__.find('random_search') != -1 or algorithm.__name__.find('stounif') != -1:
-        epsilons = [0]  
+        epsilons = [0]
+    elif algorithm.__name__.find('genetic_algorithm') !=-1:
+        epsilons = [0]
     else:
         print algorithm.__name__
         raise NotImplementedError
@@ -280,6 +314,8 @@ def main():
         algorithm = gpucb
     elif algo_name == 'soo':
         algorithm = soo
+    elif algo_name == 'ga':
+        algorithm = genetic_algorithm
     else:
         print "Wrong algo name"
         return
