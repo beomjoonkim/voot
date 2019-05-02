@@ -23,8 +23,6 @@ from generators.soo_utils.stosoo import BinaryStoSOOTree
 from generators.stounif_utils.stounif import StoUniform
 
 parser = argparse.ArgumentParser(description='parameters')
-parser.add_argument('-ucb', type=float, default=1.0)
-parser.add_argument('-widening_parameter', type=float, default=10)
 parser.add_argument('-problem_idx', type=int, default=0)
 parser.add_argument('-algo_name', type=str, default='stosoo')
 parser.add_argument('-obj_fcn', type=str, default='ackley')
@@ -39,13 +37,10 @@ algo_name = args.algo_name
 dim_x = args.dim_x
 n_fcn_evals = args.n_fcn_evals
 obj_fcn = args.obj_fcn
-stochastic_objective = args.stochastic_objective
 
 np.random.seed(problem_idx)
 random.seed(problem_idx)
 
-ucb_parameter = args.ucb
-widening_parameter = args.widening_parameter
 
 NUMMAX = 10
 if obj_fcn == 'shekel':
