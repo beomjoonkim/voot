@@ -312,6 +312,7 @@ def draw_configs(configs, env, name='point', colors=None, transparency=0.1):
             th = config[2]
             set_quat(new_body, quat_from_z_rot(th))
 
+
 def get_trajectory_length(trajectory):
     dists = 0
     for i in range(len(trajectory)-1):

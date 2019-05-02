@@ -164,11 +164,6 @@ class MCTS:
             best_node = self.tree.root
             self.n_switch += self.n_switch
         else:
-            feasible_actions = [a for a in self.s0_node.A if np.max(self.s0_node.reward_history[a]) > -2]
-            feasible_q_values = [self.s0_node.Q[a] for a in feasible_actions]
-            best_action = feasible_actions[np.argmax(feasible_q_values)]
-            best_node = self.s0_node.children[best_action]
-            """
             non_goal_traj_feasible_actions = []
             non_goal_traj_q_values = []
             is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
@@ -178,7 +173,6 @@ class MCTS:
                 if is_pick_node and not self.pick_switch:
                     is_action_evaled_enough = False  # free-pass if we are not doing pick switch
                 else:
-                    import pdb;pdb.set_trace()
                     is_action_evaled_enough = self.s0_node.children[a].have_been_used_as_root
 
                 if is_action_feasible and (not is_action_evaled_enough):
@@ -188,7 +182,6 @@ class MCTS:
             best_action = non_goal_traj_feasible_actions[np.argmax(non_goal_traj_q_values)]
             best_node = self.s0_node.children[best_action]
             best_node.have_been_used_as_root = True
-            """
         return best_node
 
     def search(self, n_iter=100, max_time=np.inf):
@@ -208,6 +201,7 @@ class MCTS:
                 if self.s0_node.A[0].type == 'two_arm_place':
                     #self.s0_node.store_node_information(self.environment.name)
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
+                    #import pdb;pdb.set_trace()
                     pass
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
