@@ -143,10 +143,12 @@ def main():
         args.problem_idx = 3
         args.widening_parameter = 5
         args.n_actions_per_node = 1
+        """
         if args.sampling_strategy == 'voo':
             args.epsilon = 0.1
         elif args.sampling_strategy == 'randomized_doo':
             args.epsilon = 1.0
+        """
     elif args.domain == 'minimum_displacement_removal':
         args.mcts_iter = 2000
         args.voo_sampling_mode = 'uniform'
