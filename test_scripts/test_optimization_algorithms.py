@@ -64,10 +64,6 @@ if obj_fcn == 'shekel':
         config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(args.dim_x)+'.pkl', 'r'))
         A = config['A']
         C = config['C']
-    #np.random.seed(problem_idx)
-    #A = np.random.rand(NUMMAX, dim_x)*10
-    #C = np.random.rand(NUMMAX)
-    #import pdb;pdb.set_trace()
 
 if obj_fcn == 'shekel':
     domain =np.array([[-500.]*dim_x, [500.]*dim_x])
@@ -268,7 +264,7 @@ def genetic_algorithm(explr_p):
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.5, 0.3, 0.4, 0.3, 0.2, 0.1]
+        epsilons = [0.1, 0.3, 0.5, 0.4, 0.3, 0.2, 0.1]
     elif algorithm.__name__ == 'doo':
         epsilons = [np.finfo(float).eps, 0.0001, 1, 0.1, 0.01, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.001, 0.01] # this has more initial points
     elif algorithm.__name__ == 'gpucb':

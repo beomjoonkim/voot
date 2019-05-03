@@ -127,10 +127,10 @@ def plot_across_algorithms():
             plt.plot(range(2000), [53.404] * 2000, linestyle='--', color='black', label='GA_1.3k_evals')
         elif n_dim == 10:
             #sns.tsplot([] * 2000, range(2000), ci=95, condition='GA_1.3k_evals', color='magenta')
-            pass
+            plt.plot(range(5000), [8.959] * 5000, linestyle='--', color='black', label='GA_473k_evals')
         elif n_dim == 20:
             #sns.tsplot([5.32] * 5000, range(5000), ci=95, condition='GA_750k_evals', color='purple')
-            plt.plot(range(2000), [53.404] * 2000, linestyle='--', color='black', label='GA_750k_evals')
+            plt.plot(range(5000), [5.32] * 5000, linestyle='--', color='black', label='GA_750k_evals')
 
     if args.obj_fcn == 'rastrigin':
         if n_dim == 10:
@@ -139,7 +139,7 @@ def plot_across_algorithms():
             sns.tsplot([-49]*2000, range(2000), ci=95, condition='GA_100k_evals', color='purple')
 
     if args.obj_fcn == 'shekel' and args.dim == 3:
-        n_samples = 500
+        n_samples = 2000
     elif args.obj_fcn == 'rosenbrock':
         n_samples = 5000
     elif args.obj_fcn == 'shekel' and args.dim == 20:
@@ -162,7 +162,7 @@ def plot_across_algorithms():
         print algo, n_samples, np.mean(search_rwd_times[:, -1])
         print "===================="
 
-
+    plt.xlim(0, n_samples)
     savefig('Number of function evaluations', 'Best function values',
             fname='./plotters/' + args.obj_fcn + '_fcn_optimization_' + str(args.dim))
 
