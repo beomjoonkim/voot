@@ -91,7 +91,11 @@ def get_mcts_results(algo_name, mcts_parameters):
         if file_pidx != pidx:
             print "Continuing"
             continue
-        result = pickle.load(open(result_dir + fin, 'r'))
+        try:
+            result = pickle.load(open(result_dir + fin, 'r'))
+        except EOFError:
+            print "EOF error", fin
+            continue
         search_time = np.array(result['search_time'])
 
         if mcts_parameters.domain.find('convbelt') !=-1:
@@ -109,6 +113,7 @@ def get_mcts_results(algo_name, mcts_parameters):
         print len(search_time), fin
         search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
+    import pdb;pdb.set_trace()
     print 'progress', np.array(progress).mean()
     print 'success reward', np.mean(success_rewards)
     print 'n_tested', len(progress)
@@ -203,7 +208,6 @@ def plot_across_algorithms():
 
     args = parser.parse_args()
 
-
     if args.domain == 'convbelt_results':
         args.mcts_iter = 3000
         args.voo_sampling_mode = 'uniform'
@@ -211,7 +215,7 @@ def plot_across_algorithms():
         args.pick_switch = False
         args.use_max_backup = True
         args.n_feasibility_checks = 200
-        args.problem_idx = 3
+        args.pidx = 3
         args.widening_parameter = 5
         args.n_actions_per_node = 3
     elif args.domain == 'minimum_displacement_removal_results':
@@ -244,7 +248,6 @@ def plot_across_algorithms():
     algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_gaussian_0.3', 'unif']
     algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
 
-    algo_names = ['unif']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -284,8 +287,11 @@ def plot_across_algorithms():
             sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
                        color=color)
         else:
-            sns.tsplot(search_rwd[:, :], organized_times[:], ci=95, condition=algo_name,
-                       color=color)
+            try:
+                sns.tsplot(search_rwd[:, :], organized_times[:], ci=95, condition=algo_name,
+                           color=color)
+            except:
+                continue
 
     if args.domain == 'minimum_displacement_removal_results':
         domain_name = 'mdr'

@@ -252,7 +252,7 @@ class ShekelProblem:
 
 def genetic_algorithm(explr_p):
     prob = pg.problem(ShekelProblem())
-    sade = pg.sade(gen=1000000, ftol=1e-10, xtol=1e-10)
+    sade = pg.sade(gen=1000000, ftol=1e-20, xtol=1e-20)
     algo = pg.algorithm(sade)
     algo.set_verbosity(1)
     pop = pg.population(prob, size=1000)

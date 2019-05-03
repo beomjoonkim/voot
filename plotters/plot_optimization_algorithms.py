@@ -119,27 +119,28 @@ def plot_across_algorithms():
     color_dict[color_names[3]] = [0, 0, 1]
     color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
 
+    ga_color = [0.2, 0.9, 0.1]
+    ga_color = 'magenta'
     if args.obj_fcn != 'shekel':
         sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
     else:
         if n_dim == 3:
-            #sns.tsplot([53.404] * 2000, range(2000), ci=95, condition='GA_1.3k_evals', color='green')
-            plt.plot(range(2000), [53.404] * 2000, linestyle='--', color='black', label='GA_1.3k_evals')
+            plt.plot(range(2000), [4.89829] * 2000, linestyle='--', color=ga_color, label='85k_evals')
         elif n_dim == 10:
-            #sns.tsplot([] * 2000, range(2000), ci=95, condition='GA_1.3k_evals', color='magenta')
-            plt.plot(range(5000), [8.959] * 5000, linestyle='--', color='black', label='GA_473k_evals')
+            plt.plot(range(5000), [8.96] * 5000, linestyle='--', color=ga_color, label='GA_473k_evals')
         elif n_dim == 20:
-            #sns.tsplot([5.32] * 5000, range(5000), ci=95, condition='GA_750k_evals', color='purple')
-            plt.plot(range(5000), [5.32] * 5000, linestyle='--', color='black', label='GA_750k_evals')
+            plt.plot(range(5000), [5.32] * 5000, linestyle='--', color=ga_color, label='GA_750k_evals')
 
+    """
     if args.obj_fcn == 'rastrigin':
         if n_dim == 10:
-            sns.tsplot([-24]*2000, range(2000), ci=95, condition='GA_40k_evals', color='purple')
+            plt.plot(range(5000), [-21] * 5000, linestyle='--', color=ga_color, label='GA_40k_evals')
         elif n_dim == 20:
-            sns.tsplot([-49]*2000, range(2000), ci=95, condition='GA_100k_evals', color='purple')
+            plt.plot(range(5000), [-47] * 5000, linestyle='--', color=ga_color, label='GA_100k_evals')
+    """
 
-    if args.obj_fcn == 'shekel' and args.dim == 3:
-        n_samples = 2000
+    if args.dim == 3 or args.obj_fcn == 'griewank':
+        n_samples = 500
     elif args.obj_fcn == 'rosenbrock':
         n_samples = 5000
     elif args.obj_fcn == 'shekel' and args.dim == 20:

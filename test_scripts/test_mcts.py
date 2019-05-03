@@ -134,7 +134,7 @@ def main():
     RaveSetDebugLevel(DebugLevel.Error)
 
     if args.domain == 'convbelt':
-        args.mcts_iter = 3000
+        args.mcts_iter = 1000
         args.voo_sampling_mode = 'uniform'
         args.n_switch = 10
         args.pick_switch = False
@@ -142,7 +142,7 @@ def main():
         args.n_feasibility_checks = 200
         args.problem_idx = 3
         args.widening_parameter = 5
-        args.n_actions_per_node = 3
+        args.n_actions_per_node = 1
         if args.sampling_strategy == 'voo':
             args.epsilon = 0.1
         elif args.sampling_strategy == 'randomized_doo':
