@@ -165,6 +165,7 @@ def main():
             args.epsilon = 1.0
         elif args.sampling_strategy == 'doo':
             args.epsilon = 1.0
+        args.add = 'with_decreasing_widening_parameter'
 
     if args.pw:
         assert args.w > 0 and args.w <= 1

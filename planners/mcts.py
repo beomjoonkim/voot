@@ -234,7 +234,6 @@ class MCTS:
 
     def choose_action(self, curr_node, depth):
         w_param = self.widening_parameter*np.power(0.8, depth)
-        w_param = self.widening_parameter
         print "Widening parameter ", w_param
         if not curr_node.is_reevaluation_step(w_param, self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
