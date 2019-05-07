@@ -125,7 +125,7 @@ def plot_across_algorithms():
         sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
     else:
         if n_dim == 3:
-            plt.plot(range(2000), [4.89829] * 2000, linestyle='--', color=ga_color, label='85k_evals')
+            plt.plot(range(2000), [4.89829] * 2000, linestyle='--', color=ga_color, label='GA_85k_evals')
         elif n_dim == 10:
             plt.plot(range(5000), [8.96] * 5000, linestyle='--', color=ga_color, label='GA_473k_evals')
         elif n_dim == 20:

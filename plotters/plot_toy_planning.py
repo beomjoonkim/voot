@@ -102,7 +102,7 @@ def get_mcts_results(algo_name, mcts_parameters):
             success = search_time[-1, -1] < 10
         else:
             success = search_time[-1, -1] == 0
-        progress.append(search_time[-1, -1])
+        progress.append(search_time[0:1000, -1])
         if success:
             if mcts_parameters.domain.find('convbelt') !=-1:
                 success_idx = np.where(search_time[:, -1] < 10)[0][0]
@@ -113,7 +113,6 @@ def get_mcts_results(algo_name, mcts_parameters):
         print len(search_time), fin
         search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
-    import pdb;pdb.set_trace()
     print 'progress', np.array(progress).mean()
     print 'success reward', np.mean(success_rewards)
     print 'n_tested', len(progress)
@@ -217,7 +216,7 @@ def plot_across_algorithms():
         args.n_feasibility_checks = 200
         args.pidx = 3
         args.widening_parameter = 5
-        args.n_actions_per_node = 3
+        #args.n_actions_per_node = 4
     elif args.domain == 'minimum_displacement_removal_results':
         args.mcts_iter = 2000
         args.voo_sampling_mode = 'uniform'
@@ -245,8 +244,12 @@ def plot_across_algorithms():
     algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     algo_names = ['randomized_doo_1.0', 'randomized_doo_0.5', 'randomized_doo_0.01', 'voo_uniform_0.1',
                   'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
-    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_gaussian_0.3', 'unif']
-    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'unif']
+
+    if args.domain == 'convbelt_results' and args.n_actions_per_node == 4:
+        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
+    elif args.domain == 'convbelt_results' and args.n_actions_per_node != 4:
+        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -273,6 +276,7 @@ def plot_across_algorithms():
             print algo, "not found"
             continue
         search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
+        print "Maximum average rewards: ", np.mean(search_rwd[:,-1])
         #search_rwd, search_progress, organized_times = get_max_rwds_wrt_time(search_rwd_times)
 
         max_rwds.append(max_rwd)
@@ -318,6 +322,8 @@ def plot_across_algorithms():
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
 
+    if domain_name == 'cbelt':
+        plt.ylim(-2,4)
     savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 
 
