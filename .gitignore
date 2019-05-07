@@ -14,5 +14,4 @@ mover_library/*.pyc
 *core
 *core*
 test_results/mcts_search_trees/*
-*.png
 
