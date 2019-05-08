@@ -209,7 +209,6 @@ class MCTS:
                 if self.s0_node.A[0].type == 'two_arm_place':
                     #self.s0_node.store_node_information(self.environment.name)
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
-                    #import pdb;pdb.set_trace()
                     pass
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
@@ -233,7 +232,10 @@ class MCTS:
         return search_time_to_reward, self.s0_node.best_v, plan
 
     def choose_action(self, curr_node, depth):
-        w_param = self.widening_parameter*np.power(0.8, depth)
+        if not self.use_progressive_widening:
+            w_param = self.widening_parameter*np.power(0.8, depth)
+        else:
+            w_param = self.widening_parameter
         print "Widening parameter ", w_param
         if not curr_node.is_reevaluation_step(w_param, self.environment.infeasible_reward,
                                               self.use_progressive_widening, self.use_ucb):
@@ -247,6 +249,7 @@ class MCTS:
                 action = curr_node.perform_ucb_over_actions()
             else:
                 action = curr_node.choose_new_arm()
+
         return action
 
     def update_node_statistics(self, curr_node, action, sum_rewards, reward):

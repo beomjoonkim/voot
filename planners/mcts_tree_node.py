@@ -7,6 +7,8 @@ from trajectory_representation.operator import Operator
 from mover_library.utils import visualize_path
 
 import openravepy
+
+
 def upper_confidence_bound(n, n_sa):
     return 2 * np.sqrt(np.log(n) / float(n_sa))
 
@@ -67,7 +69,8 @@ class TreeNode:
         n_feasible_actions = self.get_n_feasible_actions(infeasible_rwd)
         next_state_terminal = np.any([c.is_goal_node for c in self.children.values()])
 
-        if n_feasible_actions < 1 or next_state_terminal: # sample more actions
+        if n_feasible_actions < 1 or next_state_terminal:
+            # sample more actions if no feasible actions at the node or this is the last node
             return False
 
         if not use_ucb:
@@ -78,10 +81,10 @@ class TreeNode:
         if use_progressive_widening:
             n_actions = len(self.A)
             is_time_to_sample = n_actions <= widening_parameter * self.Nvisited
-            return is_time_to_sample
+            return not is_time_to_sample
         else:
             if self.reeval_iterations < widening_parameter:
-                print 'reeval iter: %d, widening: %d'%(self.reeval_iterations, widening_parameter)
+                print 'reeval iter: %d, widening: %d' % (self.reeval_iterations, widening_parameter)
                 self.reeval_iterations += 1
                 return True
             else:
@@ -96,13 +99,11 @@ class TreeNode:
             best_action = self.get_never_evaluated_action()
         else:
             best_action = self.Q.keys()[0]
-
             feasible_actions = [a for a in self.A if np.max(self.reward_history[a]) > -2]
             feasible_q_values = [self.Q[a] for a in feasible_actions]
-            assert(len(feasible_actions) > 1)
+            assert(len(feasible_actions) >= 1)
             for action, value in zip(feasible_actions, feasible_q_values):
-                ucb_value = value + self.ucb_parameter * upper_confidence_bound(self.Nvisited, self.N[action])
-
+                ucb_value = value + self.ucb_parameter*upper_confidence_bound(self.Nvisited, self.N[action])
                 # todo randomized tie-break
                 if ucb_value > best_value:
                     best_action = action

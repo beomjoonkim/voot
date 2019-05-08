@@ -155,16 +155,19 @@ def main():
         args.use_max_backup = True
         args.n_feasibility_checks = 50
         args.problem_idx = 0
-        args.widening_parameter = 5
-        args.n_actions_per_node = 1
-        if args.sampling_strategy == 'voo':
-            args.epsilon = 0.1
-        elif args.sampling_strategy == 'randomized_doo':
-            args.epsilon = 1.0
-        elif args.sampling_strategy == 'doo':
-            args.epsilon = 1.0
-        args.add = 'with_decreasing_widening_parameter'
-
+        if args.pw:
+            args.sampling_strategy = 'unif'
+            args.pw = True
+            args.use_ucb = True
+        else:
+            args.widening_parameter = 5
+            args.n_actions_per_node = 1
+            if args.sampling_strategy == 'voo':
+                args.epsilon = 0.1
+            elif args.sampling_strategy == 'randomized_doo':
+                args.epsilon = 1.0
+            elif args.sampling_strategy == 'doo':
+                args.epsilon = 1.0
     if args.pw:
         assert args.w > 0 and args.w <= 1
     else:
