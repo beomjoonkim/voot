@@ -56,7 +56,8 @@ def get_result_dir(algo_name, mcts_parameters):
     else:
         result_dir += '_pick_switch_False'
 
-    result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
+    if mcts_parameters.add != 'fullplanning':
+        result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
     if addendum != '':
         result_dir += '_' + addendum + '/'
@@ -216,7 +217,8 @@ def plot_across_algorithms():
         args.n_feasibility_checks = 200
         args.pidx = 3
         args.widening_parameter = 5
-        #args.n_actions_per_node = 4
+        args.n_actions_per_node = 3
+        args.add = 'n_items_20'
     elif args.domain == 'minimum_displacement_removal_results':
         args.mcts_iter = 2000
         args.voo_sampling_mode = 'uniform'
@@ -227,6 +229,7 @@ def plot_across_algorithms():
         args.problem_idx = 0
         args.widening_parameter = 5
         args.n_actions_per_node = 1
+        args.add = 'with_decreasing_widening_parameter'
 
     if args.domain == 'minimum_displacement_removal_results':
         if args.n_feasibility_checks == 100:
@@ -249,6 +252,8 @@ def plot_across_algorithms():
     if args.domain == 'convbelt_results' and args.n_actions_per_node == 4:
         algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
     elif args.domain == 'convbelt_results' and args.n_actions_per_node != 4:
+        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+    elif args.domain != 'convbelt_results':
         algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
@@ -322,9 +327,12 @@ def plot_across_algorithms():
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
 
-    if domain_name == 'cbelt':
+    if domain_name == 'cbelt' and not args.p:
         plt.ylim(-2,4)
-    savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
+    if args.p:
+        savefig('Number of simulations', 'Number of remaining objects', fname='./plotters/' + args.add + '_toy_'+plot_name)
+    else:
+        savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
 
 
 if __name__ == '__main__':
