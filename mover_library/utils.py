@@ -591,21 +591,25 @@ def get_pick_domain():
 
 class CustomStateSaver:
     def __init__(self, env):
-        objects_in_env = env.GetBodies()
-        self.env_id = 1
+        self.env_id = None
+        if env is not None:
+            objects_in_env = env.GetBodies()
+            self.env_id = 1
 
-        self.robot_name = 'pr2'
-        robot = env.GetRobot(self.robot_name)
-        self.object_poses = {o.GetName(): get_body_xytheta(o) for o in objects_in_env}
-        self.robot_base_pose = get_body_xytheta(robot)
-        self.robot_dof_values = robot.GetDOFValues()
-        self.is_holding = len(robot.GetGrabbed()) > 0
-        if self.is_holding:
-            self.held_object = robot.GetGrabbed()[0].GetName()
-        else:
-            self.held_object = None
+            self.robot_name = 'pr2'
+            robot = env.GetRobot(self.robot_name)
+            self.object_poses = {o.GetName(): get_body_xytheta(o) for o in objects_in_env}
+            self.robot_base_pose = get_body_xytheta(robot)
+            self.robot_dof_values = robot.GetDOFValues()
+            self.is_holding = len(robot.GetGrabbed()) > 0
+            if self.is_holding:
+                self.held_object = robot.GetGrabbed()[0].GetName()
+            else:
+                self.held_object = None
 
     def Restore(self):
+        if self.env_id is None:
+            return
         assert len(openravepy.RaveGetEnvironments()) == 1
         env = openravepy.RaveGetEnvironment(self.env_id)
         robot = env.GetRobot(self.robot_name)

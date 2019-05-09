@@ -66,7 +66,7 @@ if obj_fcn == 'shekel':
         C = config['C']
 
 if obj_fcn == 'shekel':
-    domain =np.array([[-500.]*dim_x, [500.]*dim_x])
+    domain = np.array([[-500.]*dim_x, [500.]*dim_x])
 elif obj_fcn == 'schwefel':
     domain = np.array([[-500.]*dim_x, [500.]*dim_x])
 elif obj_fcn == 'rastrigin':

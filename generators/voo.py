@@ -191,6 +191,9 @@ class VOOGenerator(Generator):
                 for x, y in zip(x_obj_placements, y_obj_placements):
                     dist += place_parameter_distance(x, y, 1)
                 return dist
+        elif operator.find('synthe') != -1:
+            def dist_fcn(x, y):
+                return np.linalg.norm(x - y)
         else:
             raise NotImplementedError
         new_parameters = None

@@ -37,6 +37,20 @@ class Generator:
                                      np.hstack([self.place_domain[1]]*n_actions)
                                      ])
             self.feasibility_checker = MultiPapFeasibilityChecker(problem_env, n_actions)
+        elif operator_name.find('synthetic') != -1:
+            self.domain = np.array([[-500.] * 3, [500.] * 3])
+
+            class DummyFeasibilityChecker:
+                def __init__(self):
+                    pass
+
+                def check_feasibility(self, node, action_parameter):
+                    action = {}
+                    action['is_feasible'] = True
+                    action['action_parameters'] = action_parameter
+                    return action, 'HasSolution'
+
+            self.feasibility_checker = DummyFeasibilityChecker()
         else:
             raise ValueError
 

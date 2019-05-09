@@ -7,6 +7,8 @@ sys.path.append('/usr/local/lib/python2.7/site-packages')
 from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
 from problem_instantiators.conveyor_belt_instantiator import ConveyorBeltInstantiator
 
+from problem_environments.synthetic_env import SyntheticEnv
+
 from planners.mcts import MCTS
 
 import argparse
@@ -168,6 +170,13 @@ def main():
                 args.epsilon = 1.0
             elif args.sampling_strategy == 'doo':
                 args.epsilon = 1.0
+    else:
+        args.mcts_iter = 20000
+        args.voo_sampling_mode = 'gaussian'
+        args.n_switch = 100
+        args.use_max_backup = True
+        args.problem_idx = 0
+
     if args.pw:
         assert args.w > 0 and args.w <= 1
     else:
@@ -191,14 +200,18 @@ def main():
 
     if args.domain == 'minimum_displacement_removal':
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.problem_idx, args.domain)
-    else:
+        environment = problem_instantiator.environment
+    elif args.domain == 'convbelt':
         # todo make root switching in conveyor belt domain
         problem_instantiator = ConveyorBeltInstantiator(args.problem_idx, args.domain, args.n_actions_per_node)
+        environment = problem_instantiator.environment
+    else:
+        environment = SyntheticEnv(args.problem_idx)
 
     if args.v:
-        problem_instantiator.environment.env.SetViewer('qtcoin')
+        environment.env.SetViewer('qtcoin')
 
-    mcts = instantiate_mcts(args, problem_instantiator.environment)
+    mcts = instantiate_mcts(args, environment)
     search_time_to_reward, best_v_region_calls, plan = mcts.search(args.mcts_iter)
     plan = make_plan_pklable(plan)
 
@@ -206,8 +219,9 @@ def main():
     pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
                 open(stat_file_name, 'wb'))
 
-    problem_instantiator.environment.env.Destroy()
-    openravepy.RaveDestroy()
+    if args.domain != 'synthetic':
+        environment.env.Destroy()
+        openravepy.RaveDestroy()
 
 
 if __name__ == '__main__':

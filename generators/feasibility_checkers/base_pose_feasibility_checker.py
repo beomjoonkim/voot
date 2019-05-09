@@ -4,6 +4,7 @@ sys.path.append('../mover_library/')
 from mover_library.motion_planner import collision_fn
 from utils import get_body_xytheta, set_robot_config
 
+
 class BasePoseFeasibilityChecker(object):
     def __init__(self, problem_env):
         self.problem_env = problem_env

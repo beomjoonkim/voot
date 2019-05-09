@@ -42,9 +42,12 @@ class MCTS:
             self.discount_rate = 0.99  # do we need this?
         else:
             self.discount_rate = 0.9
+        if self.environment.name.find('synthetic') != -1:
+            self.depth_limit = 20
+        else:
+            self.depth_limit = np.inf
         self.sampling_strategy = sampling_strategy
         self.sampling_strategy_exploration_parameter = sampling_strategy_exploration_parameter
-        self.depth_limit = np.inf
         self.use_progressive_widening = use_progressive_widening
         self.voo_sampling_mode = voo_sampling_mode
         self.voo_counter_ratio = voo_counter_ratio
@@ -91,10 +94,9 @@ class MCTS:
             operator_skeleton = None
         else:
             operator_skeleton = self.environment.get_applicable_op_skeleton(parent_action)
-
         state_saver = CustomStateSaver(self.environment.env)
         node = TreeNode(operator_skeleton, self.exploration_parameters, depth, state_saver, self.sampling_strategy,
-                        is_init_node)
+                        is_init_node, self.depth_limit)
         if not self.environment.is_goal_reached():
             node.sampling_agent = self.create_sampling_agent(node, operator_skeleton)
 
@@ -136,6 +138,12 @@ class MCTS:
             write_dot_file(self.tree, iteration, '')
 
     def is_time_to_switch_initial_node(self):
+        if self.environment.name.find('synth') != -1:
+            if self.s0_node.Nvisited > self.n_switch:
+                return True
+            else:
+                return False
+
         if self.s0_node.is_goal_node:
             return True
 
@@ -168,28 +176,6 @@ class MCTS:
             feasible_q_values = [self.s0_node.Q[a] for a in feasible_actions]
             best_action = feasible_actions[np.argmax(feasible_q_values)]
             best_node = self.s0_node.children[best_action]
-
-            # todo Why does the code below make it hard for MCD domain?
-            """
-            non_goal_traj_feasible_actions = []
-            non_goal_traj_q_values = []
-            is_pick_node = self.s0_node.operator_skeleton.type == 'two_arm_pick'
-            for a in self.s0_node.A:
-                is_action_feasible = np.max(self.s0_node.reward_history[a]) > self.infeasible_reward
-
-                if is_pick_node and not self.pick_switch:
-                    is_action_evaled_enough = False  # free-pass if we are not doing pick switch
-                else:
-                    is_action_evaled_enough = self.s0_node.children[a].have_been_used_as_root
-
-                if is_action_feasible and (not is_action_evaled_enough):
-                    non_goal_traj_feasible_actions.append(a)
-                    non_goal_traj_q_values.append(a)
-
-            best_action = non_goal_traj_feasible_actions[np.argmax(non_goal_traj_q_values)]
-            best_node = self.s0_node.children[best_action]
-            best_node.have_been_used_as_root = True
-            """
         return best_node
 
     def search(self, n_iter=100, max_time=np.inf):
@@ -210,9 +196,9 @@ class MCTS:
                     #self.s0_node.store_node_information(self.environment.name)
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
                     pass
+                import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
-
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
@@ -233,7 +219,8 @@ class MCTS:
 
     def choose_action(self, curr_node, depth):
         if not self.use_progressive_widening:
-            w_param = self.widening_parameter*np.power(0.8, depth)
+            #w_param = self.widening_parameter*np.power(0.8, depth)
+            w_param = self.widening_parameter*np.power(0.99, depth)
         else:
             w_param = self.widening_parameter
         print "Widening parameter ", w_param
@@ -292,6 +279,8 @@ class MCTS:
             return self.goal_reward
 
         if depth == self.depth_limit:
+            if len(curr_node.parent.reward_history)>0:
+                print np.max(curr_node.parent.reward_history.values())
             return 0
 
         if DEBUG:

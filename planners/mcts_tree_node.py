@@ -15,7 +15,7 @@ def upper_confidence_bound(n, n_sa):
 
 class TreeNode:
     def __init__(self, operator_skeleton, ucb_parameter, depth, state_saver, sampling_strategy,
-                 is_init_node):
+                 is_init_node, depth_limit):
         self.Nvisited = 0
         self.N = {}  # N(n,a)
         self.Q = {}  # Q(n,a)
@@ -31,6 +31,7 @@ class TreeNode:
         self.is_goal_node = False
         self.is_goal_and_already_visited = False
         self.depth = depth
+        self.depth_limit = depth_limit
         self.sum_rewards = 0
         self.sampling_agent = None
 
@@ -67,7 +68,7 @@ class TreeNode:
             return False
 
         n_feasible_actions = self.get_n_feasible_actions(infeasible_rwd)
-        next_state_terminal = np.any([c.is_goal_node for c in self.children.values()])
+        next_state_terminal = np.any([c.is_goal_node for c in self.children.values()]) or self.depth == self.depth_limit-1
 
         if n_feasible_actions < 1 or next_state_terminal:
             # sample more actions if no feasible actions at the node or this is the last node
