@@ -145,7 +145,7 @@ def main():
             args.pw = True
             args.use_ucb = True
         else:
-            args.widening_parameter = 5
+            args.w = 5
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
                 args.epsilon = 0.1
@@ -164,7 +164,7 @@ def main():
             args.pw = True
             args.use_ucb = True
         else:
-            args.widening_parameter = 5
+            args.w = 5
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
                 args.epsilon = 0.1
@@ -178,6 +178,7 @@ def main():
         args.n_switch = 100
         args.use_max_backup = True
         args.problem_idx = 0
+        args.w = 100
 
     if args.pw:
         assert args.w > 0 and args.w <= 1

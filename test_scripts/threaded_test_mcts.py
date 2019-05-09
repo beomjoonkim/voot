@@ -74,7 +74,6 @@ def main():
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-c1', type=float, default=1)
     parser.add_argument('-n_actions_per_node', type=int, default=1)
-
     args = parser.parse_args()
 
     sampling_strategy = args.sampling_strategy
