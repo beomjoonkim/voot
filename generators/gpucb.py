@@ -1,8 +1,7 @@
 import sys
 import numpy as np
-sys.path.append('../mover_library/')
 from generator import Generator
-from utils import pick_parameter_distance, place_parameter_distance, convert_base_pose_to_se2, convert_se2_to_base_pose
+from mover_library.utils import pick_parameter_distance, place_parameter_distance, convert_base_pose_to_se2, convert_se2_to_base_pose
 from planners.mcts_utils import make_action_executable
 
 from gpucb_utils.gp import StandardContinuousGP

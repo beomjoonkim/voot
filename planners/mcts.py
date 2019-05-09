@@ -16,9 +16,6 @@ import sys
 import socket
 import numpy as np
 
-
-from test_scripts.visualize_q_functions import visualize_base_poses_and_q_values
-
 sys.setrecursionlimit(15000)
 
 DEBUG = True
@@ -139,7 +136,8 @@ class MCTS:
 
     def is_time_to_switch_initial_node(self):
         if self.environment.name.find('synth') != -1:
-            if self.s0_node.Nvisited > self.n_switch:
+            n_feasible_actions = np.sum([self.environment.is_action_feasible(a) for a in self.s0_node.A])
+            if n_feasible_actions > self.n_switch:
                 return True
             else:
                 return False
@@ -185,6 +183,7 @@ class MCTS:
         plan = None
 
         self.n_iter = n_iter
+        tmp = []
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             print '*****Root node idx %d' % self.s0_node.idx
@@ -196,12 +195,19 @@ class MCTS:
                     #self.s0_node.store_node_information(self.environment.name)
                     #visualize_base_poses_and_q_values(self.s0_node.Q, self.environment)
                     pass
-                import pdb;pdb.set_trace()
                 best_child_node = self.choose_child_node_to_descend_to()
                 self.switch_init_node(best_child_node)
             stime = time.time()
             self.simulate(self.s0_node, depth)
             time_to_search += time.time() - stime
+
+            """
+            if np.any([a.continuous_parameters['is_feasible'] for a in self.s0_node.A]):
+                feasible_action = [a for a in self.s0_node.A if a.continuous_parameters['is_feasible']][0]
+                self.log_current_tree_to_dot_file(iteration)
+                tmp.append(self.s0_node.Q[feasible_action])
+                import pdb;pdb.set_trace()
+            """
 
             #self.log_current_tree_to_dot_file(iteration)
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
@@ -251,8 +257,12 @@ class MCTS:
         else:
             curr_node.reward_history[action].append(reward)
             curr_node.N[action] += 1
-            if self.use_max_backup and sum_rewards > curr_node.Q[action]:
-                curr_node.Q[action] = sum_rewards
+            if self.use_max_backup:
+                if sum_rewards > curr_node.Q[action]:
+                    # todo
+                    #   what impact would this have had? If the new reward was not better, then we averaged.
+                    #   I might have to re-do the experiments
+                    curr_node.Q[action] = sum_rewards
             else:
                 curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
 
@@ -286,6 +296,7 @@ class MCTS:
         if DEBUG:
             print "At depth ", depth
             print "Is it time to pick?", self.environment.is_pick_time()
+
         action = self.choose_action(curr_node, depth)
         reward = self.environment.apply_operator_instance(action, curr_node)
         print "Executed ", action.type, action.continuous_parameters['is_feasible'], action.discrete_parameters
@@ -297,9 +308,7 @@ class MCTS:
             next_node.sum_ancestor_action_rewards = next_node.parent.sum_ancestor_action_rewards + reward
         else:
             next_node = curr_node.children[action]
-
         is_infeasible_action = self.is_simulated_action_infeasible(reward, action)
-        import pdb;pdb.set_trace()
         if is_infeasible_action:
             sum_rewards = reward
         else:

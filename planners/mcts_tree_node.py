@@ -5,8 +5,7 @@ import socket
 
 from mcts_utils import is_action_hashable, make_action_hashable
 from trajectory_representation.operator import Operator
-if socket.gethostname() != 'lab':
-	import openravepy
+import openravepy
 
 
 def upper_confidence_bound(n, n_sa):
@@ -51,7 +50,12 @@ class TreeNode:
         self.best_v = 0
 
     def is_action_feasible(self, action, infeasible_rwd=-2):
-        return np.max(self.reward_history[action]) > infeasible_rwd
+        # todo this should really be part of the  environment
+        # how do I get an access to environment name?
+        if action.type.find('synthetic') != -1:
+            return action.continuous_parameters['is_feasible']
+        else:
+            return np.max(self.reward_history[action]) > infeasible_rwd
 
     def get_n_feasible_actions(self, infeasible_rwd):
         n_feasible_actions = np.sum([self.is_action_feasible(a) for a in self.A])
@@ -76,7 +80,7 @@ class TreeNode:
 
         if not use_ucb:
             new_action = self.A[-1]
-            if np.max(self.reward_history[new_action]) <= -2:
+            if not self.is_action_feasible(new_action):
                 return False
 
         if use_progressive_widening:
@@ -85,7 +89,7 @@ class TreeNode:
             return not is_time_to_sample
         else:
             if self.reeval_iterations < widening_parameter:
-                print 'reeval iter: %d, widening: %d' % (self.reeval_iterations, widening_parameter)
+                print 're-eval iter: %d, widening: %d' % (self.reeval_iterations, widening_parameter)
                 self.reeval_iterations += 1
                 return True
             else:

@@ -5,9 +5,8 @@ sys.path.append('../mover_library/')
 from generator import Generator
 from planners.mcts_utils import make_action_executable
 
-from utils import pick_parameter_distance, place_parameter_distance
+from mover_library.utils import pick_parameter_distance, place_parameter_distance
 from doo_utils.doo_tree import BinaryDOOTree
-from utils import pick_parameter_distance, place_parameter_distance
 from doo import DOOGenerator
 
 import matplotlib.pyplot as plt

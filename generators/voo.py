@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-from samplers import gaussian_randomly_place_in_region
+from mover_library.samplers import gaussian_randomly_place_in_region
 from generator import Generator
 from mover_library.utils import pick_parameter_distance, place_parameter_distance, se2_distance, visualize_path
 from mover_library.utils import *

@@ -45,14 +45,12 @@ class SyntheticEnv():
         if reward < 0.3:
             reward = reward + self.infeasible_reward
             # todo stop advancing if your reward is less than 0.3
+            operator_instance.continuous_parameters['is_feasible'] = False
         return reward
 
     def is_action_feasible(self, action):
         reward = self.apply_action_and_get_reward(action, True, None)
         return reward > 0.3
-
-
-
 
     def is_goal_reached(self):
         return False
