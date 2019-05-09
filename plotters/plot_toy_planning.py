@@ -40,9 +40,16 @@ def get_result_dir(algo_name, mcts_parameters):
     n_switch = mcts_parameters.n_switch
 
     rootdir = './test_results/'
-    result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
-                 '/uct_0.0'+'_widening_' + str(widening_parameter) + '_' + algo_name
+    if algo_name.find('pw') != -1:
+        result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
+                     '/pw_methods/' + \
+                     'uct_' + str(mcts_parameters.uct) + '_widening_' + str(mcts_parameters.pw) +\
+                     '_unif'
+    else:
+        result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
+                     '/uct_0.0'+'_widening_' + str(widening_parameter) + '_' + algo_name
     result_dir += '_n_feasible_checks_' + str(n_feasibility_checks)
+
     if n_switch != -1:
         result_dir += '_n_switch_' + str(n_switch)
 
@@ -59,7 +66,7 @@ def get_result_dir(algo_name, mcts_parameters):
     if mcts_parameters.add != 'fullplanning':
         result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
-    if addendum != '':
+    if addendum != '' and algo_name != 'pw':
         result_dir += '_' + addendum + '/'
     else:
         result_dir += '/'
@@ -185,6 +192,8 @@ def get_algo_name(raw_name):
         return 'VOOT'
     elif raw_name.find('unif') != -1:
         return "UniformT"
+    elif raw_name.find('pw') != -1:
+        return "PW-UCT"
     else:
         raise ValueError
 
@@ -193,6 +202,7 @@ def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
     parser.add_argument('-domain', type=str, default='minimum_displacement_removal_results')
     parser.add_argument('-w', type=float, default=5.0)
+    parser.add_argument('-pw', type=float, default=0.1)
     parser.add_argument('-c1', type=int, default=1)
     parser.add_argument('-uct', type=float, default=0.0)
     parser.add_argument('-mcts_iter', type=int, default=2000)
@@ -202,7 +212,7 @@ def plot_across_algorithms():
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-n_switch', type=int, default=10)
     parser.add_argument('-use_max_backup', action='store_true', default=False)
-    parser.add_argument('-counter_ratio', type=int, default=10)
+    parser.add_argument('-counter_ratio', type=int, default=1)
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-n_actions_per_node', type=int, default=1)
 
@@ -254,7 +264,7 @@ def plot_across_algorithms():
     elif args.domain == 'convbelt_results' and args.n_actions_per_node != 4:
         algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain != 'convbelt_results':
-        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+        algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -328,7 +338,7 @@ def plot_across_algorithms():
             plot_name += "_n_switch_" + str(args.n_switch)
 
     if domain_name == 'cbelt' and not args.p:
-        plt.ylim(-2,4)
+        plt.ylim(-2, 4)
     if args.p:
         savefig('Number of simulations', 'Number of remaining objects', fname='./plotters/' + args.add + '_toy_'+plot_name)
     else:
