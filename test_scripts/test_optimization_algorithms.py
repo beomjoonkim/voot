@@ -18,11 +18,8 @@ if True:
   from generators.gpucb_utils.functions import UCB, Domain
   from generators.gpucb_utils.bo import BO
 from generators.voo_utils.voo import VOO
-from generators.voo_utils.stovoo import StoVOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.soo_utils.soo_tree import BinarySOOTree
-from generators.soo_utils.stosoo import BinaryStoSOOTree
-from generators.stounif_utils.stounif import StoUniform
 
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-problem_idx', type=int, default=0)

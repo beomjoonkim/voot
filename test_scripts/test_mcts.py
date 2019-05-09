@@ -4,11 +4,6 @@ sys.path.append("/root/TAMP/openrave_wrapper")
 sys.path.append("/root/TAMP/openrave_wrapper/manipulation")
 sys.path.append('/usr/local/lib/python2.7/site-packages')
 
-from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
-from problem_instantiators.conveyor_belt_instantiator import ConveyorBeltInstantiator
-
-from problem_environments.synthetic_env import SyntheticEnv
-
 from planners.mcts import MCTS
 
 import argparse
@@ -16,9 +11,15 @@ import cPickle as pickle
 import os
 import numpy as np
 import random
-import socket
+
+from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
+from problem_instantiators.conveyor_belt_instantiator import ConveyorBeltInstantiator
 import openravepy
 from openravepy import RaveSetDebugLevel, DebugLevel
+
+from problem_environments.synthetic_env import SyntheticEnv
+
+
 
 
 

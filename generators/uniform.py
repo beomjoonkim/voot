@@ -1,7 +1,3 @@
-import sys
-import numpy as np
-sys.path.append('../mover_library/')
-from samplers import *
 from generator import Generator
 
 

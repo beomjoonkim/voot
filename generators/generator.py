@@ -1,8 +1,7 @@
 import sys
 import numpy as np
-sys.path.append('./mover_library/')
-from samplers import *
-from utils import get_pick_domain, get_place_domain
+#from mover_library.samplers import *
+from mover_library.utils import get_pick_domain, get_place_domain
 
 from feasibility_checkers.pick_feasibility_checker import PickFeasibilityChecker
 from feasibility_checkers.place_feasibility_checker import PlaceFeasibilityChecker

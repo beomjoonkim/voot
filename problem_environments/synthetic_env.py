@@ -1,11 +1,9 @@
 from trajectory_representation.operator import Operator
-from problem_environment import ProblemEnvironment
 
 import pickle
 import numpy as np
 
 from deap import benchmarks
-
 
 
 class SyntheticEnv():
@@ -29,9 +27,6 @@ class SyntheticEnv():
             C = config['C']
             self.reward_function = lambda sol: benchmarks.shekel(sol, A, C)[0]
 
-    def is_pick_time(self):
-        return False
-
     def reset_to_init_state(self, node):
         # todo reset to the original state. Do this by changing the reward function to the initial one.
         pass
@@ -52,6 +47,13 @@ class SyntheticEnv():
             # todo stop advancing if your reward is less than 0.3
         return reward
 
+    def is_action_feasible(self, action):
+        reward = self.apply_action_and_get_reward(action, True, None)
+        return reward > 0.3
+
+
+
+
     def is_goal_reached(self):
         return False
 
@@ -61,6 +63,10 @@ class SyntheticEnv():
                       continuous_parameters=None,
                       low_level_motion=None)
         return op
+
+    def is_pick_time(self):
+        return False
+
 
 
 

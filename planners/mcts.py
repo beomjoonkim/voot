@@ -298,7 +298,8 @@ class MCTS:
         else:
             next_node = curr_node.children[action]
 
-        is_infeasible_action = reward == self.environment.infeasible_reward
+        is_infeasible_action = self.is_simulated_action_infeasible(reward, action)
+        import pdb;pdb.set_trace()
         if is_infeasible_action:
             sum_rewards = reward
         else:
@@ -309,6 +310,12 @@ class MCTS:
             self.update_ancestor_node_statistics(curr_node.parent, curr_node.parent_action, sum_rewards)
 
         return sum_rewards
+
+    def is_simulated_action_infeasible(self, reward, action):
+        if self.environment.name.find('synthetic') != -1:
+            return not self.environment.is_action_feasible(action)
+        else:
+            return reward == self.environment.infeasible_reward
 
     def update_ancestor_node_statistics(self, node, action, child_sum_rewards):
         if node is None:

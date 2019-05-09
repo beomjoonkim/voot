@@ -1,7 +1,4 @@
-import numpy as np
-
 from openravepy import DOFAffine
-from planners.mcts_utils import make_action_hashable
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 from trajectory_representation.operator import Operator
 

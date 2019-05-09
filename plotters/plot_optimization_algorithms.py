@@ -9,16 +9,16 @@ import seaborn as sns
 
 def savefig(xlabel, ylabel, fname=''):
     plt.legend(loc='best', prop={'size': 13})
-    plt.xlabel(xlabel, fontsize=14, fontweight='bold')
-    plt.ylabel(ylabel, fontsize=14, fontweight='bold')
+    #plt.xlabel(xlabel, fontsize=14, fontweight='bold')
+    #plt.ylabel(ylabel, fontsize=14, fontweight='bold')
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
     print 'Saving figure ', fname + '.png'
     plt.savefig(fname + '.png', dpi=100, format='png')
 
+
 def get_result_dir(algo_name, dimension, obj_fcn):
     ROOTDIR = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
-    #ROOTDIR = './test_results/'
     result_dir = ROOTDIR+'/function_optimization/' + str(obj_fcn) + '/dim_' + str(
         dimension) + '/' + algo_name + '/'
     return result_dir

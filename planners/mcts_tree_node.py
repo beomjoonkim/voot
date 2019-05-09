@@ -1,12 +1,12 @@
 import numpy as np
 import os
 import pickle
+import socket
 
-from mcts_utils import is_action_hashable, make_action_hashable, make_action_executable
+from mcts_utils import is_action_hashable, make_action_hashable
 from trajectory_representation.operator import Operator
-from mover_library.utils import visualize_path
-
-import openravepy
+if socket.gethostname() != 'lab':
+	import openravepy
 
 
 def upper_confidence_bound(n, n_sa):
