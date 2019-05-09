@@ -181,7 +181,7 @@ def main():
             args.n_switch = 50
         elif args.problem_idx == 2:
             args.mcts_iter = 100000
-            args.n_switch = 20
+            args.n_switch = 5
         else:
             raise NotImplementedError
         args.voo_sampling_mode = 'centered_uniform'

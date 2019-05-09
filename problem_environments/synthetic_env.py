@@ -28,7 +28,7 @@ class SyntheticEnv:
             self.feasible_action_value_threshold = 0.1
         elif problem_idx == 2:
             self.dim_x = 20
-            self.feasible_action_value_threshold = 0.01
+            self.feasible_action_value_threshold = 0.5
 
         config = pickle.load(
             open('./test_results/function_optimization/shekel/shekel_dim_' + str(self.dim_x) + '.pkl', 'r'))
