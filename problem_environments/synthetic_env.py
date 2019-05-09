@@ -19,14 +19,22 @@ class SyntheticEnv:
         self.robot = None
         self.objects_currently_not_in_goal = []
         self.infeasible_reward = -2
-        self.feasible_action_value_threshold = 0.1
+        self.problem_idx = problem_idx
         if problem_idx == 0:
-            dim_x = 10
-            config = pickle.load(
-                open('./test_results/function_optimization/shekel/shekel_dim_' + str(dim_x) + '.pkl', 'r'))
-            A = config['A']
-            C = config['C']
-            self.reward_function = lambda sol: benchmarks.shekel(sol, A, C)[0]
+            self.dim_x = 3
+            self.feasible_action_value_threshold = 1.0
+        elif problem_idx == 1:
+            self.dim_x = 10
+            self.feasible_action_value_threshold = 0.1
+        elif problem_idx == 2:
+            self.dim_x = 20
+            self.feasible_action_value_threshold = 0.01
+
+        config = pickle.load(
+            open('./test_results/function_optimization/shekel/shekel_dim_' + str(self.dim_x) + '.pkl', 'r'))
+        A = config['A']
+        C = config['C']
+        self.reward_function = lambda sol: benchmarks.shekel(sol, A, C)[0]
 
     def reset_to_init_state(self, node):
         # todo reset to the original state. Do this by changing the reward function to the initial one.
@@ -61,7 +69,7 @@ class SyntheticEnv:
         return False
 
     def get_applicable_op_skeleton(self, parent_action):
-        op = Operator(operator_type='synthetic_action',
+        op = Operator(operator_type='synthetic_'+str(self.dim_x),
                       discrete_parameters={},
                       continuous_parameters=None,
                       low_level_motion=None)

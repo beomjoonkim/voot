@@ -109,7 +109,7 @@ def main():
     parser.add_argument('-w', type=float, default=5.0)
     parser.add_argument('-epsilon', type=float, default=0.3)
     parser.add_argument('-sampling_strategy', type=str, default='unif')
-    parser.add_argument('-problem_idx', type=int, default=0)
+    parser.add_argument('-problem_idx', type=int, default=-1)
     parser.add_argument('-domain', type=str, default='minimum_displacement_removal')
     parser.add_argument('-planner', type=str, default='mcts')
     parser.add_argument('-v', action='store_true', default=False)
@@ -173,11 +173,19 @@ def main():
             elif args.sampling_strategy == 'doo':
                 args.epsilon = 1.0
     else:
-        args.mcts_iter = 50000
+        if args.problem_idx == 0:
+            args.mcts_iter = 10000
+            args.n_switch = 100
+        elif args.problem_idx == 1:
+            args.mcts_iter = 50000
+            args.n_switch = 50
+        elif args.problem_idx == 2:
+            args.mcts_iter = 100000
+            args.n_switch = 20
+        else:
+            raise NotImplementedError
         args.voo_sampling_mode = 'centered_uniform'
-        args.n_switch = 50
         args.use_max_backup = True
-        args.problem_idx = 0
         args.w = 100
 
     if args.pw:

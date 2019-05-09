@@ -183,7 +183,6 @@ class MCTS:
         plan = None
 
         self.n_iter = n_iter
-        tmp = []
         for iteration in range(n_iter):
             print '*****SIMULATION ITERATION %d' % iteration
             print '*****Root node idx %d' % self.s0_node.idx
