@@ -31,6 +31,9 @@ def get_result_dir(algo_name, mcts_parameters):
     elif algo_name.find('randomized_doo') !=-1:
         epsilon = algo_name.split('randomized_doo')[1][1:]
         algo_name = 'randomized_doo'
+    elif algo_name.find('doo') != -1:
+        epsilon = algo_name.split('doo')[1][1:]
+        algo_name = 'doo'
 
     uct = 0
     widening_parameter = mcts_parameters.w
@@ -118,21 +121,13 @@ def get_mcts_results(algo_name, mcts_parameters):
                 success_idx = np.where(search_time[:, -1] == 0)[0][0]
             success_rewards.append(search_time[success_idx, 2])
 
-        print len(search_time), fin
+        #print len(search_time), fin
         search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
+
     print 'progress', np.array(progress).mean()
     print 'success reward', np.mean(success_rewards)
     print 'n_tested', len(progress)
-    """
-    print "mcts time and success rate:"
-    print 'time', np.array(search_times).mean()
-    print 'ff solution',np.array(success_idxs).mean()
-    print 'max_rwd mean', np.mean(max_rwds)
-    print 'ff min score', np.min(success_rewards)
-    print 'ff mean score', np.mean(success_rewards)
-    print 'n', len(search_rwd_times)
-    """
     return search_rwd_times, np.mean(max_rwds)
 
 
@@ -194,6 +189,8 @@ def get_algo_name(raw_name):
         return "UniformT"
     elif raw_name.find('pw') != -1:
         return "PW-UCT"
+    elif raw_name.find('doo') != -1:
+        return "DOOT"
     else:
         raise ValueError
 
@@ -219,6 +216,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
 
     if args.domain == 'convbelt_results':
+        domain_name = 'cbelt'
         args.mcts_iter = 3000
         args.voo_sampling_mode = 'uniform'
         args.n_switch = 10
@@ -226,10 +224,11 @@ def plot_across_algorithms():
         args.use_max_backup = True
         args.n_feasibility_checks = 200
         args.pidx = 3
-        args.widening_parameter = 5
+        args.w = 5
         args.n_actions_per_node = 3
         args.add = 'n_items_20'
     elif args.domain == 'minimum_displacement_removal_results':
+        domain_name = 'mdr'
         args.mcts_iter = 2000
         args.voo_sampling_mode = 'uniform'
         args.n_switch = 10
@@ -237,54 +236,43 @@ def plot_across_algorithms():
         args.use_max_backup = True
         args.n_feasibility_checks = 50
         args.problem_idx = 0
-        args.widening_parameter = 5
+        args.w = 5
         args.n_actions_per_node = 1
         args.add = 'with_decreasing_widening_parameter'
-
-    if args.domain == 'minimum_displacement_removal_results':
-        if args.n_feasibility_checks == 100:
-            algo_names = ['randomized_doo_0.001', 'randomized_doo_0.01', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'unif']
-        elif args.n_feasibility_checks == 50:
-            algo_names = ['randomized_doo_1.0', 'voo_uniform_0.5', 'unif']
+    elif args.domain == 'synthetic_results':
+        domain_name = 'synthetic'
+        args.mcts_iter = 10000
+        args.voo_sampling_mode = 'gaussian'
+        args.n_switch = 100
+        args.pick_switch = False
+        args.use_max_backup = True
+        args.problem_idx = 0
+        args.w = 100
+        args.n_actions_per_node = 1
     else:
-        algo_names = ['randomized_doo_1.0', 'randomized_doo_0.1', 'voo_gaussian_0.3', 'voo_gaussian_0.5',
-                      'voo_uniform_0.3', 'voo_uniform_0.5', 'unif']
+        raise NotImplementedError
 
-    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.2', 'randomized_doo_0.4','randomized_doo_0.6',
-                  'randomized_doo_0.8','unif']
-    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.5', 'randomized_doo_0.01', 'voo_uniform_0.1',
-                  'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
-    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
-    algo_names = ['randomized_doo_1.0', 'randomized_doo_0.5', 'randomized_doo_0.01', 'voo_uniform_0.1',
-                  'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'voo_uniform_0.5', 'unif']
-    algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'voo_uniform_0.2', 'voo_uniform_0.3', 'voo_uniform_0.4', 'unif']
-
-    if args.domain == 'convbelt_results' and args.n_actions_per_node == 4:
-        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
-    elif args.domain == 'convbelt_results' and args.n_actions_per_node != 4:
-        algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
-    elif args.domain != 'convbelt_results':
+    if args.domain == 'convbelt_results':
+        if args.n_actions_per_node == 4:
+            algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
+        else:
+            algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+    elif args.domain == 'minimum_displacement_removal_results':
         algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+    elif args.domain == 'synthetic_results':
+        algo_names = ['doo_1e-08', 'voo_gaussian_0.1', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
     color_dict['RandDOOT'] = [0, 0, 1]
+    color_dict['DOOT'] = [0, 0, 1]
     color_dict['VOOT'] = [1, 0, 0]
     color_dict['UniformT'] = [0.8901960784313725, 0.6745098039215687, 0]
 
-    # DOO - black
-    # VOO - red
-    # Uniform - blue
-
-    averages = []
     max_rwds = []
     for algo_idx, algo in enumerate(algo_names):
         print algo
-        #pkl_fname = './plotters/planning_results/search_rwd_times_pkl_files/'+args.domain+'_pidx_'+str(args.pidx)+'_'+algo+'.pkl'
-        #if os.path.isfile(pkl_fname):
-        #    search_rwd_times, organized_times, max_rwd = pickle.load(open(pkl_fname,'r'))
-        #else:
         try:
             search_rwd_times, max_rwd = get_mcts_results(algo, args)
         except OSError:
@@ -292,7 +280,6 @@ def plot_across_algorithms():
             continue
         search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
         print "Maximum average rewards: ", np.mean(search_rwd[:,-1])
-        #search_rwd, search_progress, organized_times = get_max_rwds_wrt_time(search_rwd_times)
 
         max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
@@ -311,11 +298,6 @@ def plot_across_algorithms():
                            color=color)
             except:
                 continue
-
-    if args.domain == 'minimum_displacement_removal_results':
-        domain_name = 'mdr'
-    else:
-        domain_name = 'cbelt'
 
     if args.p:
         plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
@@ -337,8 +319,9 @@ def plot_across_algorithms():
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
 
-    if domain_name == 'cbelt' and not args.p:
-        plt.ylim(-2, 4)
+    if domain_name == 'cbelt':
+        if not args.p:
+            plt.ylim(-2, 4)
     if args.p:
         savefig('Number of simulations', 'Number of remaining objects', fname='./plotters/' + args.add + '_toy_'+plot_name)
     else:

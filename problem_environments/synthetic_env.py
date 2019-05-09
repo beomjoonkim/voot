@@ -6,7 +6,7 @@ import numpy as np
 from deap import benchmarks
 
 
-class SyntheticEnv():
+class SyntheticEnv:
     def __init__(self, problem_idx):
         # I want to create a sequence of Shekel functions as a reward function
         # Each state is associated with a shekel function
@@ -19,9 +19,9 @@ class SyntheticEnv():
         self.robot = None
         self.objects_currently_not_in_goal = []
         self.infeasible_reward = -2
-        self.feasible_action_value_threshold = 1.0
+        self.feasible_action_value_threshold = 0.1
         if problem_idx == 0:
-            dim_x = 3
+            dim_x = 10
             config = pickle.load(
                 open('./test_results/function_optimization/shekel/shekel_dim_' + str(dim_x) + '.pkl', 'r'))
             A = config['A']

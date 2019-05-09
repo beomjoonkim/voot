@@ -173,9 +173,9 @@ def main():
             elif args.sampling_strategy == 'doo':
                 args.epsilon = 1.0
     else:
-        args.mcts_iter = 10000
-        args.voo_sampling_mode = 'gaussian'
-        args.n_switch = 100
+        args.mcts_iter = 50000
+        args.voo_sampling_mode = 'centered_uniform'
+        args.n_switch = 50
         args.use_max_backup = True
         args.problem_idx = 0
         args.w = 100

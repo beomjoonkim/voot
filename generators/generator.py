@@ -37,7 +37,7 @@ class Generator:
                                      ])
             self.feasibility_checker = MultiPapFeasibilityChecker(problem_env, n_actions)
         elif operator_name.find('synthetic') != -1:
-            self.domain = np.array([[-500.] * 3, [500.] * 3])
+            self.domain = np.array([[-500.] * 10, [500.] * 10])
 
             class DummyFeasibilityChecker:
                 def __init__(self):
