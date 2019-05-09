@@ -259,13 +259,20 @@ class MCTS:
         else:
             curr_node.reward_history[action].append(reward)
             curr_node.N[action] += 1
-            if self.use_max_backup and sum_rewards > curr_node.Q[action]:
-                # todo
-                #   what impact would this have had? If the new reward was not better, then we averaged.
-                #   I might have to re-do the experiments
-                curr_node.Q[action] = sum_rewards
+            if self.environment.name.find('synthetic') != -1:
+                if self.use_max_backup and sum_rewards > curr_node.Q[action]:
+                    # todo
+                    #   what impact would this have had? If the new reward was not better, then we averaged.
+                    #   I might have to re-do the experiments
+                    curr_node.Q[action] = sum_rewards
+                else:
+                    curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
             else:
-                curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
+                if self.use_max_backup:
+                    if sum_rewards > curr_node.Q[action]:
+                        curr_node.Q[action] = sum_rewards
+                else:
+                    curr_node.Q[action] += (sum_rewards - curr_node.Q[action]) / float(curr_node.N[action])
 
     @staticmethod
     def update_goal_node_statistics(curr_node, reward):

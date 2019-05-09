@@ -38,6 +38,9 @@ class DOOGenerator(Generator):
                 for x, y in zip(x_obj_placements, y_obj_placements):
                     dist += place_parameter_distance(x, y, 1)
                 return dist
+        elif operator_name.find('synthe') != -1:
+            def dist_fn(x, y):
+                return np.linalg.norm(x - y)
         else:
             print "Wrong operator name"
             raise ValueError

@@ -19,6 +19,7 @@ class SyntheticEnv():
         self.robot = None
         self.objects_currently_not_in_goal = []
         self.infeasible_reward = -2
+        self.feasible_action_value_threshold = 1.0
         if problem_idx == 0:
             dim_x = 3
             config = pickle.load(
@@ -42,15 +43,19 @@ class SyntheticEnv():
 
     def apply_operator_instance(self, operator_instance, node):
         reward = self.apply_action_and_get_reward(operator_instance, True, node)
-        if reward < 0.3:
+        if reward < self.feasible_action_value_threshold:
             reward = reward + self.infeasible_reward
             # todo stop advancing if your reward is less than 0.3
             operator_instance.continuous_parameters['is_feasible'] = False
+        else:
+            reward += 1.0
+            operator_instance.continuous_parameters['is_feasible'] = True
+
         return reward
 
     def is_action_feasible(self, action):
         reward = self.apply_action_and_get_reward(action, True, None)
-        return reward > 0.3
+        return reward > self.feasible_action_value_threshold
 
     def is_goal_reached(self):
         return False
