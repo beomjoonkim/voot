@@ -25,10 +25,10 @@ class SyntheticEnv:
             self.feasible_action_value_threshold = 1.0
         elif problem_idx == 1:
             self.dim_x = 10
-            self.feasible_action_value_threshold = 0.1
+            self.feasible_action_value_threshold = 0.15
         elif problem_idx == 2:
             self.dim_x = 20
-            self.feasible_action_value_threshold = 0.5
+            self.feasible_action_value_threshold = 0.01
 
         config = pickle.load(
             open('./test_results/function_optimization/shekel/shekel_dim_' + str(self.dim_x) + '.pkl', 'r'))
@@ -51,6 +51,7 @@ class SyntheticEnv:
 
     def apply_operator_instance(self, operator_instance, node):
         reward = self.apply_action_and_get_reward(operator_instance, True, node)
+        print "Pure reward", reward
         if reward < self.feasible_action_value_threshold:
             reward = reward + self.infeasible_reward
             # todo stop advancing if your reward is less than 0.3

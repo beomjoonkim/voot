@@ -236,7 +236,7 @@ def plot_across_algorithms():
         args.use_max_backup = True
         args.n_feasibility_checks = 50
         args.problem_idx = 0
-        args.w = 5
+        args.w = 5.0
         args.n_actions_per_node = 1
         args.add = 'with_decreasing_widening_parameter'
     elif args.domain == 'synthetic_results':
@@ -268,7 +268,7 @@ def plot_across_algorithms():
     color_dict['RandDOOT'] = [0, 0, 1]
     color_dict['DOOT'] = [0, 0, 1]
     color_dict['VOOT'] = [1, 0, 0]
-    color_dict['PW-UCT'] = np.array([155, 42, 42]) / 255.0
+    color_dict['PW-UCT'] = np.array([0, 100, 0]) / 255.0
     color_dict['UniformT'] = [0.8901960784313725, 0.6745098039215687, 0]
 
     max_rwds = []

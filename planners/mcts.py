@@ -137,6 +137,7 @@ class MCTS:
     def is_time_to_switch_initial_node(self):
         if self.environment.name.find('synth') != -1:
             n_feasible_actions = np.sum([self.environment.is_action_feasible(a) for a in self.s0_node.A])
+
             if n_feasible_actions > self.n_switch:
                 return True
             else:
@@ -201,9 +202,10 @@ class MCTS:
             time_to_search += time.time() - stime
 
             """
+            tmp = []
             if np.any([a.continuous_parameters['is_feasible'] for a in self.s0_node.A]):
                 feasible_action = [a for a in self.s0_node.A if a.continuous_parameters['is_feasible']][0]
-                self.log_current_tree_to_dot_file(iteration)
+                #self.log_current_tree_to_dot_file(iteration)
                 tmp.append(self.s0_node.Q[feasible_action])
                 import pdb;pdb.set_trace()
             """
