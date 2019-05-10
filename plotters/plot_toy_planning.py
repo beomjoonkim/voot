@@ -224,7 +224,7 @@ def plot_across_algorithms():
         args.use_max_backup = True
         args.n_feasibility_checks = 200
         args.pidx = 3
-        args.w = 5
+        args.w = 5.0
         args.n_actions_per_node = 3
         args.add = 'n_items_20'
     elif args.domain == 'minimum_displacement_removal_results':
@@ -256,7 +256,7 @@ def plot_across_algorithms():
         if args.n_actions_per_node == 4:
             algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
         else:
-            algo_names = ['randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+            algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain == 'minimum_displacement_removal_results':
         algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain == 'synthetic_results':
@@ -268,6 +268,7 @@ def plot_across_algorithms():
     color_dict['RandDOOT'] = [0, 0, 1]
     color_dict['DOOT'] = [0, 0, 1]
     color_dict['VOOT'] = [1, 0, 0]
+    color_dict['PW-UCT'] = np.array([155, 42, 42]) / 255.0
     color_dict['UniformT'] = [0.8901960784313725, 0.6745098039215687, 0]
 
     max_rwds = []
