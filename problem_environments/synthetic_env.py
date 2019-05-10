@@ -22,7 +22,7 @@ class SyntheticEnv:
         self.problem_idx = problem_idx
         if problem_idx == 0:
             self.dim_x = 3
-            self.feasible_action_value_threshold = 1.0
+            self.feasible_action_value_threshold = 3.0
         elif problem_idx == 1:
             self.dim_x = 10
             self.feasible_action_value_threshold = 0.15

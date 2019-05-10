@@ -214,8 +214,10 @@ class MCTS:
             best_traj_rwd, progress, best_node = self.tree.get_best_trajectory_sum_rewards_and_node(self.discount_rate)
             search_time_to_reward.append([time_to_search, iteration, best_traj_rwd, len(progress)])
             plan = self.retrace_best_plan()
-            rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
-            print 'n feasible actions , n_switch ', np.sum(rewards >= 0), self.n_switch
+            #rewards = np.array([np.max(rlist) for rlist in self.s0_node.reward_history.values()])
+
+            n_feasible = np.sum([self.s0_node.is_action_feasible(a) for a in self.s0_node.A])
+            print 'n feasible actions , n_switch ', n_feasible, self.n_switch
             print search_time_to_reward[-1], np.argmax(np.array(search_time_to_reward)[:, 2])
 
             if time_to_search > max_time:
