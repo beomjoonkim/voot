@@ -280,7 +280,7 @@ def plot_across_algorithms():
             print algo, "not found"
             continue
         search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
-        print "Maximum average rewards: ", np.mean(search_rwd[:,-1])
+        print "Maximum average rewards: ", np.mean(search_rwd[:, -1])
 
         max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
