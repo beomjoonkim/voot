@@ -151,6 +151,7 @@ def main():
                 args.epsilon = 0.1
             elif args.sampling_strategy == 'randomized_doo':
                 args.epsilon = 1.0
+        args.add = 'no_averaging'
     elif args.domain == 'minimum_displacement_removal':
         args.mcts_iter = 2000
         args.n_switch = 10
@@ -167,11 +168,12 @@ def main():
             args.w = 5
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
-                args.epsilon = 0.01
+                args.epsilon = 0.1
             elif args.sampling_strategy == 'randomized_doo':
                 args.epsilon = 1.0
             elif args.sampling_strategy == 'doo':
                 args.epsilon = 1.0
+        args.add = 'no_averaging'
     else:
         if args.problem_idx == 0:
             args.mcts_iter = 10000

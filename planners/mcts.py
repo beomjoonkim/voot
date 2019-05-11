@@ -262,7 +262,7 @@ class MCTS:
 		else:
 			curr_node.reward_history[action].append(reward)
 			curr_node.N[action] += 1
-			if self.environment.name.find('synthetic') != -1:
+			if self.environment.name.find('synthetic') == -1:
 				if self.use_max_backup:
 					if sum_rewards > curr_node.Q[action]:
 						curr_node.Q[action] = sum_rewards
