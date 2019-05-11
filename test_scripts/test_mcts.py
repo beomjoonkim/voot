@@ -168,7 +168,7 @@ def main():
             args.w = 5
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
-                args.epsilon = 0.1
+                args.epsilon = 0.01
             elif args.sampling_strategy == 'randomized_doo':
                 args.epsilon = 1.0
             elif args.sampling_strategy == 'doo':

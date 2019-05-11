@@ -238,7 +238,7 @@ def plot_across_algorithms():
         args.problem_idx = 0
         args.w = 5.0
         args.n_actions_per_node = 1
-        args.add = 'with_decreasing_widening_parameter'
+        args.add = 'no_averaging'
     elif args.domain == 'synthetic_results':
         domain_name = 'synthetic'
         args.mcts_iter = 10000
