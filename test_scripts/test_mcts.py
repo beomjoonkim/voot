@@ -137,7 +137,7 @@ def main():
         args.n_switch = 10
         args.pick_switch = False
         args.use_max_backup = True
-        args.n_feasibility_checks = 200
+        args.n_feasibility_checks = 50
         args.problem_idx = 3
         args.n_actions_per_node = 3
         if args.pw:

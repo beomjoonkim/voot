@@ -19,7 +19,10 @@ def savefig(xlabel, ylabel, fname=''):
 def get_result_dir(algo_name, mcts_parameters):
     if algo_name.find('voo') != -1:
         if algo_name.find('uniform') != -1:
-            sampling_mode = 'uniform'
+            if algo_name.find('centered_uniform') != -1:
+                sampling_mode = 'centered_uniform'
+            else:
+                sampling_mode = 'uniform'
         elif algo_name.find('gaussian') != -1:
             sampling_mode = 'gaussian'
         else:
@@ -87,7 +90,7 @@ def get_result_dir(algo_name, mcts_parameters):
 def get_mcts_results(algo_name, mcts_parameters):
     result_dir = get_result_dir(algo_name, mcts_parameters)
 
-    pidx = mcts_parameters.pidx
+    problem_idx = mcts_parameters.problem_idx
     progress = []
     search_rwd_times = []
     max_rwds = []
@@ -97,9 +100,9 @@ def get_mcts_results(algo_name, mcts_parameters):
             print "Continuing"
             continue
         sd = int(fin.split('_')[2])
-        file_pidx = int(fin.split('_')[-1].split('.')[0])
+        file_problem_idx = int(fin.split('_')[-1].split('.')[0])
 
-        if file_pidx != pidx:
+        if file_problem_idx != problem_idx:
             print "Continuing"
             continue
         try:
@@ -204,7 +207,7 @@ def plot_across_algorithms():
     parser.add_argument('-uct', type=float, default=0.0)
     parser.add_argument('-mcts_iter', type=int, default=2000)
     parser.add_argument('-n_feasibility_checks', type=int, default=50)
-    parser.add_argument('-pidx', type=int, default=0)
+    parser.add_argument('-problem_idx', type=int, default=0)
     parser.add_argument('--p', action='store_true')
     parser.add_argument('-add', type=str, default='')
     parser.add_argument('-n_switch', type=int, default=10)
@@ -223,7 +226,7 @@ def plot_across_algorithms():
         args.pick_switch = False
         args.use_max_backup = True
         args.n_feasibility_checks = 200
-        args.pidx = 3
+        args.problem_idx = 3
         args.w = 5.0
         args.n_actions_per_node = 3
         args.add = 'n_items_20'
@@ -240,13 +243,21 @@ def plot_across_algorithms():
         args.n_actions_per_node = 1
         args.add = 'no_averaging'
     elif args.domain == 'synthetic_results':
+        if args.problem_idx == 0:
+            args.mcts_iter = 10000
+            args.n_switch = 5
+        elif args.problem_idx == 1:
+            args.mcts_iter = 30000
+            args.n_switch = 5
+        elif args.problem_idx == 2:
+            args.mcts_iter = 30000
+            args.n_switch = 3
+        else:
+            raise NotImplementedError
         domain_name = 'synthetic'
-        args.mcts_iter = 10000
         args.voo_sampling_mode = 'gaussian'
-        args.n_switch = 100
         args.pick_switch = False
         args.use_max_backup = True
-        args.problem_idx = 0
         args.w = 100
         args.n_actions_per_node = 1
     else:
@@ -260,7 +271,12 @@ def plot_across_algorithms():
     elif args.domain == 'minimum_displacement_removal_results':
         algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain == 'synthetic_results':
-        algo_names = ['doo_1e-08', 'voo_gaussian_0.1', 'unif']
+        if args.problem_idx == 0:
+            algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
+        elif args.problem_idx == 1:
+            algo_names = ['voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
+        elif args.problem_idx == 2:
+            algo_names = ['voo_centered_uniform_0.01', 'doo_1e-15', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -301,7 +317,7 @@ def plot_across_algorithms():
                 continue
 
     if args.p:
-        plot_name = 'progress_toy_'+domain_name+ '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+        plot_name = 'progress_toy_'+domain_name+ '_problem_idx_' + str(args.problem_idx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
                     + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks)
         sns.tsplot([0]*len(organized_times[:]), organized_times[:args.mcts_iter],
                    ci=95, condition='Avg feasible reward', color='magenta')
@@ -310,7 +326,7 @@ def plot_across_algorithms():
             sns.tsplot([4.1]*len(organized_times[:]), organized_times[:args.mcts_iter],
                        ci=95, condition='Avg feasible reward', color='magenta')
 
-        plot_name = 'reward_toy_'+domain_name + '_pidx_' + str(args.pidx) + '_w_' + str(args.w) + '_mcts_iter_' \
+        plot_name = 'reward_toy_'+domain_name + '_problem_idx_' + str(args.problem_idx) + '_w_' + str(args.w) + '_mcts_iter_' \
                     + str(args.mcts_iter) + "_uct_" + str(args.uct) + "_n_feasibility_checks_" \
                     + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup) \
                     + '_pick_switch_' + str(args.pick_switch)
