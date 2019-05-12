@@ -269,7 +269,7 @@ def plot_across_algorithms():
         else:
             algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain == 'minimum_displacement_removal_results':
-        algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+        algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.01', 'unif']
     elif args.domain == 'synthetic_results':
         if args.problem_idx == 0:
             algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
