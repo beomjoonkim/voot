@@ -1,9 +1,7 @@
-import sys
 import numpy as np
+import time
 
 from generator import Generator
-from planners.mcts_utils import make_action_executable
-
 from doo_utils.doo_tree import BinaryDOOTree
 from mover_library.utils import pick_parameter_distance, place_parameter_distance
 
@@ -19,6 +17,7 @@ class DOOGenerator(Generator):
         self.x_max = copy.deepcopy(self.domain[1])
         self.domain[0] = self.normalize_x_value(self.domain[0])  # (self.domain[0] - self.x_min) / (self.x_max-self.x_min)
         self.domain[1] = self.normalize_x_value(self.domain[1])  # (self.domain[1] - self.x_min) / (self.x_max-self.x_min)
+        self.idx_to_update = None
 
         operator_name = operator_skeleton.type
         if operator_name == 'two_arm_pick':
@@ -44,22 +43,25 @@ class DOOGenerator(Generator):
         else:
             print "Wrong operator name"
             raise ValueError
-        self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, dist_fn)  # this depends on the problem
+        self.doo_tree = BinaryDOOTree(self.domain, self.explr_p, dist_fn)
         self.update_flag = 'update_me'
 
     def sample_next_point(self, node, n_iter):
         self.update_evaled_values(node)
-
-        normalized_evaled_actions = [self.normalize_x_value(a) for a in self.evaled_actions]
-        self.doo_tree.update_evaled_values(normalized_evaled_actions, self.evaled_q_values,
-                                           self.problem_env.infeasible_reward)
+        #normalized_evaled_actions = [self.normalize_x_value(a) for a in self.evaled_actions]
+        self.doo_tree.update_evaled_values(self.evaled_actions, self.evaled_q_values,
+                                           self.problem_env.infeasible_reward,
+                                           self.idx_to_update)
         print "DOO sampling..."
-
+        stime = time.time()
         action, status, doo_node, action_parameters = self.sample_feasible_action(node, n_iter)
+        print "Sampling time:", time.time()-stime
+
         if status == 'HasSolution':
             self.evaled_actions.append(action_parameters)
             self.doo_tree.expand_node(self.update_flag, doo_node)
             self.evaled_q_values.append(self.update_flag)
+            self.idx_to_update = len(self.evaled_actions) - 1  # this assumes that we will use our algorithm, not UCT
             print "Found feasible sample"
         else:
             # I had this  bug where I was not updating when the action was infeasible. Now I've fixed it,
@@ -69,6 +71,28 @@ class DOOGenerator(Generator):
             self.evaled_q_values.append(-2)
 
         return action
+
+    def update_evaled_values(self, node):
+        executed_actions_in_node = node.Q.keys()
+        executed_action_values_in_node = node.Q.values()
+        if len(executed_action_values_in_node) == 0:
+            return
+
+        if self.idx_to_update is not None:
+            found = False
+            for a, q in zip(executed_actions_in_node, executed_action_values_in_node):
+                if np.all(np.isclose(self.evaled_actions[self.idx_to_update], a.continuous_parameters['action_parameters'])):
+                    found = True
+                    break
+            try:
+                assert found
+            except AssertionError:
+                print "idx to update not found"
+
+            self.evaled_q_values[self.idx_to_update] = q
+
+        assert np.array_equal(np.array(self.evaled_q_values).sort(), np.array(executed_action_values_in_node).sort()), \
+            "Are you using N_r?"
 
     def sample_feasible_action(self, node, n_iter):
         for i in range(n_iter):

@@ -25,11 +25,10 @@ class BinaryDOOTree:
         self.leaves = []
         self.nodes = []
         self.domain = domain
-        self.nodes = []
         self.distance_fn = distance_fn
         self.explr_p = explr_p
-        self.x_to_node = {}
         self.node_to_update = None
+        self.evaled_x_to_node = {}
 
     def create_node(self, cell_mid_point, cell_min, cell_max, parent_node):
         new_node = DOOTreeNode(cell_mid_point, cell_min, cell_max, parent_node, self.distance_fn, idx=len(self.nodes))
@@ -74,18 +73,16 @@ class BinaryDOOTree:
             return best_leaf
 
     def get_next_point_and_node_to_evaluate(self):
-        # how can I vary this?
-        # I can randomly sample a point?
         is_first_evaluation = self.root is None
         dim_domain = len(self.domain[0])
         if is_first_evaluation:
-            #cell_mid_point = (self.domain[1] + self.domain[0]) / 2.0
             cell_mid_point = np.random.uniform(self.domain[0], self.domain[1], (1, dim_domain)).squeeze()
             node = self.create_node(cell_mid_point, self.domain[0], self.domain[1], None)
             self.leaves.append(node)
             self.root = node
         else:
             node = self.find_leaf_with_max_upper_bound_value()
+        self.evaled_x_to_node[tuple(node.cell_mid_point)] = node
         return node
 
     def expand_node(self, fval, node):
@@ -122,30 +119,27 @@ class BinaryDOOTree:
         assert is_action_included, 'action that needs to be updated does not have a value'
         return evaled_y[np.where(is_in_array)[0][0]]
 
-    def update_evaled_values(self, evaled_x, evaled_y, infeasible_reward):
+    def update_evaled_values(self, evaled_x, evaled_y, infeasible_reward, idx_to_update):
+        # Updates the evaluated x values in the tree
         if len(evaled_x) == 0:
             return
 
-        feasible_idxs = np.array(evaled_y) != infeasible_reward
+        feasible_idxs = np.zeros((len(evaled_x,)), dtype=bool)
+        feasible_idxs[idx_to_update] = True
+        feasible_idxs = np.array(feasible_idxs)
+
         evaled_x_to_update = np.array(evaled_x)[feasible_idxs, :]  # only the feasible ones get their f values updated
         evaled_y_to_update = np.array(evaled_y)[feasible_idxs]
+        for x, y in zip(evaled_x_to_update, evaled_y_to_update):
+            node_to_update = self.evaled_x_to_node[tuple(x)]
+            node_to_update.f_value = y
 
-        if len(evaled_x_to_update) > 0:
-            for l in self.leaves:
-                if l.f_value != infeasible_reward and l.f_value != 'update_me':
-                    try:
-                        l.f_value = self.find_evaled_f_value(l.evaluated_x, evaled_x_to_update, evaled_y_to_update)
-                    except:
-                        import pdb; pdb.set_trace()
+        fvals_in_tree = np.array([n.f_value for n in self.nodes])
+        sorted_evaled_y = np.array(evaled_y)
+        assert np.array_equal(fvals_in_tree.sort(), sorted_evaled_y.sort()), \
+            "Are you using N_r?"
 
-        if self.node_to_update is not None:
-            if len(evaled_x_to_update) > 0:
-                self.node_to_update.f_value = self.find_evaled_f_value(self.node_to_update.evaluated_x, evaled_x, evaled_y)
-            else:
-                self.node_to_update.f_value = infeasible_reward
 
-        #for node in self.nodes:
-        #    node.f_value = self.find_evaled_f_value(node.evaluated_x, evaled_x, evaled_y)
 
     @staticmethod
     def add_node_to_tree(node, parent_node, side):

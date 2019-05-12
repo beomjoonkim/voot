@@ -39,9 +39,17 @@ class VOOGenerator(Generator):
 
             self.evaled_q_values[self.idx_to_update] = q
 
-        # What does the code snippet below do? Update the feasible operator instances?
-        feasible_idxs = np.where(np.array(executed_action_values_in_node) != self.problem_env.infeasible_reward)[0].tolist()
-        assert np.sum(np.array(executed_action_values_in_node) != self.problem_env.infeasible_reward) == len(feasible_idxs)
+        # What does the code snippet below do? Update the feasible operator instances? Why?
+        # We need to assert that idxs other than self.idx_to_update has the same value
+        assert np.array_equal(np.array(self.evaled_q_values).sort(), np.array(executed_action_values_in_node).sort()), "Are you using N_r?"
+        """
+        if self.problem_env.name.find('synthetic') == -1:
+            feasible_idxs = np.where(np.array(executed_action_values_in_node) != self.problem_env.infeasible_reward)[0].tolist()
+            assert np.sum(np.array(executed_action_values_in_node) != self.problem_env.infeasible_reward) == len(feasible_idxs)
+        else:
+            feasible_idxs = [idx for idx, a in enumerate(executed_actions_in_node) if
+                             self.problem_env.is_action_feasible(a)]
+
         for i in feasible_idxs:
             action = executed_actions_in_node[i]
             q_value = executed_action_values_in_node[i]
@@ -51,14 +59,22 @@ class VOOGenerator(Generator):
             is_action_included = np.any(is_in_array)
 
             assert is_action_included
-            self.evaled_q_values[np.where(is_in_array)[0][0]] = q_value
+            assert self.evaled_q_values[np.where(is_in_array)[0][0]] == q_value # would this ever be false?
+            #self.evaled_q_values[np.where(is_in_array)[0][0]] = q_value
+        """
 
     def sample_point(self, node, n_iter):
         is_more_than_one_action_in_node = len(self.evaled_actions) > 1
         if is_more_than_one_action_in_node:
-            max_reward_of_each_action = np.array([np.max(rlist) for rlist in node.reward_history.values()])
-            n_feasible_actions = np.sum(max_reward_of_each_action > -2)  # -2 or 0?
-            we_have_feasible_action = n_feasible_actions >= 1
+            stime=time.time()
+            if self.problem_env.name.find('synthetic') == -1:
+                max_reward_of_each_action = np.array([np.max(rlist) for rlist in node.reward_history.values()])
+                n_feasible_actions = np.sum(max_reward_of_each_action > -2)  # -2 or 0?
+                we_have_feasible_action = n_feasible_actions >= 1
+            else:
+                we_have_feasible_action = len(node.A) > 0
+            print 'action existence time check: ', time.time()-stime
+
         else:
             we_have_feasible_action = False
 
@@ -77,14 +93,16 @@ class VOOGenerator(Generator):
         return action, status
 
     def sample_next_point(self, node, n_iter):
+        stime = time.time()
         self.update_evaled_values(node)
+        print 'update evaled values time', time.time() - stime
 
         action, status = self.sample_point(node, n_iter)
 
         if status == 'HasSolution':
             self.evaled_actions.append(action['action_parameters'])
             self.evaled_q_values.append('update_me')
-            self.idx_to_update = len(self.evaled_actions) - 1
+            self.idx_to_update = len(self.evaled_actions) - 1 # this assumes that we are not using PW, and re-evaluate the last-sampled action multiple times
         else:
             print node.operator_skeleton.type + " sampling failed"
             self.evaled_actions.append(action['action_parameters'])
