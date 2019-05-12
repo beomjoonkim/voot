@@ -82,8 +82,10 @@ class BinaryDOOTree:
             self.root = node
         else:
             node = self.find_leaf_with_max_upper_bound_value()
-        self.evaled_x_to_node[tuple(node.cell_mid_point)] = node
         return node
+
+    def update_evaled_x_to_node(self, x, node):
+        self.evaled_x_to_node[tuple(x)] = node
 
     def expand_node(self, fval, node):
         if fval == 'update_me':
@@ -136,10 +138,7 @@ class BinaryDOOTree:
 
         fvals_in_tree = np.array([n.f_value for n in self.nodes])
         sorted_evaled_y = np.array(evaled_y)
-        assert np.array_equal(fvals_in_tree.sort(), sorted_evaled_y.sort()), \
-            "Are you using N_r?"
-
-
+        assert np.array_equal(fvals_in_tree.sort(), sorted_evaled_y.sort()), "Are you using N_r?"
 
     @staticmethod
     def add_node_to_tree(node, parent_node, side):

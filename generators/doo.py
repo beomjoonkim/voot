@@ -110,6 +110,8 @@ class DOOGenerator(Generator):
     def choose_next_point(self):
         next_node = self.doo_tree.get_next_point_and_node_to_evaluate()
         next_node.evaluated_x = next_node.cell_mid_point
+        self.doo_tree.update_evaled_x_to_node(next_node.cell_mid_point, next_node)
+
         x_to_evaluate = next_node.cell_mid_point
         x_to_evaluate = self.unnormalize_x_value(x_to_evaluate)
         return x_to_evaluate, next_node

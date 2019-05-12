@@ -20,11 +20,10 @@ class RandomizedDOOGenerator(DOOGenerator):
 
     def choose_next_point(self):
         next_node = self.doo_tree.get_next_point_and_node_to_evaluate()
-        #print "RandDOO cell range ", next_node.cell_min, next_node.cell_max
-        #print "RandDOO cell idx ", next_node.idx
         x_to_evaluate = np.random.uniform(next_node.cell_min, next_node.cell_max, (1, self.dim_x)).squeeze()
         next_node.evaluated_x = x_to_evaluate
         x_to_evaluate = self.unnormalize_x_value(x_to_evaluate)
+        self.doo_tree.update_evaled_x_to_node(x_to_evaluate, next_node)
         return x_to_evaluate, next_node
 
     def get_cell_samples(self, n_samples=50):
