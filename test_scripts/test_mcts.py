@@ -178,10 +178,10 @@ def main():
             args.mcts_iter = 10000
             args.n_switch = 5
         elif args.problem_idx == 1:
-            args.mcts_iter = 30000
+            args.mcts_iter = 10000
             args.n_switch = 5
         elif args.problem_idx == 2:
-            args.mcts_iter = 30000
+            args.mcts_iter = 10000
             args.n_switch = 3
         else:
             raise NotImplementedError
