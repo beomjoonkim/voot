@@ -25,10 +25,10 @@ class SyntheticEnv:
             self.feasible_action_value_threshold = 3.0
         elif problem_idx == 1:
             self.dim_x = 10
-            self.feasible_action_value_threshold = 0.15
+            self.feasible_action_value_threshold = 2.0
         elif problem_idx == 2:
             self.dim_x = 20
-            self.feasible_action_value_threshold = 0.01
+            self.feasible_action_value_threshold = 1.0
 
         config = pickle.load(
             open('./test_results/function_optimization/shekel/shekel_dim_' + str(self.dim_x) + '.pkl', 'r'))
@@ -62,8 +62,12 @@ class SyntheticEnv:
 
         return reward
 
-    def is_action_feasible(self, action):
-        reward = self.apply_action_and_get_reward(action, True, None)
+    def is_action_feasible(self, action, action_parameter=None):
+        if action_parameter is None:
+            reward = self.apply_action_and_get_reward(action, True, None)
+        else:
+            reward = self.reward_function(action_parameter)
+
         return reward > self.feasible_action_value_threshold
 
     def is_goal_reached(self):
