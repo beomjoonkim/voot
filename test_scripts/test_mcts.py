@@ -205,6 +205,7 @@ def main():
     set_random_seed(args.random_seed)
 
     save_dir = make_save_dir(args)
+    print "Save dir is", save_dir
     stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
     if os.path.isfile(stat_file_name):
         print "already done"
