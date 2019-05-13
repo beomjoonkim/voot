@@ -187,7 +187,6 @@ def main():
             raise NotImplementedError
         args.voo_sampling_mode = 'centered_uniform'
         args.use_max_backup = True
-        args.w = 100
 
     if args.pw:
         assert args.w > 0 and args.w <= 1
