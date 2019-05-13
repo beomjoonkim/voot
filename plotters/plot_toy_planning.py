@@ -227,7 +227,7 @@ def plot_across_algorithms():
         args.use_max_backup = True
         args.n_feasibility_checks = 50
         args.problem_idx = 3
-        args.w = 5
+        args.w = 5.0
         args.n_actions_per_node = 3
         args.add = 'no_averaging'
     elif args.domain == 'minimum_displacement_removal_results':
@@ -269,14 +269,14 @@ def plot_across_algorithms():
         else:
             algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain == 'minimum_displacement_removal_results':
-        algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.01', 'unif']
+        algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain == 'synthetic_results':
         if args.problem_idx == 0:
             algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
         elif args.problem_idx == 1:
             algo_names = ['voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
         elif args.problem_idx == 2:
-            algo_names = ['doo_2e-32','voo_centered_uniform_0.01',  'unif']
+            algo_names = ['doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -338,7 +338,7 @@ def plot_across_algorithms():
 
     if domain_name == 'cbelt':
         if not args.p:
-            plt.ylim(-2, 4)
+            plt.ylim(-2, 4.5)
     if args.p:
         savefig('Number of simulations', 'Number of remaining objects', fname='./plotters/' + args.add + '_toy_'+plot_name)
     else:

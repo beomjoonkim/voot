@@ -145,7 +145,7 @@ def main():
             args.pw = True
             args.use_ucb = True
         else:
-            args.w = 5
+            args.w = 5.0
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
                 args.epsilon = 0.1
@@ -165,7 +165,7 @@ def main():
             args.pw = True
             args.use_ucb = True
         else:
-            args.w = 5
+            args.w = 5.0
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
             elif args.sampling_strategy == 'randomized_doo':
