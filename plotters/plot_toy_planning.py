@@ -225,11 +225,11 @@ def plot_across_algorithms():
         args.n_switch = 10
         args.pick_switch = False
         args.use_max_backup = True
-        args.n_feasibility_checks = 200
+        args.n_feasibility_checks = 50
         args.problem_idx = 3
-        args.w = 5.0
+        args.w = 5
         args.n_actions_per_node = 3
-        args.add = 'n_items_20'
+        args.add = 'no_averaging'
     elif args.domain == 'minimum_displacement_removal_results':
         domain_name = 'mdr'
         args.mcts_iter = 2000
@@ -247,15 +247,15 @@ def plot_across_algorithms():
             args.mcts_iter = 10000
             args.n_switch = 5
         elif args.problem_idx == 1:
-            args.mcts_iter = 30000
+            args.mcts_iter = 10000
             args.n_switch = 5
         elif args.problem_idx == 2:
-            args.mcts_iter = 30000
+            args.mcts_iter = 10000
             args.n_switch = 3
         else:
             raise NotImplementedError
         domain_name = 'synthetic'
-        args.voo_sampling_mode = 'gaussian'
+        args.voo_sampling_mode = 'centered_uniform'
         args.pick_switch = False
         args.use_max_backup = True
         args.w = 100
@@ -276,7 +276,7 @@ def plot_across_algorithms():
         elif args.problem_idx == 1:
             algo_names = ['voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
         elif args.problem_idx == 2:
-            algo_names = ['voo_centered_uniform_0.01', 'doo_1e-15', 'unif']
+            algo_names = ['doo_2e-32','voo_centered_uniform_0.01',  'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
