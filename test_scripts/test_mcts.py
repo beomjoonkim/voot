@@ -46,6 +46,7 @@ def make_save_dir(args):
                 +'_max_backup_' + str(args.use_max_backup) \
                 +'_pick_switch_' + str(args.pick_switch) \
                 +'_n_actions_per_node_' + str(args.n_actions_per_node)
+
     if addendum != '':
         save_dir += '_' + addendum + '/'
     else:
@@ -224,7 +225,6 @@ def main():
             environment = GriewankSynthetic(args.problem_idx)
         elif args.domain.find("shekel") != -1:
             environment = ShekelSynthetic(args.problem_idx)
-
 
     if args.v:
         environment.env.SetViewer('qtcoin')
