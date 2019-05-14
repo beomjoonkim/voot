@@ -103,12 +103,12 @@ class TreeNode:
             best_action = self.get_never_evaluated_action()
         else:
             best_action = self.Q.keys()[0]
-            feasible_actions = [a for a in self.A if np.max(self.reward_history[a]) > -2]
+            feasible_actions = [a for a in self.A if self.is_action_feasible(a)]
             feasible_q_values = [self.Q[a] for a in feasible_actions]
             assert(len(feasible_actions) >= 1)
             for action, value in zip(feasible_actions, feasible_q_values):
                 ucb_value = value + self.ucb_parameter*upper_confidence_bound(self.Nvisited, self.N[action])
-                # todo randomized tie-break
+                # todo randomized tie-breaks
                 if ucb_value > best_value:
                     best_action = action
                     best_value = ucb_value

@@ -279,9 +279,9 @@ def plot_across_algorithms():
         if args.problem_idx == 0:
             algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
         elif args.problem_idx == 1:
-            algo_names = ['voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
+            algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
         elif args.problem_idx == 2:
-            algo_names = ['doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
+            algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()

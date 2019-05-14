@@ -149,7 +149,7 @@ def main():
             args.w = 5.0
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
-                args.epsilon = 0.1
+                #args.epsilon = 0.1
             elif args.sampling_strategy == 'randomized_doo':
                 args.epsilon = 1.0
         args.add = 'no_averaging'
@@ -206,6 +206,7 @@ def main():
 
     save_dir = make_save_dir(args)
     print "Save dir is", save_dir
+    import pdb;pdb.set_trace()
     stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
     if os.path.isfile(stat_file_name):
         print "already done"
