@@ -38,7 +38,14 @@ class Generator:
             self.feasibility_checker = MultiPapFeasibilityChecker(problem_env, n_actions)
         elif operator_name.find('synthetic') != -1:
             dim_x = int(operator_name.split('synthetic_')[1])
-            self.domain = np.array([[-500.] * dim_x, [500.] * dim_x])
+            if problem_env.name.find('shekel') != -1:
+                self.domain = np.array([[-500.] * dim_x, [500.] * dim_x])
+            elif problem_env.name.find('rastrigin') != -1:
+                self.domain = np.array([[-5.12] * dim_x, [5.12] * dim_x])
+            elif problem_env.name.find('griewank'):
+                self.domain = np.array([[-600.] * dim_x, [600.] * dim_x])
+            else:
+                raise NotImplementedError
 
             class DummyFeasibilityChecker:
                 def __init__(self):

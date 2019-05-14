@@ -12,13 +12,13 @@ import os
 import numpy as np
 import random
 import socket
+import openravepy
 
 from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
 from problem_instantiators.conveyor_belt_instantiator import ConveyorBeltInstantiator
-import openravepy
 from openravepy import RaveSetDebugLevel, DebugLevel
 
-from problem_environments.synthetic_env import SyntheticEnv
+from problem_environments.synthetic_env import ShekelSynthetic, RastriginSynthetic, GriewankSynthetic
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560' or hostname=='phaedra' or hostname=='shakey':
@@ -218,7 +218,13 @@ def main():
         problem_instantiator = ConveyorBeltInstantiator(args.problem_idx, args.domain, args.n_actions_per_node)
         environment = problem_instantiator.environment
     else:
-        environment = SyntheticEnv(args.problem_idx)
+        if args.domain.find("rastrigin") != -1:
+            environment = RastriginSynthetic(args.problem_idx)
+        elif args.domain.find("griewank") != -1:
+            environment = GriewankSynthetic(args.problem_idx)
+        elif args.domain.find("shekel") != -1:
+            environment = ShekelSynthetic(args.problem_idx)
+
 
     if args.v:
         environment.env.SetViewer('qtcoin')

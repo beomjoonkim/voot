@@ -14,27 +14,14 @@ class SyntheticEnv:
         #   1) Store state and reward pairs
         #   2) Select the next state based on the current action
         #   3) Restore the state-reward pairs
-        self.name = 'synthetic'
         self.env = None
         self.robot = None
         self.objects_currently_not_in_goal = []
         self.infeasible_reward = -2
         self.problem_idx = problem_idx
-        if problem_idx == 0:
-            self.dim_x = 3
-            self.feasible_action_value_threshold = 3.0
-        elif problem_idx == 1:
-            self.dim_x = 10
-            self.feasible_action_value_threshold = 2.0
-        elif problem_idx == 2:
-            self.dim_x = 20
-            self.feasible_action_value_threshold = 1.0
-
-        config = pickle.load(
-            open('./test_results/function_optimization/shekel/shekel_dim_' + str(self.dim_x) + '.pkl', 'r'))
-        A = config['A']
-        C = config['C']
-        self.reward_function = lambda sol: benchmarks.shekel(sol, A, C)[0]
+        self.name = 'synthetic'
+        self.reward_function = None
+        self.feasible_reward = None
 
     def reset_to_init_state(self, node):
         # todo reset to the original state. Do this by changing the reward function to the initial one.
@@ -57,7 +44,7 @@ class SyntheticEnv:
             # todo stop advancing if your reward is less than 0.3
             operator_instance.continuous_parameters['is_feasible'] = False
         else:
-            reward += 1.0
+            reward += self.feasible_reward
             operator_instance.continuous_parameters['is_feasible'] = True
 
         return reward
@@ -83,6 +70,61 @@ class SyntheticEnv:
     def is_pick_time(self):
         return False
 
+
+class ShekelSynthetic(SyntheticEnv):
+    def __init__(self, problem_idx):
+        SyntheticEnv.__init__(self, problem_idx)
+        self.name = 'synthetic_shekel'
+        if problem_idx == 0:
+            self.dim_x = 3
+            self.feasible_action_value_threshold = 3.0
+        elif problem_idx == 1:
+            self.dim_x = 10
+            self.feasible_action_value_threshold = 2.0
+        elif problem_idx == 2:
+            self.dim_x = 20
+            self.feasible_action_value_threshold = 1.0
+        config = pickle.load(
+            open('./test_results/function_optimization/shekel/shekel_dim_' + str(self.dim_x) + '.pkl', 'r'))
+        A = config['A']
+        C = config['C']
+        self.reward_function = lambda sol: benchmarks.shekel(sol, A, C)[0]
+        self.feasible_reward = 1.0
+
+
+class RastriginSynthetic(SyntheticEnv):
+    def __init__(self, problem_idx):
+        SyntheticEnv.__init__(self, problem_idx)
+        self.name = 'synthetic_rastrigin'
+        if problem_idx == 0:
+            self.dim_x = 3
+            self.feasible_action_value_threshold = -10
+        elif problem_idx == 1:
+            self.dim_x = 10
+            self.feasible_action_value_threshold = -50
+        elif problem_idx == 2:
+            self.dim_x = 20
+            self.feasible_action_value_threshold = -200
+
+        self.feasible_reward = 100
+        self.reward_function = lambda sol: -benchmarks.rastrigin(sol)[0]
+
+
+class GriewankSynthetic(SyntheticEnv):
+    def __init__(self, problem_idx):
+        SyntheticEnv.__init__(self, problem_idx)
+        self.name = 'synthetic_griewank'
+        if problem_idx == 0:
+            self.dim_x = 3
+            self.feasible_action_value_threshold = -2
+        elif problem_idx == 1:
+            self.dim_x = 10
+            self.feasible_action_value_threshold = -50
+        elif problem_idx == 2:
+            self.dim_x = 20
+            self.feasible_action_value_threshold = -50
+        self.feasible_reward = 100
+        self.reward_function = lambda sol: -benchmarks.griewank(sol)[0]
 
 
 
