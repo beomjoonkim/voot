@@ -84,7 +84,8 @@ class TreeNode:
 
         if use_progressive_widening:
             n_actions = len(self.A)
-            is_time_to_sample = n_actions <= widening_parameter * self.Nvisited
+            #is_time_to_sample = n_actions <= widening_parameter * self.Nvisited
+            is_time_to_sample = n_feasible_actions <= widening_parameter * self.Nvisited
             return not is_time_to_sample
         else:
             if self.reeval_iterations < widening_parameter:

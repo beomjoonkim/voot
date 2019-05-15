@@ -149,7 +149,6 @@ def main():
             args.w = 5.0
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
-                #args.epsilon = 0.1
             elif args.sampling_strategy == 'randomized_doo':
                 args.epsilon = 1.0
         args.add = 'no_averaging_w_decaying_factor_0.8'

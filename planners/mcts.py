@@ -230,6 +230,8 @@ class MCTS:
 		if not self.use_progressive_widening:
 			if self.environment.name.find('synthetic') != -1:
 				w_param = self.widening_parameter * np.power(0.8, depth)
+			elif self.environment.name.find('minimum_displacement_removal') != -1:
+				w_param = self.widening_parameter * np.power(0.99, depth)
 			else:
 				w_param = self.widening_parameter * np.power(0.8, depth)
 		else:
