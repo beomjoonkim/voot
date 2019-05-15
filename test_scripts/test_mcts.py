@@ -176,7 +176,10 @@ def main():
                 args.epsilon = 1.0
             elif args.sampling_strategy == 'doo':
                 args.epsilon = 1.0
-        args.add = 'no_averaging'
+        if args.pw:
+            args.add = 'pw_reevaluates_infeasible'
+        else:
+            args.add = 'no_averaging'
     else:
         if args.problem_idx == 0:
             args.mcts_iter = 10000
