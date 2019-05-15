@@ -151,7 +151,11 @@ def main():
                 args.voo_sampling_mode = 'uniform'
             elif args.sampling_strategy == 'randomized_doo':
                 args.epsilon = 1.0
-        args.add = 'no_averaging_w_decaying_factor_0.8'
+        if args.pw:
+            args.add = 'pw_reevaluates_infeasible'
+        else:
+            args.add = 'no_averaging_w_decaying_factor_0.8'
+
     elif args.domain == 'minimum_displacement_removal':
         args.mcts_iter = 2000
         args.n_switch = 10

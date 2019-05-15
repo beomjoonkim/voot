@@ -78,19 +78,17 @@ class TreeNode:
 			if n_feasible_actions < 1 or next_state_terminal:
 				# sample more actions if no feasible actions at the node or this is the last node
 				return False
-		else:
-			if next_state_terminal:
-				return False
-
-		if not use_ucb:
 			new_action = self.A[-1]
 			if not self.is_action_feasible(new_action):
+				return False
+		else:
+			if next_state_terminal:
 				return False
 
 		if use_progressive_widening:
 			n_actions = len(self.A)
 			# is_time_to_sample = n_actions <= widening_parameter * self.Nvisited
-			is_time_to_sample = n_feasible_actions <= widening_parameter * self.Nvisited
+			is_time_to_sample = n_actions <= widening_parameter * self.Nvisited
 			return not is_time_to_sample
 		else:
 			if self.reeval_iterations < widening_parameter:
