@@ -141,7 +141,7 @@ def voo(explr_p, ax):
     evaled_x = []
     evaled_y = []
     max_y = []
-    voo = VOO(domain, explr_p)
+    voo = VOO(domain, explr_p, 'centered_uniform', 100)
     times = []
     stime = time.time()
     print 'explr_p', explr_p
@@ -175,8 +175,8 @@ def draw_shekel():
     from matplotlib import cm
     from matplotlib.colors import LogNorm
 
-    X = np.arange(domain[0][0], domain[1][0], 0.01)
-    Y = np.arange(domain[0][1], domain[1][1], 0.01)
+    X = np.arange(domain[0][0], domain[1][0], 5)
+    Y = np.arange(domain[0][1], domain[1][1], 5)
     X, Y = np.meshgrid(X, Y)
     Z = np.fromiter(map(shekel_arg0, zip(X.flat, Y.flat)), dtype=np.float, count=X.shape[0] * X.shape[1]).reshape(
         X.shape)
@@ -186,9 +186,10 @@ def draw_shekel():
     ax.set_facecolor((1, 1, 1))
 
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1, norm=LogNorm(), cmap=cm.jet, linewidth=0.2)
-
     print "Drawing shekel"
     #plt.contour(X, Y, Z, rstride=1, cstride=1, norm=LogNorm(), cmap=cm.jet, linewidth=0.2)
+    ax.view_init(azim=-90, elev=70)
+    plt.show()
     plt.savefig(save_dir+'/'+str(0)+'.png')
     print "Done!"
     return ax
@@ -198,7 +199,7 @@ def draw_points(points, ax):
     points = np.array(points)
     evaluations = [benchmarks.shekel(x, A, C)[0] for x in points]
     #ax.scatter(points[:, 0], points[:, 1], evaluations, c='black', marker='>')
-    if len(points) == 3:
+    if len(points) >= 0:
         ax.view_init(azim=-90, elev=70)
         plt.plot(points[:, 0], points[:, 1], 'ro', markerfacecolor='None', markeredgewidth=1, markersize=2.5)
         plt.show()

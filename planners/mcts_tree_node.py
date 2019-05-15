@@ -98,7 +98,6 @@ class TreeNode:
     def perform_ucb_over_actions(self):
         best_value = -np.inf
         never_executed_actions_exist = len(self.Q) != len(self.A)
-
         if never_executed_actions_exist:
             best_action = self.get_never_evaluated_action()
         else:

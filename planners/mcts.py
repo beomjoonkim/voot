@@ -231,7 +231,7 @@ class MCTS:
 			if self.environment.name.find('synthetic') != -1:
 				w_param = self.widening_parameter * np.power(0.8, depth)
 			else:
-				w_param = self.widening_parameter * np.power(0.99, depth)
+				w_param = self.widening_parameter * np.power(0.8, depth)
 		else:
 			w_param = self.widening_parameter
 		print "Widening parameter ", w_param

@@ -152,7 +152,7 @@ def main():
                 #args.epsilon = 0.1
             elif args.sampling_strategy == 'randomized_doo':
                 args.epsilon = 1.0
-        args.add = 'no_averaging'
+        args.add = 'no_averaging_w_decaying_factor_0.8'
     elif args.domain == 'minimum_displacement_removal':
         args.mcts_iter = 2000
         args.n_switch = 10
