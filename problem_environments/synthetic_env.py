@@ -101,10 +101,10 @@ class RastriginSynthetic(SyntheticEnv):
             self.feasible_action_value_threshold = -10
         elif problem_idx == 1:
             self.dim_x = 10
-            self.feasible_action_value_threshold = -50
+            self.feasible_action_value_threshold = -30
         elif problem_idx == 2:
             self.dim_x = 20
-            self.feasible_action_value_threshold = -200
+            self.feasible_action_value_threshold = -100
 
         self.feasible_reward = 100
         self.reward_function = lambda sol: -benchmarks.rastrigin(sol)[0]

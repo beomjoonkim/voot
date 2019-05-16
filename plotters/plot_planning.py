@@ -4,7 +4,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pdb
+import sys
 import glob
 
 
@@ -26,16 +26,20 @@ def get_best_hyperparameter_dir(result_dir, problem_idx):
     for fidx, fdir in enumerate(fdirs):
         #print "Going through %d / %d" % (fidx, len(fdirs))
         last_rwds = []
-        for fin in os.listdir(fdir):
+        listfiles = os.listdir(fdir)
+        if len(listfiles) < 10:
+            continue
+        for fin in listfiles:
             if fin.find('pidx') == -1:
-                print "Continuing"
+                #print "Skipping file", fin
+                #print "Continuing"
                 continue
 
             sd = int(fin.split('_')[2])
             file_problem_idx = int(fin.split('_')[-1].split('.')[0])
 
             if file_problem_idx != problem_idx:
-                print "Continuing"
+                #print "Skipping file", fin
                 continue
             try:
                 result = pickle.load(open(fdir + fin, 'r'))
@@ -51,13 +55,16 @@ def get_best_hyperparameter_dir(result_dir, problem_idx):
             best_dir = fdir
             best_rwd_among_all_setups = avg_last_rwds
 
+    if best_dir is None:
+        print 'Dir empty', result_dir
+    print best_dir
     return best_dir, best_rwd_among_all_setups
 
 
 def get_result_dir(algo_name, mcts_parameters):
     voo_sampling_mode = ''
     if algo_name.find('voo') != -1:
-        voo_sampling_mode = algo_name.split('_')[1]
+        voo_sampling_mode = algo_name[4:]
         algo_name = 'voo'
     elif algo_name.find('unif') != -1:
         algo_name = 'unif'
@@ -121,15 +128,22 @@ def get_mcts_results(algo_name, mcts_parameters):
     search_rwd_times = []
     max_rwds = []
     success_rewards = []
-    for fin in os.listdir(result_dir):
+
+    try:
+        list_dir = os.listdir(result_dir)
+    except TypeError:
+        print result_dir
+        sys.exit()
+
+    for fin in list_dir:
         if fin.find('pidx') == -1:
-            print "Continuing"
+            #print "Continuing"
             continue
         sd = int(fin.split('_')[2])
         file_problem_idx = int(fin.split('_')[-1].split('.')[0])
 
         if file_problem_idx != problem_idx:
-            print "Continuing"
+            #print "Continuing"
             continue
         try:
             result = pickle.load(open(result_dir + fin, 'r'))
@@ -154,8 +168,10 @@ def get_mcts_results(algo_name, mcts_parameters):
         search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
 
-    print 'progress', np.array(progress).mean()
-    print 'success reward', np.mean(success_rewards)
+    if not mcts_parameters.pw:
+        print 'progress', np.array(progress).mean()
+        print 'success reward', np.mean(success_rewards)
+
     print 'n_tested', len(progress)
     return search_rwd_times, np.mean(max_rwds)
 
@@ -302,19 +318,25 @@ def plot_across_algorithms():
             elif args.problem_idx == 2:
                 algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01', 'unif']
         elif args.domain.find('griewank') != -1:
+            algo_names = ['voo_centered_uniform', 'doo', 'unif']
+            """
             if args.problem_idx == 0:
                 algo_names = ['voo_centered_uniform_0.2', 'doo_1e-08', 'unif']
             elif args.problem_idx == 1:
                 algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
             elif args.problem_idx == 2:
                 algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01', 'unif']
+            """
         elif args.domain.find('rastrigin') != -1:
+            algo_names = ['voo_centered_uniform', 'doo', 'unif']
+            """
             if args.problem_idx == 0:
                 algo_names = ['voo_centered_uniform_0.3', 'doo_1.0', 'unif']
             elif args.problem_idx == 1:
                 algo_names = ['pw', 'voo_centered_uniform_0.3', 'doo_1.0', 'unif']
             elif args.problem_idx == 2:
                 algo_names = ['pw', 'voo_centered_uniform_0.3', 'doo_1.0', 'unif']
+            """
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
