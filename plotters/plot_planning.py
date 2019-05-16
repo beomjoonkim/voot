@@ -15,6 +15,10 @@ def savefig(xlabel, ylabel, fname=''):
     print 'Saving figure ', fname + '.png'
     plt.savefig(fname + '.png', dpi=100, format='png')
 
+# todo:
+#   If I have multiple epsilons, select the one that has the maximum last value
+
+def choose_epsilon()
 
 def get_result_dir(algo_name, mcts_parameters):
     if algo_name.find('voo') != -1:
@@ -247,7 +251,8 @@ def plot_across_algorithms():
         args.w = 5.0
         args.n_actions_per_node = 1
         args.add = 'no_averaging'
-    elif args.domain == 'synthetic_results':
+    elif args.domain.find('synthetic') != -1:
+        domain_name = args.domain
         if args.problem_idx == 0:
             args.mcts_iter = 10000
             args.n_switch = 5
@@ -259,11 +264,10 @@ def plot_across_algorithms():
             args.n_switch = 3
         else:
             raise NotImplementedError
-        domain_name = 'synthetic'
         args.voo_sampling_mode = 'centered_uniform'
         args.pick_switch = False
         args.use_max_backup = True
-        args.w = 100
+        args.w = 5.0
         args.n_actions_per_node = 1
     else:
         raise NotImplementedError
@@ -275,13 +279,28 @@ def plot_across_algorithms():
             algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
     elif args.domain == 'minimum_displacement_removal_results':
         algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
-    elif args.domain == 'synthetic_results':
-        if args.problem_idx == 0:
-            algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
-        elif args.problem_idx == 1:
-            algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
-        elif args.problem_idx == 2:
-            algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
+    elif args.domain.find('synthetic') != -1:
+        if args.domain.find('shekel') !=-1 :
+            if args.problem_idx == 0:
+                algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
+            elif args.problem_idx == 1:
+                algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
+            elif args.problem_idx == 2:
+                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
+        elif args.domain.find('griewank') != -1:
+            if args.problem_idx == 0:
+                algo_names = ['voo_centered_uniform_0.2', 'doo_1e-08', 'unif']
+            elif args.problem_idx == 1:
+                algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
+            elif args.problem_idx == 2:
+                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
+        elif args.domain.find('rastrigin') != -1:
+            if args.problem_idx == 0:
+                algo_names = ['voo_centered_uniform_0.3', 'doo_1.0', 'unif']
+            elif args.problem_idx == 1:
+                algo_names = ['pw', 'voo_centered_uniform_0.3', 'doo_1.0', 'unif']
+            elif args.problem_idx == 2:
+                algo_names = ['pw', 'voo_centered_uniform_0.3', 'doo_1.0', 'unif']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
