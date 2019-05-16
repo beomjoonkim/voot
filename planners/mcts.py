@@ -228,12 +228,15 @@ class MCTS:
 
 	def choose_action(self, curr_node, depth):
 		if not self.use_progressive_widening:
-			if self.environment.name.find('synthetic') != -1:
+			is_synthetic = self.environment.name.find('synthetic') != -1
+			is_convbelt = self.environment.name.find('convbelt') != -1
+			is_mdr = self.environment.name.find('minimum_displacement_removal') != -1
+			if is_synthetic:
 				w_param = self.widening_parameter * np.power(0.8, depth)
-			elif self.environment.name.find('minimum_displacement_removal') != -1:
+			elif is_mdr:
 				w_param = self.widening_parameter * np.power(0.99, depth)
-			else:
-				w_param = self.widening_parameter * np.power(0.8, depth)
+			elif is_convbelt:
+				w_param = self.widening_parameter * np.power(0.99, depth)
 		else:
 			w_param = self.widening_parameter
 		print "Widening parameter ", w_param
