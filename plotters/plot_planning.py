@@ -4,6 +4,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pdb
+import glob
 
 
 def savefig(xlabel, ylabel, fname=''):
@@ -15,31 +17,52 @@ def savefig(xlabel, ylabel, fname=''):
     print 'Saving figure ', fname + '.png'
     plt.savefig(fname + '.png', dpi=100, format='png')
 
-# todo:
-#   If I have multiple epsilons, select the one that has the maximum last value
 
-def choose_epsilon()
+def get_best_hyperparameter_dir(result_dir, problem_idx):
+    best_dir = None
+    best_rwd_among_all_setups = -np.inf
+    fdirs = glob.glob(result_dir)
+
+    for fidx, fdir in enumerate(fdirs):
+        #print "Going through %d / %d" % (fidx, len(fdirs))
+        last_rwds = []
+        for fin in os.listdir(fdir):
+            if fin.find('pidx') == -1:
+                print "Continuing"
+                continue
+
+            sd = int(fin.split('_')[2])
+            file_problem_idx = int(fin.split('_')[-1].split('.')[0])
+
+            if file_problem_idx != problem_idx:
+                print "Continuing"
+                continue
+            try:
+                result = pickle.load(open(fdir + fin, 'r'))
+            except EOFError:
+                print "EOF error", fin
+                continue
+            search_time = np.array(result['search_time'])
+            max_rwd = search_time[-1, -2]
+
+            last_rwds.append(max_rwd)
+        avg_last_rwds = np.mean(last_rwds)
+        if avg_last_rwds > best_rwd_among_all_setups:
+            best_dir = fdir
+            best_rwd_among_all_setups = avg_last_rwds
+    return best_dir, best_rwd_among_all_setups
+
 
 def get_result_dir(algo_name, mcts_parameters):
+    voo_sampling_mode = ''
     if algo_name.find('voo') != -1:
-        if algo_name.find('uniform') != -1:
-            if algo_name.find('centered_uniform') != -1:
-                sampling_mode = 'centered_uniform'
-            else:
-                sampling_mode = 'uniform'
-        elif algo_name.find('gaussian') != -1:
-            sampling_mode = 'gaussian'
-        else:
-            sampling_mode = 'centered_uniform'
-        epsilon = algo_name.split('_')[-1]
-        algo_name = algo_name.split('_')[0]
+        voo_sampling_mode = algo_name.split('_')[1]
+        algo_name = 'voo'
     elif algo_name.find('unif') != -1:
         algo_name = 'unif'
-    elif algo_name.find('randomized_doo') !=-1:
-        epsilon = algo_name.split('randomized_doo')[1][1:]
+    elif algo_name.find('randomized_doo') != -1:
         algo_name = 'randomized_doo'
     elif algo_name.find('doo') != -1:
-        epsilon = algo_name.split('doo')[1][1:]
         algo_name = 'doo'
 
     widening_parameter = mcts_parameters.w
@@ -49,14 +72,11 @@ def get_result_dir(algo_name, mcts_parameters):
     n_switch = mcts_parameters.n_switch
 
     rootdir = './test_results/'
+    result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_' + str(mcts_iter)
     if algo_name.find('pw') != -1:
-        result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
-                     '/pw_methods/' + \
-                     'uct_' + str(mcts_parameters.uct) + '_widening_' + str(mcts_parameters.pw) +\
-                     '_unif'
+        result_dir += '/pw_methods/uct_*_widening_*_unif'
     else:
-        result_dir = rootdir + '/' + mcts_parameters.domain + '/mcts_iter_'+str(mcts_iter)+ \
-                     '/uct_0.0'+'_widening_' + str(widening_parameter) + '_' + algo_name
+        result_dir += '/uct_0.0' + '_widening_' + str(widening_parameter) + '_' + algo_name
     result_dir += '_n_feasible_checks_' + str(n_feasibility_checks)
 
     if n_switch != -1:
@@ -71,34 +91,34 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += '_pick_switch_True'
     else:
         result_dir += '_pick_switch_False'
-
-    if mcts_parameters.add != 'fullplanning':
-        result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
+    result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
     if addendum != '':
-        if mcts_parameters.domain.find('minimum') !=-1:
+        if mcts_parameters.domain.find('minimum') != -1:
             if algo_name != 'pw':
                 result_dir += '_' + addendum + '/'
             else:
-                result_dir += '/'
+                result_dir += '_pw_reevaluates_infeasible/'
         else:
             result_dir += '_' + addendum + '/'
     else:
         result_dir += '/'
 
-    if algo_name.find('voo') != -1:
-        result_dir += '/sampling_mode/' + sampling_mode + '/'
-        result_dir += 'counter_ratio_' + str(mcts_parameters.counter_ratio) + '/'
-        result_dir += 'eps_' + str(epsilon) + '/'
-    if algo_name.find('doo') != -1 or algo_name.find('gpucb') != -1:
-        result_dir += 'eps_' + str(epsilon) + '/'
-    print result_dir
+    problem_idx = mcts_parameters.problem_idx
+
+    if algo_name == 'voo':
+        result_dir += '/sampling_mode/'+voo_sampling_mode+'/counter_ratio_1/eps_*/'
+    elif algo_name.find('doo') != -1:
+        result_dir += '/eps_*/'
+
+    result_dir, best_rwd = get_best_hyperparameter_dir(result_dir, problem_idx)
+
+    print best_rwd
     return result_dir
 
 
 def get_mcts_results(algo_name, mcts_parameters):
     result_dir = get_result_dir(algo_name, mcts_parameters)
-
     problem_idx = mcts_parameters.problem_idx
     progress = []
     search_rwd_times = []
@@ -121,19 +141,19 @@ def get_mcts_results(algo_name, mcts_parameters):
             continue
         search_time = np.array(result['search_time'])
 
-        if mcts_parameters.domain.find('convbelt') !=-1:
+        if mcts_parameters.domain.find('convbelt') != -1:
             success = search_time[-1, -1] < 10
         else:
             success = search_time[-1, -1] == 0
         progress.append(search_time[-1, -1])
         if success:
-            if mcts_parameters.domain.find('convbelt') !=-1:
+            if mcts_parameters.domain.find('convbelt') != -1:
                 success_idx = np.where(search_time[:, -1] < 10)[0][0]
             else:
                 success_idx = np.where(search_time[:, -1] == 0)[0][0]
             success_rewards.append(search_time[success_idx, 2])
 
-        #print len(search_time), fin
+        # print len(search_time), fin
         search_rwd_times.append(search_time)
         max_rwds.append(np.max(search_time[:, 2]))
 
@@ -151,7 +171,7 @@ def get_max_rwds_wrt_time(search_rwd_times):
     all_episode_progress_data = []
     for rwd_time in search_rwd_times:
         episode_max_rwds_wrt_organized_times = []
-        episode_max_progress_wrt_organized_times=[]
+        episode_max_progress_wrt_organized_times = []
         for organized_time in organized_times:
             episode_times = np.array(rwd_time)[:, 0]
             episode_rwds = np.array(rwd_time)[:, 2]
@@ -161,9 +181,9 @@ def get_max_rwds_wrt_time(search_rwd_times):
             else:
                 max_rwd = 0
             episode_progress = -np.array(rwd_time)[:, 3]
-            #max_progress = np.max(episode_progress[idxs])
+            # max_progress = np.max(episode_progress[idxs])
             episode_max_rwds_wrt_organized_times.append(max_rwd)
-            #episode_max_progress_wrt_organized_times.append(max_progress)
+        # episode_max_progress_wrt_organized_times.append(max_progress)
         all_episode_data.append(episode_max_rwds_wrt_organized_times)
         all_episode_progress_data.append(episode_max_progress_wrt_organized_times)
 
@@ -177,7 +197,7 @@ def get_max_rwds_wrt_samples(search_rwd_times, n_evals):
     all_episode_progress_data = []
     for rwd_time in search_rwd_times:
         episode_max_rwds_wrt_organized_times = []
-        episode_max_progress_wrt_organized_times=[]
+        episode_max_progress_wrt_organized_times = []
         for organized_time in organized_times:
             episode_times = np.array(rwd_time)[:, 1]
             episode_rwds = np.array(rwd_time)[:, 2]
@@ -193,7 +213,7 @@ def get_max_rwds_wrt_samples(search_rwd_times, n_evals):
 
 
 def get_algo_name(raw_name):
-    if raw_name.find('randomized_doo') !=-1:
+    if raw_name.find('randomized_doo') != -1:
         return "RandDOOT"
     elif raw_name.find('voo') != -1:
         return 'VOOT'
@@ -273,27 +293,24 @@ def plot_across_algorithms():
         raise NotImplementedError
 
     if args.domain == 'convbelt_results':
-        if args.n_actions_per_node == 4:
-            algo_names = ['randomized_doo_1.0', 'voo_uniform_0.3', 'unif']
-        else:
-            algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+        algo_names = ['pw', 'randomized_doo', 'voo_uniform', 'unif']
     elif args.domain == 'minimum_displacement_removal_results':
-        algo_names = ['pw', 'randomized_doo_1.0', 'voo_uniform_0.1', 'unif']
+        algo_names = ['pw', 'voo_uniform', 'randomized_doo', 'unif']
     elif args.domain.find('synthetic') != -1:
-        if args.domain.find('shekel') !=-1 :
+        if args.domain.find('shekel') != -1:
             if args.problem_idx == 0:
                 algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
             elif args.problem_idx == 1:
                 algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
             elif args.problem_idx == 2:
-                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
+                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01', 'unif']
         elif args.domain.find('griewank') != -1:
             if args.problem_idx == 0:
                 algo_names = ['voo_centered_uniform_0.2', 'doo_1e-08', 'unif']
             elif args.problem_idx == 1:
                 algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
             elif args.problem_idx == 2:
-                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01',  'unif']
+                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01', 'unif']
         elif args.domain.find('rastrigin') != -1:
             if args.problem_idx == 0:
                 algo_names = ['voo_centered_uniform_0.3', 'doo_1.0', 'unif']
@@ -331,7 +348,8 @@ def plot_across_algorithms():
             color = np.random.random((1, 3))
 
         if args.p:
-            sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95, condition=algo_name,
+            sns.tsplot(search_progress[:, :args.mcts_iter], organized_times[:args.mcts_iter], ci=95,
+                       condition=algo_name,
                        color=color)
         else:
             try:
@@ -341,17 +359,20 @@ def plot_across_algorithms():
                 continue
 
     if args.p:
-        plot_name = 'progress_toy_'+domain_name+ '_problem_idx_' + str(args.problem_idx) + '_w_' + str(args.w) + '_mcts_iter_' + str(args.mcts_iter) \
-                    + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(args.n_feasibility_checks) + "_pw_" + str(args.pw)
+        plot_name = 'progress_toy_' + domain_name + '_problem_idx_' + str(args.problem_idx) + '_w_' + str(
+            args.w) + '_mcts_iter_' + str(args.mcts_iter) \
+                    + "_uct_" + str(args.uct) + "_n_feasibility_checks_" + str(
+            args.n_feasibility_checks) + "_pw_" + str(args.pw)
         if args.domain != 'convbelt_results':
-            sns.tsplot([0]*len(organized_times[:]), organized_times[:args.mcts_iter],
+            sns.tsplot([0] * len(organized_times[:]), organized_times[:args.mcts_iter],
                        ci=95, condition='Avg feasible reward', color='magenta')
     else:
         if domain_name == 'mdr':
-            sns.tsplot([4.1]*len(organized_times[:]), organized_times[:args.mcts_iter],
+            sns.tsplot([4.1] * len(organized_times[:]), organized_times[:args.mcts_iter],
                        ci=95, condition='Avg feasible reward', color='magenta')
 
-        plot_name = 'reward_toy_'+domain_name + '_problem_idx_' + str(args.problem_idx) + '_w_' + str(args.w) + '_mcts_iter_' \
+        plot_name = 'reward_toy_' + domain_name + '_problem_idx_' + str(args.problem_idx) + '_w_' + str(
+            args.w) + '_mcts_iter_' \
                     + str(args.mcts_iter) + "_uct_" + str(args.uct) + "_n_feasibility_checks_" \
                     + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup) \
                     + '_pick_switch_' + str(args.pick_switch) + "_pw_" + str(args.pw)
@@ -365,9 +386,10 @@ def plot_across_algorithms():
         if not args.p:
             plt.ylim(-2, 4.5)
     if args.p:
-        savefig('Number of simulations', 'Number of remaining objects', fname='./plotters/' + args.add + '_toy_'+plot_name)
+        savefig('Number of simulations', 'Number of remaining objects',
+                fname='./plotters/' + args.add + '_toy_' + plot_name)
     else:
-        savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_'+plot_name)
+        savefig('Number of simulations', 'Average rewards', fname='./plotters/' + args.add + '_toy_' + plot_name)
 
 
 if __name__ == '__main__':
