@@ -50,6 +50,7 @@ def get_best_hyperparameter_dir(result_dir, problem_idx):
         if avg_last_rwds > best_rwd_among_all_setups:
             best_dir = fdir
             best_rwd_among_all_setups = avg_last_rwds
+
     return best_dir, best_rwd_among_all_setups
 
 
@@ -94,13 +95,10 @@ def get_result_dir(algo_name, mcts_parameters):
     result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
     if addendum != '':
-        if mcts_parameters.domain.find('minimum') != -1:
-            if algo_name != 'pw':
-                result_dir += '_' + addendum + '/'
-            else:
-                result_dir += '_pw_reevaluates_infeasible/'
-        else:
+        if algo_name != 'pw':
             result_dir += '_' + addendum + '/'
+        else:
+            result_dir += '_pw_reevaluates_infeasible/'
     else:
         result_dir += '/'
 
@@ -110,10 +108,9 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += '/sampling_mode/'+voo_sampling_mode+'/counter_ratio_1/eps_*/'
     elif algo_name.find('doo') != -1:
         result_dir += '/eps_*/'
-
     result_dir, best_rwd = get_best_hyperparameter_dir(result_dir, problem_idx)
 
-    print best_rwd
+    print 'Best rwd', best_rwd
     return result_dir
 
 
@@ -337,7 +334,6 @@ def plot_across_algorithms():
             print algo, "not found"
             continue
         search_rwd, search_progress, organized_times = get_max_rwds_wrt_samples(search_rwd_times, args.mcts_iter)
-        print "Maximum average rewards: ", np.mean(search_rwd[:, -1])
 
         max_rwds.append(max_rwd)
         algo_name = get_algo_name(algo)
