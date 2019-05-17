@@ -154,11 +154,12 @@ def main():
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
             elif args.sampling_strategy == 'randomized_doo':
-                args.epsilon = 1.0
+                pass
+                #args.epsilon = 1.0
         if args.pw:
             args.add = 'pw_reevaluates_infeasible'
         else:
-            args.add = 'no_averaging_w_decaying_factor_0.8'
+            args.add = 'no_averaging'
 
     elif args.domain == 'minimum_displacement_removal':
         args.mcts_iter = 2000
@@ -177,9 +178,11 @@ def main():
             if args.sampling_strategy == 'voo':
                 args.voo_sampling_mode = 'uniform'
             elif args.sampling_strategy == 'randomized_doo':
-                args.epsilon = 1.0
+                pass
+                #args.epsilon = 1.0
             elif args.sampling_strategy == 'doo':
-                args.epsilon = 1.0
+                pass
+                #args.epsilon = 1.0
         if args.pw:
             args.add = 'pw_reevaluates_infeasible'
         else:
@@ -190,12 +193,14 @@ def main():
             args.n_switch = 5
         elif args.problem_idx == 1:
             args.mcts_iter = 10000
-            args.n_switch = 100
+            args.n_switch = 5
         elif args.problem_idx == 2:
             args.mcts_iter = 10000
-            args.n_switch = 100
+            args.n_switch = 3
         else:
             raise NotImplementedError
+
+        args.w = 100
 
         if args.pw:
             args.sampling_strategy = 'unif'
