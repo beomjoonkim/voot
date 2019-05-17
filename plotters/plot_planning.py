@@ -306,37 +306,16 @@ def plot_across_algorithms():
         raise NotImplementedError
 
     if args.domain == 'convbelt_results':
-        algo_names = ['pw', 'randomized_doo', 'voo_uniform', 'unif']
+        algo_names = ['pw', 'randomized_doo', 'voo_uniform']
     elif args.domain == 'minimum_displacement_removal_results':
-        algo_names = ['pw', 'voo_uniform', 'randomized_doo', 'unif']
+        algo_names = ['pw', 'voo_uniform', 'randomized_doo']
     elif args.domain.find('synthetic') != -1:
         if args.domain.find('shekel') != -1:
-            if args.problem_idx == 0:
-                algo_names = ['voo_centered_uniform_0.01', 'doo_1e-06', 'unif']
-            elif args.problem_idx == 1:
-                algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
-            elif args.problem_idx == 2:
-                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01', 'unif']
+            algo_names = ['pw', 'voo_centered_uniform', 'doo']
         elif args.domain.find('griewank') != -1:
-            algo_names = ['voo_centered_uniform', 'doo', 'unif']
-            """
-            if args.problem_idx == 0:
-                algo_names = ['voo_centered_uniform_0.2', 'doo_1e-08', 'unif']
-            elif args.problem_idx == 1:
-                algo_names = ['pw', 'voo_centered_uniform_0.01', 'doo_1e-08', 'unif']
-            elif args.problem_idx == 2:
-                algo_names = ['pw', 'doo_2e-32', 'voo_centered_uniform_0.01', 'unif']
-            """
+            algo_names = ['pw', 'voo_centered_uniform', 'doo']
         elif args.domain.find('rastrigin') != -1:
-            algo_names = ['voo_centered_uniform', 'doo', 'unif']
-            """
-            if args.problem_idx == 0:
-                algo_names = ['voo_centered_uniform_0.3', 'doo_1.0', 'unif']
-            elif args.problem_idx == 1:
-                algo_names = ['pw', 'voo_centered_uniform_0.3', 'doo_1.0', 'unif']
-            elif args.problem_idx == 2:
-                algo_names = ['pw', 'voo_centered_uniform_0.3', 'doo_1.0', 'unif']
-            """
+            algo_names = ['pw', 'voo_centered_uniform', 'doo']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -344,8 +323,8 @@ def plot_across_algorithms():
     color_dict['RandDOOT'] = [0, 0, 1]
     color_dict['DOOT'] = [0, 0, 1]
     color_dict['VOOT'] = [1, 0, 0]
-    color_dict['PW-UCT'] = np.array([0, 100, 0]) / 255.0
-    color_dict['UniformT'] = [0.8901960784313725, 0.6745098039215687, 0]
+    #color_dict['PW-UCT'] = np.array([0, 100, 0]) / 255.0
+    color_dict['PW-UCT'] = [0.8901960784313725, 0.6745098039215687, 0]
 
     max_rwds = []
     for algo_idx, algo in enumerate(algo_names):
