@@ -156,7 +156,7 @@ def main():
         if args.pw:
             args.add = 'pw_reevaluates_infeasible'
         else:
-            args.add = 'no_averaging_w_decaying_factor_0.8'
+            args.add = 'no_averaging'
 
     elif args.domain == 'minimum_displacement_removal':
         args.mcts_iter = 2000
