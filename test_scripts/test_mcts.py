@@ -187,12 +187,14 @@ def main():
             args.n_switch = 5
         elif args.problem_idx == 1:
             args.mcts_iter = 10000
-            args.n_switch = 100
+            args.n_switch = 5
         elif args.problem_idx == 2:
             args.mcts_iter = 10000
-            args.n_switch = 100
+            args.n_switch = 3
         else:
             raise NotImplementedError
+
+        args.w = 100
 
         if args.pw:
             args.sampling_strategy = 'unif'

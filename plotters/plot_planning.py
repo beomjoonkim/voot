@@ -291,10 +291,10 @@ def plot_across_algorithms():
             args.n_switch = 5
         elif args.problem_idx == 1:
             args.mcts_iter = 10000
-            args.n_switch = 100
+            args.n_switch = 5
         elif args.problem_idx == 2:
             args.mcts_iter = 10000
-            args.n_switch = 100
+            args.n_switch = 3
         else:
             raise NotImplementedError
         args.voo_sampling_mode = 'centered_uniform'
@@ -316,6 +316,7 @@ def plot_across_algorithms():
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
         elif args.domain.find('rastrigin') != -1:
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
+    algo_names = ['voo_centered_uniform', 'doo']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
