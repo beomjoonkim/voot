@@ -311,11 +311,11 @@ def plot_across_algorithms():
         algo_names = ['pw', 'voo_uniform', 'randomized_doo']
     elif args.domain.find('synthetic') != -1:
         if args.domain.find('shekel') != -1:
-            algo_names = ['pw', 'voo_centered_uniform', 'doo']
+            algo_names = ['voo_centered_uniform', 'doo']
         elif args.domain.find('griewank') != -1:
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
         elif args.domain.find('rastrigin') != -1:
-            algo_names = ['pw', 'voo_centered_uniform', 'doo']
+            algo_names = ['voo_centered_uniform', 'doo']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()

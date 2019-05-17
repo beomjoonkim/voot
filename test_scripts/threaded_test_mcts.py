@@ -1,5 +1,4 @@
 import os
-import sys
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
 import argparse
 import time
@@ -22,13 +21,14 @@ def worker_p(config):
     n_switch = config['n_switch']
     voo_counter_ratio = config['counter_ratio']
     n_actions_per_node = config['n_actions_per_node']
+    value_threshold = config['value_threshold']
 
     command = 'python ./test_scripts/test_mcts.py -sampling_strategy ' + s + \
         ' -problem_idx ' + str(pidx) + ' -domain ' + d + ' -epsilon ' + str(e) + ' -w ' + str(w) + \
         ' -mcts_iter ' + str(mcts_iter) + ' -uct '+str(uct) + ' -n_feasibility_checks ' + str(n_feasibility_checks) + \
         ' -random_seed ' + str(seed) + ' -voo_sampling_mode ' + str(voo_sampling_mode) + ' -n_switch ' + str(n_switch) + \
         ' -voo_counter_ratio ' + str(voo_counter_ratio) + ' -c1 ' + str(config['c1']) + ' -n_actions_per_node ' + \
-          str(n_actions_per_node)
+          str(n_actions_per_node) + ' -value_threshold ' + str(value_threshold)
     if pw:
         command += ' -pw '
 
@@ -45,7 +45,7 @@ def worker_p(config):
         command += ' -add ' + add
 
     print command
-    os.system(command)
+    #os.system(command)
 
 
 def worker_wrapper_multi_input(multi_args):
@@ -74,6 +74,7 @@ def main():
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-c1', type=float, default=1)
     parser.add_argument('-n_actions_per_node', type=int, default=1)
+    parser.add_argument('-value_threshold', type=float, default=-40.0)
     args = parser.parse_args()
 
     sampling_strategy = args.sampling_strategy
@@ -118,7 +119,8 @@ def main():
                                           'counter_ratio': counter_ratio,
                                           'pick_switch': args.pick_switch,
                                           'c1': args.c1,
-                                          'n_actions_per_node': args.n_actions_per_node}
+                                          'n_actions_per_node': args.n_actions_per_node,
+                                          'value_threshold': args.value_threshold}
                                 configs.append(config)
 
     n_workers = int(20)

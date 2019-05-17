@@ -93,7 +93,7 @@ class ShekelSynthetic(SyntheticEnv):
 
 
 class RastriginSynthetic(SyntheticEnv):
-    def __init__(self, problem_idx):
+    def __init__(self, problem_idx, value_threshold):
         SyntheticEnv.__init__(self, problem_idx)
         self.name = 'synthetic_rastrigin'
         if problem_idx == 0:
@@ -101,7 +101,7 @@ class RastriginSynthetic(SyntheticEnv):
             self.feasible_action_value_threshold = -10
         elif problem_idx == 1:
             self.dim_x = 10
-            self.feasible_action_value_threshold = -30
+            self.feasible_action_value_threshold = value_threshold
         elif problem_idx == 2:
             self.dim_x = 20
             self.feasible_action_value_threshold = -100

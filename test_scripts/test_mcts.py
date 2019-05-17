@@ -47,6 +47,9 @@ def make_save_dir(args):
                 +'_pick_switch_' + str(args.pick_switch) \
                 +'_n_actions_per_node_' + str(args.n_actions_per_node)
 
+    if domain.find('synthetic') != -1:
+        save_dir += '_value_threshold_' + str(args.value_threshold)
+
     if addendum != '':
         save_dir += '_' + addendum + '/'
     else:
@@ -129,10 +132,10 @@ def main():
     parser.add_argument('-use_max_backup', action='store_true', default=False)
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-n_actions_per_node', type=int, default=1)
+    parser.add_argument('-value_threshold', type=float, default=40.0)
 
     args = parser.parse_args()
     RaveSetDebugLevel(DebugLevel.Error)
-
 
     if args.domain == 'convbelt':
         args.mcts_iter = 3000
@@ -233,7 +236,7 @@ def main():
         environment = problem_instantiator.environment
     else:
         if args.domain.find("rastrigin") != -1:
-            environment = RastriginSynthetic(args.problem_idx)
+            environment = RastriginSynthetic(args.problem_idx, args.value_threshold)
         elif args.domain.find("griewank") != -1:
             environment = GriewankSynthetic(args.problem_idx)
         elif args.domain.find("shekel") != -1:
