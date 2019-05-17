@@ -133,6 +133,7 @@ def main():
     args = parser.parse_args()
     RaveSetDebugLevel(DebugLevel.Error)
 
+
     if args.domain == 'convbelt':
         args.mcts_iter = 3000
         args.n_switch = 10
@@ -186,12 +187,18 @@ def main():
             args.n_switch = 5
         elif args.problem_idx == 1:
             args.mcts_iter = 10000
-            args.n_switch = 5
+            args.n_switch = 100
         elif args.problem_idx == 2:
             args.mcts_iter = 10000
-            args.n_switch = 3
+            args.n_switch = 100
         else:
             raise NotImplementedError
+
+        if args.pw:
+            args.sampling_strategy = 'unif'
+            args.pw = True
+            args.use_ucb = True
+
         args.voo_sampling_mode = 'centered_uniform'
         args.use_max_backup = True
 
