@@ -23,6 +23,7 @@ def get_best_hyperparameter_dir(result_dir, problem_idx):
     best_rwd_among_all_setups = -np.inf
     fdirs = glob.glob(result_dir)
 
+    print 'n hyper-parameters tested', len(fdirs)
     for fidx, fdir in enumerate(fdirs):
         #print "Going through %d / %d" % (fidx, len(fdirs))
         last_rwds = []
@@ -300,7 +301,7 @@ def plot_across_algorithms():
         args.voo_sampling_mode = 'centered_uniform'
         args.pick_switch = False
         args.use_max_backup = True
-        args.w = 5.0
+        args.w = 100
         args.n_actions_per_node = 1
     else:
         raise NotImplementedError
@@ -317,7 +318,6 @@ def plot_across_algorithms():
         elif args.domain.find('rastrigin') != -1:
             algo_names = ['voo_centered_uniform', 'doo']
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
-    algo_names = ['voo_centered_uniform', 'doo']
 
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
