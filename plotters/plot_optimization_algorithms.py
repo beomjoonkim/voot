@@ -42,6 +42,7 @@ def get_results(algo_name, dimension, obj_fcn):
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         else:
             optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+        print 'optimal epsilon', result['epsilons'][optimal_epsilon_idx]
         max_y = max_ys[optimal_epsilon_idx, :]
         if len(max_y) < 500:
             continue
@@ -111,6 +112,7 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['gpucb', 'soo',  'voo', 'doo', 'uniform']
+    algo_names = ['voo']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -130,6 +132,7 @@ def plot_across_algorithms():
             plt.plot(range(5000), [8.96] * 5000, linestyle='--', color=ga_color, label='GA_473k_evals')
         elif n_dim == 20:
             plt.plot(range(5000), [5.32] * 5000, linestyle='--', color=ga_color, label='GA_750k_evals')
+
 
     """
     if args.obj_fcn == 'rastrigin':

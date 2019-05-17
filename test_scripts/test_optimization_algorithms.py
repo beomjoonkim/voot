@@ -256,12 +256,11 @@ def genetic_algorithm(explr_p):
     pop = algo.evolve(pop)
     print pop.champion_f
     champion_x = pop.champion_x
-    import pdb;pdb.set_trace()
 
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.1, 0.3, 0.5, 0.4, 0.3, 0.2, 0.1]
+        epsilons = [0.1, 0.3, 0.5, 0.4, 0.3, 0.2]
     elif algorithm.__name__ == 'doo':
         epsilons = [np.finfo(float).eps, 0.0001, 1, 0.1, 0.01, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.001, 0.01] # this has more initial points
     elif algorithm.__name__ == 'gpucb':
