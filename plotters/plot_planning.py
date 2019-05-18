@@ -101,6 +101,9 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += '_pick_switch_False'
     result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
+    if mcts_parameters.domain.find('synthetic') != -1:
+        result_dir += '_value_threshold_' + str(mcts_parameters.value_threshold)
+
     if addendum != '':
         if algo_name != 'pw':
             result_dir += '_' + addendum + '/'
