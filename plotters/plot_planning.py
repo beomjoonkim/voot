@@ -103,7 +103,12 @@ def get_result_dir(algo_name, mcts_parameters):
     result_dir += '_n_actions_per_node_' + str(mcts_parameters.n_actions_per_node)
 
     if mcts_parameters.domain.find('synthetic') != -1:
-        result_dir += '_value_threshold_' + str(mcts_parameters.value_threshold)
+        if mcts_parameters.domain.find('rastrigin') != -1:
+            if mcts_parameters.problem_idx == 1 or algo_name.find('pw') !=-1:
+                result_dir += '_value_threshold_-50.0' #+ str(mcts_parameters.value_threshold)
+        elif mcts_parameters.domain.find('shekel') != -1 and algo_name.find('pw') != -1:
+            result_dir += '_value_threshold_' + str(mcts_parameters.value_threshold)
+
 
     if addendum != '':
         if algo_name != 'pw':
@@ -261,9 +266,11 @@ def plot_across_algorithms():
     parser.add_argument('-counter_ratio', type=int, default=1)
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-n_actions_per_node', type=int, default=1)
-    parser.add_argument('-value_threshold', type=float, default=-40)
+    parser.add_argument('-value_threshold', type=float, default=-40.0)
 
     args = parser.parse_args()
+    if args.domain.find('results') == -1:
+        args.domain +='_results'
 
     if args.domain == 'convbelt_results':
         domain_name = 'cbelt'
@@ -316,14 +323,13 @@ def plot_across_algorithms():
         algo_names = ['pw', 'voo_uniform', 'randomized_doo']
     elif args.domain.find('synthetic') != -1:
         if args.domain.find('shekel') != -1:
-            algo_names = ['voo_centered_uniform', 'doo']
+            algo_names = ['pw', 'voo_centered_uniform', 'doo']
         elif args.domain.find('griewank') != -1:
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
         elif args.domain.find('rastrigin') != -1:
             algo_names = ['voo_centered_uniform', 'doo']
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
 
-    algo_names = ['voo_centered_uniform', 'doo']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
