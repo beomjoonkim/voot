@@ -261,6 +261,7 @@ def plot_across_algorithms():
     parser.add_argument('-counter_ratio', type=int, default=1)
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-n_actions_per_node', type=int, default=1)
+    parser.add_argument('-value_threshold', type=float, default=-40)
 
     args = parser.parse_args()
 
@@ -322,6 +323,7 @@ def plot_across_algorithms():
             algo_names = ['voo_centered_uniform', 'doo']
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
 
+    algo_names = ['voo_centered_uniform', 'doo']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -373,14 +375,18 @@ def plot_across_algorithms():
             sns.tsplot([4.1] * len(organized_times[:]), organized_times[:args.mcts_iter],
                        ci=95, condition='Avg feasible reward', color='magenta')
 
-        plot_name = 'reward_toy_' + domain_name + '_problem_idx_' + str(args.problem_idx) + '_w_' + str(
-            args.w) + '_mcts_iter_' \
+        plot_name = 'reward_toy_' + domain_name + '_problem_idx_' + str(args.problem_idx) + '_w_' + str(args.w) \
+                    + '_mcts_iter_' \
                     + str(args.mcts_iter) + "_uct_" + str(args.uct) + "_n_feasibility_checks_" \
                     + str(args.n_feasibility_checks) + '_use_max_backup_' + str(args.use_max_backup) \
                     + '_pick_switch_' + str(args.pick_switch) + "_pw_" + str(args.pw)
 
+        if domain_name.find('synthetic') != -1:
+            plot_name += '_value_threshold_' + str(args.value_threshold)
+
         if args.domain == 'convbelt_results':
             plot_name += '_n_actions_per_node_' + str(args.n_actions_per_node)
+
         if args.n_switch != -1:
             plot_name += "_n_switch_" + str(args.n_switch)
 

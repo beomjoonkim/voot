@@ -40,12 +40,12 @@ def make_save_dir(args):
 
     save_dir = ROOTDIR + '/test_results/' + domain + '_results/' + 'mcts_iter_' + str(mcts_iter) + '/'
     save_dir += '/uct_'+str(uct_parameter) + '_widening_' \
-                + str(w) + '_' + sampling_strategy + \
-                '_n_feasible_checks_'+str(n_feasibility_checks) \
-                +'_n_switch_' + str(args.n_switch) \
-                +'_max_backup_' + str(args.use_max_backup) \
-                +'_pick_switch_' + str(args.pick_switch) \
-                +'_n_actions_per_node_' + str(args.n_actions_per_node)
+                + str(w) + '_' + sampling_strategy \
+                + '_n_feasible_checks_'+str(n_feasibility_checks) \
+                + '_n_switch_' + str(args.n_switch) \
+                + '_max_backup_' + str(args.use_max_backup) \
+                + '_pick_switch_' + str(args.pick_switch) \
+                + '_n_actions_per_node_' + str(args.n_actions_per_node)
 
     if domain.find('synthetic') != -1:
         save_dir += '_value_threshold_' + str(args.value_threshold)
@@ -200,12 +200,13 @@ def main():
         else:
             raise NotImplementedError
 
-        args.w = 100
 
         if args.pw:
             args.sampling_strategy = 'unif'
             args.pw = True
             args.use_ucb = True
+        else:
+            args.w = 100
 
         args.voo_sampling_mode = 'centered_uniform'
         args.use_max_backup = True
