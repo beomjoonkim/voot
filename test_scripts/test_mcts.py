@@ -200,13 +200,15 @@ def main():
         else:
             raise NotImplementedError
 
-
         if args.pw:
             args.sampling_strategy = 'unif'
             args.pw = True
             args.use_ucb = True
         else:
             args.w = 100
+
+        if args.domain == 'synthetic_rastrigin' and args.problem_idx == 1:
+            args.value_threshold = -50
 
         args.voo_sampling_mode = 'centered_uniform'
         args.use_max_backup = True

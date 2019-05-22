@@ -25,22 +25,18 @@ def get_best_hyperparameter_dir(result_dir, problem_idx):
 
     print 'n hyper-parameters tested', len(fdirs)
     for fidx, fdir in enumerate(fdirs):
-        #print "Going through %d / %d" % (fidx, len(fdirs))
         last_rwds = []
         listfiles = os.listdir(fdir)
         if len(listfiles) < 10:
             continue
         for fin in listfiles:
             if fin.find('pidx') == -1:
-                #print "Skipping file", fin
-                #print "Continuing"
                 continue
 
             sd = int(fin.split('_')[2])
             file_problem_idx = int(fin.split('_')[-1].split('.')[0])
 
             if file_problem_idx != problem_idx:
-                #print "Skipping file", fin
                 continue
             try:
                 result = pickle.load(open(fdir + fin, 'r'))
@@ -108,7 +104,6 @@ def get_result_dir(algo_name, mcts_parameters):
                 result_dir += '_value_threshold_-50.0' #+ str(mcts_parameters.value_threshold)
         elif mcts_parameters.domain.find('shekel') != -1 and algo_name.find('pw') != -1:
             result_dir += '_value_threshold_' + str(mcts_parameters.value_threshold)
-
 
     if addendum != '':
         if algo_name != 'pw':
