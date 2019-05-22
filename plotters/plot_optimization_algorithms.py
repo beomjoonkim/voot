@@ -24,10 +24,8 @@ def get_result_dir(algo_name, dimension, obj_fcn):
     return result_dir
 
 
-def get_results(algo_name, dimension, obj_fcn):
-    result_dir = get_result_dir(algo_name, dimension, obj_fcn)
-    max_y_values = []
-
+def get_optimal_epsilon_idx(result_dir):
+    eps_to_max_vals = {}
     try:
         result_files = os.listdir(result_dir)
     except OSError:
@@ -38,12 +36,54 @@ def get_results(algo_name, dimension, obj_fcn):
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
-        if algo_name == 'doo':
-            optimal_epsilon_idx = np.argmax(max_ys[:, -1])
-        else:
-            optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+        max_y = max_ys[0, :]
+        if len(max_y) < 500:
+            continue
+        epsilons = result['epsilons']
+        try:
+            print result['epsilons']
+        except:
+            import pdb;pdb.set_trace()
+        for idx, epsilon in enumerate(result['epsilons']):
+            if epsilon in eps_to_max_vals.keys():
+                eps_to_max_vals[epsilon].append(max_ys[idx, -1])
+            else:
+                eps_to_max_vals[epsilon] = [max_ys[idx, -1]]
+
+    max_val = -np.inf
+    for eps, val in zip(eps_to_max_vals.keys(), eps_to_max_vals.values()):
+        eps_to_max_vals[eps] = np.mean(val)
+        if np.mean(val) > max_val:
+            max_val = np.mean(val)
+            max_esp = eps
+    if len(max_y) < 500:
+        return None
+    else:
+        return epsilons.index(max_esp)
+
+
+def get_results(algo_name, dimension, obj_fcn):
+    result_dir = get_result_dir(algo_name, dimension, obj_fcn)
+    max_y_values = []
+
+    try:
+        result_files = os.listdir(result_dir)
+    except OSError:
+        return None
+
+    optimal_epsilon_idx = get_optimal_epsilon_idx(result_dir)
+    for fin in result_files:
+        if fin.find('.pkl') == -1:
+            continue
+        result = pickle.load(open(result_dir + fin, 'r'))
+        max_ys = np.array(result['max_ys'])
+        max_y = max_ys[0]
+        if len(max_y) < 500:
+            continue
+        #optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         print 'optimal epsilon', result['epsilons'][optimal_epsilon_idx]
         max_y = max_ys[optimal_epsilon_idx, :]
+        max_y_values.append(max_y)
         if len(max_y) < 500:
             continue
         else:
@@ -112,7 +152,6 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['gpucb', 'soo',  'voo', 'doo', 'uniform']
-    algo_names = ['voo']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]

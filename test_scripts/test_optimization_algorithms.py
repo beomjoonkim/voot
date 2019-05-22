@@ -260,7 +260,7 @@ def genetic_algorithm(explr_p):
 
 def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
-        epsilons = [0.1, 0.3, 0.5, 0.4, 0.3, 0.2]
+        epsilons = [0.001]
     elif algorithm.__name__ == 'doo':
         epsilons = [np.finfo(float).eps, 0.0001, 1, 0.1, 0.01, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.001, 0.01] # this has more initial points
     elif algorithm.__name__ == 'gpucb':
@@ -279,7 +279,8 @@ def get_exploration_parameters(algorithm):
 
 
 def main():
-    if socket.gethostname() != 'shakey' and socket.gethostname() != 'phaedra' and socket.gethostname() != 'dell-XPS-15-9560':
+    if socket.gethostname() != 'shakey' and socket.gethostname() != 'phaedra' and socket.gethostname() != 'dell-XPS-15-9560'\
+        and socket.gethostname() != 'lab':
         save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
     else:
         save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
@@ -292,7 +293,8 @@ def main():
 
     if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
         print "Already done"
-        return 
+        return
+
 
     if algo_name == 'uniform':
         algorithm = random_search
