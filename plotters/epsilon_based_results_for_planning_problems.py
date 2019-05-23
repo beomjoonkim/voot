@@ -62,6 +62,7 @@ def get_result_dir(algo_name, mcts_parameters):
         result_dir += '/sampling_mode/' + voo_sampling_mode + '/counter_ratio_1/eps_*/'
     elif algo_name.find('doo') != -1:
         result_dir += '/eps_*/'
+    print "Result dir", result_dir
     return result_dir
 
 
@@ -137,6 +138,7 @@ def plot_across_algorithms():
     parser.add_argument('-pick_switch', action='store_true', default=False)
     parser.add_argument('-n_actions_per_node', type=int, default=1)
     parser.add_argument('-value_threshold', type=float, default=-40.0)
+    parser.add_argument('-algo', type=str, default='voo')
 
     args = parser.parse_args()
     if args.domain.find('results') == -1:
@@ -198,6 +200,9 @@ def plot_across_algorithms():
         algo_names = ['pw', 'voo_uniform', 'randomized_doo']
     elif args.domain.find('synthetic') != -1:
         algo_names = ['pw', 'voo_centered_uniform', 'doo']
+
+    algo_names = ['doo']
+    algo_names = [args.algo]
 
     for algo_idx, algo in enumerate(algo_names):
         print "Algo name " + algo
