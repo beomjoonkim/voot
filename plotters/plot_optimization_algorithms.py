@@ -40,10 +40,7 @@ def get_optimal_epsilon_idx(result_dir):
         if len(max_y) < 500:
             continue
         epsilons = result['epsilons']
-        try:
-            print result['epsilons']
-        except:
-            import pdb;pdb.set_trace()
+        print result['epsilons']
         for idx, epsilon in enumerate(result['epsilons']):
             if epsilon in eps_to_max_vals.keys():
                 eps_to_max_vals[epsilon].append(max_ys[idx, -1])
@@ -57,6 +54,7 @@ def get_optimal_epsilon_idx(result_dir):
             max_val = np.mean(val)
             max_esp = eps
     if len(max_y) < 500:
+        import pdb;pdb.set_trace()
         return None
     else:
         return epsilons.index(max_esp)
@@ -81,7 +79,11 @@ def get_results(algo_name, dimension, obj_fcn):
         if len(max_y) < 500:
             continue
         #optimal_epsilon_idx = np.argmax(max_ys[:, -1])
-        print 'optimal epsilon', result['epsilons'][optimal_epsilon_idx]
+        print fin
+        try:
+            print 'optimal epsilon', result['epsilons'][optimal_epsilon_idx]
+        except:
+            import pdb;pdb.set_trace()
         max_y = max_ys[optimal_epsilon_idx, :]
         max_y_values.append(max_y)
         if len(max_y) < 500:
@@ -166,11 +168,11 @@ def plot_across_algorithms():
         sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
     else:
         if n_dim == 3:
-            plt.plot(range(2000), [4.89829] * 2000, linestyle='--', color=ga_color, label='GA_85k_evals')
+            plt.plot(range(2000), [4.78739] * 2000, linestyle='--', color=ga_color, label='GA_2.4e4_evals')
         elif n_dim == 10:
-            plt.plot(range(5000), [8.96] * 5000, linestyle='--', color=ga_color, label='GA_473k_evals')
+            plt.plot(range(5000), [6.04759] * 5000, linestyle='--', color=ga_color, label='GA_2.65e5_evals')
         elif n_dim == 20:
-            plt.plot(range(5000), [5.32] * 5000, linestyle='--', color=ga_color, label='GA_750k_evals')
+            plt.plot(range(5000), [3.93869] * 5000, linestyle='--', color=ga_color, label='GA_8.10e5_evals')
 
 
     """
