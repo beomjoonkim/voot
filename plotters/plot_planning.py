@@ -324,7 +324,6 @@ def plot_across_algorithms():
         elif args.domain.find('rastrigin') != -1:
             algo_names = ['voo_centered_uniform', 'doo']
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
-
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
