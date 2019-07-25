@@ -17,6 +17,8 @@ if True:
   from generators.gpucb_utils.gp import StandardContinuousGP
   from generators.gpucb_utils.functions import UCB, Domain
   from generators.gpucb_utils.bo import BO
+
+from generators.soo_utils.bamsoo_tree import BinaryBAMSOOTree
 from generators.voo_utils.voo import VOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.soo_utils.soo_tree import BinarySOOTree
