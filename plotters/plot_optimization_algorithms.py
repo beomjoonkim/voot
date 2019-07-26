@@ -9,19 +9,33 @@ import seaborn as sns
 
 def savefig(xlabel, ylabel, fname=''):
     plt.legend(loc='best', prop={'size': 13})
-    #plt.xlabel(xlabel, fontsize=14, fontweight='bold')
-    #plt.ylabel(ylabel, fontsize=14, fontweight='bold')
+    # plt.xlabel(xlabel, fontsize=14, fontweight='bold')
+    # plt.ylabel(ylabel, fontsize=14, fontweight='bold')
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
-    print 'Saving figure ', fname + '.png'
+    # print 'Saving figure ', fname + '.png'
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
 def get_result_dir(algo_name, dimension, obj_fcn):
     ROOTDIR = '/home/beomjoon/Dropbox (MIT)/braincloud/gtamp_results/'
-    result_dir = ROOTDIR+'/function_optimization/' + str(obj_fcn) + '/dim_' + str(
+    result_dir = ROOTDIR + '/function_optimization/' + str(obj_fcn) + '/dim_' + str(
         dimension) + '/' + algo_name + '/'
     return result_dir
+
+
+def augment_cmaes_data(max_y):
+    population_size = 10
+    desired_length = (len(max_y)) * population_size
+    augmented = []
+
+    max_y_idx = 0
+    for idx in range(desired_length):
+        if idx % population_size == 0:
+            curr_max_y = max_y[max_y_idx]
+            max_y_idx += 1
+        augmented.append(curr_max_y)
+    return np.array(augmented)
 
 
 def get_optimal_epsilon_idx(result_dir):
@@ -37,12 +51,13 @@ def get_optimal_epsilon_idx(result_dir):
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         max_y = max_ys[0, :]
-        if len(max_y) < 500:
+        if len(max_y) < 500 and not ('cmaes' in result_dir):
             continue
+
         epsilons = result['epsilons']
-        print result['epsilons']
+        # print result['epsilons']
         for idx, epsilon in enumerate(result['epsilons']):
-            if epsilon in eps_to_max_vals.keys():
+            if epsilon in eps_to_max_vals:
                 eps_to_max_vals[epsilon].append(max_ys[idx, -1])
             else:
                 eps_to_max_vals[epsilon] = [max_ys[idx, -1]]
@@ -53,8 +68,7 @@ def get_optimal_epsilon_idx(result_dir):
         if np.mean(val) > max_val:
             max_val = np.mean(val)
             max_esp = eps
-    if len(max_y) < 500:
-        import pdb;pdb.set_trace()
+    if len(max_y) < 500 and not ('cmaes' in result_dir):
         return None
     else:
         return epsilons.index(max_esp)
@@ -76,74 +90,27 @@ def get_results(algo_name, dimension, obj_fcn):
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         max_y = max_ys[0]
-        if len(max_y) < 500:
+        if len(max_y) < 500 and not ('cmaes' in result_dir):
             continue
-        #optimal_epsilon_idx = np.argmax(max_ys[:, -1])
-        print fin
+        # optimal_epsilon_idx = np.argmax(max_ys[:, -1])
+        # print fin
         try:
-            print 'optimal epsilon', result['epsilons'][optimal_epsilon_idx]
+            asdf = result['epsilons'][optimal_epsilon_idx]
         except:
-            import pdb;pdb.set_trace()
+            import pdb;
+            pdb.set_trace()
         max_y = max_ys[optimal_epsilon_idx, :]
+        if 'cmaes' in result_dir:
+            max_y = augment_cmaes_data(max_y)
         max_y_values.append(max_y)
-        if len(max_y) < 500:
+        if len(max_y) < 500 and not ('cmaes' in result_dir):
             continue
         else:
             max_y_values.append(max_y)
-        print fin, len(max_y_values[-1]), max_y[-1], optimal_epsilon_idx
+        # print fin, len(max_y_values[-1]), max_y[-1], optimal_epsilon_idx
 
-    print 'number of functions tested ', len(max_y_values)
+    # print 'number of functions tested ', len(max_y_values)
     return np.array(max_y_values)
-
-
-def get_max_rwds_wrt_time(search_rwd_times):
-    max_time = 10000
-    organized_times = range(100, max_time, 100)
-
-    all_episode_data = []
-    for rwd_time in search_rwd_times:
-        episode_max_rwds_wrt_organized_times = []
-        for organized_time in organized_times:
-            if isinstance(rwd_time, dict):
-                rwd_time_temp = rwd_time['namo']
-                episode_times = np.array(rwd_time_temp)[:, 0]
-                episode_rwds = np.array(rwd_time_temp)[:, 2]
-            else:
-                episode_times = np.array(rwd_time)[:, 0]
-                episode_rwds = np.array(rwd_time)[:, 2]
-            idxs = episode_times < organized_time
-            if np.any(idxs):
-                max_rwd = np.max(episode_rwds[idxs])
-            else:
-                max_rwd = 0
-            episode_max_rwds_wrt_organized_times.append(max_rwd)
-        all_episode_data.append(episode_max_rwds_wrt_organized_times)
-
-    return np.array(all_episode_data), organized_times
-
-
-def get_max_rwds_wrt_samples(search_rwd_times):
-    organized_times = range(10, 1000, 10)
-
-    all_episode_data = []
-    for rwd_time in search_rwd_times:
-        episode_max_rwds_wrt_organized_times = []
-        for organized_time in organized_times:
-            if isinstance(rwd_time, dict):
-                rwd_time_temp = rwd_time['namo']
-                episode_times = np.array(rwd_time_temp)[:, 1]
-                episode_rwds = np.array(rwd_time_temp)[:, 2]
-            else:
-                episode_times = np.array(rwd_time)[:, 1]
-                episode_rwds = np.array(rwd_time)[:, 2]
-            idxs = episode_times <= organized_time
-            if np.any(idxs):
-                max_rwd = np.max(episode_rwds[idxs])
-            else:
-                max_rwd = 0
-            episode_max_rwds_wrt_organized_times.append(max_rwd)
-        all_episode_data.append(episode_max_rwds_wrt_organized_times)
-    return np.array(all_episode_data), organized_times
 
 
 def plot_across_algorithms():
@@ -153,7 +120,8 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['gpucb', 'soo',  'voo', 'doo', 'uniform']
+    algo_names = ['gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
+    #algo_names = ['cmaes']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
     color_dict[color_names[0]] = [0., 0.5570478679, 0.]
@@ -161,19 +129,17 @@ def plot_across_algorithms():
     color_dict[color_names[2]] = [1, 0, 0]
     color_dict[color_names[3]] = [0, 0, 1]
     color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
-
-    ga_color = [0.2, 0.9, 0.1]
-    ga_color = 'magenta'
+    color_dict[color_names[5]] = [117 / 255.0, 15 / 255.0, 138 / 255.0]
+    optimum_color = 'magenta'
     if args.obj_fcn != 'shekel':
-        sns.tsplot([0]*2000, range(2000), ci=95, condition='Optimum', color='magenta')
+        sns.tsplot([0] * 2000, range(2000), ci=95, condition='Optimum', color='magenta')
     else:
         if n_dim == 3:
-            plt.plot(range(2000), [4.78739] * 2000, linestyle='--', color=ga_color, label='GA_2.4e4_evals')
+            plt.plot(range(2000), [4.78739] * 2000, linestyle='--', color=optimum_color, label='GA_2.4e4_evals')
         elif n_dim == 10:
-            plt.plot(range(5000), [6.04759] * 5000, linestyle='--', color=ga_color, label='GA_2.65e5_evals')
+            plt.plot(range(5000), [6.04759] * 5000, linestyle='--', color=optimum_color, label='GA_2.65e5_evals')
         elif n_dim == 20:
-            plt.plot(range(5000), [3.93869] * 5000, linestyle='--', color=ga_color, label='GA_8.10e5_evals')
-
+            plt.plot(range(5000), [3.93869] * 5000, linestyle='--', color=optimum_color, label='GA_8.10e5_evals')
 
     """
     if args.obj_fcn == 'rastrigin':
@@ -193,7 +159,7 @@ def plot_across_algorithms():
         n_samples = 1000
 
     for algo_idx, algo in enumerate(algo_names):
-        print algo
+        # print algo
         search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
         if search_rwd_times is None:
             continue
@@ -201,11 +167,13 @@ def plot_across_algorithms():
         search_rwd_times = search_rwd_times[:, 0:n_samples]
         n_samples_tested = search_rwd_times.shape[-1]
         if n_samples_tested < n_samples:
-            sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
+            sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo.upper(),
+                       color=color_dict[color_names[algo_idx]])
         else:
-            sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(), color=color_dict[color_names[algo_idx]])
-        print algo, n_samples, np.mean(search_rwd_times[:, -1])
-        print "===================="
+            sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(),
+                       color=color_dict[color_names[algo_idx]])
+        # print algo, n_samples, np.mean(search_rwd_times[:, -1])
+        # print "===================="
 
     plt.xlim(0, n_samples)
     savefig('Number of function evaluations', 'Best function values',
