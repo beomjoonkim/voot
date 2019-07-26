@@ -11,7 +11,7 @@ from deap import benchmarks
 
 import socket
 
-if socket.gethostname() == 'dell-XPS-15-9560':
+if socket.gethostname() == 'dell-XPS-15-9560' or socket.gethostname() == 'lab':
     import pygmo as pg
 
 if True:
@@ -291,7 +291,7 @@ def voo(explr_p):
     return evaled_x, evaled_y, max_y, times
 
 
-class ShekelProblem:
+class GeneticAlgoProblem:
     def fitness(self, x):
         return [-get_objective_function(x)]
 
@@ -300,14 +300,36 @@ class ShekelProblem:
 
 
 def genetic_algorithm(explr_p):
-    prob = pg.problem(ShekelProblem())
-    sade = pg.sade(gen=1000000, ftol=1e-20, xtol=1e-20)
-    algo = pg.algorithm(sade)
+    prob = pg.problem(GeneticAlgoProblem())
+    #sade = pg.sade(gen=1, ftol=1e-20, xtol=1e-20)
+
+    if obj_fcn == 'griewank' or dim_x == 3:
+        optimizer = pg.cmaes(gen=51, ftol=1e-20, xtol=1e-20)
+    elif obj_fcn == 'shekel' and dim_x == 20:
+        optimizer = pg.cmaes(gen=501, ftol=1e-20, xtol=1e-20)
+    else:
+        optimizer = pg.cmaes(gen=101, ftol=1e-20, xtol=1e-20)
+    algo = pg.algorithm(optimizer)
     algo.set_verbosity(1)
-    pop = pg.population(prob, size=1000)
+    pop = pg.population(prob, size=10)
     pop = algo.evolve(pop)
     print pop.champion_f
     champion_x = pop.champion_x
+    uda = algo.extract(pg.cmaes)
+    log = np.array(uda.get_log())
+    n_fcn_evals = log[:, 1]
+    pop_best_at_generation = -log[:, 2]
+    evaled_x = None
+    evaled_y = pop_best_at_generation
+
+    max_y = [pop_best_at_generation[0]]
+    for y in pop_best_at_generation[1:]:
+        if y > max_y[-1]:
+            max_y.append(y)
+        else:
+            max_y.append(max_y[-1])
+
+    return evaled_x, evaled_y, max_y, 0
 
 
 def get_exploration_parameters(algorithm):
@@ -362,7 +384,7 @@ def main():
         algorithm = gpucb
     elif algo_name == 'soo':
         algorithm = soo
-    elif algo_name == 'ga':
+    elif algo_name == 'cmaes':
         algorithm = genetic_algorithm
     elif algo_name == 'rembo_gpucb':
         algorithm = rembo_gpucb
