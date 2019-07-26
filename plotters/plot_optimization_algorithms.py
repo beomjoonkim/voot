@@ -99,6 +99,7 @@ def get_results(algo_name, dimension, obj_fcn):
         except:
             import pdb;
             pdb.set_trace()
+        import pdb;pdb.set_trace()
         max_y = max_ys[optimal_epsilon_idx, :]
         if 'cmaes' in result_dir:
             max_y = augment_cmaes_data(max_y)
@@ -120,7 +121,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
+    algo_names = ['rembo_gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
     #algo_names = ['cmaes']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
