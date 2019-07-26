@@ -19,7 +19,7 @@ if True:
     from generators.gpucb_utils.functions import UCB, Domain
     from generators.gpucb_utils.bo import BO
 
-#from generators.soo_utils.bamsoo_tree import BinaryBAMSOOTree
+from generators.soo_utils.bamsoo_tree import BamBinarySOOTree
 from generators.voo_utils.voo import VOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.soo_utils.soo_tree import BinarySOOTree
@@ -184,6 +184,32 @@ def soo(dummy):
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
+
+def bamsoo(explr_p, save_dir):
+    soo_tree = BamBinarySOOTree(domain)
+
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    times = []
+
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        next_node = soo_tree.get_next_point_and_node_to_evaluate()
+        x_to_evaluate = next_node.cell_mid_point
+        next_node.evaluated_x = x_to_evaluate
+        fval = get_objective_function(x_to_evaluate)
+        soo_tree.expand_node(fval, next_node, evaled_x, evaled_y)
+
+        evaled_x.append(x_to_evaluate)
+        evaled_y.append(fval)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time() - stime)
+
+    print "Max value found", np.max(evaled_y)
+    return evaled_x, evaled_y, max_y, times
+
+    pass
 
 def gpucb(explr_p, save_dir):
     gp = StandardContinuousGP(dim_x)
@@ -392,6 +418,8 @@ def main():
         algorithm = genetic_algorithm
     elif algo_name == 'rembo_gpucb':
         algorithm = rembo_gpucb
+    elif algo_name == 'bamsoo':
+        algorithm = bamsoo
     else:
         print "Wrong algo name"
         return
@@ -406,7 +434,7 @@ def main():
         elif algo_name == 'rembo_gpucb':
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, args.low_dim, save_dir)
         else:
-            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
 
         max_ys.append(max_y)
         time_takens.append(time_taken)

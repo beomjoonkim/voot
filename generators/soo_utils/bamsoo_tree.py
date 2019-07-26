@@ -1,6 +1,10 @@
 import numpy as np
 import copy
 
+from generators.gpucb_utils.gp import StandardContinuousGP
+from generators.gpucb_utils.functions import UCB, Domain
+from generators.gpucb_utils.bo import BO
+
 
 class SOOTreeNode:
     def __init__(self, cell_mid_point, cell_min, cell_max, height, parent_node):
@@ -19,7 +23,7 @@ class SOOTreeNode:
         self.f_value = fval
 
 
-class BinarySOOTree:
+class BamBinarySOOTree:
     def __init__(self, domain):
         self.root = None
         self.leaves = []
@@ -30,6 +34,9 @@ class BinarySOOTree:
         self.vmax = -np.inf
         self.tree_traversal_height = 0
         self.tree_height = 0
+        dim_x = len(self.domain[0])
+        self.gp = StandardContinuousGP(dim_x)
+        self.fplus = None
 
     @staticmethod
     def create_node(cell_mid_point, cell_min, cell_max, parent_node):
@@ -44,12 +51,16 @@ class BinarySOOTree:
         left_child_cell_mid_point_x = self.compute_left_child_cell_mid_point(parent_node)
         cell_min, cell_max = self.compute_left_child_cell_limits(parent_node)
 
+        # evaluate U_N(x) of the node here
+
         node = self.create_node(left_child_cell_mid_point_x, cell_min, cell_max, parent_node)
         self.add_node_to_tree(node, parent_node, 'left')
 
     def add_right_child(self, parent_node):
         right_child_cell_mid_point_x = self.compute_right_child_cell_mid_point(parent_node)
         cell_min, cell_max = self.compute_right_child_cell_limits(parent_node)
+
+        # evaluate U_N(x) of the node here
 
         node = self.create_node(right_child_cell_mid_point_x, cell_min, cell_max, parent_node)
         self.add_node_to_tree(node, parent_node, 'right')
@@ -62,20 +73,39 @@ class BinarySOOTree:
         leaf_values = [l.f_value for l in leaves]
         best_leaf = leaves[np.argmax(leaf_values)]
 
+        # Here, is the for-loop implementation in BamSOO.
+        #   If U_N(x) value is greater than f_plus, then evaluate this point and evaluate it. Update GP. Set g(x) = f(x)
+        #   Otherwise, set g(x) = L_N(x)
+        #   Okay, in my code, I would just to return the point if U_N(x) > f+. There is no g(x), but only f_value.
+        #   So, setting node.f_value = L_N(x) is same is g(x) = L_N(x)
+
         if best_leaf.f_value >= self.vmax:
             self.vmax = best_leaf.f_value  # update the vmax to the best leaf value
             is_node_children_added = not(best_leaf.l_child is None)
             if is_node_children_added:
+                # I need to check U_N value of the chosen child
                 is_left_child_evaluated = best_leaf.l_child.f_value is not None
                 is_right_child_evaluated = best_leaf.r_child.f_value is not None
+
                 if not is_left_child_evaluated:
-                    return best_leaf.l_child
+                    node_to_eval = best_leaf.l_child
                 elif not is_right_child_evaluated:
-                    return best_leaf.r_child
+                    node_to_eval = best_leaf.r_child
                 else:
                     assert False, 'When both children have been evaluated, the node should not be in the self.leaves'
             else:
-                return best_leaf
+                # I need to check U_N value of the best_leaf
+                node_to_eval = best_leaf
+
+            # lines 12-17 of BamSOO
+            if node_to_eval.ucb >= self.fplus:
+                return node_to_eval
+            else:
+                # if the next-node-to-eval has ucb value less than fplus, then don't evaluate the node
+                node_to_eval.f_value = node_to_eval.lcb
+                if node_to_eval.f_value > self.fplus:  # line 19-20 of BamSOO
+                    self.fplus = node_to_eval.f_value
+                return None
         else:
             return None
 
@@ -86,6 +116,7 @@ class BinarySOOTree:
         is_first_evaluation = self.root is None
         dim_domain = len(self.domain[0])
 
+        # Here, check the children's U_N values
         if is_first_evaluation:
             cell_mid_point = np.random.uniform(self.domain[0], self.domain[1], (1, dim_domain)).squeeze()
             node = self.create_node(cell_mid_point, self.domain[0], self.domain[1], None)
@@ -117,11 +148,17 @@ class BinarySOOTree:
 
         return node
 
-    def expand_node(self, fval, node):
-        # this function evaluates the node if it has not been evaluated, but evalutes its children if they have not
-        # been evaluated. This is what it means to "expand" the node from Munos et al. - evaluate the node,
-        # and its K children
+    def expand_node(self, fval, node, evaled_x, evaled_y):
         node.update_node_f_value(fval)
+
+        # lines 15 in Algorithm 3 of BamSOO
+        # Update my gp here
+        self.gp.update(evaled_x, evaled_y)
+
+        # lines 19-20 in Algorithm 3 of BamSOO
+        if self.fplus is None or fval > self.fplus:
+            self.fplus = fval
+
         self.nodes.append(node)
 
         self.add_left_child(parent_node=node)
