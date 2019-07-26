@@ -221,7 +221,7 @@ def rembo_gpucb(explr_p, low_dim, save_dir):
     original_dim = len(domain[0])
     A = np.random.rand(original_dim, low_dim) * (domain_max-domain_min) + domain_min
 
-    # has to be such that when I multiply it by A, then it should stay within domain_min
+    # has to be such that when I multiply it by A, then it should roughly stay within domain_min
     low_dim_domain_min = [-np.sqrt(domain_max)/2.0] * low_dim
     low_dim_domain_max = [np.sqrt(domain_max)/2.0] * low_dim
     low_dim_domain = [low_dim_domain_min, low_dim_domain_max]
@@ -241,6 +241,7 @@ def rembo_gpucb(explr_p, low_dim, save_dir):
         low_dim_x = gp_optimizer.choose_next_point(evaled_low_dim_x, evaled_y)
         x = np.dot(A, low_dim_x)
 
+        # keep it in range
         if not(np.all(x <= domain_max)):
             x[np.where(x >= domain_max)] = domain_max
         if not(np.all(x >= domain_min)):
