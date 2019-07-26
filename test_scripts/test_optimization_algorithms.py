@@ -10,15 +10,16 @@ from deap.benchmarks import shekel
 from deap import benchmarks
 
 import socket
+
 if socket.gethostname() == 'dell-XPS-15-9560':
     import pygmo as pg
 
 if True:
-  from generators.gpucb_utils.gp import StandardContinuousGP
-  from generators.gpucb_utils.functions import UCB, Domain
-  from generators.gpucb_utils.bo import BO
+    from generators.gpucb_utils.gp import StandardContinuousGP
+    from generators.gpucb_utils.functions import UCB, Domain
+    from generators.gpucb_utils.bo import BO
 
-from generators.soo_utils.bamsoo_tree import BinaryBAMSOOTree
+#from generators.soo_utils.bamsoo_tree import BinaryBAMSOOTree
 from generators.voo_utils.voo import VOO
 from generators.doo_utils.doo_tree import BinaryDOOTree
 from generators.soo_utils.soo_tree import BinarySOOTree
@@ -26,11 +27,12 @@ from generators.soo_utils.soo_tree import BinarySOOTree
 parser = argparse.ArgumentParser(description='parameters')
 parser.add_argument('-problem_idx', type=int, default=0)
 parser.add_argument('-algo_name', type=str, default='stosoo')
-parser.add_argument('-obj_fcn', type=str, default='ackley')
+parser.add_argument('-obj_fcn', type=str, default='griewank')
 parser.add_argument('-dim_x', type=int, default=10)
 parser.add_argument('-n_fcn_evals', type=int, default=500)
 parser.add_argument('-voo_sampling_mode', type=str, default='centered_uniform')
 parser.add_argument('-switch_counter', type=int, default=100)
+parser.add_argument('-low_dim', type=int, default=2)
 args = parser.parse_args()
 
 problem_idx = args.problem_idx
@@ -42,13 +44,12 @@ obj_fcn = args.obj_fcn
 np.random.seed(problem_idx)
 random.seed(problem_idx)
 
-
 NUMMAX = 10
 if obj_fcn == 'shekel':
 
-    #np.random.seed(problem_idx)
-    #A = np.random.rand(NUMMAX, dim_x)*10
-    #C = np.random.rand(NUMMAX)
+    # np.random.seed(problem_idx)
+    # A = np.random.rand(NUMMAX, dim_x)*10
+    # C = np.random.rand(NUMMAX)
 
     if args.dim_x == 2:
         A = np.array([[
@@ -60,24 +61,25 @@ if obj_fcn == 'shekel':
         ]) * 500
         C = np.array([0.002, 0.005, 0.005, 0.005, 0.005]) * 500
     else:
-        config = pickle.load(open('./test_results/function_optimization/shekel/shekel_dim_'+str(args.dim_x)+'.pkl', 'r'))
+        config = pickle.load(
+            open('./test_results/function_optimization/shekel/shekel_dim_' + str(args.dim_x) + '.pkl', 'r'))
         A = config['A']
         C = config['C']
 
 if obj_fcn == 'shekel':
-    domain = np.array([[-500.]*dim_x, [500.]*dim_x])
+    domain = np.array([[-500.] * dim_x, [500.] * dim_x])
 elif obj_fcn == 'schwefel':
-    domain = np.array([[-500.]*dim_x, [500.]*dim_x])
+    domain = np.array([[-500.] * dim_x, [500.] * dim_x])
 elif obj_fcn == 'rastrigin':
-    domain = np.array([[-5.12]*dim_x, [5.12]*dim_x])
+    domain = np.array([[-5.12] * dim_x, [5.12] * dim_x])
 elif obj_fcn == 'ackley':
-    domain = np.array([[-30.]*dim_x, [30.]*dim_x])
+    domain = np.array([[-30.] * dim_x, [30.] * dim_x])
 elif obj_fcn == 'griewank':
-    domain = np.array([[-600.]*dim_x, [600.]*dim_x])
+    domain = np.array([[-600.] * dim_x, [600.] * dim_x])
 elif obj_fcn == 'rosenbrock':
-    domain = np.array([[-100.]*dim_x, [100.]*dim_x])
+    domain = np.array([[-100.] * dim_x, [100.] * dim_x])
 elif obj_fcn == 'schaffer':
-    domain = np.array([[-100.]*dim_x, [100.]*dim_x])
+    domain = np.array([[-100.] * dim_x, [100.] * dim_x])
 else:
     raise NotImplementedError
 
@@ -112,9 +114,9 @@ def random_search(epsilon):
     times = []
     stime = time.time()
     for i in range(n_fcn_evals):
-        #if i == 0:
+        # if i == 0:
         #    x = (domain_min+domain_max)/2.0
-        #else:
+        # else:
         x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
         if len(x.shape) == 0:
             x = np.array([x])
@@ -122,7 +124,7 @@ def random_search(epsilon):
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
+        times.append(time.time() - stime)
     return evaled_x, evaled_y, max_y, times
 
 
@@ -148,7 +150,7 @@ def doo(explr_p):
         evaled_x.append(x_to_evaluate)
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
+        times.append(time.time() - stime)
 
     best_idx = np.where(evaled_y == max_y[-1])[0][0]
     print evaled_x[best_idx], evaled_y[best_idx]
@@ -177,7 +179,7 @@ def soo(dummy):
         evaled_x.append(x_to_evaluate)
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
+        times.append(time.time() - stime)
 
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
@@ -195,16 +197,64 @@ def gpucb(explr_p, save_dir):
     times = []
     stime = time.time()
     for i in range(n_fcn_evals):
-        print 'gp iteration ', i
         x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
         y = get_objective_function(x)
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
+        times.append(time.time() - stime)
+        print 'gp iteration ', i, np.max(evaled_y)
 
         pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
                     open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
+
+    return evaled_x, evaled_y, max_y, times
+
+
+def rembo_gpucb(explr_p, low_dim, save_dir):
+    gp = StandardContinuousGP(low_dim)
+    acq_fcn = UCB(zeta=explr_p, gp=gp)
+
+    # Generate A
+    domain_min = domain[0][0]
+    domain_max = domain[1][1]
+    original_dim = len(domain[0])
+    A = np.random.rand(original_dim, low_dim) * (domain_max-domain_min) + domain_min
+
+    # has to be such that when I multiply it by A, then it should stay within domain_min
+    low_dim_domain_min = [-np.sqrt(domain_max)/2.0] * low_dim
+    low_dim_domain_max = [np.sqrt(domain_max)/2.0] * low_dim
+    low_dim_domain = [low_dim_domain_min, low_dim_domain_max]
+
+    gp_format_domain = Domain(0, low_dim_domain)
+    gp_optimizer = BO(gp, acq_fcn, gp_format_domain)  # note: this minimizes the negative acq_fcn
+
+    evaled_x = []
+    evaled_y = []
+
+    evaled_low_dim_x = []
+    max_y = []
+    times = []
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        print 'gp iteration ', i
+        low_dim_x = gp_optimizer.choose_next_point(evaled_low_dim_x, evaled_y)
+        x = np.dot(A, low_dim_x)
+
+        if not(np.all(x <= domain_max)):
+            x[np.where(x >= domain_max)] = domain_max
+        if not(np.all(x >= domain_min)):
+            x[np.where(x <= domain_min)] = domain_min
+        y = get_objective_function(x)
+        evaled_low_dim_x.append(low_dim_x)
+        evaled_x.append(x)
+        evaled_y.append(y)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time() - stime)
+
+        pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
+                    open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
+        print 'max_y', max_y
 
     return evaled_x, evaled_y, max_y, times
 
@@ -216,7 +266,7 @@ def voo(explr_p):
     voo = VOO(domain, explr_p, args.voo_sampling_mode, args.switch_counter)
     times = []
     stime = time.time()
-    print 'explr_p',explr_p
+    print 'explr_p', explr_p
 
     for i in range(n_fcn_evals):
         print "%d / %d" % (i, n_fcn_evals)
@@ -229,7 +279,7 @@ def voo(explr_p):
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
-        times.append(time.time()-stime)
+        times.append(time.time() - stime)
 
     best_idx = np.where(evaled_y == max_y[-1])[0][0]
     print evaled_x[best_idx], evaled_y[best_idx]
@@ -238,7 +288,6 @@ def voo(explr_p):
     print "Explr p", explr_p
 
     return evaled_x, evaled_y, max_y, times
-
 
 
 class ShekelProblem:
@@ -264,14 +313,17 @@ def get_exploration_parameters(algorithm):
     if algorithm.__name__.find('voo') != -1:
         epsilons = [0.001]
     elif algorithm.__name__ == 'doo':
-        epsilons = [np.finfo(float).eps, 0.0001, 1, 0.1, 0.01, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.001, 0.01] # this has more initial points
+        epsilons = [np.finfo(float).eps, 0.0001, 1, 0.1, 0.01, np.finfo(np.float32).eps, 0.0000001, 0.000001, 0.001,
+                    0.01]  # this has more initial points
     elif algorithm.__name__ == 'gpucb':
+        epsilons = [0.01, 1, 0.1, 5, 10, 30]
+    elif algorithm.__name__ == 'rembo_gpucb':
         epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__.find('soo') != -1:
         epsilons = [0]
     elif algorithm.__name__.find('random_search') != -1 or algorithm.__name__.find('stounif') != -1:
         epsilons = [0]
-    elif algorithm.__name__.find('genetic_algorithm') !=-1:
+    elif algorithm.__name__.find('genetic_algorithm') != -1:
         epsilons = [0]
     else:
         print algorithm.__name__
@@ -281,11 +333,13 @@ def get_exploration_parameters(algorithm):
 
 
 def main():
-    if socket.gethostname() != 'shakey' and socket.gethostname() != 'phaedra' and socket.gethostname() != 'dell-XPS-15-9560'\
-        and socket.gethostname() != 'lab':
-        save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+    if socket.gethostname() != 'shakey' and socket.gethostname() != 'phaedra' \
+            and socket.gethostname() != 'dell-XPS-15-9560' \
+            and socket.gethostname() != 'lab':
+        save_dir = '/data/public/rw/pass.port/gtamp_results/test_results/function_optimization/' + obj_fcn + '/dim_' \
+                   + str(dim_x) + '/' + algo_name + '/'
     else:
-        save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/'+algo_name+'/'
+        save_dir = './test_results/function_optimization/' + obj_fcn + '/dim_' + str(dim_x) + '/' + algo_name + '/'
 
     if not os.path.isdir(save_dir):
         try:
@@ -293,10 +347,9 @@ def main():
         except OSError:
             pass
 
-    if os.path.isfile(save_dir+'/'+str(problem_idx)+'.pkl'):
+    if os.path.isfile(save_dir + '/' + str(problem_idx) + '.pkl'):
         print "Already done"
-        return
-
+        #return
 
     if algo_name == 'uniform':
         algorithm = random_search
@@ -310,6 +363,8 @@ def main():
         algorithm = soo
     elif algo_name == 'ga':
         algorithm = genetic_algorithm
+    elif algo_name == 'rembo_gpucb':
+        algorithm = rembo_gpucb
     else:
         print "Wrong algo name"
         return
@@ -321,6 +376,8 @@ def main():
     for epsilon in epsilons:
         if algo_name == 'gpucb':
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
+        elif algo_name == 'rembo_gpucb':
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, args.low_dim, save_dir)
         else:
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
 
@@ -328,12 +385,10 @@ def main():
         time_takens.append(time_taken)
 
     pickle.dump({"epsilons": epsilons, 'max_ys': max_ys, 'time_takens': time_takens},
-                open(save_dir+'/'+str(problem_idx)+'.pkl', 'wb'))
+                open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
 
     return epsilons, max_ys, time_takens
 
 
 if __name__ == '__main__':
     main()
-
-
