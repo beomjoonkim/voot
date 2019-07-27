@@ -15,9 +15,9 @@ if socket.gethostname() == 'dell-XPS-15-9560' or socket.gethostname() == 'lab':
     import pygmo as pg
 
 if True:
-    from generators.gpucb_utils.gp import StandardContinuousGP
-    from generators.gpucb_utils.functions import UCB, Domain
-    from generators.gpucb_utils.bo import BO
+    from generators.gpucb_utils.gp import StandardContinuousGP, AddStandardContinuousGP
+    from generators.gpucb_utils.functions import UCB, Domain, AddUCB
+    from generators.gpucb_utils.bo import BO, AddBO
 
 from generators.soo_utils.bamsoo_tree import BamBinarySOOTree
 from generators.voo_utils.voo import VOO
@@ -209,7 +209,30 @@ def bamsoo(explr_p, save_dir):
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
 
-    pass
+
+def add_gpucb(explr_p, save_dir):
+    gp = AddStandardContinuousGP(dim_x)
+    acq_fcn = AddUCB(add_gp=gp)
+    gp_format_domain = Domain(0, domain)
+    gp_optimizer = AddBO(gp, acq_fcn, gp_format_domain)  # note: this minimizes the negative acq_fcn
+
+    evaled_x = []
+    evaled_y = []
+    max_y = []
+    times = []
+    stime = time.time()
+    for i in range(n_fcn_evals):
+        x = gp_optimizer.choose_next_point(evaled_x, evaled_y)
+        y = get_objective_function(x)
+        evaled_x.append(x)
+        evaled_y.append(y)
+        max_y.append(np.max(evaled_y))
+        times.append(time.time() - stime)
+        print 'gp iteration ', i, np.max(evaled_y), x
+
+        pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
+                    open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
+    return evaled_x, evaled_y, max_y, times
 
 def gpucb(explr_p, save_dir):
     gp = StandardContinuousGP(dim_x)
@@ -373,6 +396,8 @@ def get_exploration_parameters(algorithm):
     elif algorithm.__name__ == 'rembo_gpucb':
         #epsilons = [0.01, 1, 0.1, 5, 10, 30]
         epsilons = [1, 0.1, 5]
+    elif algorithm.__name__ == 'add_gpucb':
+        epsilons = [0]
     elif algorithm.__name__.find('soo') != -1:
         epsilons = [0]
     elif algorithm.__name__.find('random_search') != -1 or algorithm.__name__.find('stounif') != -1:
@@ -421,6 +446,8 @@ def main():
         algorithm = rembo_gpucb
     elif algo_name == 'bamsoo':
         algorithm = bamsoo
+    elif algo_name == 'add_gpucb':
+        algorithm = add_gpucb
     else:
         print "Wrong algo name"
         return

@@ -115,6 +115,16 @@ class UCB(Function):
         return f[0, 0], g[0, :]
 
 
+class AddUCB(Function):
+    def __init__(self, add_gp):
+        self.add_gp = add_gp
+        self.decomposition_dim = self.add_gp.decompositions
+        self.add_ucb = []
+        for idx, gp in enumerate(self.add_gp.gps):
+            gp_zeta = 0.2 * self.decomposition_dim[idx] * np.log(2)
+            self.add_ucb.append(UCB(gp_zeta, gp))
+
+
 class ProbImprovement(Function):
     def __init__(self, target_val, gp):
         self.target_val = target_val
