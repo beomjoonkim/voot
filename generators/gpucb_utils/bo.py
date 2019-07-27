@@ -50,7 +50,7 @@ class AddBO(BO):
         # go through each function in acq_function
         n_evals = len(evaled_x)
         update_hyper_params = n_evals % 20 == 0
-        self.model.update(evaled_x, evaled_y, update_hyper_params) # update every 10th
+        self.model.update(evaled_x, evaled_y, update_hyper_params)  # update every 10th
         x = []
         for idx, ucb in enumerate(self.acq_fcn.add_ucb):
             domain_ = self.decomposed_domain[idx]

@@ -307,7 +307,7 @@ def rembo_gpucb(explr_p, low_dim, save_dir):
 
         pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
                     open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
-        print 'max_y', max_y
+        print 'max_y', max_y[-1]
 
     return evaled_x, evaled_y, max_y, times
 
