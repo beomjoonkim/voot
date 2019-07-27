@@ -397,7 +397,7 @@ def get_exploration_parameters(algorithm):
     elif algorithm.__name__ == 'gpucb':
         epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'rembo_gpucb':
-        epsilons = [1, 0.1, 5]
+        epsilons = [0.01, 0.1, 0.5]  # 1 and 5 the best?
     elif algorithm.__name__ == 'add_gpucb':
         epsilons = [0]
     elif algorithm.__name__ == 'soo':

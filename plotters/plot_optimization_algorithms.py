@@ -53,10 +53,12 @@ def get_optimal_epsilon_idx(result_dir):
         max_y = max_ys[0, :]
         if len(max_y) < 500 and not ('cmaes' in result_dir):
             continue
-
-        epsilons = result['epsilons']
+        try:
+            epsilons = result['epsilons']
+        except KeyError:
+            epsilons = result['epsilon']
         # print result['epsilons']
-        for idx, epsilon in enumerate(result['epsilons']):
+        for idx, epsilon in enumerate(epsilons):
             if epsilon in eps_to_max_vals:
                 eps_to_max_vals[epsilon].append(max_ys[idx, -1])
             else:
@@ -71,7 +73,10 @@ def get_optimal_epsilon_idx(result_dir):
     if len(max_y) < 500 and not ('cmaes' in result_dir):
         return None
     else:
-        return epsilons.index(max_esp)
+        if 'rembo' in result_dir:
+            return 2
+        else:
+            return epsilons.index(max_esp)
 
 
 def get_results(algo_name, dimension, obj_fcn):
@@ -94,12 +99,13 @@ def get_results(algo_name, dimension, obj_fcn):
             continue
         # optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         # print fin
+        """
         try:
             asdf = result['epsilons'][optimal_epsilon_idx]
         except:
             import pdb;
             pdb.set_trace()
-        import pdb;pdb.set_trace()
+        """
         max_y = max_ys[optimal_epsilon_idx, :]
         if 'cmaes' in result_dir:
             max_y = augment_cmaes_data(max_y)
@@ -116,12 +122,12 @@ def get_results(algo_name, dimension, obj_fcn):
 
 def plot_across_algorithms():
     parser = argparse.ArgumentParser(description='MCTS parameters')
-    parser.add_argument('-dim', type=int, default=3)
+    parser.add_argument('-dim', type=int, default=10)
     parser.add_argument('-obj_fcn', type=str, default='shekel')
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['rembo_gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
+    algo_names = ['add_gpucb', 'rembo_gpucb', 'gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
     #algo_names = ['cmaes']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
@@ -131,6 +137,8 @@ def plot_across_algorithms():
     color_dict[color_names[3]] = [0, 0, 1]
     color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
     color_dict[color_names[5]] = [117 / 255.0, 15 / 255.0, 138 / 255.0]
+    color_dict[color_names[6]] = [15 / 255.0, 117 / 255.0, 138 / 255.0]
+    color_dict[color_names[7]] = [102 / 255.0, 51 / 255.0, 0 / 255.0]
     optimum_color = 'magenta'
     if args.obj_fcn != 'shekel':
         sns.tsplot([0] * 2000, range(2000), ci=95, condition='Optimum', color='magenta')
