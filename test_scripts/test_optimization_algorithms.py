@@ -186,7 +186,7 @@ def soo(dummy):
 
 
 def bamsoo(explr_p, save_dir):
-    soo_tree = BamBinarySOOTree(domain)
+    bamsoo_tree = BamBinarySOOTree(domain, explr_p)
 
     evaled_x = []
     evaled_y = []
@@ -195,16 +195,17 @@ def bamsoo(explr_p, save_dir):
 
     stime = time.time()
     for i in range(n_fcn_evals):
-        next_node = soo_tree.get_next_point_and_node_to_evaluate()
+        next_node = bamsoo_tree.get_next_point_and_node_to_evaluate()
         x_to_evaluate = next_node.cell_mid_point
         next_node.evaluated_x = x_to_evaluate
         fval = get_objective_function(x_to_evaluate)
-        soo_tree.expand_node(fval, next_node, evaled_x, evaled_y)
+        bamsoo_tree.expand_node(fval, next_node, evaled_x, evaled_y)
 
         evaled_x.append(x_to_evaluate)
         evaled_y.append(fval)
         max_y.append(np.max(evaled_y))
         times.append(time.time() - stime)
+        print i, max_y[-1], evaled_x[-1]
 
     print "Max value found", np.max(evaled_y)
     return evaled_x, evaled_y, max_y, times
@@ -234,6 +235,7 @@ def add_gpucb(explr_p, save_dir):
                     open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
     return evaled_x, evaled_y, max_y, times
 
+
 def gpucb(explr_p, save_dir):
     gp = StandardContinuousGP(dim_x)
     acq_fcn = UCB(zeta=explr_p, gp=gp)
@@ -252,6 +254,7 @@ def gpucb(explr_p, save_dir):
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
         times.append(time.time() - stime)
+        print evaled_x
         print 'gp iteration ', i, np.max(evaled_y)
 
         pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
@@ -394,20 +397,20 @@ def get_exploration_parameters(algorithm):
     elif algorithm.__name__ == 'gpucb':
         epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'rembo_gpucb':
-        #epsilons = [0.01, 1, 0.1, 5, 10, 30]
         epsilons = [1, 0.1, 5]
     elif algorithm.__name__ == 'add_gpucb':
         epsilons = [0]
-    elif algorithm.__name__.find('soo') != -1:
+    elif algorithm.__name__ == 'soo':
         epsilons = [0]
     elif algorithm.__name__.find('random_search') != -1 or algorithm.__name__.find('stounif') != -1:
         epsilons = [0]
     elif algorithm.__name__.find('genetic_algorithm') != -1:
         epsilons = [0]
+    elif algorithm.__name__ == 'bamsoo':
+        epsilons = [0.1, 0.7, 0.9]
     else:
         print algorithm.__name__
         raise NotImplementedError
-
     return epsilons
 
 

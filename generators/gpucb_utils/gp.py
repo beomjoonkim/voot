@@ -19,9 +19,16 @@ class StandardContinuousGP:
         # todo make the same distance used in the voo
         if len(evaled_x) == 0:
             return
+        self.evaled_x = evaled_x
+        self.evaled_y = evaled_y
         evaled_x = np.array(evaled_x)
         evaled_y = np.array(evaled_y)[:, None]
-        self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern, normalizer=True)
+        if len(evaled_x) == 1:
+            normalizer = False
+        else:
+            normalizer = True
+
+        self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern, normalizer=normalizer)
 
         if update_hyper_params:
             self.model.optimize(messages=False, max_f_eval=1000)

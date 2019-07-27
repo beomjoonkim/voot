@@ -6,8 +6,8 @@ from generators.gpucb_utils.functions import UCB, Domain
 from generators.gpucb_utils.bo import BO
 
 
-class SOOTreeNode:
-    def __init__(self, cell_mid_point, cell_min, cell_max, height, parent_node):
+class BamSOOTreeNode:
+    def __init__(self, cell_mid_point, cell_min, cell_max, height, parent_node, ucb, lcb):
         self.cell_mid_point = cell_mid_point
         self.evaluated_x = None
         self.l_child = None
@@ -18,13 +18,15 @@ class SOOTreeNode:
         self.parent = parent_node
         self.f_value = None
         self.height = height
+        self.ucb = ucb
+        self.lcb = lcb
 
     def update_node_f_value(self, fval):
         self.f_value = fval
 
 
 class BamBinarySOOTree:
-    def __init__(self, domain):
+    def __init__(self, domain, explr_p):
         self.root = None
         self.leaves = []
         self.nodes = []
@@ -37,14 +39,20 @@ class BamBinarySOOTree:
         dim_x = len(self.domain[0])
         self.gp = StandardContinuousGP(dim_x)
         self.fplus = None
+        self.explr_p = explr_p
+        self.N = 1
 
-    @staticmethod
-    def create_node(cell_mid_point, cell_min, cell_max, parent_node):
+    def create_node(self, cell_mid_point, cell_min, cell_max, parent_node):
         if parent_node is None:
             height = 0
         else:
             height = parent_node.height + 1
-        new_node = SOOTreeNode(cell_mid_point, cell_min, cell_max, height, parent_node)
+        mu, var = self.gp.predict(cell_mid_point)
+
+        Bn = np.sqrt(2 * np.log((np.pi*np.pi *self.N*self.N) / (6.0 * self.explr_p) ))
+        ucb = mu + Bn*var
+        lcb = mu - Bn*var
+        new_node = BamSOOTreeNode(cell_mid_point, cell_min, cell_max, height, parent_node, ucb, lcb)
         return new_node
 
     def add_left_child(self, parent_node):
@@ -68,7 +76,7 @@ class BamBinarySOOTree:
     def find_leaf_with_max_value_at_given_height(self, height):
         leaves = self.get_leaves_at_height(height)
         if len(leaves) == 0:
-            return None
+            return None, 'DontEval'
 
         leaf_values = [l.f_value for l in leaves]
         best_leaf = leaves[np.argmax(leaf_values)]
@@ -78,10 +86,10 @@ class BamBinarySOOTree:
         #   Otherwise, set g(x) = L_N(x)
         #   Okay, in my code, I would just to return the point if U_N(x) > f+. There is no g(x), but only f_value.
         #   So, setting node.f_value = L_N(x) is same is g(x) = L_N(x)
-
         if best_leaf.f_value >= self.vmax:
             self.vmax = best_leaf.f_value  # update the vmax to the best leaf value
             is_node_children_added = not(best_leaf.l_child is None)
+            self.N += 1
             if is_node_children_added:
                 # I need to check U_N value of the chosen child
                 is_left_child_evaluated = best_leaf.l_child.f_value is not None
@@ -99,15 +107,14 @@ class BamBinarySOOTree:
 
             # lines 12-17 of BamSOO
             if node_to_eval.ucb >= self.fplus:
-                return node_to_eval
+                return node_to_eval, 'Eval'
             else:
-                # if the next-node-to-eval has ucb value less than fplus, then don't evaluate the node
                 node_to_eval.f_value = node_to_eval.lcb
                 if node_to_eval.f_value > self.fplus:  # line 19-20 of BamSOO
                     self.fplus = node_to_eval.f_value
-                return None
+                return node_to_eval, 'DontEval'
         else:
-            return None
+            return None, 'DontEval'
 
     def get_leaves_at_height(self, height):
         return [l for l in self.leaves if l.height == height]
@@ -122,31 +129,47 @@ class BamBinarySOOTree:
             node = self.create_node(cell_mid_point, self.domain[0], self.domain[1], None)
             self.leaves.append(node)
             self.root = node
+            node_eval_flag = 'Eval'
         else:
-            node = self.find_leaf_node_whose_value_is_greater_than_vmax()
+            node, node_eval_flag = self.find_leaf_node_whose_value_is_greater_than_vmax()
 
+        # todo
+        #   I need to take care of the case in which there is no node
+        #   that has ucb value higher than fplus. In such case, we associate
+        #   its lcb value as its f_value, and then expand its children.
+        #   The gp is not updated.
+        while node_eval_flag == 'DontEval':
+            self.nodes.append(node)
+            self.add_left_child(parent_node=node)
+            self.add_right_child(parent_node=node)
+
+            not_root_node = node.parent is not None
+            if not_root_node:
+                self.add_parent_children_to_leaves(node)
+
+            node, node_eval_flag = self.find_leaf_node_whose_value_is_greater_than_vmax()
         return node
 
     def find_leaf_node_whose_value_is_greater_than_vmax(self):
-        node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
+        node, flag = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
         no_node_exceeds_vmax = node is None
         while no_node_exceeds_vmax and self.tree_traversal_height <= self.tree_height:
             self.tree_traversal_height += 1
-            node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
+            node, flag = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
             no_node_exceeds_vmax = node is None
 
         if no_node_exceeds_vmax:
             # it might come here without finding the leaf node. Reset self.vmax in this case
             self.vmax = -np.inf
             self.tree_traversal_height = 0
-            node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
+            node, flag = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
             no_node_exceeds_vmax = node is None
             while no_node_exceeds_vmax and self.tree_traversal_height <= self.tree_height:
                 self.tree_traversal_height += 1
-                node = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
+                node, flag = self.find_leaf_with_max_value_at_given_height(self.tree_traversal_height)
                 no_node_exceeds_vmax = node is None
 
-        return node
+        return node, flag
 
     def expand_node(self, fval, node, evaled_x, evaled_y):
         node.update_node_f_value(fval)
