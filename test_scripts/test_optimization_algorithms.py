@@ -16,7 +16,7 @@ if socket.gethostname() == 'dell-XPS-15-9560' or socket.gethostname() == 'lab':
 
 if True:
     from generators.gpucb_utils.gp import StandardContinuousGP, AddStandardContinuousGP
-    from generators.gpucb_utils.functions import UCB, Domain, AddUCB
+    from generators.gpucb_utils.functions import UCB, Domain, AddUCB, ProbImprovement
     from generators.gpucb_utils.bo import BO, AddBO
 
 from generators.soo_utils.bamsoo_tree import BamBinarySOOTree
@@ -263,9 +263,12 @@ def gpucb(explr_p, save_dir):
     return evaled_x, evaled_y, max_y, times
 
 
-def rembo_gpucb(explr_p, low_dim, save_dir):
+def rembo(explr_p, low_dim, save_dir, acq='ucb'):
     gp = StandardContinuousGP(low_dim)
-    acq_fcn = UCB(zeta=explr_p, gp=gp)
+    if acq == 'ucb':
+        acq_fcn = UCB(zeta=explr_p, gp=gp)
+    else:
+        acq_fcn = ProbImprovement(target_val=0, gp=gp)
 
     # Generate A
     domain_min = domain[0][0]
@@ -303,6 +306,10 @@ def rembo_gpucb(explr_p, low_dim, save_dir):
         evaled_x.append(x)
         evaled_y.append(y)
         max_y.append(np.max(evaled_y))
+
+        if acq == 'ei':
+            acq_fcn.target_val = max_y[-1]
+
         times.append(time.time() - stime)
 
         pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
@@ -408,6 +415,8 @@ def get_exploration_parameters(algorithm):
         epsilons = [0]
     elif algorithm.__name__ == 'bamsoo':
         epsilons = [0.1, 0.7, 0.9]
+    elif algorithm.__name__ == 'rembo_ei':
+        epsilons = [0]
     else:
         print algorithm.__name__
         raise NotImplementedError
@@ -415,6 +424,7 @@ def get_exploration_parameters(algorithm):
 
 
 def main():
+    print "Testing ", args.algo_name
     if socket.gethostname() != 'shakey' and socket.gethostname() != 'phaedra' \
             and socket.gethostname() != 'dell-XPS-15-9560' \
             and socket.gethostname() != 'lab':
@@ -446,7 +456,13 @@ def main():
     elif algo_name == 'cmaes':
         algorithm = genetic_algorithm
     elif algo_name == 'rembo_gpucb':
+        def rembo_gpucb(a,b,c):
+            return rembo(a,b,c,acq='ucb')
         algorithm = rembo_gpucb
+    elif algo_name == 'rembo_ei':
+        def rembo_ei(a, b, c):
+            return rembo(a, b, c, acq='ei')
+        algorithm = rembo_ei
     elif algo_name == 'bamsoo':
         algorithm = bamsoo
     elif algo_name == 'add_gpucb':
@@ -462,7 +478,7 @@ def main():
     for epsilon in epsilons:
         if algo_name == 'gpucb':
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
-        elif algo_name == 'rembo_gpucb':
+        elif 'rembo' in algo_name:
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, args.low_dim, save_dir)
         else:
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)

@@ -135,11 +135,13 @@ class ProbImprovement(Function):
 
         if np.any(var == 0):
             var += 0.00000001
+        var = 1 # This makes it expected improvement
         return (self.target_val - mu) / np.sqrt(var)
 
     def fg(self, x):
         # returns function value and gradient value at x
         mu, var = self.gp.predict(x)
+        var = 1
         dmdx, dvdx = self.gp.predictive_gradients(x)
         dmdx = dmdx[0, :, 0]
         dvdx = dvdx[0, :]
