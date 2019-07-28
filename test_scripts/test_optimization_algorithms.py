@@ -479,7 +479,13 @@ def main():
         if algo_name == 'gpucb':
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
         elif 'rembo' in algo_name:
-            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, args.low_dim, save_dir)
+            if dim_x == 10:
+                low_dim = 3
+            elif dim_x == 20:
+                low_dim = 6
+            else:
+                raise NotImplementedError
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, low_dim, save_dir)
         else:
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
 
