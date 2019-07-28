@@ -480,9 +480,9 @@ def main():
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
         elif 'rembo' in algo_name:
             if dim_x == 10:
-                low_dim = 3
+                low_dim = 2
             elif dim_x == 20:
-                low_dim = 6
+                low_dim = 3
             else:
                 raise NotImplementedError
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, low_dim, save_dir)

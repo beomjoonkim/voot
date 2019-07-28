@@ -13,7 +13,7 @@ class BO(object):
         self.opt_n = opt_n
 
     def choose_next_point(self, evaled_x, evaled_y):
-        update_hyper_params = len(evaled_x) % 10 == 0
+        update_hyper_params = len(evaled_x) % 50 == 0
         self.model.update(evaled_x, evaled_y, update_hyper_params)
         x, acq_fcn_val = helper.global_minimize(self.acq_fcn,
                                                 self.acq_fcn.fg,
