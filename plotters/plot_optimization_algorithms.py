@@ -58,7 +58,7 @@ def get_optimal_epsilon_idx(result_dir):
         except KeyError:
             epsilons = result['epsilon']
         # print result['epsilons']
-        print epsilons
+        #print epsilons
         for idx, epsilon in enumerate(epsilons):
             if epsilon in eps_to_max_vals:
                 eps_to_max_vals[epsilon].append(max_ys[idx, -1])
@@ -77,6 +77,7 @@ def get_optimal_epsilon_idx(result_dir):
     else:
         if 'rembo' in result_dir:
             #return 2 # 0, 1, 2
+            return epsilons.index(max_esp)
             return 1
         else:
             return epsilons.index(max_esp)
@@ -132,7 +133,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['rembo_gpucb', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
+    algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
     #algo_names = ['cmaes']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
