@@ -87,7 +87,7 @@ class BamBinarySOOTree:
         #   Okay, in my code, I would just to return the point if U_N(x) > f+. There is no g(x), but only f_value.
         #   So, setting node.f_value = L_N(x) is same is g(x) = L_N(x)
         if best_leaf.f_value >= self.vmax:
-            self.vmax = best_leaf.f_value  # update the vmax to the best leaf value
+            self.vmax = best_leaf.f_value  # Line 24 of BamSOO
             is_node_children_added = not(best_leaf.l_child is None)
             self.N += 1
             if is_node_children_added:
@@ -106,6 +106,7 @@ class BamBinarySOOTree:
                 node_to_eval = best_leaf
 
             # lines 12-17 of BamSOO
+            #print node_to_eval, self.N, node_to_eval.ucb, self.fplus
             if node_to_eval.ucb >= self.fplus:
                 return node_to_eval, 'Eval'
             else:
@@ -148,6 +149,7 @@ class BamBinarySOOTree:
                 self.add_parent_children_to_leaves(node)
 
             node, node_eval_flag = self.find_leaf_node_whose_value_is_greater_than_vmax()
+            self.fplus = -np.inf
         return node
 
     def find_leaf_node_whose_value_is_greater_than_vmax(self):

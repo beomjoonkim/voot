@@ -100,9 +100,17 @@ def get_results(algo_name, dimension, obj_fcn):
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         max_y = max_ys[0]
-        if len(max_y) < 500 and not ('cmaes' in result_dir):
-            print result_dir+fin
-            continue
+
+        print len(max_y), result_dir+fin
+        if 'griewank' in obj_fcn:
+            if len(max_y) < 500 and not ('cmaes' in result_dir):
+                print "Skipping because not enough max_y", result_dir+fin
+                continue
+        else:
+            if len(max_y) < 1000 and not ('cmaes' in result_dir):
+                print "Skipping because not enough max_y", result_dir+fin
+                continue
+
         # optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         # print fin
         """
@@ -133,7 +141,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'uniform', 'cmaes']
+    algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'cmaes']
     #algo_names = ['cmaes']
     color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     color_names = color_dict.keys()
