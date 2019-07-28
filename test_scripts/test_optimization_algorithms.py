@@ -266,7 +266,8 @@ def gpucb(explr_p, save_dir):
 def rembo(hyperparam_update_frequency, low_dim, save_dir, acq='ucb'):
     gp = StandardContinuousGP(low_dim)
     if acq == 'ucb':
-        explr_p = 0.1
+        #explr_p = 0.1
+        explr_p = hyperparam_update_frequency
         acq_fcn = UCB(zeta=explr_p, gp=gp)
     else:
         acq_fcn = ProbImprovement(target_val=0, gp=gp)
@@ -293,8 +294,11 @@ def rembo(hyperparam_update_frequency, low_dim, save_dir, acq='ucb'):
     times = []
     stime = time.time()
     for i in range(n_fcn_evals):
-        print 'gp iteration ', i
-        low_dim_x = gp_optimizer.choose_next_point(evaled_low_dim_x, evaled_y, hyperparam_update_frequency)
+        print 'gp iteration ', i, hyperparam_update_frequency
+        if acq == 'ucb':
+            low_dim_x = gp_optimizer.choose_next_point(evaled_low_dim_x, evaled_y, 1)
+        else:
+            low_dim_x = gp_optimizer.choose_next_point(evaled_low_dim_x, evaled_y, hyperparam_update_frequency)
         x = np.dot(A, low_dim_x)
 
         # keep it in range
@@ -309,6 +313,7 @@ def rembo(hyperparam_update_frequency, low_dim, save_dir, acq='ucb'):
         max_y.append(np.max(evaled_y))
 
         if acq == 'ei':
+            print max_y
             acq_fcn.target_val = max_y[-1]
 
         times.append(time.time() - stime)
@@ -405,7 +410,7 @@ def get_exploration_parameters(algorithm):
     elif algorithm.__name__ == 'gpucb':
         epsilons = [0.01, 1, 0.1, 5, 10, 30]
     elif algorithm.__name__ == 'rembo_gpucb':
-        epsilons = [0.01, 0.1, 0.5]  # 1 and 5 the best?
+        epsilons = [1, 0.01, 0.1, 0.5]  # 1 and 5 the best?
     elif algorithm.__name__ == 'add_gpucb':
         epsilons = [0]
     elif algorithm.__name__ == 'soo':
@@ -417,7 +422,7 @@ def get_exploration_parameters(algorithm):
     elif algorithm.__name__ == 'bamsoo':
         epsilons = [0.1, 0.7, 0.9]
     elif algorithm.__name__ == 'rembo_ei':
-        epsilons = [1, 10, 20, 30]
+        epsilons = [10, 20, 30]
     else:
         print algorithm.__name__
         raise NotImplementedError
@@ -487,8 +492,10 @@ def main():
             else:
                 raise NotImplementedError
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, low_dim, save_dir)
-        else:
+        elif 'bamsoo' in algo_name:
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, save_dir)
+        else:
+            evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon)
 
         max_ys.append(max_y)
         time_takens.append(time_taken)

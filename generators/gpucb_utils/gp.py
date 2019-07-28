@@ -15,7 +15,7 @@ class StandardContinuousGP:
         mu, sig = self.model.predict(x)
         return mu, sig
 
-    def update(self, evaled_x, evaled_y, update_hyper_params=True):
+    def update(self, evaled_x, evaled_y, update_hyper_params=True, is_bamsoo=False):
         # todo make the same distance used in the voo
         if len(evaled_x) == 0:
             return
@@ -23,11 +23,16 @@ class StandardContinuousGP:
         self.evaled_y = evaled_y
         evaled_x = np.array(evaled_x)
         evaled_y = np.array(evaled_y)[:, None]
-        if len(evaled_x) == 1:
-            normalizer = False
+        if is_bamsoo:
+            # this is for BamSOO, which returns NaN when normalize with a single data point
+            if len(evaled_x) == 1:
+                normalizer = False  # what is the impact of this?
+            else:
+                normalizer = True
         else:
             normalizer = True
 
+        print normalizer, update_hyper_params
         self.model = GPy.models.GPRegression(evaled_x, evaled_y, kernel=self.kern, normalizer=normalizer)
 
         if update_hyper_params:

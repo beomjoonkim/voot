@@ -12,9 +12,9 @@ class BO(object):
         self.domain = domain
         self.opt_n = opt_n
 
-    def choose_next_point(self, evaled_x, evaled_y, frequency):
+    def choose_next_point(self, evaled_x, evaled_y, frequency, is_bamsoo=False):
         update_hyper_params = len(evaled_x) % frequency == 0 # For rastrigin =30
-        self.model.update(evaled_x, evaled_y, update_hyper_params)
+        self.model.update(evaled_x, evaled_y, update_hyper_params, is_bamsoo)
         x, acq_fcn_val = helper.global_minimize(self.acq_fcn,
                                                 self.acq_fcn.fg,
                                                 self.domain,

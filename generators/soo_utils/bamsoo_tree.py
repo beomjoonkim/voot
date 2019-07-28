@@ -178,7 +178,7 @@ class BamBinarySOOTree:
 
         # lines 15 in Algorithm 3 of BamSOO
         # Update my gp here
-        self.gp.update(evaled_x, evaled_y)
+        self.gp.update(evaled_x, evaled_y,is_bamsoo=True)
 
         # lines 19-20 in Algorithm 3 of BamSOO
         if self.fplus is None or fval > self.fplus:

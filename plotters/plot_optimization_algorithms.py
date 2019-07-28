@@ -58,7 +58,7 @@ def get_optimal_epsilon_idx(result_dir):
         except KeyError:
             epsilons = result['epsilon']
         # print result['epsilons']
-        #print epsilons
+        print epsilons
         for idx, epsilon in enumerate(epsilons):
             if epsilon in eps_to_max_vals:
                 eps_to_max_vals[epsilon].append(max_ys[idx, -1])
@@ -77,6 +77,7 @@ def get_optimal_epsilon_idx(result_dir):
     else:
         if 'rembo' in result_dir:
             #return 2 # 0, 1, 2
+            print 'best', epsilons.index(max_esp)
             return epsilons.index(max_esp)
             return 1
         else:
