@@ -263,9 +263,10 @@ def gpucb(explr_p, save_dir):
     return evaled_x, evaled_y, max_y, times
 
 
-def rembo(explr_p, low_dim, save_dir, acq='ucb'):
+def rembo(hyperparam_update_frequency, low_dim, save_dir, acq='ucb'):
     gp = StandardContinuousGP(low_dim)
     if acq == 'ucb':
+        explr_p = 0.1
         acq_fcn = UCB(zeta=explr_p, gp=gp)
     else:
         acq_fcn = ProbImprovement(target_val=0, gp=gp)
@@ -293,7 +294,7 @@ def rembo(explr_p, low_dim, save_dir, acq='ucb'):
     stime = time.time()
     for i in range(n_fcn_evals):
         print 'gp iteration ', i
-        low_dim_x = gp_optimizer.choose_next_point(evaled_low_dim_x, evaled_y)
+        low_dim_x = gp_optimizer.choose_next_point(evaled_low_dim_x, evaled_y, hyperparam_update_frequency)
         x = np.dot(A, low_dim_x)
 
         # keep it in range
@@ -312,7 +313,7 @@ def rembo(explr_p, low_dim, save_dir, acq='ucb'):
 
         times.append(time.time() - stime)
 
-        pickle.dump({'epsilon': [explr_p], 'max_ys': [max_y]},
+        pickle.dump({'epsilon': [hyperparam_update_frequency], 'max_ys': [max_y]},
                     open(save_dir + '/' + str(problem_idx) + '.pkl', 'wb'))
         print 'max_y', max_y[-1]
 
@@ -416,7 +417,7 @@ def get_exploration_parameters(algorithm):
     elif algorithm.__name__ == 'bamsoo':
         epsilons = [0.1, 0.7, 0.9]
     elif algorithm.__name__ == 'rembo_ei':
-        epsilons = [0]
+        epsilons = [1, 10, 20, 30]
     else:
         print algorithm.__name__
         raise NotImplementedError
