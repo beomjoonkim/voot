@@ -75,8 +75,8 @@ def get_optimal_epsilon_idx(result_dir):
     if len(max_y) < 500 and not ('cmaes' in result_dir):
         return None
     else:
-        if 'rembo' in result_dir:
-            #return 2 # 0, 1, 2
+        if 'rembo_gpucb' in result_dir:
+            return 2 # 0, 1, 2
             print 'best', epsilons.index(max_esp)
             return epsilons.index(max_esp)
             return 1
@@ -142,19 +142,24 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'cmaes']
+    if args.obj_fcn == 'griewank':
+        algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'cmaes']
+    else:
+        algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'cmaes']
     #algo_names = ['cmaes']
-    color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    color_names = color_dict.keys()
-    color_dict[color_names[0]] = [0., 0.5570478679, 0.]
-    color_dict[color_names[1]] = [0, 0, 0]
-    color_dict[color_names[2]] = [1, 0, 0]
-    color_dict[color_names[3]] = [0, 0, 1]
-    color_dict[color_names[4]] = [0.8901960784313725, 0.6745098039215687, 0]
-    color_dict[color_names[5]] = [117 / 255.0, 15 / 255.0, 138 / 255.0]
-    color_dict[color_names[6]] = [15 / 255.0, 117 / 255.0, 138 / 255.0]
-    color_dict[color_names[7]] = [102 / 255.0, 51 / 255.0, 0 / 255.0]
-    color_dict[color_names[7]] = [3 / 255.0, 252 / 255.0, 148 / 255.0]
+    #color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
+    #color_names = color_dict.keys()
+    color_dict = {}
+    color_dict['rembo_gpucb'] = [0., 0.5570478679, 0.]
+    color_dict['rembo_ei'] = [0., 0.5570478679, 0.]
+    color_dict['cmaes'] = [0, 0, 0]
+    color_dict['voo'] = [1, 0, 0]
+    color_dict['doo'] = [0, 0, 1]
+    color_dict['soo'] = [3 / 255.0, 252 / 255.0, 148 / 255.0]
+    color_dict['bamsoo'] = [117 / 255.0, 15 / 255.0, 138 / 255.0]
+    color_dict['gpucb'] = [15 / 255.0, 117 / 255.0, 138 / 255.0]
+    #color_dict[color_names[7]] = [102 / 255.0, 51 / 255.0, 0 / 255.0]
+    #color_dict[color_names[7]] = [3 / 255.0, 252 / 255.0, 148 / 255.0]
     optimum_color = 'magenta'
     if args.obj_fcn != 'shekel':
         sns.tsplot([0] * 2000, range(2000), ci=95, condition='Optimum', color='magenta')
@@ -193,10 +198,10 @@ def plot_across_algorithms():
         n_samples_tested = search_rwd_times.shape[-1]
         if n_samples_tested < n_samples:
             sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo.upper(),
-                       color=color_dict[color_names[algo_idx]])
+                       color=color_dict[algo])
         else:
             sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(),
-                       color=color_dict[color_names[algo_idx]])
+                       color=color_dict[algo])
         # print algo, n_samples, np.mean(search_rwd_times[:, -1])
         # print "===================="
 

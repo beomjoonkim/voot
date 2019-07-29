@@ -272,26 +272,37 @@ def rembo(hyperparam_update_frequency, low_dim, save_dir, acq='ucb'):
     else:
         acq_fcn = ProbImprovement(target_val=0, gp=gp)
 
+
+    dim_parameters = domain.shape[-1]
+    domain_min = domain[0]
+    domain_max = domain[1]
+    first_x = np.random.uniform(domain_min, domain_max, (1, dim_parameters)).squeeze()
+    first_y = get_objective_function(first_x)
+
+
     # Generate A
     domain_min = domain[0][0]
     domain_max = domain[1][1]
     original_dim = len(domain[0])
+    # it does not generate same init point b/c of this.
     A = np.random.rand(original_dim, low_dim) * (domain_max-domain_min) + domain_min
 
     # has to be such that when I multiply it by A, then it should roughly stay within domain_min
     low_dim_domain_min = [-np.sqrt(domain_max)/2.0] * low_dim
     low_dim_domain_max = [np.sqrt(domain_max)/2.0] * low_dim
     low_dim_domain = [low_dim_domain_min, low_dim_domain_max]
+    low_dim_first_x = np.linalg.lstsq(A, first_x)[0]
 
     gp_format_domain = Domain(0, low_dim_domain)
     gp_optimizer = BO(gp, acq_fcn, gp_format_domain)  # note: this minimizes the negative acq_fcn
 
-    evaled_x = []
-    evaled_y = []
+    evaled_x = [first_x]
+    evaled_y = [first_y]
 
-    evaled_low_dim_x = []
+    evaled_low_dim_x = [low_dim_first_x]
     max_y = []
     times = []
+
     stime = time.time()
     for i in range(n_fcn_evals):
         print 'gp iteration ', i, hyperparam_update_frequency
