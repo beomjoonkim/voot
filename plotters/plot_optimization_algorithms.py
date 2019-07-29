@@ -75,8 +75,8 @@ def get_optimal_epsilon_idx(result_dir):
     if len(max_y) < 500 and not ('cmaes' in result_dir):
         return None
     else:
-        if 'rembo_gpucb' in result_dir:
-            return 2 # 0, 1, 2
+        if 'rembo' in result_dir:
+            return -1 # 0, 1, 2
             print 'best', epsilons.index(max_esp)
             return epsilons.index(max_esp)
             return 1
@@ -205,7 +205,7 @@ def plot_across_algorithms():
         # print algo, n_samples, np.mean(search_rwd_times[:, -1])
         # print "===================="
 
-    plt.xlim(0, n_samples)
+    plt.xlim(-20, n_samples)
     savefig('Number of function evaluations', 'Best function values',
             fname='./plotters/' + args.obj_fcn + '_fcn_optimization_' + str(args.dim))
 

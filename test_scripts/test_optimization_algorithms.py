@@ -433,7 +433,8 @@ def get_exploration_parameters(algorithm):
     elif algorithm.__name__ == 'bamsoo':
         epsilons = [0.1, 0.7, 0.9]
     elif algorithm.__name__ == 'rembo_ei':
-        epsilons = [1, 10, 20, 30]
+        #epsilons = [1, 10, 20, 30]
+        epsilons = [50, 60, 70]
     else:
         print algorithm.__name__
         raise NotImplementedError
