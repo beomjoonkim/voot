@@ -378,7 +378,7 @@ class GeneticAlgoProblem:
 def genetic_algorithm(explr_p):
     prob = pg.problem(GeneticAlgoProblem())
     #sade = pg.sade(gen=1, ftol=1e-20, xtol=1e-20)
-    population_size = 10
+    population_size = 5
 
     if obj_fcn == 'griewank' or dim_x == 3:
         total_evals = 500
@@ -386,12 +386,11 @@ def genetic_algorithm(explr_p):
         total_evals = 5000
     else:
         total_evals = 1000
-
     generations = total_evals / population_size
     optimizer = pg.cmaes(gen=generations, ftol=1e-20, xtol=1e-20)
     algo = pg.algorithm(optimizer)
     algo.set_verbosity(1)
-    pop = pg.population(prob, size=5)
+    pop = pg.population(prob, size=population_size)
     pop = algo.evolve(pop)
     print pop.champion_f
     champion_x = pop.champion_x

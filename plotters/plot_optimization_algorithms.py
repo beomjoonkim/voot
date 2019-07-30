@@ -24,8 +24,7 @@ def get_result_dir(algo_name, dimension, obj_fcn):
     return result_dir
 
 
-def augment_cmaes_data(max_y):
-    population_size = 10
+def augment_cmaes_data(max_y, population_size=5):
     desired_length = (len(max_y)) * population_size
     augmented = []
 
@@ -142,10 +141,7 @@ def plot_across_algorithms():
     args = parser.parse_args()
     n_dim = args.dim
 
-    if args.obj_fcn == 'griewank':
-        algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'cmaes']
-    else:
-        algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', 'cmaes']
+    algo_names = ['cmaes', 'rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
     #algo_names = ['cmaes']
     #color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     #color_names = color_dict.keys()
