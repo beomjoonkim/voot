@@ -50,7 +50,7 @@ def get_optimal_epsilon_idx(result_dir):
         result = pickle.load(open(result_dir + fin, 'r'))
         max_ys = np.array(result['max_ys'])
         max_y = max_ys[0, :]
-        if len(max_y) < 500 and not ('cmaes' in result_dir):
+        if 'epsilon' not in result and 'epsilons' not in result:
             continue
         try:
             epsilons = result['epsilons']
@@ -111,23 +111,16 @@ def get_results(algo_name, dimension, obj_fcn):
                 print "Skipping because not enough max_y", result_dir+fin
                 continue
 
-        # optimal_epsilon_idx = np.argmax(max_ys[:, -1])
-        # print fin
-        """
-        try:
-            asdf = result['epsilons'][optimal_epsilon_idx]
-        except:
-            import pdb;
-            pdb.set_trace()
-        """
         max_y = max_ys[optimal_epsilon_idx, :]
         if 'cmaes' in result_dir:
             max_y = augment_cmaes_data(max_y)
         max_y_values.append(max_y)
+        """
         if len(max_y) < 500 and not ('cmaes' in result_dir):
             continue
         else:
             max_y_values.append(max_y)
+        """
         # print fin, len(max_y_values[-1]), max_y[-1], optimal_epsilon_idx
 
     # print 'number of functions tested ', len(max_y_values)
@@ -142,6 +135,7 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['cmaes', 'rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
+    algo_names = ['voo']
     #algo_names = ['cmaes']
     #color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
     #color_names = color_dict.keys()
@@ -191,6 +185,7 @@ def plot_across_algorithms():
             continue
 
         search_rwd_times = search_rwd_times[:, 0:n_samples]
+        #search_rwd_times = search_rwd_times[np.argsort(search_rwd_times[:, -1])[10:], :]
         n_samples_tested = search_rwd_times.shape[-1]
         if n_samples_tested < n_samples:
             sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo.upper(),
