@@ -71,16 +71,69 @@ def get_optimal_epsilon_idx(result_dir):
             max_val = np.mean(val)
             max_esp = eps
     print result_dir
-    if len(max_y) < 500 and not ('cmaes' in result_dir):
-        return None
+
+    if 'rembo' in result_dir:
+        return -1 # 0, 1, 2
     else:
+        return epsilons.index(max_esp)
+
+def get_results_for_rastrigin(algo_name, dimension, obj_fcn):
+    result_dir = get_result_dir(algo_name, dimension, obj_fcn)
+    max_y_values = []
+
+    try:
+        result_files = os.listdir(result_dir)
+    except OSError:
+        return None
+
+    for fin in result_files:
+        if fin.find('.pkl') == -1:
+            continue
+        result = pickle.load(open(result_dir + fin, 'r'))
+        max_ys = np.array(result['max_ys'])
+        optimal_epsilon_idx = np.argmax(max_ys[:, -1])
         if 'rembo' in result_dir:
-            return -1 # 0, 1, 2
-            print 'best', epsilons.index(max_esp)
-            return epsilons.index(max_esp)
-            return 1
+            optimal_epsilon_idx = -1
+        if len(max_ys.shape) == 1:
+            max_y = max_ys
         else:
-            return epsilons.index(max_esp)
+            max_y = max_ys[optimal_epsilon_idx]
+
+        ####
+        if 'cmaes' in result_dir:
+            if 'shekel' in result_dir and 'dim_20' in result_dir:
+                max_y = augment_cmaes_data(max_y, 6)
+            else:
+                max_y = augment_cmaes_data(max_y, 5)
+
+        print len(max_y), result_dir+fin
+        if 'griewank' in obj_fcn and len(max_y) < 500:
+                print "Skipping because not enough max_y", result_dir+fin
+                continue
+        elif 'shekel' in result_dir and 'dim_20' in result_dir:
+            if len(max_y) < 5000:
+                if 'bamsoo' in result_dir or 'rembo_ei' in result_dir or 'gpucb' in result_dir:
+                    max_y = np.hstack([max_y, [max_y[-1]]*(5000-len(max_y))])
+                else:
+                    print "Skipping because not enough max_y", result_dir+fin
+                    continue
+        elif len(max_y) < 1000:
+            print "Skipping because not enough max_y", result_dir+fin
+            continue
+        ###
+
+        max_y_values.append(max_y)
+        if len(max_y) < 500 and not ('cmaes' in result_dir):
+            continue
+        else:
+            max_y_values.append(max_y)
+        ####
+
+
+        print fin, len(max_y_values[-1]), max_y[-1], optimal_epsilon_idx
+
+    print 'number of functions tested ', len(max_y_values)
+    return np.array(max_y_values)
 
 
 def get_results(algo_name, dimension, obj_fcn):
@@ -98,32 +151,41 @@ def get_results(algo_name, dimension, obj_fcn):
         if fin.find('.pkl') == -1:
             continue
         result = pickle.load(open(result_dir + fin, 'r'))
-        max_ys = np.array(result['max_ys'])
-        max_y = max_ys[0]
+        max_ys = np.array(result['max_ys']).squeeze()
+
+        if len(max_ys.shape) == 1:
+            max_y = max_ys
+        else:
+            max_y = max_ys[optimal_epsilon_idx]
+
+        if 'cmaes' in result_dir:
+            if 'shekel' in result_dir and 'dim_20' in result_dir:
+                max_y = augment_cmaes_data(max_y, 6)
+            else:
+                max_y = augment_cmaes_data(max_y, 5)
 
         print len(max_y), result_dir+fin
         if 'griewank' in obj_fcn:
-            if len(max_y) < 500 and not ('cmaes' in result_dir):
+            if len(max_y) < 500:
                 print "Skipping because not enough max_y", result_dir+fin
                 continue
-        else:
-            if len(max_y) < 1000 and not ('cmaes' in result_dir):
-                print "Skipping because not enough max_y", result_dir+fin
-                continue
+        elif 'shekel' in result_dir and 'dim_20' in result_dir:
+            if len(max_y) < 5000:
+                if 'bamsoo' in result_dir or 'rembo_ei' in result_dir or 'gpucb' in result_dir:
+                    max_y = np.hstack([max_y, [max_y[-1]]*(5000-len(max_y))])
+                else:
+                    print "Skipping because not enough max_y", result_dir+fin
+                    continue
+        elif len(max_y) < 1000:
+            print "Skipping because not enough max_y", result_dir+fin
+            continue
 
-        max_y = max_ys[optimal_epsilon_idx, :]
-        if 'cmaes' in result_dir:
-            max_y = augment_cmaes_data(max_y)
         max_y_values.append(max_y)
-        """
         if len(max_y) < 500 and not ('cmaes' in result_dir):
             continue
         else:
             max_y_values.append(max_y)
-        """
-        # print fin, len(max_y_values[-1]), max_y[-1], optimal_epsilon_idx
 
-    # print 'number of functions tested ', len(max_y_values)
     return np.array(max_y_values)
 
 
@@ -135,21 +197,15 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['cmaes', 'rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
-    algo_names = ['voo']
-    #algo_names = ['cmaes']
-    #color_dict = pickle.load(open('./plotters/color_dict.p', 'r'))
-    #color_names = color_dict.keys()
+
     color_dict = {}
-    color_dict['rembo_gpucb'] = [0., 0.5570478679, 0.]
     color_dict['rembo_ei'] = [0., 0.5570478679, 0.]
     color_dict['cmaes'] = [0, 0, 0]
     color_dict['voo'] = [1, 0, 0]
     color_dict['doo'] = [0, 0, 1]
     color_dict['soo'] = [3 / 255.0, 252 / 255.0, 148 / 255.0]
     color_dict['bamsoo'] = [117 / 255.0, 15 / 255.0, 138 / 255.0]
-    color_dict['gpucb'] = [15 / 255.0, 117 / 255.0, 138 / 255.0]
-    #color_dict[color_names[7]] = [102 / 255.0, 51 / 255.0, 0 / 255.0]
-    #color_dict[color_names[7]] = [3 / 255.0, 252 / 255.0, 148 / 255.0]
+    color_dict['gpucb'] = [139 / 255.0, 69 / 255.0, 19 / 255.0]
     optimum_color = 'magenta'
     if args.obj_fcn != 'shekel':
         sns.tsplot([0] * 2000, range(2000), ci=95, condition='Optimum', color='magenta')
@@ -160,14 +216,6 @@ def plot_across_algorithms():
             plt.plot(range(5000), [6.04759] * 5000, linestyle='--', color=optimum_color, label='GA_2.65e5_evals')
         elif n_dim == 20:
             plt.plot(range(5000), [3.93869] * 5000, linestyle='--', color=optimum_color, label='GA_8.10e5_evals')
-
-    """
-    if args.obj_fcn == 'rastrigin':
-        if n_dim == 10:
-            plt.plot(range(5000), [-21] * 5000, linestyle='--', color=ga_color, label='GA_40k_evals')
-        elif n_dim == 20:
-            plt.plot(range(5000), [-47] * 5000, linestyle='--', color=ga_color, label='GA_100k_evals')
-    """
 
     if args.dim == 3 or args.obj_fcn == 'griewank':
         n_samples = 500
@@ -180,18 +228,22 @@ def plot_across_algorithms():
 
     for algo_idx, algo in enumerate(algo_names):
         # print algo
-        search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
+        if 'rastrigin' == args.obj_fcn:
+            search_rwd_times = get_results_for_rastrigin(algo, n_dim, args.obj_fcn)
+        else:
+            search_rwd_times = get_results(algo, n_dim, args.obj_fcn)
         if search_rwd_times is None:
             continue
 
         search_rwd_times = search_rwd_times[:, 0:n_samples]
         #search_rwd_times = search_rwd_times[np.argsort(search_rwd_times[:, -1])[10:], :]
         n_samples_tested = search_rwd_times.shape[-1]
+        algo_name = algo.upper() if algo != 'rembo_ei' else 'REMBO'
         if n_samples_tested < n_samples:
-            sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo.upper(),
+            sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo_name,
                        color=color_dict[algo])
         else:
-            sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo.upper(),
+            sns.tsplot(search_rwd_times, range(n_samples), ci=95, condition=algo_name,
                        color=color_dict[algo])
         # print algo, n_samples, np.mean(search_rwd_times[:, -1])
         # print "===================="
