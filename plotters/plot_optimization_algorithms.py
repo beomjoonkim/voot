@@ -240,7 +240,7 @@ def plot_across_algorithms():
         n_samples_tested = search_rwd_times.shape[-1]
         if algo == 'rembo_ei':
             algo_name = 'REMBO'
-        elif 'bamsoo':
+        elif algo == 'bamsoo':
             algo_name = 'BaMSOO'
         else:
             algo_name = algo.upper()
