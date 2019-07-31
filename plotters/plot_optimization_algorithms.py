@@ -238,6 +238,13 @@ def plot_across_algorithms():
         search_rwd_times = search_rwd_times[:, 0:n_samples]
         #search_rwd_times = search_rwd_times[np.argsort(search_rwd_times[:, -1])[10:], :]
         n_samples_tested = search_rwd_times.shape[-1]
+        if algo == 'rembo_ei':
+            algo_name = 'REMBO'
+        elif 'bamsoo':
+            algo_name = 'BaMSOO'
+        else:
+            algo_name = algo.upper()
+
         algo_name = algo.upper() if algo != 'rembo_ei' else 'REMBO'
         if n_samples_tested < n_samples:
             sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo_name,
