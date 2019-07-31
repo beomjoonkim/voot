@@ -245,7 +245,6 @@ def plot_across_algorithms():
         else:
             algo_name = algo.upper()
 
-        algo_name = algo.upper() if algo != 'rembo_ei' else 'REMBO'
         if n_samples_tested < n_samples:
             sns.tsplot(search_rwd_times, range(n_samples_tested), ci=95, condition=algo_name,
                        color=color_dict[algo])
