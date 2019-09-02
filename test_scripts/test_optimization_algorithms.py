@@ -500,6 +500,8 @@ def main():
                 low_dim = 2
             elif dim_x == 20:
                 low_dim = 3
+            elif dim_x == 3:
+                low_dim = 3
             else:
                 raise NotImplementedError
             evaled_x, evaled_y, max_y, time_taken = algorithm(epsilon, low_dim, save_dir)
