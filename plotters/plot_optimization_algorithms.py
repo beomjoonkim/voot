@@ -107,7 +107,7 @@ def get_results_for_rastrigin(algo_name, dimension, obj_fcn):
                 max_y = augment_cmaes_data(max_y, 5)
 
         print len(max_y), result_dir+fin
-        if 'griewank' in obj_fcn and len(max_y) < 500:
+        if ('griewank' in obj_fcn or 'dim_3' in result_dir) and len(max_y) < 500:
                 print "Skipping because not enough max_y", result_dir+fin
                 continue
         elif 'shekel' in result_dir and 'dim_20' in result_dir:
@@ -117,7 +117,7 @@ def get_results_for_rastrigin(algo_name, dimension, obj_fcn):
                 else:
                     print "Skipping because not enough max_y", result_dir+fin
                     continue
-        elif len(max_y) < 1000:
+        elif ('dim_3' not in  result_dir) and len(max_y) < 1000:
             print "Skipping because not enough max_y", result_dir+fin
             continue
         ###
@@ -165,7 +165,8 @@ def get_results(algo_name, dimension, obj_fcn):
                 max_y = augment_cmaes_data(max_y, 5)
 
         print len(max_y), result_dir+fin
-        if 'griewank' in obj_fcn:
+
+        if 'griewank' in obj_fcn or 'dim_3' in result_dir:
             if len(max_y) < 500:
                 print "Skipping because not enough max_y", result_dir+fin
                 continue
@@ -197,6 +198,7 @@ def plot_across_algorithms():
     n_dim = args.dim
 
     algo_names = ['cmaes', 'rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
+    #algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
 
     color_dict = {}
     color_dict['rembo_ei'] = [0., 0.5570478679, 0.]

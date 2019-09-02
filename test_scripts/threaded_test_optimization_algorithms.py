@@ -40,7 +40,7 @@ def main():
     for pidx in pidxs:
         configs.append([n_iter, pidx, algo_name, dim, obj_fcn])
 
-    if algo_name == 'gpucb':
+    if algo_name == 'gpucb' or algo_name == 'bamsoo' or algo_name == 'rembo_ei':
         n_workers = int(3)
     else:
         n_workers = int(30)
