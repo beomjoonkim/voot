@@ -12,6 +12,8 @@ from keras import backend as K
 from keras import initializers
 from keras.callbacks import ModelCheckpoint
 
+
+from PolicySearch import PolicySearch
 from functools import partial
 import time
 from keras.preprocessing.image import ImageDataGenerator
@@ -31,7 +33,8 @@ import scipy.signal
 INFEASIBLE_SCORE = -sys.float_info.max
 
 
-def trpo_loss(sumA_weight, old_pi_a, tau):
+def ppo_loss(sumA_weight, old_pi_a, tau):
+    # This is actually PPO loss function
     def loss(actions, pi_pred):
         # log prob term is -K.sum(K.square(old_pi_a - actions),axis=-1,keepdims=True)
         p_old = K.exp(-K.sum(K.square(old_pi_a - actions), axis=-1, keepdims=True))
@@ -64,22 +67,9 @@ def discount(x, gamma):
     return scipy.signal.lfilter([1], [1, -gamma], x[::-1], axis=0)[::-1]
 
 
-class TRPO:
-    def __init__(self, sess, dim_action, dim_state, save_folder, tau, explr_const,
-                 key_configs=None, x_scaler=None, visualize=False):
-        self.opt_G = Adam(lr=1e-4, beta_1=0.5)
-        self.opt_D = Adam(lr=1e-3, beta_1=0.5)
-
-        # initialize
-        self.initializer = initializers.glorot_normal()
-        self.sess = sess
-
-        # get setup dimensions for inputs
-        self.dim_action = dim_action
-        self.dim_state = dim_state
-        self.n_key_confs = dim_state[0]
-        self.key_configs = key_configs
-        self.a_scaler = x_scaler
+class PPO(PolicySearch):
+    def __init__(self, sess, dim_action, dim_state, save_folder, tau, explr_const):
+        PolicySearch.__init__(sess, dim_action, dim_state, save_folder, tau, explr_const)
 
         # define inputs
         self.x_input = Input(shape=(dim_action,), name='x', dtype='float32')  # action
@@ -87,78 +77,19 @@ class TRPO:
         self.tau_input = Input(shape=(1,), name='tau', dtype='float32')  # collision vector
 
         self.a_gen, self.disc, self.DG, = self.createGAN()
-        self.save_folder = save_folder
-        self.visualize = visualize
-        self.tau = tau
-        self.explr_const = explr_const
 
-    def createGAN(self):
-        disc = self.createDisc()
-        a_gen, a_gen_output = self.createGen()
+    def create_qfcn_and_policy(self):
+        disc = self.create_qfcn()
+        a_gen, a_gen_output = self.create_policy()
         return a_gen, disc, None
 
-    def saveWeights(self, init=True, additional_name=''):
-        self.a_gen.save_weights(self.save_folder + '/a_gen' + additional_name + '.h5')
-        self.disc.save_weights(self.save_folder + '/disc' + additional_name + '.h5')
-
-    def load_offline_weights(self, weight_f):
-        self.a_gen.load_weights(self.save_folder + weight_f)
-
-    def load_weights(self):
-        best_rwd = -np.inf
-        for weightf in os.listdir(self.save_folder):
-            if weightf.find('a_gen') == -1: continue
-            try:
-                rwd = float(weightf.split('_')[-1][0:-3])
-            except ValueError:
-                continue
-            if rwd > best_rwd:
-                best_rwd = rwd
-                best_weight = weightf
-        print "Using initial weight ", best_weight
-        self.a_gen.load_weights(self.save_folder + '/' + best_weight)
-
-    def resetWeights(self, init=True):
-        if init:
-            self.a_gen.load_weights('a_gen_init.h5')
-            self.disc.load_weights('disc_init.h5')
-        else:
-            self.a_gen.load_weights(self.save_folder + '/a_gen.h5')
-            self.disc.load_weights(self.save_folder + '/disc.h5')
-
-    def createGen(self):
+    def create_policy(self):
         init_ = self.initializer
         dropout_rate = 0.25
         dense_num = 64
         n_filters = 64
 
-        # K_H = self.k_input
-        W_H = Reshape((self.n_key_confs, self.dim_state[1], 1))(self.w_input)
-        H = W_H
-        H = Conv2D(filters=n_filters, \
-                   kernel_size=(1, self.dim_state[1]), \
-                   strides=(1, 1),
-                   activation='relu')(H)
-        H = Conv2D(filters=n_filters,
-                   kernel_size=(1, 1),
-                   strides=(1, 1),
-                   activation='relu')(H)
-        H = Conv2D(filters=n_filters,
-                   kernel_size=(1, 1),
-                   strides=(1, 1),
-                   activation='relu')(H)
-        H = Conv2D(filters=n_filters,
-                   kernel_size=(1, 1),
-                   strides=(1, 1),
-                   activation='relu')(H)
-        H1 = Conv2D(filters=n_filters,
-                    kernel_size=(1, 1),
-                    strides=(1, 1),
-                    activation='relu')(H)
-        H1 = H
-        H1 = MaxPooling2D(pool_size=(2, 1))(H1)
-        H = Flatten()(H1)
-        H = Dense(dense_num, activation='relu')(H)
+        H = Dense(dense_num, activation='relu')(self.w_input)
         H = Dense(dense_num, activation='relu')(H)
         a_gen_output = Dense(self.dim_action,
                              activation='linear',
@@ -168,17 +99,13 @@ class TRPO:
         # these two are used for training purposes
         sumAweight_input = Input(shape=(1,), name='sumA', dtype='float32')
         old_pi_a_input = Input(shape=(self.dim_action,), name='old_pi_a', dtype='float32')
-        a_gen = Model(input=[self.w_input, sumAweight_input, old_pi_a_input, self.tau_input], \
-                      output=[a_gen_output])
-
-        a_gen.compile(loss=trpo_loss(sumA_weight=sumAweight_input, \
-                                     old_pi_a=old_pi_a_input,
-                                     tau=self.tau_input), \
+        a_gen = Model(input=[self.w_input, sumAweight_input, old_pi_a_input, self.tau_input], output=[a_gen_output])
+        a_gen.compile(loss=ppo_loss(sumA_weight=sumAweight_input, old_pi_a=old_pi_a_input, tau=self.tau_input),
                       optimizer=self.opt_G)
 
         return a_gen, a_gen_output
 
-    def createDisc(self):
+    def create_qfcn(self):
         init_ = self.initializer
         dropout_rate = 0.25
         dense_num = 64
@@ -204,15 +131,15 @@ class TRPO:
             d = self.dim_action
             pred = self.a_gen.predict([x, dummy_sumA, dummy_old_pi_a, tau])
             noise = self.explr_const * np.random.randn(n, d)
-            return self.a_scaler.inverse_transform(pred + noise)
+            return pred + noise
         else:
             n = n_samples
             d = self.dim_action
             pred = self.a_gen.predict([np.tile(x, (n, 1, 1)), dummy_sumA, dummy_old_pi_a, tau])
             noise = self.explr_const * np.random.randn(n, d)
-            return self.a_scaler.inverse_transform(pred + noise)
+            return pred + noise
 
-    def compute_A(self, states, actions, sprimes, rewards, traj_lengths):
+    def compute_advantage_values(self, states, actions, sprimes, rewards, traj_lengths):
         Vsprime = np.array([self.disc.predict(s[None, :])[0, 0] \
                                 if np.sum(s) != 0 else 0 for s in sprimes])
         n_data = len(Vsprime)
@@ -257,7 +184,7 @@ class TRPO:
                       verbose=False)
         self.disc.load_weights(self.save_folder + '/weights.hdf5')
 
-    def update_pi(self, states, actions, adv):
+    def update_policy(self, states, actions, adv):
         n_data = states.shape[0]
         batch_size = np.min([32, int(len(actions) * 0.1)])
         if batch_size == 0:
@@ -277,53 +204,35 @@ class TRPO:
         print "Done!"
         self.a_gen.load_weights(self.save_folder + '/pi_weights.hdf5')
 
-    def train(self, epochs=500, d_lr=1e-3, g_lr=1e-4):
+    def train(self, problem, seed, epochs=500, d_lr=1e-3, g_lr=1e-4):
         K.set_value(self.opt_G.lr, g_lr)
         K.set_value(self.opt_D.lr, d_lr)
 
         print self.opt_G.get_config()
-        print "Fitting V..."
-        current_best_J = -np.inf
 
-        stime = time.time()
+        pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
+        pfile = open(pfilename, 'wb')
 
-        self.update_V(states, sumR)
-        adv = self.compute_A(states, actions, sprimes, rewards, traj_lengths)
-        self.update_pi(states, actions, adv)
-
-        self.saveWeights(additional_name='epoch_' + str(0))
-        print time.time() - stime
-
-        # train pi
         for i in range(1, epochs):
-            stime = time.time()
-            print 'Completed: %.2f%%' % (i / float(epochs) * 100)
-            # Try policy - 5 trajectories, each 20 long
+            self.epoch = i
+            print "N simulations %d/%d" % (i, epochs)
             traj_list = []
-            for n_iter in range(5):  # N = 5, T = 20, using the notation from PPO paper
-                problem = ConveyorBelt()  # different "initial" state
-                traj = problem.execute_policy(self, 20, visualize=self.visualize)
+            if 'convbelt' in problem.name:
+                length_of_rollout = 20
+            else:
+                length_of_rollout = 10
+            for n_iter in range(1):  # N = 5, T = 20, using the notation from PPO paper
+                problem.init_saver.Restore()
+                problem.objects_currently_not_in_goal = problem.objects
+                traj = problem.rollout_the_policy(self, length_of_rollout)
                 traj_list.append(traj)
-                problem.env.Destroy()
-                RaveDestroy()
-            avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
-            std_J = np.std([np.sum(traj['r']) for traj in traj_list])
-            pfile = open(self.save_folder + '/performance.txt', 'a')
-            pfile.write(str(i) + ',' + str(avg_J) + ',' + str(std_J) + '\n')
-            pfile.close()
-            print 'Score of this policy', avg_J
-            print time.time() - stime
+            self.log_traj_performance(traj_list, i)
 
             # Add new data to the buffer
             new_s, new_a, new_r, new_sprime, new_sumR, _, new_traj_lengths = format_RL_data(traj_list)
-            new_a = self.a_scaler.transform(new_a)
 
             self.update_V(new_s, new_sumR)
-            new_sumA = self.compute_A(new_s, new_a, new_sprime, new_r, new_traj_lengths)
-            self.update_pi(new_s, new_a, new_sumA)
+            new_sumA = self.compute_advantage_values(new_s, new_a, new_sprime, new_r, new_traj_lengths)
+            self.update_policy(new_s, new_a, new_sumA)
 
-            if avg_J > current_best_J:
-                current_best_J = avg_J
-                theta_star = self.save_folder + '/policy_search_' + str(i) + '.h5'
-                self.saveWeights(additional_name='epoch_' + \
-                                                 str(i) + '_' + str(avg_J))
+

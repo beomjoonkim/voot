@@ -41,28 +41,20 @@ class DDPG:
     def __init__(self, sess, dim_action, dim_state, tau, save_folder, explr_const, visualize=False):
         self.opt_G = Adam(lr=1e-4, beta_1=0.5)
         self.opt_D = Adam(lr=1e-3, beta_1=0.5)
-
-        # initialize
         self.initializer = initializers.glorot_normal()
         self.sess = sess
-
-        # get setup dimensions for inputs
         self.dim_action = dim_action
         self.dim_state = dim_state
-
         self.v = visualize
-
         self.tau = tau
+        self.n_weight_updates = 0
+        self.save_folder = save_folder
+        self.explr_const = explr_const
 
         # define inputs
         self.x_input = Input(shape=(dim_action,), name='x', dtype='float32')  # action
         self.w_input = Input(shape=(dim_state,), name='w', dtype='float32')  # collision vector
-
         self.a_gen, self.disc, self.DG, = self.createGAN()
-        self.save_folder = save_folder
-        self.explr_const = explr_const
-
-        self.n_weight_updates = 0
 
     def createGAN(self):
         disc = self.createDisc()

@@ -20,14 +20,14 @@ else:
     ROOTDIR = '/data/public/rw/pass.port/gtamp_results/test_results/'
 
 
-def setup_save_dirs(parent_dir, domain, pi_name, n_data, n_trial, d_lr, g_lr, tau, nscore_train, explr_const):
+def setup_save_dirs(parent_dir, domain, pi_name, n_data, n_trial, d_lr, g_lr, tau, nscore_train, explr_p):
     n_data_dir = parent_dir + '/RL_results/'+ domain + '/n_data_' + str(n_data)
     pi_dir = n_data_dir + '/' + pi_name
 
     lr_dir = pi_dir + '/dg_lr_' + str(d_lr) + '_' + str(g_lr) + '/'
     tau_dir = lr_dir + '/tau_' + str(tau) + '/'
-    explr_const_dir = tau_dir + '/' + '/explr_const_' + str(explr_const) + '/'
-    nscore_dir = explr_const_dir + '/' + '/n_score_' + str(nscore_train) + '/'
+    explr_p_dir = tau_dir + '/' + '/explr_p_' + str(explr_p) + '/'
+    nscore_dir = explr_p_dir + '/' + '/n_score_' + str(nscore_train) + '/'
     trial_dir = nscore_dir + '/n_trial_' + str(n_trial)
     train_results_dir = trial_dir + '/train_results/'
 
@@ -42,7 +42,7 @@ def setup_save_dirs(parent_dir, domain, pi_name, n_data, n_trial, d_lr, g_lr, ta
     return train_results_dir
 
 
-def create_policy(alg, train_results_dir, tau, explr_const, v):
+def create_policy(alg, train_results_dir, tau, explr_p, v):
     session = tf.Session()
 
     print train_results_dir
@@ -63,7 +63,7 @@ def create_policy(alg, train_results_dir, tau, explr_const, v):
                       dim_state,
                       tau=tau,
                       save_folder=train_results_dir,
-                      explr_const=explr_const,
+                      explr_const=explr_p,
                       visualize=v)
     elif alg == 'trpo':
         policy = TRPO(session,
@@ -71,7 +71,7 @@ def create_policy(alg, train_results_dir, tau, explr_const, v):
                       dim_state,
                       tau=tau,
                       save_folder=train_results_dir,
-                      explr_const=explr_const,
+                      explr_p=explr_p,
                       visualize=v)
     else:
         raise NotImplementedError
@@ -94,12 +94,12 @@ def train_agent(args):
     g_lr = args.g_lr
     tau = args.tau  # epsilon in TRPO, tau in DDPG, lambda in SOAP
     v = args.v
-    explr_const = args.explr_const
+    explr_p = args.explr_p
     n_score_train = args.n_score
     train_results_dir = setup_save_dirs(ROOTDIR, args.domain, alg, n_data, n_trial,
-                                        d_lr, g_lr, tau, n_score_train, explr_const)
+                                        d_lr, g_lr, tau, n_score_train, explr_p)
 
-    policy = create_policy(alg, train_results_dir, tau, explr_const, v)
+    policy = create_policy(alg, train_results_dir, tau, explr_p, v)
 
     print "Starting train"
     if args.domain == 'convbelt':
@@ -133,7 +133,7 @@ def parse_args():
     parser.add_argument('-g_lr', type=float, default=1e-4)
     parser.add_argument('-n_score', type=int, default=5)
     parser.add_argument('-otherpi', default='uniform')
-    parser.add_argument('-explr_const', type=float, default=0.0)
+    parser.add_argument('-explr_p', type=float, default=0.0)
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-seed', type=int, default=0)
     args = parser.parse_args()
