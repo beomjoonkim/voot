@@ -14,6 +14,7 @@ import time
 import sys
 import numpy as np
 import os
+import random
 
 from data_load_utils import format_RL_data
 from problem_environments.conveyor_belt_rl_env import RLConveyorBelt
@@ -161,18 +162,13 @@ class DDPG:
 
     def update_disc(self, batch_x, batch_w, batch_targets, batch_size):
         before = self.disc.get_weights()
-        checkpointer = ModelCheckpoint(filepath=self.save_folder + '/disc_weights.hdf5',
-                                       verbose=0,
-                                       save_best_only=True,
-                                       save_weights_only=True)
+
         self.disc.fit({'x': batch_x, 'w': batch_w},
                       batch_targets,
                       validation_split=0.1,
-                      callbacks=[checkpointer],
                       batch_size=batch_size,
                       epochs=1,
                       verbose=False)
-        self.disc.load_weights(self.save_folder + '/disc_weights.hdf5')
         after = self.disc.get_weights()
         self.soft_update(self.disc, before, after)
 
@@ -180,23 +176,20 @@ class DDPG:
         # maximizes Q( pi(s_batch ) )
         y_labels = np.ones((len(s_batch),))  # dummy variable
         before = self.a_gen.get_weights()
-        checkpointer = ModelCheckpoint(filepath=self.save_folder + '/DG_weights.hdf5',
-                                       verbose=False,
-                                       save_best_only=True,
-                                       save_weights_only=True)
+
         self.DG.fit({'w': s_batch},
                     {'disc_output': y_labels, 'a_gen_output': y_labels},
-                    callbacks=[checkpointer],
                     validation_split=0.1,
                     batch_size=batch_size,
                     epochs=1,
                     verbose=False)
-        self.DG.load_weights(
-            self.save_folder + '/DG_weights.hdf5')  # verfied that when I load DG weights, it loads a_gen weights
         after = self.a_gen.get_weights()  # verfied that weights of disc does not change
         self.soft_update(self.a_gen, before, after)
 
-    def train(self, epochs=500, d_lr=1e-3, g_lr=1e-4):
+    def train(self, seed, epochs=500, d_lr=1e-3, g_lr=1e-4):
+        np.random.seed(seed)
+        random.seed(seed)
+
         BATCH_SIZE = 1
 
         K.set_value(self.opt_G.lr, g_lr)
@@ -204,7 +197,7 @@ class DDPG:
         print self.opt_G.get_config()
 
         current_best_J = -np.inf
-        pfilename = self.save_folder + '/performance.txt'
+        pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
         pfile = open(pfilename, 'w')
 
         # n_episodes = epochs*5
@@ -215,7 +208,6 @@ class DDPG:
         problem = RLConveyorBelt(problem_idx=3, n_actions_per_node=3)  # different "initial" state
         n_data = 0
         for i in range(1, epochs):
-            #print 'Completed: %.2f%%' % (i / float(epochs) * 100)
             print "N simulations", i
 
             # Technically speaking, we should update the policy every timestep.
@@ -229,7 +221,6 @@ class DDPG:
                 traj = problem.rollout_the_policy(self, length_of_rollout, self.v)
                 traj_list.append(traj)
             rollout_time = time.time() - stime
-            #print "Rollout time", time.time() - stime
             avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
             std_J = np.std([np.sum(traj['r']) for traj in traj_list])
             pfile = open(pfilename, 'a')

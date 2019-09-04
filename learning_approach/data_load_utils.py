@@ -83,25 +83,7 @@ def aggregate_data(train_dir, fname_keyword):
             return
 
 
-def setup_save_dirs(parent_dir, pi_name, \
-                    n_data, n_trial, d_lr, g_lr, \
-                    tau, nscore_train, explr_const):
-    n_data_dir = parent_dir + 'RL_results//n_data_' + str(n_data)
-    pi_dir = n_data_dir + '/' + pi_name
-    scaler_dir = pi_dir + '/scalers/'
 
-    lr_dir = pi_dir + '/dg_lr_' + str(d_lr) + '_' + str(g_lr) + '/'
-    tau_dir = lr_dir + '/tau_' + str(tau) + '/'
-    explr_const_dir = tau_dir + '/' + '/explr_const_' + str(explr_const) + '/'
-    nscore_dir = explr_const_dir + '/' + '/n_score_' + str(nscore_train) + '/'
-    trial_dir = nscore_dir + '/n_trial_' + str(n_trial)
-    train_results_dir = trial_dir + '/train_results/'
-
-    if not os.path.exists(train_results_dir):
-        os.makedirs(train_results_dir)
-    if not os.path.exists(scaler_dir):
-        os.mkdir(scaler_dir)
-    return train_results_dir, scaler_dir
 
 
 def setup_planner_result_dir(parent_dir, args):
