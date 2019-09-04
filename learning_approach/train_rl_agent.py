@@ -117,7 +117,7 @@ def parse_args():
     parser.add_argument('-n_trial', type=int, default=-1)
     parser.add_argument('-i', type=int, default=0)
     parser.add_argument('-v', action='store_true')
-    parser.add_argument('-tau', type=float, default=1e-2)
+    parser.add_argument('-tau', type=float, default=1e-3)
     parser.add_argument('-d_lr', type=float, default=1e-3)
     parser.add_argument('-g_lr', type=float, default=1e-4)
     parser.add_argument('-n_score', type=int, default=5)
