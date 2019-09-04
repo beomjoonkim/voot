@@ -95,7 +95,6 @@ def train_agent(args):
     policy = create_policy(alg, train_results_dir, tau, explr_const, v)
 
     print "Starting train"
-    sys.exit(-1)
     if args.domain == 'convbelt':
         epochs = 3000
         problem = RLConveyorBelt(problem_idx=3, n_actions_per_node=3)  # different "initial" state
