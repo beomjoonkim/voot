@@ -40,7 +40,6 @@ def main():
     n_workers = int(3)
     print configs
     pool = ThreadPool(n_workers)
-    import pdb;pdb.set_trace()
     results = pool.map(worker_wrapper_multi_input, configs)
 
 
