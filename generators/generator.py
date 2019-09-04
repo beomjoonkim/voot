@@ -1,6 +1,4 @@
-import sys
 import numpy as np
-#from mover_library.samplers import *
 from mover_library.utils import get_pick_domain, get_place_domain
 
 from feasibility_checkers.pick_feasibility_checker import PickFeasibilityChecker
@@ -59,7 +57,8 @@ class Generator:
 
             self.feasibility_checker = DummyFeasibilityChecker()
         else:
-            raise ValueError
+            print "Generator not implemented for", operator_name
+            raise NotImplementedError
 
     def update_evaled_values(self, node):
         executed_actions_in_node = node.Q.keys()

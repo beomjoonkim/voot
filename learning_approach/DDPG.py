@@ -1,0 +1,287 @@
+import matplotlib as mpl
+# mpl.use('Agg') # do this before importing plt to run with no DISPLAY
+import matplotlib.pyplot as plt
+
+from keras.layers import *
+from keras.callbacks import ModelCheckpoint
+from keras.layers.merge import Concatenate
+from keras.models import Sequential, Model
+from keras.optimizers import *
+from keras import backend as K
+from keras import initializers
+
+import time
+import sys
+import numpy as np
+import os
+
+from data_load_utils import format_RL_data
+from problem_environments.conveyor_belt_rl_env import RLConveyorBelt
+
+from openravepy import RaveDestroy
+INFEASIBLE_SCORE = -sys.float_info.max
+LAMBDA = 0
+
+
+def G_loss(dummy, pred):
+    return -K.mean(pred, axis=-1)  # try to maximize the value of pred
+
+
+def noise(n, z_size):
+    return np.random.normal(size=(n, z_size)).astype('float32')
+
+
+def tile(x):
+    reps = [1, 1, 32]
+    return K.tile(x, reps)
+
+
+class DDPG:
+    def __init__(self, sess, dim_action, dim_state, tau, save_folder, explr_const, visualize=False):
+        self.opt_G = Adam(lr=1e-4, beta_1=0.5)
+        self.opt_D = Adam(lr=1e-3, beta_1=0.5)
+
+        # initialize
+        self.initializer = initializers.glorot_normal()
+        self.sess = sess
+
+        # get setup dimensions for inputs
+        self.dim_action = dim_action
+        self.dim_state = dim_state
+
+        self.v = visualize
+
+        self.tau = tau
+
+        # define inputs
+        self.x_input = Input(shape=(dim_action,), name='x', dtype='float32')  # action
+        self.w_input = Input(shape=(dim_state,), name='w', dtype='float32')  # collision vector
+
+        self.a_gen, self.disc, self.DG, = self.createGAN()
+        self.save_folder = save_folder
+        self.explr_const = explr_const
+
+        self.n_weight_updates = 0
+
+    def createGAN(self):
+        disc = self.createDisc()
+        a_gen, a_gen_output = self.createGen()
+        for l in disc.layers:
+            l.trainable = False
+        DG_output = disc([a_gen_output, self.w_input])
+        DG = Model(input=[self.w_input], output=[DG_output])
+        DG.compile(loss={'disc_output': G_loss, },
+                   optimizer=self.opt_G,
+                   metrics=[])
+        return a_gen, disc, DG
+
+    def saveWeights(self, init=True, additional_name=''):
+        self.a_gen.save_weights(self.save_folder + '/a_gen' + additional_name + '.h5')
+        self.disc.save_weights(self.save_folder + '/disc' + additional_name + '.h5')
+
+    def load_offline_weights(self, weight_f):
+        self.a_gen.load_weights(self.save_folder + weight_f)
+
+    def load_weights(self):
+        best_rwd = -np.inf
+        for weightf in os.listdir(self.save_folder):
+            if weightf.find('a_gen') == -1: continue
+            try:
+                rwd = float(weightf.split('_')[-1][0:-3])
+            except ValueError:
+                continue
+            if rwd > best_rwd:
+                best_rwd = rwd
+                best_weight = weightf
+        print "Using initial weight ", best_weight
+        self.a_gen.load_weights(self.save_folder + '/' + best_weight)
+
+    def resetWeights(self, init=True):
+        if init:
+            self.a_gen.load_weights('a_gen_init.h5')
+            self.disc.load_weights('disc_init.h5')
+        else:
+            self.a_gen.load_weights(self.save_folder + '/a_gen.h5')
+            self.disc.load_weights(self.save_folder + '/disc.h5')
+
+    def createGen(self):
+        init_ = self.initializer
+        dropout_rate = 0.25
+        dense_num = 64
+        n_filters = 64
+
+        # K_H = self.k_input
+        H = Dense(dense_num, activation='relu')(self.w_input)
+        H = Dense(dense_num, activation='relu')(H)
+        a_gen_output = Dense(self.dim_action,
+                             activation='linear',
+                             init=init_,
+                             name='a_gen_output')(H)
+        a_gen = Model(input=[self.w_input], output=a_gen_output)
+        return a_gen, a_gen_output
+
+    def createDisc(self):
+        init_ = self.initializer
+        dropout_rate = 0.25
+        dense_num = 64
+
+        # K_H = self.k_input
+        XK_H = Concatenate(axis=-1)([self.x_input, self.w_input])
+
+        H = Dense(dense_num, activation='relu')(XK_H)
+        H = Dense(dense_num, activation='relu')(H)
+
+        disc_output = Dense(1, activation='linear', init=init_)(H)
+        disc = Model(input=[self.x_input, self.w_input],
+                     output=disc_output,
+                     name='disc_output')
+        disc.compile(loss='mse', optimizer=self.opt_D)
+        return disc
+
+    def predict(self, x, n_samples=1):
+        if n_samples == 1:
+            n = n_samples
+            d = self.dim_action
+            pred = self.a_gen.predict(x)
+            noise = self.explr_const * np.random.randn(n, d)
+            return pred + noise
+        else:
+            n = n_samples
+            d = self.dim_action
+            pred = self.a_gen.predict(np.tile(x, (n, 1, 1)))
+            noise = self.explr_const * np.random.randn(n, d)
+            return pred + noise
+
+    def soft_update(self, network, before, after):
+        new_weights = network.get_weights()
+        for i in range(len(before)):
+            new_weights[i] = (1 - self.tau) * before[i] + \
+                             (self.tau) * after[i]
+        network.set_weights(new_weights)
+
+    def update_disc(self, batch_x, batch_w, batch_targets, batch_size):
+        before = self.disc.get_weights()
+        checkpointer = ModelCheckpoint(filepath=self.save_folder + '/disc_weights.hdf5',
+                                       verbose=0,
+                                       save_best_only=True,
+                                       save_weights_only=True)
+        self.disc.fit({'x': batch_x, 'w': batch_w},
+                      batch_targets,
+                      validation_split=0.1,
+                      callbacks=[checkpointer],
+                      batch_size=batch_size,
+                      epochs=1,
+                      verbose=False)
+        self.disc.load_weights(self.save_folder + '/disc_weights.hdf5')
+        after = self.disc.get_weights()
+        self.soft_update(self.disc, before, after)
+
+    def update_pi(self, s_batch, batch_size):
+        # maximizes Q( pi(s_batch ) )
+        y_labels = np.ones((len(s_batch),))  # dummy variable
+        before = self.a_gen.get_weights()
+        checkpointer = ModelCheckpoint(filepath=self.save_folder + '/DG_weights.hdf5',
+                                       verbose=False,
+                                       save_best_only=True,
+                                       save_weights_only=True)
+        self.DG.fit({'w': s_batch},
+                    {'disc_output': y_labels, 'a_gen_output': y_labels},
+                    callbacks=[checkpointer],
+                    validation_split=0.1,
+                    batch_size=batch_size,
+                    epochs=1,
+                    verbose=False)
+        self.DG.load_weights(
+            self.save_folder + '/DG_weights.hdf5')  # verfied that when I load DG weights, it loads a_gen weights
+        after = self.a_gen.get_weights()  # verfied that weights of disc does not change
+        self.soft_update(self.a_gen, before, after)
+
+    def train(self, epochs=500, d_lr=1e-3, g_lr=1e-4):
+        BATCH_SIZE = 1
+
+        K.set_value(self.opt_G.lr, g_lr)
+        K.set_value(self.opt_D.lr, d_lr)
+        print self.opt_G.get_config()
+
+        current_best_J = -np.inf
+        pfilename = self.save_folder + '/performance.txt'
+        pfile = open(pfilename, 'w')
+
+        # n_episodes = epochs*5
+        # T = 20, but we update it once we finish executing all T
+        # This is because this is an episodic task - you can only learn meaningful moves
+        # if you go deep in the trajectory.
+        # So, we have 300*5*20 RL data
+        problem = RLConveyorBelt(problem_idx=3, n_actions_per_node=3)  # different "initial" state
+        n_data = 0
+        for i in range(1, epochs):
+            #print 'Completed: %.2f%%' % (i / float(epochs) * 100)
+            print "N simulations", i
+
+            # Technically speaking, we should update the policy every timestep.
+            # What if we update it 100 times after we executed 5 episodes, each with 20 timesteps??
+            stime = time.time()
+            traj_list = []
+            length_of_rollout = 10
+            for n_iter in range(1):
+                problem.init_saver.Restore()
+                problem.objects_currently_not_in_goal = problem.objects
+                traj = problem.rollout_the_policy(self, length_of_rollout, self.v)
+                traj_list.append(traj)
+            rollout_time = time.time() - stime
+            #print "Rollout time", time.time() - stime
+            avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
+            std_J = np.std([np.sum(traj['r']) for traj in traj_list])
+            pfile = open(pfilename, 'a')
+            pfile.write(str(i) + ',' + str(avg_J) + ',' + str(std_J) + ',' + str(n_data) + '\n')
+            pfile.close()
+            print 'Score of this policy', avg_J
+
+            if avg_J > current_best_J:
+                current_best_J = avg_J
+                theta_star = self.save_folder + '/policy_search_' + str(i) + '.h5'
+                self.saveWeights(additional_name='tau_' + str(self.tau) + 'epoch_' + str(i) + '_' + str(avg_J))
+
+            # Add new data to the buffer - only if this was a non-zero trajectory
+            lowest_possible_reward = -np.inf
+            if avg_J > lowest_possible_reward:
+                # Get data from trajectory
+                new_s, new_a, new_r, new_sprime, new_sumR, _, new_traj_lengths = format_RL_data(traj_list)
+                new_a = new_a
+
+                if 'states' in locals():
+                    n_new = len(new_s)
+                    n_dim_state = states.shape[1]
+                    states = np.r_[states, new_s.reshape((n_new, n_dim_state))]
+                    actions = np.r_[actions, new_a]
+                    rewards = np.r_[rewards, new_r]
+                    sprimes = np.r_[sprimes, new_sprime.reshape((n_new, n_dim_state))]
+                else:
+                    states = new_s
+                    actions = new_a
+                    rewards = new_r
+                    sprimes = new_sprime
+                n_data = len(states)
+
+                terminal_state_idxs = np.where(np.sum(np.sum(sprimes, axis=-1), axis=-1) == 0)[0]
+                nonterminal_mask = np.ones((sprimes.shape[0], 1))
+                nonterminal_mask[terminal_state_idxs, :] = 0
+                ## end of getting data
+
+                # make the targets
+                fake = self.a_gen.predict([sprimes])  # predicted by pi
+                real = actions
+                real_targets = rewards + np.multiply(self.disc.predict([fake, sprimes]), nonterminal_mask)
+
+                # Update policies
+                stime = time.time()
+                self.update_disc(real, states, real_targets, BATCH_SIZE)
+                self.update_pi(states, BATCH_SIZE)
+                fitting_time = time.time() - stime
+                self.n_weight_updates += 1
+            else:
+                fitting_time = 0
+            print "Fitting time", fitting_time
+            print "Rollout time", rollout_time
+            print "Time taken for epoch", fitting_time + rollout_time
+

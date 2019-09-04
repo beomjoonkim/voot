@@ -3,17 +3,15 @@ import sys
 import copy
 import os
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__))+'/../mover_library/')
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../mover_library/')
 from conveyor_belt_problem import create_conveyor_belt_problem
 from problem_environment import ProblemEnvironment
 from trajectory_representation.operator import Operator
 import cPickle as pickle
 import re
 from mover_library.utils import *
-from operator_utils.grasp_utils import solveTwoArmIKs, compute_two_arm_grasp
 from manipulation.primitives.savers import DynamicEnvironmentStateSaver
 from openravepy import DOFAffine, Environment
-
 
 from mover_library.motion_planner import collision_fn, base_extend_fn, base_sample_fn, base_distance_fn
 
@@ -61,7 +59,6 @@ class ConveyorBelt(ProblemEnvironment):
                 return None, "NoSolution"
             set_robot_config(original_xytheta, self.robot)
 
-
         goal_robot_xytheta = operator_instance.continuous_parameters['base_pose']
 
         if operator_instance.low_level_motion is not None:
@@ -93,7 +90,7 @@ class ConveyorBelt(ProblemEnvironment):
         else:
             set_robot_config(goal, self.robot)
             if not self.regions['big_region_1'].contains(held.ComputeAABB()) and \
-                    not self.regions['big_region_2'].contains(held.ComputeAABB()) :
+                    not self.regions['big_region_2'].contains(held.ComputeAABB()):
                 n_iterations = [20, 50, 100, 500, 1000]
                 set_robot_config(q_init, self.robot)
                 path, status = self.get_motion_plan(q_init, goal, d_fn, s_fn, e_fn, c_fn, n_iterations)
@@ -202,7 +199,6 @@ class ConveyorBelt(ProblemEnvironment):
                 else:
                     motion_plans.append(motion_plan)
                     two_arm_place_object(obj, self.robot, operator_instance.continuous_parameters)
-
             if status == 'HasSolution':
                 if operator_instance.low_level_motion is None:
                     operator_instance.update_low_level_motion(motion_plans)
@@ -226,13 +222,8 @@ class ConveyorBelt(ProblemEnvironment):
             two_arm_pick_object(target_object, self.robot, pick_params)
 
     def compute_place_reward(self, operator_instance):
-        if operator_instance.type == 'two_arm_place':
-            assert len(self.robot.GetGrabbed()) == 1
-            object_held = self.robot.GetGrabbed()[0]
-            two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
-            new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
-            reward = np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion))
-        elif operator_instance.type.find('_paps') != -1:
+        is_op_type_pap = operator_instance.type.find('_paps') != -1
+        if is_op_type_pap:
             objects = operator_instance.discrete_parameters['objects']
             place_base_poses = operator_instance.continuous_parameters['base_poses']
             reward = 0
@@ -242,20 +233,27 @@ class ConveyorBelt(ProblemEnvironment):
                 self.pick_object(obj)
                 operator_instance.continuous_parameters['base_pose'] = bpose
                 two_arm_place_object(obj, self.robot, operator_instance.continuous_parameters)
-                reward += np.exp(-0.1*get_trajectory_length(operator_instance.low_level_motion[idx]))
+                reward += np.exp(-0.1 * get_trajectory_length(operator_instance.low_level_motion[idx]))
             new_objects_not_in_goal = self.objects_currently_not_in_goal[self.n_actions_per_node:]
+        elif operator_instance.type == 'two_arm_place':
+            assert len(self.robot.GetGrabbed()) == 1
+            object_held = self.robot.GetGrabbed()[0]
+            two_arm_place_object(object_held, self.robot, operator_instance.continuous_parameters)
+            new_objects_not_in_goal = self.objects_currently_not_in_goal[1:]
+            reward = np.exp(-0.1 * get_trajectory_length(operator_instance.low_level_motion))
         else:
             raise NotImplementedError
-
         return reward, new_objects_not_in_goal
 
     def is_goal_reached(self):
         return len(self.get_objs_in_region('object_region')) == len(self.objects)
 
     def load_object_setup(self):
-        object_setup_file_name = './problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl'
+        object_setup_file_name = './problem_environments/conveyor_belt_domain_problems/' + str(
+            self.problem_idx) + '.pkl'
         if os.path.isfile(object_setup_file_name):
-            obj_setup = pickle.load(open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'r'))
+            obj_setup = pickle.load(
+                open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'r'))
             return obj_setup
         else:
             return None
@@ -265,17 +263,19 @@ class ConveyorBelt(ProblemEnvironment):
                           'object_shapes': self.problem_config['obj_shapes'],
                           'obst_poses': self.problem_config['obst_poses'],
                           'obst_shapes': self.problem_config['obst_shapes']}
-        pickle.dump(object_configs, open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl', 'wb'))
+        pickle.dump(object_configs,
+                    open('./problem_environments/conveyor_belt_domain_problems/' + str(self.problem_idx) + '.pkl',
+                         'wb'))
 
     def get_applicable_op_skeleton(self, parent_action):
         if parent_action is None:
             op_name = 'two_arm_pick'
         else:
-            #use_multipaps = parent_action.discrete_parameters['object'].GetName().find("big") != -1
+            # use_multipaps = parent_action.discrete_parameters['object'].GetName().find("big") != -1
             use_multipaps = self.n_actions_per_node > 1
             if parent_action.type == 'two_arm_pick':
                 if use_multipaps:
-                    op_name = str(self.n_actions_per_node)+'_paps'
+                    op_name = str(self.n_actions_per_node) + '_paps'
                 else:
                     op_name = 'two_arm_place'
             else:
@@ -307,4 +307,3 @@ class ConveyorBelt(ProblemEnvironment):
     def get_pick_for_obj(self, obj):
         obj_number = int(re.search(r'\d+', obj.GetName()).group())
         return self.picks[obj_number]
-

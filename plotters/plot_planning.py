@@ -313,7 +313,7 @@ def plot_across_algorithms():
         raise NotImplementedError
 
     if args.domain == 'convbelt_results':
-        algo_names = ['pw', 'randomized_doo', 'voo_uniform']
+        algo_names = ['voo_uniform', 'pw', 'randomized_doo']
     elif args.domain == 'minimum_displacement_removal_results':
         algo_names = ['pw', 'voo_uniform', 'randomized_doo']
     elif args.domain.find('synthetic') != -1:
