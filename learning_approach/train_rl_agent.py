@@ -1,12 +1,11 @@
 import numpy as np
-import pickle
 import os
-import sys
-import matplotlib.pyplot as plt
 import argparse
 import tensorflow as tf
 import socket
-
+from problem_environments.conveyor_belt_rl_env import RLConveyorBelt
+from problem_environments.minimum_displacement_removal_rl import RLMinimumDisplacementRemoval
+from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
 from DDPG import DDPG
 
 # from TRPO import TRPO
@@ -42,9 +41,12 @@ def create_policy(alg, train_results_dir, tau, explr_const, v):
     print train_results_dir
     print '========'
 
-    # todo use the poses of objects first
-    dim_state = 3 * 20
-    dim_action = 9
+    if 'mdr' in train_results_dir:
+        dim_state = 3 * 7
+        dim_action = 3
+    else:
+        dim_state = 3 * 20
+        dim_action = 9
 
     if alg.find('ddpg') != -1:
         assert tau is not None, 'ddpg requires tau'
@@ -94,10 +96,12 @@ def train_agent(args):
     print "Starting train"
     if args.domain == 'convbelt':
         epochs = 3000
+        problem = RLConveyorBelt(problem_idx=3, n_actions_per_node=3)  # different "initial" state
     else:
         epochs = 2000
+        problem = RLMinimumDisplacementRemoval(problem_idx=0)
 
-    policy.train(args.seed, epochs=epochs, d_lr=1e-3, g_lr=1e-4)
+    policy.train(problem, args.seed, epochs=epochs, d_lr=1e-3, g_lr=1e-4)
 
     policy.saveWeights(additional_name='_1_')
     create_done_marker(train_results_dir)

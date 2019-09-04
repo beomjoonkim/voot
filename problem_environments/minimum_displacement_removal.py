@@ -118,7 +118,6 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
                 self.set_objects_not_in_goal(new_objects_not_in_goal)
             else:
                 raise NotImplementedError
-
         return reward
 
     def compute_place_reward(self, operator_instance):

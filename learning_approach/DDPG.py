@@ -17,7 +17,7 @@ import os
 import random
 
 from data_load_utils import format_RL_data
-from problem_environments.conveyor_belt_rl_env import RLConveyorBelt
+
 
 from openravepy import RaveDestroy
 INFEASIBLE_SCORE = -sys.float_info.max
@@ -156,8 +156,7 @@ class DDPG:
     def soft_update(self, network, before, after):
         new_weights = network.get_weights()
         for i in range(len(before)):
-            new_weights[i] = (1 - self.tau) * before[i] + \
-                             (self.tau) * after[i]
+            new_weights[i] = (1 - self.tau) * before[i] + (self.tau) * after[i]
         network.set_weights(new_weights)
 
     def update_disc(self, batch_x, batch_w, batch_targets, batch_size):
@@ -186,10 +185,40 @@ class DDPG:
         after = self.a_gen.get_weights()  # verfied that weights of disc does not change
         self.soft_update(self.a_gen, before, after)
 
-    def train(self, seed, epochs=500, d_lr=1e-3, g_lr=1e-4):
+    def augment_dataset(self, traj_list, states, actions, rewards, sprimes):
+        new_s, new_a, new_r, new_sprime, new_sumR, _, new_traj_lengths = format_RL_data(traj_list)
+        new_a = new_a
+        new_data_obtained = len(new_s) > 0
+
+        if new_data_obtained:
+            if states is not None:
+                n_new = len(new_s)
+                n_dim_state = states.shape[1]
+                states = np.r_[states, new_s.reshape((n_new, n_dim_state))]
+                actions = np.r_[actions, new_a]
+                rewards = np.r_[rewards, new_r]
+                sprimes = np.r_[sprimes, new_sprime.reshape((n_new, n_dim_state))]
+            else:
+                states = new_s
+                actions = new_a
+                rewards = new_r
+                sprimes = new_sprime
+        else:
+            pass
+
+        if states is not None:
+            terminal_state_idxs = np.where(np.sum(np.sum(sprimes, axis=-1), axis=-1) == 0)[0]
+            nonterminal_mask = np.ones((sprimes.shape[0], 1))
+            nonterminal_mask[terminal_state_idxs, :] = 0
+        else:
+            nonterminal_mask = None
+
+        return states, actions, rewards, sprimes, nonterminal_mask, new_data_obtained
+
+    def train(self, problem, seed, epochs=500, d_lr=1e-3, g_lr=1e-4):
         np.random.seed(seed)
         random.seed(seed)
-
+        tf.random.set_random_seed(seed)
         BATCH_SIZE = 1
 
         K.set_value(self.opt_G.lr, g_lr)
@@ -198,15 +227,8 @@ class DDPG:
 
         current_best_J = -np.inf
         pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
-        pfile = open(pfilename, 'w')
-
-        # n_episodes = epochs*5
-        # T = 20, but we update it once we finish executing all T
-        # This is because this is an episodic task - you can only learn meaningful moves
-        # if you go deep in the trajectory.
-        # So, we have 300*5*20 RL data
-        problem = RLConveyorBelt(problem_idx=3, n_actions_per_node=3)  # different "initial" state
         n_data = 0
+        states = actions = rewards = sprimes= None
         for i in range(1, epochs):
             print "N simulations", i
 
@@ -228,50 +250,34 @@ class DDPG:
             pfile.close()
             print 'Score of this policy', avg_J
 
-            if avg_J > current_best_J:
-                current_best_J = avg_J
-                theta_star = self.save_folder + '/policy_search_' + str(i) + '.h5'
-                self.saveWeights(additional_name='tau_' + str(self.tau) + 'epoch_' + str(i) + '_' + str(avg_J))
+            #if avg_J > current_best_J:
+                #current_best_J = avg_J
+                #theta_star = self.save_folder + '/policy_search_' + str(i) + '.h5'
+                #self.saveWeights(additional_name='tau_' + str(self.tau) + 'epoch_' + str(i) + '_' + str(avg_J))
 
             # Add new data to the buffer - only if this was a non-zero trajectory
-            lowest_possible_reward = -np.inf
+            lowest_possible_reward = -2
             if avg_J > lowest_possible_reward:
-                # Get data from trajectory
-                new_s, new_a, new_r, new_sprime, new_sumR, _, new_traj_lengths = format_RL_data(traj_list)
-                new_a = new_a
+                states, actions, rewards, sprimes, nonterminal_mask, new_data_obtained \
+                    = self.augment_dataset(traj_list, states, actions, rewards, sprimes)
+                # Make the targets
+                if new_data_obtained:
+                    policy_actions = self.a_gen.predict([sprimes])  # predicted by pi
+                    taken_actions = actions
+                    real_targets = rewards + np.multiply(self.disc.predict([policy_actions, sprimes]), nonterminal_mask)
 
-                if 'states' in locals():
-                    n_new = len(new_s)
-                    n_dim_state = states.shape[1]
-                    states = np.r_[states, new_s.reshape((n_new, n_dim_state))]
-                    actions = np.r_[actions, new_a]
-                    rewards = np.r_[rewards, new_r]
-                    sprimes = np.r_[sprimes, new_sprime.reshape((n_new, n_dim_state))]
+                    # Update policies
+                    stime = time.time()
+                    self.update_disc(taken_actions, states, real_targets, BATCH_SIZE)
+                    self.update_pi(states, BATCH_SIZE)
+                    self.n_weight_updates += 1
+                    fitting_time = time.time() - stime
+                    n_data = len(states)
                 else:
-                    states = new_s
-                    actions = new_a
-                    rewards = new_r
-                    sprimes = new_sprime
-                n_data = len(states)
-
-                terminal_state_idxs = np.where(np.sum(np.sum(sprimes, axis=-1), axis=-1) == 0)[0]
-                nonterminal_mask = np.ones((sprimes.shape[0], 1))
-                nonterminal_mask[terminal_state_idxs, :] = 0
-                ## end of getting data
-
-                # make the targets
-                fake = self.a_gen.predict([sprimes])  # predicted by pi
-                real = actions
-                real_targets = rewards + np.multiply(self.disc.predict([fake, sprimes]), nonterminal_mask)
-
-                # Update policies
-                stime = time.time()
-                self.update_disc(real, states, real_targets, BATCH_SIZE)
-                self.update_pi(states, BATCH_SIZE)
-                fitting_time = time.time() - stime
-                self.n_weight_updates += 1
+                    fitting_time = 0
             else:
                 fitting_time = 0
+
             print "Fitting time", fitting_time
             print "Rollout time", rollout_time
             print "Time taken for epoch", fitting_time + rollout_time

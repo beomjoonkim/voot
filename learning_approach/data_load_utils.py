@@ -131,7 +131,8 @@ def format_RL_data(trajs, n_data=None):
     traj_lengths = []
     n_trans = 0
     for tau in trajs:
-        if len(tau['a']) == 0: continue
+        if len(tau['a']) == 0:
+            continue
         idx = 0
         for s, a, r in zip(tau['s'], tau['a'], tau['r']):
             traj_lengths.append(len(tau['s']) - idx)
