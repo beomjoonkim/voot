@@ -219,7 +219,7 @@ class DDPG:
         np.random.seed(seed)
         random.seed(seed)
         tf.random.set_random_seed(seed)
-        BATCH_SIZE = 1
+        BATCH_SIZE = 32
 
         K.set_value(self.opt_G.lr, g_lr)
         K.set_value(self.opt_D.lr, d_lr)
@@ -227,9 +227,12 @@ class DDPG:
 
         pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
         pfile = open(pfilename, 'wb')
+        self.n_feasible_trajs = 0
         n_data = 0
         states = actions = rewards = sprimes= None
+        number_of_lowest_reward_episodes = 0
         for i in range(1, epochs):
+            self.epoch = i
             print "N simulations", i
 
             # Technically speaking, we should update the policy every timestep.
@@ -260,10 +263,14 @@ class DDPG:
                 #self.saveWeights(additional_name='tau_' + str(self.tau) + 'epoch_' + str(i) + '_' + str(avg_J))
 
             # Add new data to the buffer - only if this was a non-zero trajectory
+            states, actions, rewards, sprimes, nonterminal_mask, new_data_obtained \
+                = self.augment_dataset(traj_list, states, actions, rewards, sprimes)
+            n_data = len(states)
+
             lowest_possible_reward = -2
-            if avg_J > lowest_possible_reward:
-                states, actions, rewards, sprimes, nonterminal_mask, new_data_obtained \
-                    = self.augment_dataset(traj_list, states, actions, rewards, sprimes)
+            if (avg_J > lowest_possible_reward) or (i % 10 == 0):
+                if avg_J > lowest_possible_reward:
+                    self.n_feasible_trajs += 1
                 # Make the targets
                 if new_data_obtained:
                     policy_actions = self.a_gen.predict([sprimes])  # predicted by pi
@@ -276,12 +283,11 @@ class DDPG:
                     self.update_pi(states, BATCH_SIZE)
                     self.n_weight_updates += 1
                     fitting_time = time.time() - stime
-                    n_data = len(states)
                 else:
                     fitting_time = 0
             else:
+                number_of_lowest_reward_episodes += 1
                 fitting_time = 0
-
             print "Fitting time", fitting_time
             print "Rollout time", rollout_time
             print "Time taken for epoch", fitting_time + rollout_time
