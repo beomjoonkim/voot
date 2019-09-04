@@ -75,7 +75,10 @@ def get_optimal_epsilon_idx(result_dir):
     if 'rembo' in result_dir:
         return -1 # 0, 1, 2
     else:
-        return epsilons.index(max_esp)
+        if max_esp in epsilons:
+            return epsilons.index(max_esp)
+        else:
+            return epsilons[0]
 
 def get_results_for_rastrigin(algo_name, dimension, obj_fcn):
     result_dir = get_result_dir(algo_name, dimension, obj_fcn)
@@ -196,8 +199,10 @@ def plot_across_algorithms():
     parser.add_argument('-obj_fcn', type=str, default='shekel')
     args = parser.parse_args()
     n_dim = args.dim
-
-    algo_names = ['cmaes', 'rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
+    if args.dim<10:
+        algo_names = ['cmaes', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo'] #, 'uniform']
+    else:
+        algo_names = ['cmaes', 'rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo'] #, 'uniform']
     #algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
 
     color_dict = {}
@@ -208,6 +213,7 @@ def plot_across_algorithms():
     color_dict['soo'] = [3 / 255.0, 252 / 255.0, 148 / 255.0]
     color_dict['bamsoo'] = [117 / 255.0, 15 / 255.0, 138 / 255.0]
     color_dict['gpucb'] = [139 / 255.0, 69 / 255.0, 19 / 255.0]
+    color_dict['uniform'] = [139 / 255.0, 69 / 255.0, 100/ 255.0]
     optimum_color = 'magenta'
     if args.obj_fcn != 'shekel':
         sns.tsplot([0] * 2000, range(2000), ci=95, condition='Optimum', color='magenta')

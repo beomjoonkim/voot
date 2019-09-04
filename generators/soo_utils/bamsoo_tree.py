@@ -49,7 +49,13 @@ class BamBinarySOOTree:
             height = parent_node.height + 1
         mu, var = self.gp.predict(cell_mid_point)
 
-        Bn = np.sqrt(2 * np.log((np.pi*np.pi *self.N*self.N) / (6.0 * self.explr_p) ))
+        running_shekel_3d = True
+        if running_shekel_3d:
+            Bn = self.explr_p
+        else:
+            Bn = np.sqrt(2 * np.log((np.pi*np.pi*self.N*self.N) / (6.0 * self.explr_p) ))
+
+        print Bn*var, self.N
         ucb = mu + Bn*var
         lcb = mu - Bn*var
         new_node = BamSOOTreeNode(cell_mid_point, cell_min, cell_max, height, parent_node, ucb, lcb)
@@ -178,7 +184,7 @@ class BamBinarySOOTree:
 
         # lines 15 in Algorithm 3 of BamSOO
         # Update my gp here
-        self.gp.update(evaled_x, evaled_y,is_bamsoo=True)
+        self.gp.update(evaled_x, evaled_y, is_bamsoo=True)
 
         # lines 19-20 in Algorithm 3 of BamSOO
         if self.fplus is None or fval > self.fplus:
