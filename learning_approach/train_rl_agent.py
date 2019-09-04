@@ -7,6 +7,7 @@ from problem_environments.conveyor_belt_rl_env import RLConveyorBelt
 from problem_environments.minimum_displacement_removal_rl import RLMinimumDisplacementRemoval
 from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
 from DDPG import DDPG
+import sys
 
 # from TRPO import TRPO
 
@@ -94,6 +95,7 @@ def train_agent(args):
     policy = create_policy(alg, train_results_dir, tau, explr_const, v)
 
     print "Starting train"
+    sys.exit(-1)
     if args.domain == 'convbelt':
         epochs = 3000
         problem = RLConveyorBelt(problem_idx=3, n_actions_per_node=3)  # different "initial" state
@@ -102,13 +104,12 @@ def train_agent(args):
         problem = RLMinimumDisplacementRemoval(problem_idx=0)
 
     policy.train(problem, args.seed, epochs=epochs, d_lr=1e-3, g_lr=1e-4)
+    #policy.saveWeights(additional_name='_' + str(args.seed) + '_')
+    create_done_marker(train_results_dir, args.seed)
 
-    policy.saveWeights(additional_name='_1_')
-    create_done_marker(train_results_dir)
 
-
-def create_done_marker(train_results_dir):
-    fin = open(train_results_dir + '/done_train.txt', 'a')
+def create_done_marker(train_results_dir, seed):
+    fin = open(train_results_dir + '/%d_done_train.txt' % (seed), 'a')
     fin.write('dummy file to mark done\n')
     fin.close()
 

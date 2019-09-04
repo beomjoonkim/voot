@@ -225,7 +225,6 @@ class DDPG:
         K.set_value(self.opt_D.lr, d_lr)
         print self.opt_G.get_config()
 
-        current_best_J = -np.inf
         pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
         n_data = 0
         states = actions = rewards = sprimes= None
@@ -242,6 +241,7 @@ class DDPG:
                 problem.objects_currently_not_in_goal = problem.objects
                 traj = problem.rollout_the_policy(self, length_of_rollout, self.v)
                 traj_list.append(traj)
+
             rollout_time = time.time() - stime
             avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
             std_J = np.std([np.sum(traj['r']) for traj in traj_list])

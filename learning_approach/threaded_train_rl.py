@@ -1,5 +1,6 @@
 import os
 from multiprocessing.pool import ThreadPool  # dummy is nothing but multiprocessing but wrapper around threading
+from multiprocessing import cpu_count
 import argparse
 import time
 
@@ -37,7 +38,7 @@ def main():
             config[key] = val
         config['seed'] = seed
         configs.append(config)
-    n_workers = int(3)
+    n_workers = cpu_count()
     print configs
     pool = ThreadPool(n_workers)
     results = pool.map(worker_wrapper_multi_input, configs)
