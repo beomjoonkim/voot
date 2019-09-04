@@ -7,7 +7,7 @@ class DDPGGenerator(Generator):
     def __init__(self, op_name, problem_env, policy):
         Generator.__init__(self, op_name, problem_env)
         self.policy = policy
-        self.epsilon = 0.999 # epsilon greedy exploration
+        self.epsilon = 0.99 # epsilon greedy exploration
 
     def sample_next_point(self, node, state, n_iter):
         p_use_unif = np.power(self.epsilon, self.policy.n_weight_updates)
@@ -17,6 +17,7 @@ class DDPGGenerator(Generator):
             if use_unif:
                 action_parameters = self.sample_from_uniform()
             else:
+                print "Executing policy"
                 action_parameters = self.policy.predict(state).squeeze()
 
             action, status = self.feasibility_checker.check_feasibility(node, action_parameters)

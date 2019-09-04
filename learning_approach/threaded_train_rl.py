@@ -26,6 +26,7 @@ def main():
     parser.add_argument('-seeds', nargs='+', type=int)
     parser.add_argument('-domain', type=str, default='convbelt')
     parser.add_argument('-tau', type=float, default=1e-3)
+    parser.add_argument('-explr_p', type=float, default=0.3)
     args = parser.parse_args()
 
     configs = []
