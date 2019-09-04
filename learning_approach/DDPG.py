@@ -226,6 +226,7 @@ class DDPG:
         print self.opt_G.get_config()
 
         pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
+        pfile = open(pfilename, 'wb')
         n_data = 0
         states = actions = rewards = sprimes= None
         for i in range(1, epochs):
@@ -235,7 +236,10 @@ class DDPG:
             # What if we update it 100 times after we executed 5 episodes, each with 20 timesteps??
             stime = time.time()
             traj_list = []
-            length_of_rollout = 10
+            if 'convbelt' in problem.name:
+                length_of_rollout = 20
+            else:
+                length_of_rollout = 10
             for n_iter in range(1):
                 problem.init_saver.Restore()
                 problem.objects_currently_not_in_goal = problem.objects

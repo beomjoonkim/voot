@@ -51,7 +51,7 @@ class RLConveyorBelt(ConveyorBelt):
                 rewards.append(reward)
 
             if reward == -2:
-                break # end of episode
+                break
 
             if len(self.objects_currently_not_in_goal) == 0:
                 # reset the environment and the
