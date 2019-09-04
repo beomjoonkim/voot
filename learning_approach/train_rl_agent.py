@@ -7,6 +7,7 @@ from problem_environments.conveyor_belt_rl_env import RLConveyorBelt
 from problem_environments.minimum_displacement_removal_rl import RLMinimumDisplacementRemoval
 from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
 from DDPG import DDPG
+import time
 import sys
 
 # from TRPO import TRPO
@@ -31,7 +32,13 @@ def setup_save_dirs(parent_dir, domain, pi_name, n_data, n_trial, d_lr, g_lr, ta
     train_results_dir = trial_dir + '/train_results/'
 
     if not os.path.exists(train_results_dir):
-        os.makedirs(train_results_dir)
+        try:
+            os.makedirs(train_results_dir)
+        except OSError:
+            time.sleep(1)
+            if not os.path.exists(train_results_dir):
+                os.makedirs(train_results_dir)
+
     return train_results_dir
 
 
