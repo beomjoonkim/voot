@@ -32,7 +32,6 @@ class MinimumDisplacementRemoval(ProblemEnvironment):
 
         self.init_saver = DynamicEnvironmentStateSaver(self.env)
         self.robot = self.env.GetRobots()[0]
-        self.objects = self.problem_config['objects']
 
         self.is_init_pick_node = True
 

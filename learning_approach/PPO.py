@@ -215,6 +215,7 @@ class PPO(PolicySearch):
         self.pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
         pfile = open(self.pfilename, 'wb')
         n_data = 0
+        n_remains = []
         for i in range(1, epochs):
             self.epoch = i
             print "N simulations %d/%d" % (i, epochs)
@@ -226,22 +227,29 @@ class PPO(PolicySearch):
             for n_iter in range(1):  # N = 5, T = 20, using the notation from PPO paper
                 problem.init_saver.Restore()
                 problem.objects_currently_not_in_goal = problem.objects
-                traj = problem.rollout_the_policy(self, length_of_rollout)
-                traj_list.append(traj)
+                traj, n_remain = problem.rollout_the_policy(self, length_of_rollout)
+                if len(traj['a'])>0:
+                    traj_list.append(traj)
+                    n_remains.append(n_remain)
 
-            avg_J = self.log_traj_performance(traj_list, i, n_data)
-            lowest_possible_reward = -2
-            if avg_J > lowest_possible_reward:
-                self.n_feasible_trajs += 1
+            if len(traj['a'])> 0:
+                avg_J = self.log_traj_performance([traj_list[-1]], n_remains[-1], i, n_data)
+                lowest_possible_reward = -2
+                if avg_J > lowest_possible_reward:
+                    self.n_feasible_trajs += 1
+            else:
+                avg_J = self.log_traj_performance(-2.0, 7, i, n_data)
+
 
             is_time_to_train = i % 10 == 0
-            if is_time_to_train:
+            if is_time_to_train and len(traj_list)>0:
                 new_s, new_a, new_r, new_sprime, new_sumR, _, new_traj_lengths = format_RL_data(traj_list)
                 n_data += len(new_s)
                 self.update_V(new_s, new_sumR)
                 new_sumA = self.compute_advantage_values(new_s, new_a, new_sprime, new_r, new_traj_lengths)
                 self.update_policy(new_s, new_a, new_sumA)
                 traj_list = []
+                n_remains = []
 
 
 

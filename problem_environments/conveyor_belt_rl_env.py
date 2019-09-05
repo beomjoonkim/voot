@@ -54,9 +54,7 @@ class RLConveyorBelt(ConveyorBelt):
                 break
 
             if len(self.objects_currently_not_in_goal) == 0:
-                # reset the environment and the
-                self.init_saver.Restore()
-                self.objects_currently_not_in_goal = self.objects
+                break
 
         traj = {'s': states, 'a': actions, 'r': rewards}
-        return traj
+        return traj, len(self.objects_currently_not_in_goal)

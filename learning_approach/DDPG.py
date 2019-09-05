@@ -18,8 +18,8 @@ import random
 
 from data_load_utils import format_RL_data
 
-
 from openravepy import RaveDestroy
+
 INFEASIBLE_SCORE = -sys.float_info.max
 LAMBDA = 0
 
@@ -221,8 +221,9 @@ class DDPG:
         pfile = open(self.pfilename, 'wb')
         self.n_feasible_trajs = 0
         n_data = 0
-        states = actions = rewards = sprimes= None
+        states = actions = rewards = sprimes = None
         number_of_lowest_reward_episodes = 0
+        n_remains = []
         for i in range(1, epochs):
             self.epoch = i
             print "N simulations", i
@@ -230,34 +231,35 @@ class DDPG:
             # Technically speaking, we should update the policy every timestep.
             # What if we update it 100 times after we executed 5 episodes, each with 20 timesteps??
             stime = time.time()
-            traj_list = []
             if 'convbelt' in problem.name:
                 length_of_rollout = 20
             else:
                 length_of_rollout = 10
+
+            traj_list = []
             for n_iter in range(1):
                 problem.init_saver.Restore()
                 problem.objects_currently_not_in_goal = problem.objects
-                traj = problem.rollout_the_policy(self, length_of_rollout, self.v)
-                traj_list.append(traj)
+                traj, n_remain = problem.rollout_the_policy(self, length_of_rollout, self.v)
+                if len(traj['a']) > 0:
+                    traj_list.append(traj)
+                    n_remains.append(n_remain)
 
             rollout_time = time.time() - stime
-            avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
-            std_J = np.std([np.sum(traj['r']) for traj in traj_list])
-            pfile = open(self.pfilename, 'a')
-            pfile.write(str(i) + ',' + str(avg_J) + ',' + str(std_J) + ',' + str(n_data) + '\n')
-            pfile.close()
-            print 'Score of this policy', avg_J
+            if len(traj_list) > 0:
+                assert len(traj_list) == 1
+                avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
+            else:
+                avg_J = -2
 
-            #if avg_J > current_best_J:
-                #current_best_J = avg_J
-                #theta_star = self.save_folder + '/policy_search_' + str(i) + '.h5'
-                #self.saveWeights(additional_name='tau_' + str(self.tau) + 'epoch_' + str(i) + '_' + str(avg_J))
+            pfile = open(self.pfilename, 'a')
+            pfile.write(str(i) + ',' + str(avg_J) + ',' + str(n_remain) + ',' + str(n_data) + '\n')
+            pfile.close()
 
             # Add new data to the buffer - only if this was a non-zero trajectory
             states, actions, rewards, sprimes, nonterminal_mask, new_data_obtained \
                 = self.augment_dataset(traj_list, states, actions, rewards, sprimes)
-            n_data = len(states)
+            n_data = 0 if states is None else len(states)
 
             lowest_possible_reward = -2
             if (avg_J > lowest_possible_reward) or (i % 10 == 0):
@@ -283,4 +285,3 @@ class DDPG:
             print "Fitting time", fitting_time
             print "Rollout time", rollout_time
             print "Time taken for epoch", fitting_time + rollout_time
-

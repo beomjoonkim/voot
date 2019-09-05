@@ -15,6 +15,7 @@ class RLMinimumDisplacementRemoval(MinimumDisplacementRemoval):
         swept_volume_to_clear_obstacles_from = self.load_swept_volume()
         initial_collisions = self.get_objs_in_collision(swept_volume_to_clear_obstacles_from, 'entire_region')
         self.initial_collisions = initial_collisions
+        self.objects= self.initial_collisions
         self.set_objects_not_in_goal(initial_collisions)
         self.set_swept_volume(swept_volume_to_clear_obstacles_from)
 
@@ -67,9 +68,7 @@ class RLMinimumDisplacementRemoval(MinimumDisplacementRemoval):
                 break  # end of episode
 
             if len(self.objects_currently_not_in_goal) == 0:
-                # reset the environment and the
-                self.init_saver.Restore()
-                self.objects_currently_not_in_goal = self.objects
+                break
 
         traj = {'s': states, 'a': actions, 'r': rewards}
-        return traj
+        return traj, len(self.objects_currently_not_in_goal)

@@ -65,12 +65,17 @@ class PolicySearch:
 
         return states, actions, rewards, sprimes, nonterminal_mask, new_data_obtained
 
-    def log_traj_performance(self, traj_list, epoch, n_data):
+    def log_traj_performance(self, traj_list, n_remain, epoch, n_data):
+        if traj_list == -2:
+            avg_J = traj_list
+        else:
+            try:
+                avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
+            except:
+                import pdb;pdb.set_trace()
 
-        avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
-        std_J = np.std([np.sum(traj['r']) for traj in traj_list])
         pfile = open(self.pfilename, 'a')
-        pfile.write(str(epoch) + ',' + str(avg_J) + ',' + str(std_J) + ',' + str(n_data) + '\n')
+        pfile.write(str(epoch) + ',' + str(avg_J) + ',' + str(n_remain) + ',' + str(n_data) + '\n')
         pfile.close()
         print 'Score of this policy', avg_J
         return avg_J
