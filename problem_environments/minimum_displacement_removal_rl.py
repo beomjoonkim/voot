@@ -3,7 +3,7 @@ from mover_library.utils import get_body_xytheta
 from generators.presampled_pick_generator import PreSampledPickGenerator
 from mover_library.utils import CustomStateSaver
 from planners.mcts_tree_node import TreeNode
-from generators.learned_generators.ddpg_generator import DDPGGenerator
+from generators.learned_generators.learned_policy_based_generator import LearnedPolicyBasedGenerator
 from generators.uniform import UniformGenerator
 import numpy as np
 import pickle
@@ -34,7 +34,8 @@ class RLMinimumDisplacementRemoval(MinimumDisplacementRemoval):
         rewards = []
 
         pick_generator = UniformGenerator('two_arm_pick', self)
-        place_generator = DDPGGenerator('two_arm_place', self, policy)
+        place_generator = LearnedPolicyBasedGenerator('two_arm_place', self, policy)
+        # Which generator to use?
         parent_action = None
         parent_reward = 0
 

@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 
-class DDPGGenerator(Generator):
+class LearnedPolicyBasedGenerator(Generator):
     def __init__(self, op_name, problem_env, policy):
         Generator.__init__(self, op_name, problem_env)
         self.policy = policy

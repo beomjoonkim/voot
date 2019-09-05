@@ -3,7 +3,7 @@ from mover_library.utils import get_body_xytheta
 from generators.presampled_pick_generator import PreSampledPickGenerator
 from mover_library.utils import CustomStateSaver
 from planners.mcts_tree_node import TreeNode
-from generators.learned_generators.ddpg_generator import DDPGGenerator
+from generators.learned_generators.learned_policy_based_generator import LearnedPolicyBasedGenerator
 import numpy as np
 from mover_library import utils
 
@@ -26,7 +26,7 @@ class RLConveyorBelt(ConveyorBelt):
         rewards = []
 
         pick_generator = PreSampledPickGenerator()
-        place_generator = DDPGGenerator('3_paps', self, policy)
+        place_generator = LearnedPolicyBasedGenerator('3_paps', self, policy)
         parent_action = None
 
         while len(actions) < time_step_limit:

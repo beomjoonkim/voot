@@ -217,8 +217,8 @@ class DDPG:
         K.set_value(self.opt_D.lr, d_lr)
         print self.opt_G.get_config()
 
-        pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
-        pfile = open(pfilename, 'wb')
+        self.pfilename = self.save_folder + '/' + str(seed) + '_performance.txt'
+        pfile = open(self.pfilename, 'wb')
         self.n_feasible_trajs = 0
         n_data = 0
         states = actions = rewards = sprimes= None
@@ -244,7 +244,7 @@ class DDPG:
             rollout_time = time.time() - stime
             avg_J = np.mean([np.sum(traj['r']) for traj in traj_list])
             std_J = np.std([np.sum(traj['r']) for traj in traj_list])
-            pfile = open(pfilename, 'a')
+            pfile = open(self.pfilename, 'a')
             pfile.write(str(i) + ',' + str(avg_J) + ',' + str(std_J) + ',' + str(n_data) + '\n')
             pfile.close()
             print 'Score of this policy', avg_J

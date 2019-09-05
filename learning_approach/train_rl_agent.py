@@ -7,6 +7,7 @@ from problem_environments.conveyor_belt_rl_env import RLConveyorBelt
 from problem_environments.minimum_displacement_removal_rl import RLMinimumDisplacementRemoval
 from problem_instantiators.minimum_constraint_removal_instantiator import MinimumConstraintRemovalInstantiator
 from DDPG import DDPG
+from PPO import PPO
 import time
 import sys
 
@@ -65,14 +66,8 @@ def create_policy(alg, train_results_dir, tau, explr_p, v):
                       save_folder=train_results_dir,
                       explr_const=explr_p,
                       visualize=v)
-    elif alg == 'trpo':
-        policy = TRPO(session,
-                      dim_action,
-                      dim_state,
-                      tau=tau,
-                      save_folder=train_results_dir,
-                      explr_p=explr_p,
-                      visualize=v)
+    elif alg == 'ppo':
+        policy = PPO(session, dim_action, dim_state, tau=tau, save_folder=train_results_dir, explr_const=explr_p)
     else:
         raise NotImplementedError
 
