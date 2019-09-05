@@ -176,10 +176,9 @@ class PPO(PolicySearch):
                                        save_weights_only=True)
         self.qfcn.fit(states, sumR, epochs=20,
                       validation_split=0.1,
-                      callbacks=[checkpointer],
                       batch_size=batch_size,
                       verbose=False)
-        self.qfcn.load_weights(self.save_folder + '/weights.hdf5')
+        #self.qfcn.load_weights(self.save_folder + '/weights.hdf5')
 
     def update_policy(self, states, actions, adv):
         n_data = states.shape[0]
@@ -196,10 +195,10 @@ class PPO(PolicySearch):
         tau = np.tile(self.tau, (n_data, 1))
         self.policy.fit([states, adv, old_pi_a, tau],
                        actions, epochs=20, validation_split=0.1,
-                       batch_size=batch_size, callbacks=[checkpointer],
+                       batch_size=batch_size,
                        verbose=False)
         print "Done!"
-        self.policy.load_weights(self.save_folder + '/pi_weights.hdf5')
+        #self.policy.load_weights(self.save_folder + '/pi_weights.hdf5')
 
     def train(self, problem, seed, epochs=500, d_lr=1e-3, g_lr=1e-4):
         K.set_value(self.opt_G.lr, g_lr)
