@@ -113,7 +113,7 @@ def create_objects(env, conveyor_belt, num_objects):
         height = np.random.rand(1) * (max_height - min_height) + min_height
         new_body = box_body(env, width, length, height,
                             name=name+'%s' % i,
-                            color=(0, (i + .5) / num_objects, 0))
+                            color=(0, 0.5, 0))
         trans = np.eye(4)
         trans[2, -1] = 0.075
         env.Add(new_body)
