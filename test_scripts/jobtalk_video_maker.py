@@ -233,7 +233,7 @@ def main():
     stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
     if os.path.isfile(stat_file_name):
         print "already done"
-        return -1
+        #return -1
 
     if args.domain == 'minimum_displacement_removal':
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.problem_idx, args.domain)
@@ -252,6 +252,7 @@ def main():
 
     if args.v:
         environment.env.SetViewer('qtcoin')
+    import pdb;pdb.set_trace()
 
     mcts = instantiate_mcts(args, environment)
     search_time_to_reward, best_v_region_calls, plan = mcts.search(args.mcts_iter)
