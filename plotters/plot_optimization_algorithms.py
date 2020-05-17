@@ -14,6 +14,8 @@ def savefig(xlabel, ylabel, fname=''):
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
     # print 'Saving figure ', fname + '.png'
+    plt.show()
+    import pdb;pdb.set_trace()
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
@@ -203,6 +205,7 @@ def plot_across_algorithms():
         algo_names = ['cmaes', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo'] #, 'uniform']
     else:
         algo_names = ['cmaes', 'rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo'] #, 'uniform']
+        algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'doo', 'cmaes', 'voo']
     #algo_names = ['rembo_ei', 'bamsoo', 'gpucb', 'soo', 'voo', 'doo', ]
 
     color_dict = {}

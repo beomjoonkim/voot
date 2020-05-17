@@ -3,7 +3,9 @@ sys.path.append(os.getcwd())
 sys.path.append("/root/TAMP/openrave_wrapper")
 sys.path.append("/root/TAMP/openrave_wrapper/manipulation")
 sys.path.append('/usr/local/lib/python2.7/site-packages')
+sys.path.append('/home/beomjoon/Documents/github/guiding_gtamp_light')
 
+from gtamp_utils import utils
 from planners.mcts import MCTS
 
 import argparse
@@ -19,6 +21,7 @@ from problem_instantiators.conveyor_belt_instantiator import ConveyorBeltInstant
 from openravepy import RaveSetDebugLevel, DebugLevel
 
 from problem_environments.synthetic_env import ShekelSynthetic, RastriginSynthetic, GriewankSynthetic
+from mover_library.motion_planner import collision_fn, base_extend_fn, base_sample_fn, base_distance_fn
 
 hostname = socket.gethostname()
 if hostname == 'dell-XPS-15-9560' or hostname=='phaedra' or hostname=='shakey' or hostname=='lab':
@@ -105,6 +108,55 @@ def make_plan_pklable(plan):
             if 'object' in p.discrete_parameters.keys():
                 p.discrete_parameters['object'] =  p.discrete_parameters['object'].GetName()
     return plan
+
+import time
+
+
+def play_motion(motion, t_sleep):
+    time.sleep(t_sleep)
+    for c in motion:
+        utils.set_robot_config(c)
+        time.sleep(t_sleep)
+
+
+def play_plan(objs, place_motions, environment):
+    d_fn = base_distance_fn(environment.robot, x_extents=3.9, y_extents=7.1)
+    s_fn = base_sample_fn(environment.robot, x_extents=4.225, y_extents=5, x=-3.175, y=-3)
+    e_fn = base_extend_fn(environment.robot)
+    c_fn = collision_fn(environment.env, environment.robot)
+    n_iterations = [20, 50, 100, 500, 1000]
+
+    pick_motions = []
+    pick_motions = pickle.load(open('./test_scripts/jobtalk_video_pick_motions.pkl', 'r'))
+    raw_input('Play plan?')
+    time.sleep(3)
+    for obj, pick_motion, place_motion in zip(objs, pick_motions, place_motions):
+        environment.pick_object(obj)
+        utils.set_robot_config(environment.init_base_conf)
+        if obj.GetName() == 'small_obj5':
+            q_goal = np.array(np.array([[-6.14148808, -5.93437004,  3.64749158]]))
+            place_action = {'q_goal': q_goal}
+        else:
+            place_action = {'q_goal': place_motion[-1][None, :]}
+        play_motion(place_motion, 0.02)
+        utils.two_arm_place_object(place_action)
+        # plan a motion to the top
+        play_motion(pick_motion, 0.02)
+        """
+        q_init = environment.robot.GetActiveDOFValues()
+        motion, status = environment.get_motion_plan(q_init, environment.init_base_conf,
+                                                     d_fn, s_fn, e_fn, c_fn, n_iterations)
+        if status == 'NoSolution':
+            obj.Enable(False)
+            motion, status = environment.get_motion_plan(q_init, environment.init_base_conf,
+                                                         d_fn, s_fn, e_fn, c_fn, n_iterations)
+            obj.Enable(True)
+        pick_motions.append(motion)
+        """
+    import pdb;pdb.set_trace()
+
+    #pickle.dump(pick_motions, open('./test_scripts/jobtalk_video_pick_motions.pkl','wb'))
+
 
 
 def main():
@@ -230,10 +282,9 @@ def main():
 
     save_dir = make_save_dir(args)
     print "Save dir is", save_dir
-    stat_file_name = save_dir + '/rand_seed_' + str(args.random_seed) + '_pidx_' + str(args.problem_idx)+'.pkl'
-    if os.path.isfile(stat_file_name):
-        print "already done"
-        #return -1
+    stat_file_names = os.listdir(save_dir)
+    rwds = np.array([pickle.load(open(save_dir+stat_file_name, 'r'))['search_time'][-1][-2] for stat_file_name in stat_file_names])
+    stat_file_name = save_dir+stat_file_names[np.argmax(rwds)]
 
     if args.domain == 'minimum_displacement_removal':
         problem_instantiator = MinimumConstraintRemovalInstantiator(args.problem_idx, args.domain)
@@ -250,17 +301,27 @@ def main():
         elif args.domain.find("shekel") != -1:
             environment = ShekelSynthetic(args.problem_idx)
 
-    if args.v:
-        environment.env.SetViewer('qtcoin')
+    environment.env.SetViewer('qtcoin')
+    viewer = environment.env.GetViewer()
+    cam_transform = np.array(
+        [[0.9998789, 0.00486718, -0.01478187, -1.67376077],
+        [0.01244485, -0.82038901, 0.57167036, -10.30184746],
+        [-0.00934446, -0.57178508, -0.82035023, 11.19177628],
+        [0., 0., 0., 1.]]
+    )
+    viewer.SetCamera(cam_transform)
+    plan = pickle.load(open(stat_file_name, 'r'))['plan']
+
+    places = plan[1::2]
+    objs = [environment.env.GetKinBody(obj) for place in places for obj in place.discrete_parameters['objects']]
+    places = places[:-1]
+    place_motions = [l for place in places for l in place.low_level_motion if place.low_level_motion is not None]
+    n_objs_placed = len(place_motions)
+    objs = objs[0:n_objs_placed]
     import pdb;pdb.set_trace()
 
-    mcts = instantiate_mcts(args, environment)
-    search_time_to_reward, best_v_region_calls, plan = mcts.search(args.mcts_iter)
-    plan = make_plan_pklable(plan)
-
-    print "Number of best-vregion calls: ", best_v_region_calls
-    pickle.dump({'search_time': search_time_to_reward, 'plan': plan, 'pidx': args.problem_idx},
-                open(stat_file_name, 'wb'))
+    play_plan(objs, place_motions, environment)
+    environment.init_saver.Restore()
 
     if args.domain != 'synthetic':
         environment.env.Destroy()

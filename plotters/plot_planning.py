@@ -9,14 +9,25 @@ import glob
 
 import plot_rl
 
+
+# Figures to make:
+#   Picture of a goal for the packing domain
+#   High dimensional action space for pick
+#   Better picture of Shekel function
+#   Graphs with legends outside
+#   Graphs progressively building up
+
 def savefig(xlabel, ylabel, fname=''):
     plt.legend(loc='best', prop={'size': 13})
     plt.xlabel(xlabel, fontsize=14, fontweight='bold')
     plt.ylabel(ylabel, fontsize=14, fontweight='bold')
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
+    plt.ylim(-2.5, 4)
     print 'Saving figure ', fname + '.png'
     plt.tight_layout()
+    import pdb;
+    pdb.set_trace()
     plt.savefig(fname + '.png', dpi=100, format='png')
 
 
@@ -324,9 +335,13 @@ def setup_options():
 
 def get_algo_names(options):
     if options.domain == 'convbelt':
+        #algo_names = ['RL_ppo', 'RL_ddpg', 'voo_uniform', 'pw', 'randomized_doo']
+        #algo_names = ['voo_uniform', 'pw']
+        algo_names = ['RL_ppo', 'RL_ddpg', 'voo_uniform', 'pw']
+        algo_names = ['RL_ppo', 'RL_ddpg']
         algo_names = ['RL_ppo', 'RL_ddpg', 'voo_uniform', 'pw', 'randomized_doo']
     elif options.domain == 'mdr':
-        algo_names = ['RL_ppo', 'RL_ddpg', 'pw', 'voo_uniform', 'randomized_doo' ]
+        algo_names = ['RL_ppo', 'RL_ddpg', 'pw', 'voo_uniform', 'randomized_doo']
     elif options.domain.find('synthetic') != -1:
         if options.domain.find('shekel') != -1:
             algo_names = ['pw', 'voo_centered_uniform', 'doo']
@@ -344,8 +359,8 @@ def get_color_for_each_algorithm():
     color_dict['RandDOOT'] = [0, 0, 1]
     color_dict['VOOT'] = [1, 0, 0]
     color_dict['PW-UCT'] = [0.8901960784313725, 0.6045098039215687, 0]
-    color_dict['PPO'] = [98/255., 37/255., 147/255.]
-    color_dict['DDPG'] = [15/255., 121/255., 147/255.]
+    color_dict['PPO'] = [98 / 255., 37 / 255., 147 / 255.]
+    color_dict['DDPG'] = [15 / 255., 121 / 255., 147 / 255.]
     return color_dict
 
 
@@ -364,7 +379,7 @@ def get_plot_name(options):
             options.w) + '_mcts_iter_' + str(options.mcts_iter) \
                     + "_uct_" + str(options.uct) + "_n_feasibility_checks_" + str(
             options.n_feasibility_checks) + "_pw_" + str(options.pw)
-        plot_name = options.domain+ '_progress'
+        plot_name = options.domain + '_progress'
     else:
         plot_name = 'reward_toy_' + options.domain + '_problem_idx_' + str(options.problem_idx) + '_w_' + str(
             options.w) \
@@ -381,7 +396,7 @@ def get_plot_name(options):
 
         if options.n_switch != -1:
             plot_name += "_n_switch_" + str(options.n_switch)
-        plot_name = options.domain+ '_rewards'
+        plot_name = options.domain + '_rewards'
     return plot_name
 
 
@@ -407,7 +422,17 @@ def plot_across_algorithms():
         algo_name = get_algo_name_to_put_on_plot(algo)
         if 'PPO' in algo_name or 'DDPG' in algo_name:
             fdir = 'RL_results/%s/n_data_100/%s/dg_lr_0.001_0.0001/' % (options.domain, algo_name.lower())
-            search_rwd, search_progress = plot_rl.get_max_rwds_wrt_samples(fdir)
+            if algo_name == 'PPO':
+                if options.domain == 'convbelt':
+                    tau = 0.3
+                else:
+                    tau = 0.1
+            else:
+                if options.domain == 'convbelt':
+                    tau = 1e-4
+                else:
+                    tau = 1e-4
+            search_rwd, search_progress = plot_rl.get_max_rwds_wrt_samples(fdir, tau)
         else:
             search_rwd_times, max_rwd = get_mcts_results(algo, options)
             search_rwd, search_progress = get_max_rwds_wrt_samples(search_rwd_times, options.mcts_iter)
@@ -423,7 +448,6 @@ def plot_across_algorithms():
         if not options.p:
             plt.ylim(-2, 4.5)
     y_axis_label = 'Number of remaining objects' if options.p else 'Average rewards'
-
     savefig('Number of simulations', y_axis_label, fname='./plotters/' + options.add + plot_name)
 
 

@@ -4,6 +4,9 @@ import os
 import argparse
 import numpy as np
 import random
+import sys
+sys.path.insert(0, os.getcwd())
+
 
 from deap.benchmarks import shekel
 from deap import benchmarks
@@ -52,7 +55,10 @@ domain = np.array([[-500.]*dim_x, [500.]*dim_x])
 
 # todo define X near 0.5,0.5 , and 500,500. Both shows difference in mu(R)/mu(X)
 save_dir = './test_results/function_optimization/visualization/shekel' + '/dim_' + str(dim_x) + \
-           '/'+algo_name+'/'
+           '/'+algo_name+'/seed_'+str(args.seed)+'/'
+
+save_dir = '/home/beomjoon/Dropbox (MIT)/' + 'visualization/shekel' + '/dim_' + str(dim_x) + \
+           '/'+algo_name+'/seed_'+str(args.seed)+'/'
 
 
 def get_objective_function(sol):
@@ -147,7 +153,7 @@ def voo(explr_p, ax):
     print 'explr_p', explr_p
 
     for i in range(n_fcn_evals):
-        print "Iteration ",i
+        print "Iteration ", i
         x = voo.choose_next_point(evaled_x, evaled_y)
         if len(x.shape) == 0:
             x = np.array([x])
@@ -159,7 +165,6 @@ def voo(explr_p, ax):
 
         draw_points(evaled_x, ax)
         print np.max(evaled_y)
-
     best_idx = np.where(evaled_y == max_y[-1])[0][0]
     print evaled_x[best_idx], evaled_y[best_idx]
     print "Max value found", np.max(evaled_y)
@@ -189,7 +194,7 @@ def draw_shekel():
     print "Drawing shekel"
     #plt.contour(X, Y, Z, rstride=1, cstride=1, norm=LogNorm(), cmap=cm.jet, linewidth=0.2)
     ax.view_init(azim=-90, elev=70)
-    plt.show()
+    #plt.show()
     plt.savefig(save_dir+'/'+str(0)+'.png')
     print "Done!"
     return ax
@@ -202,9 +207,9 @@ def draw_points(points, ax):
     if len(points) >= 0:
         ax.view_init(azim=-90, elev=70)
         plt.plot(points[:, 0], points[:, 1], 'ro', markerfacecolor='None', markeredgewidth=1, markersize=2.5)
-        plt.show()
-        import pdb;pdb.set_trace()
-    #plt.savefig(save_dir+'/'+str(points.shape[0])+'.png')
+        #plt.show()
+        #import pdb;pdb.set_trace()
+    plt.savefig(save_dir+'/'+str(points.shape[0])+'.png')
 
 
 def main():
@@ -232,7 +237,7 @@ def main():
     else:
         raise NotImplementedError
 
-    seed = 6
+    seed = args.seed
     np.random.seed(seed)
     random.seed(seed)
     ax = draw_shekel()
